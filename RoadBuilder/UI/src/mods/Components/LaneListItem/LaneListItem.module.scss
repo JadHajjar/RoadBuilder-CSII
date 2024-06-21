@@ -1,0 +1,29 @@
+.item {
+    padding: 8rem;
+    background-color: rgba($color: #ffffff, $alpha: 0.15);    
+    width: auto;
+    height: auto;
+    border-radius: 4rem;
+    margin: 8rem;
+    margin-top: 0;
+    margin-bottom: 16rem;
+    flex-grow: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+
+    .image {
+        width: 80rem;
+        height: 80rem;
+        background-color: black;                
+    }
+
+    .label {
+        color: var(--normalTextColor);
+        margin-top: 4rem;
+        max-width: 80rem;
+    }
+
+}

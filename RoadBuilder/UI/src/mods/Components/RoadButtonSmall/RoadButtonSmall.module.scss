@@ -1,0 +1,12 @@
+.button {
+    width: 80rem;
+    height: 80rem;
+    background-color: black;    
+
+    transition: transform 0.2s;
+    margin: 0 4rem;
+
+    &:hover {
+        transform: scale(1.05);
+    }
+}

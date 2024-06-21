@@ -1,0 +1,27 @@
+.container {
+    padding: 0 6rem;
+    transform: scale(1);
+    transition: all 0.2s;
+    margin: 0 1rem;
+
+    .divider {
+        height: 100%;
+        width: 4rem;
+        background-color: rgba($color: #fff, $alpha: 0.35);                    
+        transition: all 0.2s;
+    }
+
+    &:hover, &.highlighted {
+        margin: 0 15rem;     
+
+        .divider {
+            background-color: var(--accentColorNormal-hover);
+        }        
+    }
+    
+    &.invisible {        
+        transform: scale(0, 1);
+        opacity: 0;
+    }
+
+}

@@ -1,0 +1,30 @@
+.panel {
+    position: absolute;
+    width: 300rem;
+    top: 80rem;
+    bottom: 300rem;
+    right: 6rem;
+    z-index: 0;
+
+    background-color: var(--panelColorNormal);
+    backdrop-filter: var(--panelBlur);
+    border-radius: var(--panelRadius);
+
+    pointer-events: auto;
+
+    padding: 8rem 4rem;    
+    overflow: hidden;
+    
+    // .list {
+    //     padding-right: 16rem; 
+    // }
+
+    .list > :first-child {
+        display: flex;
+        flex-wrap: wrap;        
+        flex-direction: row;        
+        justify-content: center;                         
+        align-items: center;        
+    }
+    
+}
