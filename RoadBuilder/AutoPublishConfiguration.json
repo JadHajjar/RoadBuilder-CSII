@@ -1,0 +1,6 @@
+{
+  "ModName": "Road Builder",
+  "ThumbnailUrl": ".png",
+  "PublishConfigurationFile": "Properties\\PublishConfiguration.xml",
+  "ChangelogFile": "Changelog.json"
+}
