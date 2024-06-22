@@ -1,37 +1,70 @@
+.container {
+    margin: 8rem;
+    margin-top: 0;
+    margin-bottom: 16rem;
+    width: 132rem;
+    height: 160rem;
+
+    &.moving {
+        background-color: rgba($color: #000000, $alpha: 0.3);
+        border-radius: 4rem;
+    }
+}
+
 .item {
     padding: 8rem;
     background-color: rgba($color: #ffffff, $alpha: 0.15);    
     width: auto;
     height: 160rem;
-    border-radius: 4rem;
-    margin: 8rem;
-    margin-top: 0;
-    margin-bottom: 16rem;
+    border-radius: 4rem;    
     flex-grow: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     overflow: hidden;    
+    transform: scale(1);
+    
+    transition: height 0.25s, box-shadow 0.25s, transform 0.25s;
 
-
-    .image {
-        width: 80rem;
-        height: 80rem;
-        background-color: black;                
+    &:hover {
+        transform: scale(1.1);
+        box-shadow: 0px 4rem 5rem 2rem rgba($color: #000000, $alpha: 0.3);
     }
 
-    .label {
-        color: var(--normalTextColor);
-        margin-top: 4rem;
-        width: 120rem;
-        height: 2lh;
-        text-align: center;    
-        text-overflow: ellipsis;        
-        overflow: hidden;
+    &.moving {
+        position: absolute;
+        height: 100rem;
 
-        display: -webkit-box;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
+        .label {
+            transform: scale(1, 0);
+        }        
     }
 
+    &.dragRepresentation {
+        position: absolute;
+    }
+}
+
+.image {
+    width: 80rem;
+    height: 80rem;
+    background-color: black;                
+}
+
+.label {
+    color: var(--normalTextColor);
+    margin-top: 4rem;
+    width: 120rem;
+    height: 2lh;
+    text-align: center;    
+    text-overflow: ellipsis;        
+    overflow: hidden;
+
+    transform-origin: top center;
+
+    transition: transform 0.25s;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
 }

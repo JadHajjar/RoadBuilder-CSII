@@ -14,20 +14,15 @@ import { SearchTextBox } from 'mods/Components/SearchTextBox/SearchTextBox';
 export const LaneListPanel = () => {
     const {translate} = useLocalization();
     let [searchQuery, setSearchQuery] = useState<string>();
+    
 
-    let allNetSections = useValue(allNetSections$);    
-
-    const range = (i: number, n: number) => ({
-        [Symbol.iterator]: () => ({ 
-            next: () => ({ done: i > n, value: i++  }) 
-        })
-    })
+    let allNetSections = useValue(allNetSections$);        
     let items = allNetSections
         .filter((val, idx) => searchQuery == undefined || searchQuery == '' || val.DisplayName.indexOf(searchQuery) >= 0)        
         .map((val, idx) => <LaneListItem key={idx} netSection={val}/>);        
 
     return (
-        <div className={styles.panel}>            
+        <div className={styles.panel}>
             <SearchTextBox onChange={setSearchQuery} />
             <Scrollable className={styles.list} vertical smooth trackVisibility='scrollable'>
                 {items}
