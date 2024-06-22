@@ -2,7 +2,7 @@
     padding: 8rem;
     background-color: rgba($color: #ffffff, $alpha: 0.15);    
     width: auto;
-    height: auto;
+    height: 160rem;
     border-radius: 4rem;
     margin: 8rem;
     margin-top: 0;
@@ -10,8 +10,8 @@
     flex-grow: 0;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
+    overflow: hidden;    
 
 
     .image {
@@ -23,7 +23,15 @@
     .label {
         color: var(--normalTextColor);
         margin-top: 4rem;
-        max-width: 80rem;
+        width: 120rem;
+        height: 2lh;
+        text-align: center;    
+        text-overflow: ellipsis;        
+        overflow: hidden;
+
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
     }
 
 }

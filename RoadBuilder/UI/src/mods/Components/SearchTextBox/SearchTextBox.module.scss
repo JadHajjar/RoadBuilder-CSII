@@ -1,0 +1,21 @@
+.searchContainer {
+    position: relative;    
+    .searchTextBox {  
+        display: initial;                  
+    }
+
+    .searchClearButton {
+        position: absolute;
+        right: 8rem;
+        top: 0.2em;
+        height: calc( var(--fontSizeXL)  + 1rem);
+        width: calc( var(--fontSizeXL)  + 1rem);
+        padding: 1rem;
+        background: none;
+        opacity: 0.7;
+
+        &:hover {
+            opacity: 1;
+        }
+    }
+}
