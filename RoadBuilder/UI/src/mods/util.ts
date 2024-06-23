@@ -12,3 +12,8 @@ export const range = (i: number, n: number) => ({
         next: () => ({ done: i > n, value: i++  }) 
     })
 });
+
+export const MouseButtons = {
+    Secondary: 2,
+    Primary: 0
+};

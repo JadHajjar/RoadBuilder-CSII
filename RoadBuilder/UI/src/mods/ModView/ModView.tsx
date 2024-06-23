@@ -7,6 +7,7 @@ import { Number2 } from "cs2/ui";
 import { LaneListItemDrag } from "../Components/LaneListItem/LaneListItem";
 
 import styles from './ModView.module.scss';
+import { MouseButtons } from "mods/util";
 
 export const ModView = () => {    
     let [draggingItem, setDraggingItem] = useState<NetSectionItem | undefined>();
@@ -23,11 +24,29 @@ export const ModView = () => {
         setMousePosition({x: evt.clientX, y: evt.clientY});
     }
 
+    let onMouseDown = (evt: MouseEvent) => {
+        
+    }
+
+    let onMouseRelease = (evt: MouseEvent) => {
+        if (evt.button == MouseButtons.Primary) {
+            //TODO: send message to bottom view that a new lane has been added
+            setDraggingItem(undefined);            
+        }
+        if (evt.button == MouseButtons.Secondary) {
+            setDraggingItem(undefined);
+        }
+    }
+
     useEffect(() => {
         document.addEventListener('mousemove', onMouseMove);
+        document.addEventListener('mousedown', onMouseDown);
+        document.addEventListener('mouseup', onMouseRelease);
         console.log("Setup event listener");
         return () => {
             document.removeEventListener('mousemove', onMouseMove);
+            document.removeEventListener('mousedown', onMouseDown);
+            document.removeEventListener('mouseup', onMouseRelease);
         }
     }, []);
 
