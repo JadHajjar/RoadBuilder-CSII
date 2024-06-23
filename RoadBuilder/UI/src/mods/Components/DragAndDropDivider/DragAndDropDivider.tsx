@@ -11,10 +11,6 @@ export const DragAndDropDivider = () => {
             [styles.hidden]: dragContext.netSectionItem === undefined
         }
     );
-
-    let x = 'fdas';
-    let y = {x: 32};
-
     return (
         <div className={containerClasses}>
             <div className={styles.divider}>
