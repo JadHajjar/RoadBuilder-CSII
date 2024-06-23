@@ -30,6 +30,29 @@
     font-weight: bold;
 }
 
+.hint {
+    position: absolute;
+    font-size: var(--fontSizeXL);
+    bottom: 50%;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-weight: bold;    
+    // backdrop-filter: blur(3px);
+    color: var(--normalTextColor);
+
+    animation: hintEntry 0.2s;
+}
+
+@keyframes hintEntry {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
 @keyframes entry {
     0% {
         opacity: 0;

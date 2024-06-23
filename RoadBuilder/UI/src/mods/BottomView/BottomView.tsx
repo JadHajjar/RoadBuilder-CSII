@@ -47,6 +47,7 @@ export const BottomView = () => {
     return (
         <div className={styles.view}>
             {items}
+            {itemList.length == 0 && !dragContext.netSectionItem? <div className={styles.hint}>Drag Lanes Here</div> : <></>}
             {/* <RoadButtonSmall />
             <DragAndDropDivider onAddItem={onAddItem} ref={}/>
             <RoadButtonSmall /> */}
