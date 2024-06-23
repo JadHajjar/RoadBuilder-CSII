@@ -31,10 +31,17 @@ export const BottomView = () => {
         }
     }
 
+    let onDeleteItem = (idx: number) => {
+        setItemList([
+            ...itemList.slice(0, idx),
+            ...itemList.slice(Math.min(idx+1, itemList.length))
+        ]);
+    }
+
     let items = itemList.flatMap((val, idx) => {        
         return [
             <DragAndDropDivider onAddItem={onAddItem} key={idx*2} listIdx={idx} onEvaluateDragAndDrop={onEvaluateDragAndDrop}/>,
-            <RoadButtonSmall item={val} key={idx * 2 + 1} />
+            <RoadButtonSmall index={idx} onDelete={onDeleteItem} item={val} key={idx * 2 + 1} />
         ]
     });
     items.push(
