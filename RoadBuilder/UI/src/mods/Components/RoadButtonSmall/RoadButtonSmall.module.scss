@@ -1,12 +1,35 @@
-.button {
-    width: 80rem;
-    height: 80rem;
-    background-color: black;    
+.button {    
+    position: relative;
+    width: 80rem;    
+    height: 80rem;    
 
     transition: transform 0.2s;
-    margin: 0 4rem;
+    margin: 0 16rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(2px);   
+
+    img {                
+        width: 80%;
+        height: 80%;
+    }
 
     &:hover {
         transform: scale(1.05);
     }
+}
+
+.frame {    
+    position: absolute;
+    left: -8rem;
+    right: -8rem;
+    bottom: -8rem;
+    top: -8rem;
+
+    border: 3px solid rgba($color: #fff, $alpha: 0.3);
+    background-color: rgba(0, 0, 0, .2);    
+    backdrop-filter: blur(8px);    
+    mask-image: url('../../../images/bottom_button_border_mask.svg');        
+    mask-size: 100%;
 }

@@ -6,7 +6,9 @@ export const RoadButtonSmall = (props: {item: NetSectionItem}) => {
     return (
         <Tooltip tooltip={props.item.DisplayName}>
             <div className={styles.button}>
-
+                <div className={styles.frame}>                    
+                </div>
+                <img src='Media/Placeholder.svg'/>
             </div>
         </Tooltip>        
     )

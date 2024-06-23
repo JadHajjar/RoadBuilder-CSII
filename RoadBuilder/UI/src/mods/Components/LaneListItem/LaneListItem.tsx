@@ -38,6 +38,10 @@ export const LaneListItem = ({netSection} : {netSection: NetSectionItem}) => {
         }
     };
 
+    // if (!netSection.Thumbnail){
+        netSection.Thumbnail = 'Media/Placeholder.svg';
+    // }  
+
     return (
         <Tooltip tooltip={netSection.DisplayName}>
             <div onMouseDown={onMouseDown} className={classNames(styles.container, containerStyles)}>
@@ -66,7 +70,9 @@ export const LaneListItemDrag = forwardRef<HTMLDivElement>((props, ref) => {
         left: `calc( ${dragData.mousePosition.x}px - 66rem)`,
         top: `calc( ${dragData.mousePosition.y}px - 40rem)`
     }
-
+    // if (!netSection.Thumbnail){
+        netSection.Thumbnail = 'Media/Placeholder.svg';
+    // }    
     return (
         <div style={offsetStyle} className={classNames(styles.item, styles.dragRepresentation)} ref={ref}>
             <img className={styles.image} src={netSection.Thumbnail}/>

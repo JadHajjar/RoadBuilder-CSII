@@ -67,7 +67,10 @@
 .image {
     width: 80rem;
     height: 80rem;
-    background-color: black;                
+    background-color: rgba($color: #000000, $alpha: 0.3);
+    backdrop-filter: blur(2px);   
+    padding: 4rem;
+    border-radius: 4rem;               
 }
 
 .label {
