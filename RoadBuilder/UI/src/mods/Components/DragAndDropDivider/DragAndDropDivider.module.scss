@@ -1,27 +1,36 @@
 .container {
-    padding: 0 6rem;
+    position: relative;
+    width: 64rem;
     transform: scale(1);
-    transition: all 0.2s;
-    margin: 0 1rem;
+    transition: width 0.2s, opacity 0.2s, transform 0.2s;   
+    display: flex;
+    justify-content: center; 
 
     .divider {
-        height: 100%;
+        height: 110%;
+        margin-top: -10%;
         width: 4rem;
         background-color: rgba($color: #fff, $alpha: 0.35);                    
-        transition: all 0.2s;
+        transition: background-color 0.2s;    
+        border-radius: 2rem;
     }
 
     &:hover, &.highlighted {
-        margin: 0 15rem;     
+        width: 84rem;     
 
         .divider {
             background-color: var(--accentColorNormal-hover);
         }        
     }
     
-    &.invisible {        
+    &.hidden {        
+        width: 0rem;
         transform: scale(0, 1);
         opacity: 0;
+
+        .divider {
+
+        }
     }
 
 }
