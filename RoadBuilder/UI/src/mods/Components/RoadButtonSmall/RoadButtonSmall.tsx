@@ -14,7 +14,11 @@ export const RoadButtonSmall = (props: _Props) => {
                 <div className={styles.frame}>                    
                 </div>
                 <img src='Media/Placeholder.svg'/>
-                <Button variant='icon' onSelect={props.onDelete.bind(null, props.index)} className={styles.closeButton} src='Media/Glyphs/Trash.svg'></Button>
+                <Button 
+                    variant='icon' 
+                    onSelect={props.onDelete.bind(null, props.index)} 
+                    className={styles.closeButton} 
+                    src='Media/Glyphs/Trash.svg'/>
             </div>
         </Tooltip>        
     )
