@@ -46,8 +46,8 @@ export const LaneListItemDrag = () => {
 
     let netSection = dragData.netSectionItem;
     let offsetStyle : CSSProperties = {
-        left: dragData.mousePosition.x + 'px',
-        top: dragData.mousePosition.y + 'px'
+        left: `calc( ${dragData.mousePosition.x}px - 66rem)`,
+        top: `calc( ${dragData.mousePosition.y}px - 40rem)`
     }
 
     return (

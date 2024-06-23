@@ -26,6 +26,9 @@ export const ModView = () => {
     useEffect(() => {
         document.addEventListener('mousemove', onMouseMove);
         console.log("Setup event listener");
+        return () => {
+            document.removeEventListener('mousemove', onMouseMove);
+        }
     }, []);
 
     let dragData : DragContextData = {

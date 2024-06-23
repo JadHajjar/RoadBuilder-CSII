@@ -11,6 +11,24 @@
     }
 }
 
+@keyframes startDrag-item {
+    0% {
+        height: 160rem;        
+    }
+    100% {
+        height: 100rem;
+    }
+}
+@keyframes startDrag-label {
+    0% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(1, 0);
+        opacity: 0;
+    }
+}
+
 .item {
     padding: 8rem;
     background-color: rgba($color: #ffffff, $alpha: 0.15);    
@@ -24,7 +42,7 @@
     overflow: hidden;    
     transform: scale(1);
     
-    transition: height 0.25s, box-shadow 0.25s, transform 0.25s;
+    transition: width 0.25s, height 0.25s, box-shadow 0.25s, transform 0.25s;
 
     &:hover {
         transform: scale(1.1);
@@ -32,16 +50,17 @@
     }
 
     &.moving {
-        position: absolute;
-        height: 100rem;
-
-        .label {
-            transform: scale(1, 0);
-        }        
+        display: none;                   
     }
 
     &.dragRepresentation {
         position: absolute;
+        height: 100rem;        
+        .label {
+            transform: scale(1, 0);
+            animation: startDrag-label 0.2s;        
+        }
+        animation: startDrag-item 0.2s;     
     }
 }
 
