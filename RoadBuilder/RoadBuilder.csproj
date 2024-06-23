@@ -41,6 +41,8 @@
 	</Target>
 
 	<ItemGroup>
+		<PackageReference Include="Lib.Harmony" Version="2.2.2" />
+		
 		<Reference Include="Game">
 			<Private>false</Private>
 		</Reference>
@@ -100,10 +102,6 @@
 	<ItemGroup>
 		<None Include="$(ModPropsFile)" Link="Properties\Mod.props" />
 		<None Include="$(ModTargetsFile)" Link="Properties\Mod.targets" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <PackageReference Include="Lib.Harmony" Version="2.2.2" />
 	</ItemGroup>
 
 </Project>

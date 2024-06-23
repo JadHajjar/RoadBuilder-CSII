@@ -12,16 +12,12 @@ namespace RoadBuilder.Utilities
 	{
 		public static void Save(RoadConfig roadConfig)
 		{
-			DeleteLocalConfig(roadConfig);
-
-			roadConfig.ID = $"{PlatformManager.instance.userSpecificPath}-{Guid.NewGuid()}";
-
 			File.WriteAllText(Path.Combine(FoldersUtil.ContentFolder, $"{roadConfig.ID}.json"), JSON.Dump(roadConfig));
 		}
 
-		private static void DeleteLocalConfig(RoadConfig roadConfig)
+		public static void DeleteLocalConfig(string configID)
 		{
-			var fileName = Path.Combine(FoldersUtil.ContentFolder, $"{roadConfig.ID}.json");
+			var fileName = Path.Combine(FoldersUtil.ContentFolder, $"{configID}.json");
 
 			if (File.Exists(fileName))
 			{

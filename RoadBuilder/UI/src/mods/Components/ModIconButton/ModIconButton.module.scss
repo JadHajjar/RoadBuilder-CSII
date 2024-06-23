@@ -1,0 +1,31 @@
+.toggle {
+  background-color: var(--accentColorNormal);
+
+  &:hover {
+    background-color: var(--accentColorNormal-hover);
+  }
+
+  &:active {
+    background-color: var(--accentColorNormal-pressed);
+  }
+
+  &.selected {
+    background-color: var(--accentColorLight);
+
+    img {
+      filter: drop-shadow(0 1rem 1rem rgba(0, 0, 0, 0.2));
+    }
+  }
+  img {
+    filter: drop-shadow(0 0 1rem rgba(0, 0, 0, 0.15));
+  }
+}
+
+.toolInfo {
+  z-index: 1;
+  background-color: white;
+}
+
+.toolModes {
+  background-color: white;
+}

@@ -3,6 +3,7 @@
 using Game;
 using Game.Prefabs;
 using Game.SceneFlow;
+using Game.Tools;
 using Game.UI;
 using Game.UI.InGame;
 
@@ -35,6 +36,7 @@ namespace RoadBuilder.Systems
 		protected override void OnGameLoadingComplete(Purpose purpose, GameMode mode)
 		{
 			base.OnGameLoadingComplete(purpose, mode);
+
 			if (mode != GameMode.Game)
 			{
 				return;
@@ -44,6 +46,7 @@ namespace RoadBuilder.Systems
 				.WithAll<NetSectionData>()
 				.WithOptions(EntityQueryOptions.IncludePrefab)
 				.Build();
+
 			var entities = entityQuery.ToEntityArray(Allocator.Temp);
 			var sections = new List<NetSectionItem>();
 
@@ -61,8 +64,9 @@ namespace RoadBuilder.Systems
 					Thumbnail = ImageSystem.GetThumbnail(prefab)
 				});
 			}
+
 			_NetSections.Value = sections.ToArray();
-        }
+		}
 
 		private string GetAssetName(PrefabBase prefab)
 		{
