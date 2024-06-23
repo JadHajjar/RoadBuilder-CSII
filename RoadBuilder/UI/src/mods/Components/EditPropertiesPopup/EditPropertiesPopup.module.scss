@@ -1,0 +1,52 @@
+.view {
+    position: absolute;
+    width: 200rem;
+    height: 160rem;    
+    bottom: 200rem;  
+    background-color: var(--panelColorNormal);
+    backdrop-filter: var(--panelBlur);
+    border-radius: 3rem;  
+    padding: 4rem;
+
+    display: flex;
+    flex-direction: column;
+
+    animation: enter 0.2s;
+}
+
+.topBar {
+    display: flex;
+    flex-direction: row;
+    justify-content: right;    
+}
+
+.content {
+    position: relative;
+    display: flex;
+    flex-grow: 1;
+    width: 100%;
+    flex-direction: row;
+    justify-content: center;
+
+    .caret{
+        position: absolute;
+        display: block;
+        bottom: -24rem;
+        width: 80rem;
+        height: 20rem;
+        background-color: var(--panelColorNormal);
+        backdrop-filter: var(--panelBlur);
+        mask-image: url(coui://gameui/Media/Misc/BalloonArrowBottom.svg#1);
+        mask-size: 100% 80rem;
+        mask-position: 50% 95%;
+    }
+}
+
+@keyframes enter {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}

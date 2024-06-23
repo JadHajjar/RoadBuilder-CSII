@@ -26,8 +26,17 @@
     border-radius: 50%;
     width: 24rem;
     height: 24rem;
+    padding: 4rem;
     background-color: rgba(255, 255, 255, 0.3);
     font-weight: bold;
+
+    img {
+        filter: invert(1);
+    }
+
+    &:hover {
+        background-color: rgba(255, 255, 255, 0.4);
+    }
 }
 
 .hint {

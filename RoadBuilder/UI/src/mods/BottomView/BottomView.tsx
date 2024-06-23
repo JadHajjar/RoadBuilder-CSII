@@ -58,7 +58,7 @@ export const BottomView = () => {
             {/* <RoadButtonSmall />
             <DragAndDropDivider onAddItem={onAddItem} ref={}/>
             <RoadButtonSmall /> */}
-            <Button className={styles.closeButton} variant='flat'>X</Button>
+            <Button className={styles.closeButton} variant='icon' src='Media/Glyphs/Close.svg' />
         </div>
     )
 
