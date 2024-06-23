@@ -1,6 +1,7 @@
 .container {
     position: relative;
     width: 64rem;
+    height: 110rem;
     transform: scale(1);
     transition: width 0.2s, opacity 0.2s, transform 0.2s;   
     display: flex;
@@ -29,7 +30,7 @@
         opacity: 0;
 
         .divider {
-
+            position: inherit;
         }
     }
 

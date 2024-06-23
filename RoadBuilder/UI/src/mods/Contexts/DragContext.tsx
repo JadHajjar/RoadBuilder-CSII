@@ -6,10 +6,13 @@ export interface DragContextData {
     netSectionItem?: NetSectionItem;
     mousePosition: Number2;
     onNetSectionItemChange: (item?: NetSectionItem) => void;
+    mouseReleased: boolean;
+    dragElement?: Element | null;
 }
 
 export const DragContext = createContext<DragContextData>({
     netSectionItem: undefined,
     mousePosition: {x: 0, y: 0},
-    onNetSectionItemChange: (item) => {}
+    onNetSectionItemChange: (item) => {},
+    mouseReleased: false
 });

@@ -1,4 +1,4 @@
-import { MouseEventHandler, useEffect, useState } from "react";
+import { MouseEventHandler, startTransition, useEffect, useRef, useState, useTransition } from "react";
 import { BottomView } from "../BottomView/BottomView"
 import { LaneListPanel } from "../LaneListPanel/LaneListPanel"
 import { DragContext, DragContextData } from 'mods/Contexts/DragContext';
@@ -12,16 +12,22 @@ import { MouseButtons } from "mods/util";
 export const ModView = () => {    
     let [draggingItem, setDraggingItem] = useState<NetSectionItem | undefined>();
     let [mousePosition, setMousePosition] = useState<Number2>({x: 0, y: 0});
+    let [mouseReleased, setMouseReleased] = useState<boolean>(false);    
+    let dragItemRef = useRef<HTMLDivElement>(null);
     
     let onNetSectionItemChange = (item?: NetSectionItem) => {
-        setDraggingItem(item);       
+        setDraggingItem(item);             
+        setMouseReleased(false); 
     }
 
     let onMouseMove = (evt: MouseEvent) => {        
-        if (draggingItem) {
-            return;
+        if (draggingItem == undefined) {
+            startTransition(() => {
+                setMousePosition({x: evt.clientX, y: evt.clientY});
+            });
+        } else {
+            setMousePosition({x: evt.clientX, y: evt.clientY});
         }        
-        setMousePosition({x: evt.clientX, y: evt.clientY});
     }
 
     let onMouseDown = (evt: MouseEvent) => {
@@ -29,14 +35,22 @@ export const ModView = () => {
     }
 
     let onMouseRelease = (evt: MouseEvent) => {
-        if (evt.button == MouseButtons.Primary) {
+        if (evt.button == MouseButtons.Primary && draggingItem) {
             //TODO: send message to bottom view that a new lane has been added
-            setDraggingItem(undefined);            
+            setMouseReleased(true);          
         }
         if (evt.button == MouseButtons.Secondary) {
             setDraggingItem(undefined);
         }
-    }
+    }    
+
+    let dragData : DragContextData = {
+        onNetSectionItemChange: onNetSectionItemChange,
+        mousePosition: mousePosition,
+        netSectionItem: draggingItem,
+        mouseReleased: mouseReleased,
+        dragElement: dragItemRef.current
+    };
 
     useEffect(() => {
         document.addEventListener('mousemove', onMouseMove);
@@ -48,20 +62,14 @@ export const ModView = () => {
             document.removeEventListener('mousedown', onMouseDown);
             document.removeEventListener('mouseup', onMouseRelease);
         }
-    }, []);
-
-    let dragData : DragContextData = {
-        onNetSectionItemChange: onNetSectionItemChange,
-        mousePosition: mousePosition,
-        netSectionItem: draggingItem
-    };
+    }, [draggingItem]);
 
     return (
         <DragContext.Provider value={dragData}>
             <div className={styles.view}>            
                     <LaneListPanel />
                     <BottomView />
-                    <LaneListItemDrag />            
+                    <LaneListItemDrag ref={dragItemRef} />            
             </div>                      
         </DragContext.Provider>      
     )
