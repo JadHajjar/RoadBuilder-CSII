@@ -5,12 +5,11 @@ import mod from "mod.json";
 import styles from "./ActionPopup.module.scss";
 import { useLocalization } from "cs2/l10n";
 import { CSSProperties } from "react";
-import { cancelPickerAction, createFromScratch, createFromTemplate } from "mods/bindings";
+import { cancelPickerAction, createFromScratch, createFromTemplate, toggleTool } from "mods/bindings";
 import { useRem } from "cs2/utils";
 
 export default (props: {popupPosition: Number2}) => {
-  const { translate } = useLocalization();  
-  let rem = useRem();
+  const { translate } = useLocalization();    
 
   let positionStyle : CSSProperties = {
     transform:  `translate(${props.popupPosition?.x}px, ${props.popupPosition?.y}px)`
@@ -28,7 +27,7 @@ export default (props: {popupPosition: Number2}) => {
           Create New Prefab
         </Button>      
         {/* Cancel Button */}        
-        <Button className={classNames(styles.cancelButton, styles.button)} onSelect={cancelPickerAction} variant="flat" focusKey={FOCUS_DISABLED}>
+        <Button className={classNames(styles.cancelButton, styles.button)} onSelect={() => {cancelPickerAction(); toggleTool();}} variant="flat" focusKey={FOCUS_DISABLED}>
           Cancel
         </Button>        
       </div>
