@@ -97,6 +97,11 @@ export const ModView = () => {
   
   let content : JSX.Element | null = null;
   switch (roadBuilderToolMode) {
+    case RoadBuilderToolModeEnum.Picker:
+      content = (
+        <div className={styles.pickerHint}>Click on a Road</div>
+      )
+      break;
     case RoadBuilderToolModeEnum.ActionSelection:  
       content = (
         <ActionPopup popupPosition={actionPopupPosition} />
