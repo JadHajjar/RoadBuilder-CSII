@@ -9,3 +9,4 @@ export const roadBuilderToolMode$ = bindValue(mod.id, "RoadBuilderToolMode", Roa
 export const createFromTemplate = trigger.bind(null, mod.id, "ActionPopup.Edit");
 export const createFromScratch = trigger.bind(null, mod.id, "ActionPopup.New");
 export const cancelPickerAction = trigger.bind(null, mod.id, "ActionPopup.Cancel");
+export const toggleTool = trigger.bind(null, mod.id, "ToggleTool");
