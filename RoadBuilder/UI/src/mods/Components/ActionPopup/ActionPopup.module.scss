@@ -16,13 +16,14 @@
   bottom: 0;
   right: 0;
   overflow: hidden;
-  pointer-events: auto;
+  pointer-events: none;
 }
 
 .relContainer {
   position: relative;
   width: auto;
   height: auto;  
+  pointer-events: auto;
 }
 
 .button {
