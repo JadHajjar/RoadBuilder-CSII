@@ -12,9 +12,11 @@ import { bindValue, useValue } from "cs2/api";
 import { RoadBuilderToolModeEnum } from "domain/RoadBuilderToolMode";
 import { roadBuilderToolMode$ } from "mods/bindings";
 import ActionPopup from "mods/Components/ActionPopup/ActionPopup";
+import { useRem } from "cs2/utils";
 
 export const ModView = () => {
   const roadBuilderToolMode = useValue(roadBuilderToolMode$);
+  let rem = useRem();
 
   let [draggingItem, setDraggingItem] = useState<NetSectionItem | undefined>();
   let [mousePosition, setMousePosition] = useState<Number2>({ x: 0, y: 0 });
@@ -52,7 +54,21 @@ export const ModView = () => {
   useEffect(() => {
     switch(roadBuilderToolMode) {
         case RoadBuilderToolModeEnum.ActionSelection:
-          setActionPopupPosition(mousePosition);
+          let halfPopupWidth = rem * 500/2;
+          let halfPopupHeight = rem * 120/2;
+          let bodySize = document.body.getBoundingClientRect();
+          let deltaRight = bodySize.width - (mousePosition.x + halfPopupWidth);
+          let deltaLeft = mousePosition.x - halfPopupWidth;
+          let deltaTop = mousePosition.y - halfPopupHeight;
+          let deltaBottom = bodySize.height - (mousePosition.y + halfPopupHeight);          
+          let nPos = mousePosition;          
+          if (deltaRight <  0 || deltaLeft < 0) {
+            nPos = {...nPos, x: nPos.x + Math.min(deltaRight, deltaLeft < 0? -deltaLeft : 0)}
+          }          
+          if (deltaBottom < 0 || deltaTop < 0) {
+            nPos = {...nPos, y: nPos.y + Math.min(deltaBottom, deltaTop < 0? -deltaTop : 0)}
+          }
+          setActionPopupPosition(nPos);
           break;        
         default:          
           break;

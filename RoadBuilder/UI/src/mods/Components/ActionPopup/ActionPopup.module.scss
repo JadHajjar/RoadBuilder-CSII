@@ -1,3 +1,14 @@
+@mixin entry_animation($identifier, $deltaX, $deltaY) {
+  @keyframes entry-#{$identifier} {
+    from {
+      opacity: 0;
+      transform: translate($deltaX, $deltaY);
+      pointer-events: none;
+    }
+  } 
+  animation: 0.2s entry-#{$identifier} backwards;
+}
+
 .container {
   position: fixed;
   left: 0;
@@ -17,24 +28,26 @@
 .button {
   position: absolute;
   width: 200rem;
-  height: auto;
+  height: 40rem;
   padding: 8rem;
   background-color: #d9d9d9b5;
   backdrop-filter: blur(4px);
   text-align: center;
   color: black;
   border-radius: 4rem;
+  pointer-events: auto;
+  opacity: 1;
 }
 .templateButton {
-  top: -80rem;
-  left: -100rem;  
+  transform: translate(-100rem, -80rem);
+  @include entry_animation(template, -100rem, 0rem);  
 }
 .createButton {
-  top: 0;
-  left: 100rem;
+  transform: translate(80rem, -20rem); 
+  @include entry_animation(create, -100rem, -20rem);   
 }
 .cancelButton {
-  bottom: -100rem;
-  left: -50rem;
+  transform: translate(-50rem, 40rem);
+  @include entry_animation(cancel, -50rem, 0rem);    
   width: 100rem;
 }

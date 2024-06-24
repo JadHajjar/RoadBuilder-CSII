@@ -6,9 +6,11 @@ import styles from "./ActionPopup.module.scss";
 import { useLocalization } from "cs2/l10n";
 import { CSSProperties } from "react";
 import { cancelPickerAction, createFromScratch, createFromTemplate } from "mods/bindings";
+import { useRem } from "cs2/utils";
 
 export default (props: {popupPosition: Number2}) => {
   const { translate } = useLocalization();  
+  let rem = useRem();
 
   let positionStyle : CSSProperties = {
     transform:  `translate(${props.popupPosition?.x}px, ${props.popupPosition?.y}px)`
