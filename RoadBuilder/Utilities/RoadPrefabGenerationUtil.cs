@@ -22,29 +22,32 @@ namespace RoadBuilder.Utilities
 	{
 		private readonly PrefabSystem _prefabSystem;
 
-		public RoadConfig RoadConfig { get; }
+		public RoadBuilderPrefab RoadPrefab { get; }
 
-		public RoadPrefabGenerationUtil(RoadConfig roadConfig, PrefabSystem prefabSystem)
+		public RoadPrefabGenerationUtil(RoadBuilderPrefab prefab, PrefabSystem prefabSystem)
 		{
 			_prefabSystem = prefabSystem;
 
-			RoadConfig = roadConfig; 
+			RoadPrefab = prefab;
 		}
 
-		public void GenerateNewId() 
+		public void GenerateRoad()
 		{
-			RoadConfig.ID = $"{PlatformManager.instance.userSpecificPath}-{Guid.NewGuid()}";
+			DummyGenerateRoad(RoadPrefab);
+
+			if (!RoadPrefab.WasGenerated)
+			{
+				RoadPrefab.WasGenerated = true;
+
+				_prefabSystem.AddPrefab(RoadPrefab);
+			}
+			else
+			{
+				RoadPrefab.Config.ID = $"{PlatformManager.instance.userSpecificPath}-{Guid.NewGuid()}";
+			}
 		}
 
-		public RoadPrefab GenerateRoad(RoadBuilderPrefab prefab = null)
-		{
-			prefab ??= new();
-			prefab.Config = RoadConfig;
-
-			return DummyGenerateRoad(prefab);
-		}
-
-		public RoadPrefab DummyGenerateRoad(RoadBuilderPrefab prefab = null)
+		public void DummyGenerateRoad(RoadBuilderPrefab prefab)
 		{
 			var prefabs = Traverse.Create(_prefabSystem).Field<List<PrefabBase>>("m_Prefabs").Value;
 			RoadPrefab basePrefab = (RoadPrefab)prefabs.FirstOrDefault(p => p.name == "Small Road");
@@ -53,8 +56,6 @@ namespace RoadBuilder.Utilities
 
 			ComponentBase[] baseComponents = new ComponentBase[basePrefab.components.Count];
 			basePrefab.components.CopyTo(baseComponents);
-
-			prefab ??= new();
 
 			prefab.m_SpeedLimit = 80;
 			prefab.m_RoadType = RoadType.Normal;
@@ -109,8 +110,6 @@ namespace RoadBuilder.Utilities
 				prefab.m_Sections[5],
 				prefab.m_Sections[6]
 			};
-
-			return prefab;
 		}
 	}
 }

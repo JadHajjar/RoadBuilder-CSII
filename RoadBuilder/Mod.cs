@@ -10,6 +10,7 @@ using Game.Tools;
 
 using HarmonyLib;
 using RoadBuilder.Systems;
+using RoadBuilder.Systems.UI;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Entities;
@@ -17,7 +18,7 @@ using Unity.Mathematics;
 
 namespace RoadBuilder
 {
-	public class Mod : IMod
+    public class Mod : IMod
 	{
 		public const string Id = nameof(RoadBuilder);
 		public static ILog Log { get; } = LogManager.GetLogger(nameof(RoadBuilder)).SetShowsErrorsInUI(false);

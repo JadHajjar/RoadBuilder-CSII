@@ -9,8 +9,8 @@ namespace RoadBuilder.Domain
 	public enum RoadBuilderToolMode
 	{
 		None = 0,
-		Picker,
-		ActionSelection,
-		Editing
+		Picker = 1,
+		ActionSelection = 2,
+		Editing = 3
 	}
 }

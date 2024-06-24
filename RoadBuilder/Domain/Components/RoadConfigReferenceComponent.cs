@@ -1,5 +1,7 @@
 ﻿using Colossal.Serialization.Entities;
 
+using RoadBuilder.Systems;
+
 using Unity.Collections;
 using Unity.Entities;
 
@@ -7,8 +9,6 @@ namespace RoadBuilder.Domain.Components
 {
 	public struct RoadConfigReferenceComponent : IComponentData, ISerializable
 	{
-		private const ushort CURRENT_VERSION = 1;
-
 		public FixedString4096Bytes ConfigurationID;
 
 		public void Deserialize<TReader>(TReader reader) where TReader : IReader
@@ -21,7 +21,7 @@ namespace RoadBuilder.Domain.Components
 
 		public void Serialize<TWriter>(TWriter writer) where TWriter : IWriter
 		{
-			writer.Write(CURRENT_VERSION);
+			writer.Write(RoadBuilderSystem.CURRENT_VERSION);
 			writer.Write(ConfigurationID.ToString());
 		}
 	}
