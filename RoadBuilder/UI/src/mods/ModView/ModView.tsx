@@ -4,22 +4,22 @@ import { LaneListPanel } from "../LaneListPanel/LaneListPanel";
 import { DragContext, DragContextData } from "mods/Contexts/DragContext";
 import { NetSectionItem } from "domain/NetSectionItem";
 import { Number2 } from "cs2/ui";
-import mod from "mod.json";
 import { LaneListItemDrag } from "../Components/LaneListItem/LaneListItem";
 
 import styles from "./ModView.module.scss";
 import { MouseButtons } from "mods/util";
 import { bindValue, useValue } from "cs2/api";
 import { RoadBuilderToolModeEnum } from "domain/RoadBuilderToolMode";
-
-const RoadBuilderToolMode$ = bindValue(mod.id, "RoadBuilderToolMode", RoadBuilderToolModeEnum.None);
+import { roadBuilderToolMode$ } from "mods/bindings";
+import ActionPopup from "mods/Components/ActionPopup/ActionPopup";
 
 export const ModView = () => {
-  const RoadBuilderToolMode = useValue(RoadBuilderToolMode$);
+  const roadBuilderToolMode = useValue(roadBuilderToolMode$);
 
   let [draggingItem, setDraggingItem] = useState<NetSectionItem | undefined>();
   let [mousePosition, setMousePosition] = useState<Number2>({ x: 0, y: 0 });
   let [mouseReleased, setMouseReleased] = useState<boolean>(false);
+  let [actionPopupPosition, setActionPopupPosition] = useState<Number2>({x: 0, y: 0});
   let dragItemRef = useRef<HTMLDivElement>(null);
 
   let onNetSectionItemChange = (item?: NetSectionItem) => {
@@ -49,6 +49,16 @@ export const ModView = () => {
     }
   };
 
+  useEffect(() => {
+    switch(roadBuilderToolMode) {
+        case RoadBuilderToolModeEnum.ActionSelection:
+          setActionPopupPosition(mousePosition);
+          break;        
+        default:          
+          break;
+    }
+  }, [roadBuilderToolMode])
+
   let dragData: DragContextData = {
     onNetSectionItemChange: onNetSectionItemChange,
     mousePosition: mousePosition,
@@ -68,15 +78,30 @@ export const ModView = () => {
       document.removeEventListener("mouseup", onMouseRelease);
     };
   }, [draggingItem]);
-
-  if (RoadBuilderToolMode !== RoadBuilderToolModeEnum.Editing) return null;
-
-  return (
-    <DragContext.Provider value={dragData}>
-      <div className={styles.view}>
+  
+  let content : JSX.Element | null = null;
+  switch (roadBuilderToolMode) {
+    case RoadBuilderToolModeEnum.ActionSelection:  
+      content = (
+        <ActionPopup popupPosition={actionPopupPosition} />
+      );
+      break;
+    case RoadBuilderToolModeEnum.Editing:
+      content = (
+        <>
         <LaneListPanel />
         <BottomView />
         <LaneListItemDrag ref={dragItemRef} />
+        </>
+      )
+      break;
+    default:
+      return (<></>);      
+  }
+  return (
+    <DragContext.Provider value={dragData}>
+      <div className={styles.view}>
+        {content}              
       </div>
     </DragContext.Provider>
   );

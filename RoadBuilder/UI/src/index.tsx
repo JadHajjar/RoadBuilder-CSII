@@ -9,8 +9,7 @@ import ActionPopup from "mods/Components/ActionPopup/ActionPopup";
 const register: ModRegistrar = (moduleRegistry) => {
   VanillaComponentResolver.setRegistry(moduleRegistry);
 
-  moduleRegistry.append("GameTopLeft", ModIconButton);
-  moduleRegistry.append("Game", ActionPopup);
+  moduleRegistry.append("GameTopLeft", ModIconButton);  
   moduleRegistry.append("Game", ModView);
 };
 

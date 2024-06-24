@@ -1,19 +1,55 @@
 .container {
-  width: 350rem;
-  height: 200rem;
   position: fixed;
-  top: calc(50vh - 200rem / 2);
-  left: calc(50vw - 350rem / 2);
-  padding: 10rem;
-  backdrop-filter: var(--panelBlur);
-  background-color: var(--panelColorNormal);
-  color: var(--textColor);
-  border-top-left-radius: var(--panelRadius);
-  border-top-right-radius: var(--panelRadius);
-  border-bottom-left-radius: var(--panelRadius);
-  border-bottom-right-radius: var(--panelRadius);
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  // width: 350rem;
+  // height: 200rem;
+  // position: fixed;
+  // top: calc(50vh - 200rem / 2);
+  // left: calc(50vw - 350rem / 2);
+  // padding: 10rem;
+  // backdrop-filter: blur(1px);
+  // background-color: var(--panelColorNormal);
+  // color: var(--textColor);
+  // border-top-left-radius: var(--panelRadius);
+  // border-top-right-radius: var(--panelRadius);
+  // border-bottom-left-radius: var(--panelRadius);
+  // border-bottom-right-radius: var(--panelRadius);
   overflow: hidden;
   pointer-events: auto;
+}
+
+.relContainer {
+  position: relative;
+  width: auto;
+  height: auto;  
+}
+
+.button {
+  position: absolute;
+  width: 200rem;
+  height: auto;
+  padding: 8rem;
+  background-color: #d9d9d9b5;
+  backdrop-filter: blur(4px);
+  text-align: center;
+  color: black;
+  border-radius: 4rem;
+}
+.templateButton {
+  top: -80rem;
+  left: -100rem;  
+}
+.createButton {
+  top: 0;
+  left: 100rem;
+}
+.cancelButton {
+  bottom: -100rem;
+  left: -50rem;
+  width: 100rem;
 }
 
 .container > div {
