@@ -80,18 +80,22 @@
     }
 }
 
-.informationBar {
-    height: 80rem;
+.informationBar {    
+    flex-grow: 1;
+    margin-top: 50rem;
     width: 130rem;
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
+    justify-content: center;
     align-items: stretch;
     color:  var(--normalTextColor) ;
     padding-top: 0px;
     padding-left: 8rem;
     padding-right: 8rem;
     padding-bottom: 0px;
+    font-size: 0.8em;
+
+    border-right: 2rem solid rgba(225,225,225,0.3);    
 
     .laneName {
         overflow: hidden;
@@ -100,4 +104,8 @@
         height: 1lh;
         text-align: center;
     }
+}
+
+.container:nth-child(2) .informationBar {
+    border-left: 2rem solid rgba(225,225,225,0.3);
 }
