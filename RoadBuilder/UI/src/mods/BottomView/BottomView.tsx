@@ -6,6 +6,7 @@ import { NetSectionItem } from 'domain/NetSectionItem';
 import { range } from 'mods/util';
 import { MouseEvent, useContext, useRef, useState } from 'react';
 import { DragContext } from 'mods/Contexts/DragContext';
+import { tool } from 'cs2/bindings';
 
 export const BottomView = () => {
 
@@ -70,7 +71,7 @@ export const BottomView = () => {
             </div>            
             <div className={styles.bottomBG}>
                 <Button className={styles.copyButton} variant='flat'>Copy to New Prefab</Button>
-                <Button className={styles.closeButton} src='Media/Glyphs/Close.svg' variant='icon' />
+                <Button className={styles.closeButton} src='Media/Glyphs/Close.svg' variant='icon' onSelect={tool.selectTool.bind(null, tool.DEFAULT_TOOL)} />
             </div>
         </div>        
     )
