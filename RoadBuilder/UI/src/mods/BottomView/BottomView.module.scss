@@ -1,22 +1,35 @@
-.view {
+.viewContainer {
     position: absolute;    
     left: 20%;
     right: 20%;
     // The Vanilla Prefab Picker width => calc( var(--assetMenuColumns) * ( var(--assetMenuItemSize) + var(--assetMenuItemGap) ) - var(--assetMenuItemGap) + 40rem);
-    height: auto;//120rem;
-    padding: 24rem;        
+    height: auto;//120rem;    
     bottom: 121rem;
     z-index: 0;
 
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
-    justify-content: center;        
+    justify-content: center;   
+    align-items: flex-end;         
+    
+    animation: entry 0.2s;
+}
+
+.view {
+    position: relative;
+    min-width: 20%;
+    height: auto;
+    padding: 24rem;
+
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;   
+    align-items: flex-end;     
 
     background: linear-gradient(180deg, rgba(217, 217, 217, 0) 60.0%, rgba(255, 255, 255, 0.3) 100%);        
     pointer-events: auto;
-    
-    animation: entry 0.2s;
 }
 
 .closeButton {

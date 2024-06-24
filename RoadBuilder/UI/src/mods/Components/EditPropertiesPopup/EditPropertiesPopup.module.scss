@@ -2,7 +2,7 @@
     position: absolute;
     width: 200rem;
     height: 160rem;    
-    bottom: 200rem;  
+    bottom: 120rem;      
     background-color: var(--panelColorNormal);
     backdrop-filter: var(--panelBlur);
     border-radius: 3rem;  
@@ -10,14 +10,32 @@
 
     display: flex;
     flex-direction: column;
+    transform-origin: bottom center;
 
     animation: enter 0.2s;
+    color: rgba($color: #FFF, $alpha: 1.0);
 }
 
 .topBar {
     display: flex;
+    width: 100%;
     flex-direction: row;
-    justify-content: right;    
+    justify-content: flex-end;    
+    align-items: center;
+
+    & .deleteButton {
+        mask-image: url(coui://gameui/Media/Glyphs/Trash.svg);
+    }
+    & .closeButton {
+        mask-image: url(coui://gameui/Media/Glyphs/Close.svg);
+    }
+    > button {        
+        background-color: rgba(255,255,255, 0.7);
+        mask-size: 100%;
+        &:hover {
+            background-color: white;
+        }
+    }
 }
 
 .content {

@@ -1,3 +1,11 @@
+.container {
+    height: 200rem;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+}
+
 .button {    
     position: relative;
     width: 80rem;    
