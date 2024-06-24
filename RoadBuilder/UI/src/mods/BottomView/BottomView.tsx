@@ -6,7 +6,6 @@ import { NetSectionItem } from 'domain/NetSectionItem';
 import { range } from 'mods/util';
 import { MouseEvent, useContext, useRef, useState } from 'react';
 import { DragContext } from 'mods/Contexts/DragContext';
-import { EditPropertiesPopup } from 'mods/Components/EditPropertiesPopup/EditPropertiesPopup';
 
 export const BottomView = () => {
 
@@ -65,11 +64,11 @@ export const BottomView = () => {
     
     return (
         <div className={styles.viewContainer}>
-            <div className={styles.view}>
-            {items}
-            {itemList.length == 0 && !dragContext.netSectionItem? <div className={styles.hint}>Drag Lanes Here</div> : <></>}
-            {/* <Button className={styles.closeButton} variant='icon' src='Media/Glyphs/Close.svg' />             */}
-        </div>
+            <div className={styles.view}>                
+                {items}                
+                {itemList.length == 0 && !dragContext.netSectionItem? <div className={styles.hint}>Drag Lanes Here</div> : <></>}                
+            </div>            
+            <div className={styles.bottomBG}></div>
         </div>        
     )
 

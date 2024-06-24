@@ -2,6 +2,7 @@
     position: relative;
     width: 64rem;
     height: 110rem;
+    margin-bottom: 82rem;
     transform: scale(1);
     transition: width 0.2s, opacity 0.2s, transform 0.2s;   
     display: flex;
@@ -9,7 +10,7 @@
 
     .divider {
         height: 110%;
-        margin-top: -10%;
+        margin-top: -12%;
         width: 4rem;
         background-color: rgba($color: #fff, $alpha: 0.35);                    
         transition: background-color 0.2s;    

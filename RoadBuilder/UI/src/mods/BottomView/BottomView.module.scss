@@ -16,11 +16,22 @@
     animation: entry 0.2s;
 }
 
+.bottomBG {
+    position: absolute;
+    width: 100vw;
+    bottom: 0px;    
+    height: 80rem;
+    background-color:  var(--panelColorNormal);
+    backdrop-filter:  var(--panelBlur);
+    z-index: -1;
+}
+
 .view {
     position: relative;
     min-width: 20%;
-    height: auto;
+    height: 100%;
     padding: 24rem;
+    padding-bottom: 0rem;
 
     display: flex;
     flex-direction: row;
@@ -28,7 +39,7 @@
     justify-content: center;   
     align-items: flex-end;     
 
-    background: linear-gradient(180deg, rgba(217, 217, 217, 0) 60.0%, rgba(255, 255, 255, 0.3) 100%);        
+    background: linear-gradient(to top,rgba(217, 217, 217, 0) 82rem, rgba(255, 255, 255, 0.3) 82rem, rgba(217, 217, 217, 0) 140rem);
     pointer-events: auto;
 }
 
@@ -56,6 +67,7 @@
     position: absolute;
     font-size: var(--fontSizeXL);
     bottom: 50%;
+    padding-bottom: 80rem;
     left: 0;
     right: 0;
     text-align: center;

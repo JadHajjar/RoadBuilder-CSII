@@ -34,8 +34,13 @@ export const RoadButtonSmall = (props: _Props) => {
             <div className={styles.button}>
                 <div className={styles.frame}>                    
                 </div>
-                <img src='Media/Placeholder.svg'/>                    
+                <img src='Media/Placeholder.svg'/>                      
             </div>            
+            <div className={styles.informationBar}>
+                <div className={styles.laneName}>
+                    {props.item.DisplayName}
+                </div>                
+            </div>              
             {popup}
         </div>            
     )
