@@ -1,3 +1,5 @@
+@use '../../base.scss';
+
 @mixin entry_animation($identifier, $deltaX, $deltaY) {
   @keyframes entry-#{$identifier} {
     from {
@@ -27,16 +29,13 @@
 }
 
 .button {
+  @include base.basicButton();
+
   position: absolute;
   width: 200rem;
-  height: 40rem;
-  padding: 8rem;
-  background-color: #d9d9d9b5;
-  backdrop-filter: blur(4px);
-  text-align: center;
-  color: black;
-  border-radius: 4rem;
+  height: 40rem;      
   pointer-events: auto;
+
   opacity: 1;
 }
 .templateButton {
