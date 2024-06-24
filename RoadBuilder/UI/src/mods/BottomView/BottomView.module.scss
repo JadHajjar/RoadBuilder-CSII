@@ -16,16 +16,6 @@
     animation: entry 0.2s;
 }
 
-.bottomBG {
-    position: absolute;
-    width: 100vw;
-    bottom: 0px;    
-    height: 80rem;
-    background-color:  var(--panelColorNormal);
-    backdrop-filter:  var(--panelBlur);
-    z-index: -1;
-}
-
 .view {
     position: relative;
     min-width: 20%;
@@ -43,10 +33,40 @@
     pointer-events: auto;
 }
 
-.closeButton {
+.bottomBG {
     position: absolute;
-    right: 0;
-    top: -28rem;
+    width: 100vw;
+    bottom: 0px;    
+    height: 80rem;
+    background-color:  var(--panelColorNormal);
+    backdrop-filter:  var(--panelBlur);
+    z-index: -1;
+
+    padding: 8rem 32rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    pointer-events: auto;
+}
+
+.copyButton {
+    padding: 8rem;
+    border-radius: 8rem;
+    background-color: rgba(255, 255, 255, 0.3);  
+    border: none;
+    &:hover {
+        background-color: rgba(255, 255, 255, 0.4);  
+        border: none;
+    }
+    &:active {
+        background: rgba(255, 255, 255, 0.5);   
+        border: none;
+    }
+}
+
+.closeButton {
+    position: relative;    
     border-radius: 50%;
     width: 24rem;
     height: 24rem;
@@ -61,7 +81,11 @@
     &:hover {
         background-color: rgba(255, 255, 255, 0.4);
     }
+    &:active {
+        background: rgba(255, 255, 255, 0.5);   
+    } 
 }
+
 
 .hint {
     position: absolute;

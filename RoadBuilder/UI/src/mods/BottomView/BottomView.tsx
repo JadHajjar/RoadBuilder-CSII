@@ -68,7 +68,10 @@ export const BottomView = () => {
                 {items}                
                 {itemList.length == 0 && !dragContext.netSectionItem? <div className={styles.hint}>Drag Lanes Here</div> : <></>}                
             </div>            
-            <div className={styles.bottomBG}></div>
+            <div className={styles.bottomBG}>
+                <Button className={styles.copyButton} variant='flat'>Copy to New Prefab</Button>
+                <Button className={styles.closeButton} src='Media/Glyphs/Close.svg' variant='icon' />
+            </div>
         </div>        
     )
 
