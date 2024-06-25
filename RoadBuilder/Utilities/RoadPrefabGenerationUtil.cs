@@ -20,13 +20,13 @@ namespace RoadBuilder.Utilities
 {
 	public class RoadPrefabGenerationUtil
 	{
-		private readonly PrefabSystem _prefabSystem;
+		private readonly RoadGenerationData _roadGenerationData;
 
 		public RoadBuilderPrefab RoadPrefab { get; }
 
-		public RoadPrefabGenerationUtil(RoadBuilderPrefab prefab, PrefabSystem prefabSystem)
+		public RoadPrefabGenerationUtil(RoadBuilderPrefab prefab, RoadGenerationData roadGenerationData)
 		{
-			_prefabSystem = prefabSystem;
+			_roadGenerationData = roadGenerationData;
 
 			RoadPrefab = prefab;
 		}
@@ -38,8 +38,6 @@ namespace RoadBuilder.Utilities
 			if (!RoadPrefab.WasGenerated)
 			{
 				RoadPrefab.WasGenerated = true;
-
-				_prefabSystem.AddPrefab(RoadPrefab);
 			}
 			else
 			{
@@ -49,7 +47,7 @@ namespace RoadBuilder.Utilities
 
 		public void DummyGenerateRoad(RoadBuilderPrefab prefab)
 		{
-			var prefabs = Traverse.Create(_prefabSystem).Field<List<PrefabBase>>("m_Prefabs").Value;
+			var prefabs = new List<PrefabBase>();//Traverse.Create(_prefabSystem).Field<List<PrefabBase>>("m_Prefabs").Value;
 			RoadPrefab basePrefab = (RoadPrefab)prefabs.FirstOrDefault(p => p.name == "Small Road");
 			NetSectionPrefab roadLanePrefab = (NetSectionPrefab)prefabs.FirstOrDefault(p => p.name == "Car Drive Section 3");
 			NetSectionPrefab sidewalk5Prefab = (NetSectionPrefab)prefabs.FirstOrDefault(p => p.name == "Sidewalk 5");

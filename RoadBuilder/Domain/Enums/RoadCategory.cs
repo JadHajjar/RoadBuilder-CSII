@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RoadBuilder.Domain
+namespace RoadBuilder.Domain.Enums
 {
-	public enum RoadBuilderToolMode
+	[Flags]
+	public enum RoadCategory
 	{
-		None = 0,
-		Picker = 1,
-		ActionSelection = 2,
-		Editing = 3
+		Road = 0,
+		Highway = 1,
+		PublicTransport = 2,
 	}
 }

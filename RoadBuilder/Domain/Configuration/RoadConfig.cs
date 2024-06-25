@@ -1,6 +1,9 @@
 ﻿using Colossal.Json;
 using Colossal.Serialization.Entities;
 
+using Game.Debug.Tests;
+
+using RoadBuilder.Domain.Enums;
 using RoadBuilder.Systems;
 
 using System;
@@ -14,6 +17,12 @@ namespace RoadBuilder.Domain.Configuration
 		public string OriginalID;
 		public string ID;
 		public string Name;
+		public float SpeedLimit;
+		public bool GeneratesTrafficLights;
+		public bool GeneratesZoningBlocks;
+		public float MaxSlopeSteepness;
+		public string AggregateType;
+		public RoadCategory Category;
 		public List<LaneConfig> Lanes = new();
 
 		public void Deserialize<TReader>(TReader reader) where TReader : IReader
@@ -21,6 +30,14 @@ namespace RoadBuilder.Domain.Configuration
 			reader.Read(out Version);
 			reader.Read(out ID);
 			reader.Read(out Name);
+			reader.Read(out SpeedLimit);
+			reader.Read(out GeneratesTrafficLights);
+			reader.Read(out GeneratesZoningBlocks);
+			reader.Read(out MaxSlopeSteepness);
+			reader.Read(out AggregateType);
+			reader.Read(out int category);
+
+			Category = (RoadCategory)category;
 
 			reader.Read(out int laneCount);
 
@@ -41,6 +58,12 @@ namespace RoadBuilder.Domain.Configuration
 			writer.Write(RoadBuilderSystem.CURRENT_VERSION);
 			writer.Write(ID);
 			writer.Write(Name);
+			writer.Write(SpeedLimit);
+			writer.Write(GeneratesTrafficLights);
+			writer.Write(GeneratesZoningBlocks);
+			writer.Write(MaxSlopeSteepness);
+			writer.Write(AggregateType);
+			writer.Write((int)Category);
 
 			writer.Write(Lanes.Count);
 

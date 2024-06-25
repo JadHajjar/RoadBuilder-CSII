@@ -34,8 +34,7 @@ namespace RoadBuilder
 
 			//AssetDatabase.global.LoadSettings(nameof(RoadBuilder), Settings, new Setting(this));
 
-			updateSystem.UpdateAt<RoadPrefabInitializeSystem>(SystemUpdatePhase.PrefabUpdate);
-			updateSystem.UpdateAt<RoadPrefabGenerationSystem>(SystemUpdatePhase.Modification1);
+			updateSystem.UpdateAt<RoadBuilderSystem>(SystemUpdatePhase.Modification1);
 			updateSystem.UpdateAt<RoadBuilderToolSystem>(SystemUpdatePhase.ToolUpdate);
 			updateSystem.UpdateAt<RoadBuilderUISystem>(SystemUpdatePhase.UIUpdate);
 			updateSystem.UpdateAt<NetSectionsUISystem>(SystemUpdatePhase.UIUpdate);

@@ -7,6 +7,7 @@ using Game.Prefabs;
 using Game.Tools;
 
 using RoadBuilder.Domain;
+using RoadBuilder.Domain.Enums;
 using RoadBuilder.Systems.UI;
 using Unity.Collections;
 
@@ -59,16 +60,6 @@ namespace RoadBuilder.Systems
 			{
 				HandlePicker();
 			}
-			else if (roadBuilderUISystem.Mode is not RoadBuilderToolMode.ActionSelection)
-			{
-				var entities = highlightedQuery.ToEntityArray(Allocator.Temp);
-
-				for (var i = 0; i < entities.Length; i++)
-				{
-					EntityManager.RemoveComponent<Highlighted>(entities[i]);
-					EntityManager.AddComponent<BatchesUpdated>(entities[i]);
-				}
-			}
 
 			return base.OnUpdate(inputDeps);
 		}
@@ -84,7 +75,14 @@ namespace RoadBuilder.Systems
 					&& EntityManager.TryGetComponent<PrefabRef>(entity, out var prefabRef)
 					&& prefabSystem.TryGetPrefab<RoadPrefab>(prefabRef, out var prefab))
 				{
-					roadBuilderUISystem.ShowActionPopup(entity);
+					if (prefab is RoadBuilderPrefab)
+					{
+						roadBuilderUISystem.EditPrefab(entity);
+					}
+					else
+					{
+						roadBuilderUISystem.CreateNewPrefab(entity);
+					}
 
 					return;
 				}

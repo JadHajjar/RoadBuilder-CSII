@@ -1,7 +1,7 @@
 ﻿using Game.Prefabs;
 using Game.Tools;
 using Game.UI.InGame;
-using RoadBuilder.Domain;
+using RoadBuilder.Domain.Enums;
 using Unity.Entities;
 
 namespace RoadBuilder.Systems.UI
@@ -13,6 +13,7 @@ namespace RoadBuilder.Systems.UI
         private PrefabSystem prefabSystem;
         private PrefabUISystem prefabUISystem;
         private ToolSystem toolSystem;
+        private RoadBuilderSystem roadBuilderSystem;
         private RoadBuilderToolSystem roadBuilderToolSystem;
         private DefaultToolSystem defaultToolSystem;
 
@@ -27,7 +28,8 @@ namespace RoadBuilder.Systems.UI
             prefabSystem = World.GetOrCreateSystemManaged<PrefabSystem>();
             prefabUISystem = World.GetOrCreateSystemManaged<PrefabUISystem>();
             toolSystem = World.GetOrCreateSystemManaged<ToolSystem>();
-            roadBuilderToolSystem = World.GetOrCreateSystemManaged<RoadBuilderToolSystem>();
+            roadBuilderSystem = World.GetOrCreateSystemManaged<RoadBuilderSystem>();
+			roadBuilderToolSystem = World.GetOrCreateSystemManaged<RoadBuilderToolSystem>();
             defaultToolSystem = World.GetOrCreateSystemManaged<DefaultToolSystem>();
 
             toolSystem.EventToolChanged += OnToolChanged;
@@ -35,8 +37,7 @@ namespace RoadBuilder.Systems.UI
             RoadBuilderMode = CreateBinding("RoadBuilderToolMode", RoadBuilderToolMode.None);
 
             CreateTrigger("ToggleTool", ToggleTool);
-            CreateTrigger("ActionPopup.New", CreateNewPrefab);
-            CreateTrigger("ActionPopup.Edit", EditPrefab);
+            CreateTrigger("ActionPopup.New", () => CreateNewPrefab(workingEntity));
             CreateTrigger("ActionPopup.Cancel", ClearTool);
         }
 
@@ -46,12 +47,6 @@ namespace RoadBuilder.Systems.UI
             {
                 RoadBuilderMode.Value = RoadBuilderToolMode.None;
             }
-        }
-
-        internal void ShowActionPopup(Entity entity)
-        {
-            workingEntity = entity;
-            RoadBuilderMode.Value = RoadBuilderToolMode.ActionSelection;
         }
 
         private void ToggleTool()
@@ -77,16 +72,24 @@ namespace RoadBuilder.Systems.UI
             toolSystem.activeTool = defaultToolSystem;
         }
 
-        private void EditPrefab()
+        public void EditPrefab(Entity entity)
         {
+            workingEntity = entity;
             RoadBuilderMode.Value = RoadBuilderToolMode.Editing;
 
-        }
+            var config = roadBuilderSystem.GetOrGenerateConfiguration(workingEntity);
 
-        private void CreateNewPrefab()
+
+		}
+
+		public void CreateNewPrefab(Entity entity)
         {
-            RoadBuilderMode.Value = RoadBuilderToolMode.Editing;
+            workingEntity = entity;
+			RoadBuilderMode.Value = RoadBuilderToolMode.EditingSingleMode;
 
-        }
-    }
+			var config = roadBuilderSystem.GetOrGenerateConfiguration(workingEntity);
+
+
+		}
+	}
 }
