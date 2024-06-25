@@ -1,3 +1,12 @@
+.container {
+    height: 200rem;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
 .button {    
     position: relative;
     width: 80rem;    
@@ -6,6 +15,7 @@
     transition: transform 0.2s;
     margin: 0 16rem;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     backdrop-filter: blur(2px);   
@@ -68,4 +78,34 @@
         transform: scale(1);
         opacity: 1;
     }
+}
+
+.informationBar {    
+    flex-grow: 1;
+    margin-top: 50rem;
+    width: 130rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
+    color:  var(--normalTextColor) ;
+    padding-top: 0px;
+    padding-left: 8rem;
+    padding-right: 8rem;
+    padding-bottom: 0px;
+    font-size: 0.8em;
+
+    border-right: 2rem solid rgba(225,225,225,0.3);    
+
+    .laneName {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        height: 1lh;
+        text-align: center;
+    }
+}
+
+.container:nth-child(2) .informationBar {
+    border-left: 2rem solid rgba(225,225,225,0.3);
 }

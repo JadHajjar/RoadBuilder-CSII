@@ -9,7 +9,6 @@ import { MouseButtons } from 'mods/util';
 export const LaneListItem = ({netSection} : {netSection: NetSectionItem}) => {
     // let [dragging, setDragging] = useState(false);
     let dragContext = useContext(DragContext);
-    let [mouseHoldTimeout, setMouseHoldTimeout] = useState(-1);
 
     let dragging = dragContext.netSectionItem?.PrefabName == netSection.PrefabName;
     let containerStyles: Record<string, boolean> = {};
@@ -25,16 +24,7 @@ export const LaneListItem = ({netSection} : {netSection: NetSectionItem}) => {
 
     let onMouseDown : MouseEventHandler<HTMLDivElement> = (evt) => {          
         if (evt.button == MouseButtons.Primary) {
-            let handle = setTimeout(() => {
-                updateModDragItem();                
-            }, 1000/60 * 2);
-            setMouseHoldTimeout(handle);
-        }
-        if (evt.button == MouseButtons.Secondary) {
-            if (mouseHoldTimeout >= 0) {
-                clearTimeout(mouseHoldTimeout);
-                setMouseHoldTimeout(-1);
-            }                        
+            updateModDragItem();                                        
         }
     };
 

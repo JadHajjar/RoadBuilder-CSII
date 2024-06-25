@@ -1,17 +1,20 @@
 import styles from './BottomView.module.scss';
 import { RoadButtonSmall } from '../Components/RoadButtonSmall/RoadButtonSmall';
 import { DragAndDropDivider } from 'mods/Components/DragAndDropDivider/DragAndDropDivider';
-import { Button } from 'cs2/ui';
+import { Button, Number2 } from 'cs2/ui';
 import { NetSectionItem } from 'domain/NetSectionItem';
 import { range } from 'mods/util';
-import { useContext, useRef, useState } from 'react';
+import { MouseEvent, useContext, useRef, useState } from 'react';
 import { DragContext } from 'mods/Contexts/DragContext';
+import { tool } from 'cs2/bindings';
 
 export const BottomView = () => {
 
     let dragContext = useContext(DragContext);
     let [evaluationCount, setEvaluationCount] = useState(0);
     let [itemList, setItemList] = useState<NetSectionItem[]>([]);    
+    let [selectedItem, setSelectedItem] = useState<number>(-1);
+    let [propertiesPosition, setPropertiesPosition] = useState<Number2 | undefined>(); 
 
     let onAddItem = (item: NetSectionItem, index: number) => {        
         let nList = [
@@ -21,7 +24,6 @@ export const BottomView = () => {
         ];
         setItemList(nList);        
     }
-
     let onEvaluateDragAndDrop = () => {        
         if (evaluationCount + 1 == itemList.length + 1) {
             dragContext.onNetSectionItemChange(undefined);
@@ -29,6 +31,16 @@ export const BottomView = () => {
         } else {
             setEvaluationCount(evaluationCount + 1);
         }
+    }
+    let onClickItem = (index: number, evt: any) => {
+        setSelectedItem(index);
+        let boundRect = evt.target.getBoundingClientRect();                
+        let propertyPos = {
+            x: evt.target.offsetLeft, 
+            y: evt.currentTarget.clientTop
+        };
+        console.log(propertyPos);
+        setPropertiesPosition(propertyPos);
     }
 
     let onDeleteItem = (idx: number) => {
@@ -41,7 +53,7 @@ export const BottomView = () => {
     let items = itemList.flatMap((val, idx) => {        
         return [
             <DragAndDropDivider onAddItem={onAddItem} key={idx*2} listIdx={idx} onEvaluateDragAndDrop={onEvaluateDragAndDrop}/>,
-            <RoadButtonSmall index={idx} onDelete={onDeleteItem} item={val} key={idx * 2 + 1} />
+            <RoadButtonSmall index={idx} onClick={onClickItem} onDelete={onDeleteItem} item={val} key={idx * 2 + 1} />
         ]
     });
     items.push(
@@ -52,14 +64,16 @@ export const BottomView = () => {
     )
     
     return (
-        <div className={styles.view}>
-            {items}
-            {itemList.length == 0 && !dragContext.netSectionItem? <div className={styles.hint}>Drag Lanes Here</div> : <></>}
-            {/* <RoadButtonSmall />
-            <DragAndDropDivider onAddItem={onAddItem} ref={}/>
-            <RoadButtonSmall /> */}
-            <Button className={styles.closeButton} variant='icon' src='Media/Glyphs/Close.svg' />
-        </div>
+        <div className={styles.viewContainer}>
+            <div className={styles.view}>                
+                {items}                
+                {itemList.length == 0 && !dragContext.netSectionItem? <div className={styles.hint}>Drag Lanes Here</div> : <></>}                
+            </div>            
+            <div className={styles.bottomBG}>
+                <Button className={styles.copyButton} variant='flat'>Copy to New Prefab</Button>
+                <Button className={styles.closeButton} src='Media/Glyphs/Close.svg' variant='icon' onSelect={tool.selectTool.bind(null, tool.DEFAULT_TOOL)} />
+            </div>
+        </div>        
     )
 
 }

@@ -5,10 +5,11 @@ import mod from "mod.json";
 import styles from "./ActionPopup.module.scss";
 import { useLocalization } from "cs2/l10n";
 import { CSSProperties } from "react";
-import { cancelPickerAction, createFromScratch, createFromTemplate } from "mods/bindings";
+import { cancelPickerAction, editPrefab, createFromTemplate, toggleTool } from "mods/bindings";
+import { useRem } from "cs2/utils";
 
 export default (props: {popupPosition: Number2}) => {
-  const { translate } = useLocalization();  
+  const { translate } = useLocalization();    
 
   let positionStyle : CSSProperties = {
     transform:  `translate(${props.popupPosition?.x}px, ${props.popupPosition?.y}px)`
@@ -16,32 +17,19 @@ export default (props: {popupPosition: Number2}) => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.relContainer} style={positionStyle}>
-        
-        <Tooltip tooltip={translate(`Tooltip.LABEL[${mod.id}.ClosePanel]`, "Close Panel")}>
-          <Button className={styles.closeIcon} variant="icon" onSelect={cancelPickerAction} focusKey={FOCUS_DISABLED}>
-            <img style={{ maskImage: "url(Media/Glyphs/Close.svg)" }}></img>
-          </Button>
-        </Tooltip>        
-
-        {/* Use as Template */}
-        <Tooltip tooltip="">
-          <Button className={classNames(styles.templateButton, styles.button)} variant="flat" onSelect={createFromTemplate} focusKey={FOCUS_AUTO}>
-            Use as Template
-          </Button>        
-        </Tooltip>          
-        {/* Create from Scratch */}
-        <Tooltip tooltip="">      
-          <Button className={classNames(styles.createButton, styles.button)} onSelect={createFromScratch} variant="flat" focusKey={FOCUS_AUTO}>
-            Create New Prefab
-          </Button>
-        </Tooltip>         
-        {/* Cancel Button */}
-        <Tooltip tooltip="">  
-          <Button className={classNames(styles.cancelButton, styles.button)} onSelect={cancelPickerAction} variant="flat" focusKey={FOCUS_DISABLED}>
-            Cancel
-          </Button>
-        </Tooltip>         
+      <div className={styles.relContainer} style={positionStyle}>        
+        {/* Use as Template */}        
+        <Button className={classNames(styles.templateButton, styles.button)} variant="flat" onSelect={createFromTemplate} focusKey={FOCUS_AUTO}>
+          Use as Template
+        </Button>                
+        {/* Edit Prefab */}        
+        <Button className={classNames(styles.editButton, styles.button)} onSelect={editPrefab} variant="flat" focusKey={FOCUS_AUTO}>
+          Edit Prefab
+        </Button>      
+        {/* Cancel Button */}        
+        <Button className={classNames(styles.cancelButton, styles.button)} onSelect={() => {cancelPickerAction(); toggleTool();}} variant="flat" focusKey={FOCUS_DISABLED}>
+          Cancel
+        </Button>        
       </div>
     </div>
   );
