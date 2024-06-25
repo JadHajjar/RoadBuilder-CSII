@@ -10,9 +10,10 @@ import styles from "./ModView.module.scss";
 import { MouseButtons } from "mods/util";
 import { bindValue, useValue } from "cs2/api";
 import { RoadBuilderToolModeEnum } from "domain/RoadBuilderToolMode";
-import { roadBuilderToolMode$ } from "mods/bindings";
+import { roadBuilderToolMode$, toggleTool } from "mods/bindings";
 import ActionPopup from "mods/Components/ActionPopup/ActionPopup";
 import { useRem } from "cs2/utils";
+import { tool } from "cs2/bindings";
 
 export const ModView = () => {
   const roadBuilderToolMode = useValue(roadBuilderToolMode$);
@@ -39,14 +40,20 @@ export const ModView = () => {
     }
   };
 
+  let onMouseClick = (evt: MouseEvent) => {}
+
   let onMouseDown = (evt: MouseEvent) => {};
 
   let onMouseRelease = (evt: MouseEvent) => {
-    if (evt.button == MouseButtons.Primary && draggingItem) {
+    if (evt.button == MouseButtons.Secondary && roadBuilderToolMode == RoadBuilderToolModeEnum.Picker) {
+      toggleTool();    
+    } else if (evt.button == MouseButtons.Secondary && roadBuilderToolMode == RoadBuilderToolModeEnum.ActionSelection) {
+      toggleTool();
+      toggleTool();
+    } else if (evt.button == MouseButtons.Primary && draggingItem) {
       //TODO: send message to bottom view that a new lane has been added
       setMouseReleased(true);
-    }
-    if (evt.button == MouseButtons.Secondary) {
+    } else if (evt.button == MouseButtons.Secondary) {
       setDraggingItem(undefined);
     }
   };
@@ -87,11 +94,13 @@ export const ModView = () => {
     document.addEventListener("mousemove", onMouseMove);
     document.addEventListener("mousedown", onMouseDown);
     document.addEventListener("mouseup", onMouseRelease);
+    document.addEventListener("click", onMouseClick);
     console.log("Setup event listener");
     return () => {
       document.removeEventListener("mousemove", onMouseMove);
       document.removeEventListener("mousedown", onMouseDown);
       document.removeEventListener("mouseup", onMouseRelease);
+      document.removeEventListener("click", onMouseClick);
     };
   }, [draggingItem]);
   
