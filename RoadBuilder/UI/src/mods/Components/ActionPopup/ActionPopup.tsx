@@ -5,7 +5,7 @@ import mod from "mod.json";
 import styles from "./ActionPopup.module.scss";
 import { useLocalization } from "cs2/l10n";
 import { CSSProperties } from "react";
-import { cancelPickerAction, createFromScratch, createFromTemplate, toggleTool } from "mods/bindings";
+import { cancelPickerAction, editPrefab, createFromTemplate, toggleTool } from "mods/bindings";
 import { useRem } from "cs2/utils";
 
 export default (props: {popupPosition: Number2}) => {
@@ -22,9 +22,9 @@ export default (props: {popupPosition: Number2}) => {
         <Button className={classNames(styles.templateButton, styles.button)} variant="flat" onSelect={createFromTemplate} focusKey={FOCUS_AUTO}>
           Use as Template
         </Button>                
-        {/* Create from Scratch */}        
-        <Button className={classNames(styles.createButton, styles.button)} onSelect={createFromScratch} variant="flat" focusKey={FOCUS_AUTO}>
-          Create New Prefab
+        {/* Edit Prefab */}        
+        <Button className={classNames(styles.editButton, styles.button)} onSelect={editPrefab} variant="flat" focusKey={FOCUS_AUTO}>
+          Edit Prefab
         </Button>      
         {/* Cancel Button */}        
         <Button className={classNames(styles.cancelButton, styles.button)} onSelect={() => {cancelPickerAction(); toggleTool();}} variant="flat" focusKey={FOCUS_DISABLED}>

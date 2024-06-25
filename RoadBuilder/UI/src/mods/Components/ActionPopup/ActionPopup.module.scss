@@ -42,7 +42,7 @@
   transform: translate(-100rem, -80rem);
   @include entry_animation(template, -100rem, 0rem);  
 }
-.createButton {
+.editButton {
   transform: translate(80rem, -20rem); 
   @include entry_animation(create, -100rem, -20rem);   
 }
