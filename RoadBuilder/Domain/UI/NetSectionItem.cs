@@ -10,8 +10,8 @@ namespace RoadBuilder.Domain.UI
 {
 	public class NetSectionItem
 	{
-		public string PrefabName { get; set; }
-		public string DisplayName { get; set; }
-		public string Thumbnail { get; set; }
+		public string PrefabName;
+		public string DisplayName;
+		public string Thumbnail;
 	}
 }

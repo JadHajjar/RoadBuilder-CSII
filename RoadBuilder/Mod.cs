@@ -10,6 +10,7 @@ using Game.Tools;
 
 using HarmonyLib;
 using RoadBuilder.Systems;
+using RoadBuilder.Systems.UI;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Entities;
@@ -17,7 +18,7 @@ using Unity.Mathematics;
 
 namespace RoadBuilder
 {
-	public class Mod : IMod
+    public class Mod : IMod
 	{
 		public const string Id = nameof(RoadBuilder);
 		public static ILog Log { get; } = LogManager.GetLogger(nameof(RoadBuilder)).SetShowsErrorsInUI(false);
@@ -33,8 +34,7 @@ namespace RoadBuilder
 
 			//AssetDatabase.global.LoadSettings(nameof(RoadBuilder), Settings, new Setting(this));
 
-			updateSystem.UpdateAt<RoadPrefabInitializeSystem>(SystemUpdatePhase.PrefabUpdate);
-			updateSystem.UpdateAt<RoadPrefabGenerationSystem>(SystemUpdatePhase.Modification1);
+			updateSystem.UpdateAt<RoadBuilderSystem>(SystemUpdatePhase.Modification1);
 			updateSystem.UpdateAt<RoadBuilderToolSystem>(SystemUpdatePhase.ToolUpdate);
 			updateSystem.UpdateAt<RoadBuilderUISystem>(SystemUpdatePhase.UIUpdate);
 			updateSystem.UpdateAt<NetSectionsUISystem>(SystemUpdatePhase.UIUpdate);

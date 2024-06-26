@@ -10,7 +10,7 @@ using Unity.Entities;
 
 using UnityEngine;
 
-namespace RoadBuilder.Systems
+namespace RoadBuilder.Systems.UI
 {
 	public abstract partial class ExtendedUISystemBase : UISystemBase
 	{
