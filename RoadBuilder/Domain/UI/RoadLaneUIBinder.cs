@@ -1,13 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using RoadBuilder.Domain.Configuration;
+
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RoadBuilder.Domain.UI
 {
 	public class RoadLaneUIBinder
 	{
 		public string SectionPrefabName;
+
+		public static RoadLaneUIBinder[] From(RoadConfig config)
+		{
+			return config.Lanes.Select(x => new RoadLaneUIBinder
+			{
+				SectionPrefabName = x.SectionPrefabName,
+			}).ToArray();
+		}
+
+		public LaneConfig ToLaneConfig()
+		{
+			return new LaneConfig
+			{
+				SectionPrefabName = SectionPrefabName,
+			};
+		}
 	}
 }
