@@ -5,5 +5,27 @@
     bottom: 0;
     right: 0;
 
-    background: rgba(#000,0.2);
+    // background: rgba(#000,0.2);
+}
+
+.pickerHint {
+    position: absolute;
+    left: 30%;
+    right: 30%;
+    bottom: 250rem;
+
+    padding: 8rem;
+    border-radius: 3rem;
+    
+    background-color: rgba($color: #000000, $alpha: 0.3);
+    backdrop-filter: blur(3px);
+    color: var(--normalTextColor);
+
+    text-align: center;    
+
+    transition: opacity 0.2s;
+    pointer-events: none;
+    &:hover {
+        opacity: 0.2;
+    }
 }

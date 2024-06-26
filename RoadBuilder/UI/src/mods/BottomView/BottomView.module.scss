@@ -1,28 +1,72 @@
-.view {
+.viewContainer {
     position: absolute;    
     left: 20%;
     right: 20%;
     // The Vanilla Prefab Picker width => calc( var(--assetMenuColumns) * ( var(--assetMenuItemSize) + var(--assetMenuItemGap) ) - var(--assetMenuItemGap) + 40rem);
-    height: auto;//120rem;
-    padding: 24rem;        
+    height: auto;//120rem;    
     bottom: 121rem;
     z-index: 0;
 
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
-    justify-content: center;        
-
-    background: linear-gradient(180deg, rgba(217, 217, 217, 0) 60.0%, rgba(255, 255, 255, 0.3) 100%);        
-    pointer-events: auto;
+    justify-content: center;   
+    align-items: flex-end;         
     
     animation: entry 0.2s;
 }
 
-.closeButton {
+.view {
+    position: relative;
+    min-width: 20%;
+    height: 100%;
+    padding: 24rem;
+    padding-bottom: 0rem;
+
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;   
+    align-items: flex-end;     
+
+    background: linear-gradient(to top,rgba(217, 217, 217, 0) 82rem, rgba(255, 255, 255, 0.3) 82rem, rgba(217, 217, 217, 0) 140rem);
+    pointer-events: auto;
+}
+
+.bottomBG {
     position: absolute;
-    right: 0;
-    top: -28rem;
+    width: 100vw;
+    bottom: 0px;    
+    height: 80rem;
+    background-color:  var(--panelColorNormal);
+    backdrop-filter:  var(--panelBlur);
+    z-index: -1;
+
+    padding: 8rem 32rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    pointer-events: auto;
+}
+
+.copyButton {
+    padding: 8rem;
+    border-radius: 8rem;
+    background-color: rgba(255, 255, 255, 0.3);  
+    border: none;
+    &:hover {
+        background-color: rgba(255, 255, 255, 0.4);  
+        border: none;
+    }
+    &:active {
+        background: rgba(255, 255, 255, 0.5);   
+        border: none;
+    }
+}
+
+.closeButton {
+    position: relative;    
     border-radius: 50%;
     width: 24rem;
     height: 24rem;
@@ -37,12 +81,17 @@
     &:hover {
         background-color: rgba(255, 255, 255, 0.4);
     }
+    &:active {
+        background: rgba(255, 255, 255, 0.5);   
+    } 
 }
+
 
 .hint {
     position: absolute;
     font-size: var(--fontSizeXL);
-    bottom: 50%;
+    bottom: 25%;
+    padding-bottom: 80rem;
     left: 0;
     right: 0;
     text-align: center;

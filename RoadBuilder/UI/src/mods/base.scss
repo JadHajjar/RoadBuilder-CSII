@@ -1,0 +1,40 @@
+@mixin basicLightButton($hasImage: false) {    
+    border-radius: 50%;
+    padding: 4rem;
+    color: var(--normalTextColor);    
+    background-color: rgba(255, 255, 255, 0.3);
+    font-weight: bold;
+    text-align: center;  
+    border: none;
+
+    @if $hasImage {
+        img {
+            filter: invert(1);
+        }
+    }    
+
+    &:hover {
+        background-color: rgba(255, 255, 255, 0.4);
+    }
+    &:active {
+        background: rgba(255, 255, 255, 0.5);   
+    } 
+}
+
+@mixin basicButton() {
+    padding: 8rem;
+    border-radius: 4rem;
+    background-color: rgba(217, 217, 217, 0.71);
+    backdrop-filter: blur(4px);
+    text-align: center;
+    color: black;
+    border: none;
+
+    &:hover {
+        background: rgba(217, 217, 217, 0.8);
+    }
+
+    &:active {
+        background: rgba(217, 217, 217, 1.0);
+    }
+}

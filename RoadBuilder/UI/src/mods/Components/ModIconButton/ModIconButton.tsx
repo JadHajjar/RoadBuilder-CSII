@@ -6,20 +6,18 @@ import mod from "mod.json";
 import styles from "./ModIconButton.module.scss";
 import trafficIcon from "images/mod-icon.svg";
 import { RoadBuilderToolModeEnum } from "domain/RoadBuilderToolMode";
+import { toggleTool } from "mods/bindings";
 
 const RoadBuilderToolMode$ = bindValue(mod.id, "RoadBuilderToolMode", RoadBuilderToolModeEnum.None);
 
 export default () => {
-  const RoadBuilderToolMode = useValue(RoadBuilderToolMode$);
-
-  const toggleTool = () => trigger(mod.id, "ToggleTool");
-
+  const roadBuilderToolMode = useValue(RoadBuilderToolMode$);
   return (
     <Tooltip tooltip="Road Builder">
       <Button
         src={trafficIcon}
         variant="floating"
-        className={classNames({ [styles.selected]: RoadBuilderToolMode !== RoadBuilderToolModeEnum.None }, styles.toggle)}
+        className={classNames({ [styles.selected]: roadBuilderToolMode !== RoadBuilderToolModeEnum.None }, styles.toggle)}
         onSelect={toggleTool}
       />
     </Tooltip>
