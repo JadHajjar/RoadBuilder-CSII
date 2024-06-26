@@ -115,6 +115,7 @@ export const ModView = () => {
       );
       break;*/
     case RoadBuilderToolModeEnum.Editing:
+      case RoadBuilderToolModeEnum.EditingSingle:
       content = (
         <>
           <LaneListPanel />

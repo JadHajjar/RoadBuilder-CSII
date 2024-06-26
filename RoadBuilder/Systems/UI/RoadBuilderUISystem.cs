@@ -2,6 +2,10 @@
 using Game.Tools;
 using Game.UI.InGame;
 using RoadBuilder.Domain.Enums;
+using RoadBuilder.Domain.UI;
+
+using System;
+
 using Unity.Entities;
 
 namespace RoadBuilder.Systems.UI
@@ -18,8 +22,10 @@ namespace RoadBuilder.Systems.UI
         private DefaultToolSystem defaultToolSystem;
 
         private ValueBindingHelper<RoadBuilderToolMode> RoadBuilderMode;
+		private ValueBindingHelper<RoadPropertiesUIBinder> RoadProperties;
+		private ValueBindingHelper<RoadLaneUIBinder[]> RoadLanes;
 
-        public RoadBuilderToolMode Mode => RoadBuilderMode;
+		public RoadBuilderToolMode Mode => RoadBuilderMode;
 
         protected override void OnCreate()
         {
@@ -35,13 +41,25 @@ namespace RoadBuilder.Systems.UI
             toolSystem.EventToolChanged += OnToolChanged;
 
             RoadBuilderMode = CreateBinding("RoadBuilderToolMode", RoadBuilderToolMode.None);
+            RoadProperties = CreateBinding("GetRoadProperties", "SetRoadProperties", new RoadPropertiesUIBinder(), UpdateRoadProperties);
+            RoadLanes = CreateBinding("GetRoadLanes", "SetRoadLanes", new RoadLaneUIBinder[0], UpdateRoadLanes);
 
-            CreateTrigger("ToggleTool", ToggleTool);
-            CreateTrigger("ActionPopup.New", () => CreateNewPrefab(workingEntity));
-            CreateTrigger("ActionPopup.Cancel", ClearTool);
+			CreateTrigger("ToggleTool", ToggleTool);
+            CreateTrigger("CreateNewPrefab", () => CreateNewPrefab(workingEntity));
+            CreateTrigger("ClearTool", ClearTool);
         }
 
-        private void OnToolChanged(ToolBaseSystem system)
+		private void UpdateRoadLanes(RoadLaneUIBinder[] obj)
+		{
+
+		}
+
+		private void UpdateRoadProperties(RoadPropertiesUIBinder binder)
+		{
+
+		}
+
+		private void OnToolChanged(ToolBaseSystem system)
         {
             if (system is not RoadBuilderToolSystem)
             {
@@ -85,7 +103,7 @@ namespace RoadBuilder.Systems.UI
 		public void CreateNewPrefab(Entity entity)
         {
             workingEntity = entity;
-			RoadBuilderMode.Value = RoadBuilderToolMode.EditingSingleMode;
+			RoadBuilderMode.Value = RoadBuilderToolMode.EditingSingle;
 
 			var config = roadBuilderSystem.GetOrGenerateConfiguration(workingEntity);
 
