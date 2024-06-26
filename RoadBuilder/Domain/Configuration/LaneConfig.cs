@@ -6,18 +6,18 @@ namespace RoadBuilder.Domain.Configuration
 {
 	public class LaneConfig : ISerializable
 	{
-		public string PrefabName;
+		public string SectionPrefabName;
 
 		public void Deserialize<TReader>(TReader reader) where TReader : IReader
 		{
 			reader.Read(out int version);
-			reader.Read(out PrefabName);
+			reader.Read(out SectionPrefabName);
 		}
 
 		public void Serialize<TWriter>(TWriter writer) where TWriter : IWriter
 		{
 			writer.Write(RoadBuilderSystem.CURRENT_VERSION);
-			writer.Write(PrefabName);
+			writer.Write(SectionPrefabName);
 		}
 	}
 }

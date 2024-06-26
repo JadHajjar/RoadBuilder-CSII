@@ -22,7 +22,7 @@ export const ModView = () => {
   let [draggingItem, setDraggingItem] = useState<NetSectionItem | undefined>();
   let [mousePosition, setMousePosition] = useState<Number2>({ x: 0, y: 0 });
   let [mouseReleased, setMouseReleased] = useState<boolean>(false);
-  let [actionPopupPosition, setActionPopupPosition] = useState<Number2>({x: 0, y: 0});
+  let [actionPopupPosition, setActionPopupPosition] = useState<Number2>({ x: 0, y: 0 });
   let dragItemRef = useRef<HTMLDivElement>(null);
 
   let onNetSectionItemChange = (item?: NetSectionItem) => {
@@ -40,16 +40,16 @@ export const ModView = () => {
     }
   };
 
-  let onMouseClick = (evt: MouseEvent) => {}
+  let onMouseClick = (evt: MouseEvent) => {};
 
   let onMouseDown = (evt: MouseEvent) => {};
 
   let onMouseRelease = (evt: MouseEvent) => {
     if (evt.button == MouseButtons.Secondary && roadBuilderToolMode == RoadBuilderToolModeEnum.Picker) {
-      toggleTool();    
-    } else if (evt.button == MouseButtons.Secondary && roadBuilderToolMode == RoadBuilderToolModeEnum.ActionSelection) {
       toggleTool();
+      /*} else if (evt.button == MouseButtons.Secondary && roadBuilderToolMode == RoadBuilderToolModeEnum.ActionSelection) {
       toggleTool();
+      toggleTool();*/
     } else if (evt.button == MouseButtons.Primary && draggingItem) {
       //TODO: send message to bottom view that a new lane has been added
       setMouseReleased(true);
@@ -58,7 +58,7 @@ export const ModView = () => {
     }
   };
 
-  useEffect(() => {
+  /*useEffect(() => {
     switch(roadBuilderToolMode) {
         case RoadBuilderToolModeEnum.ActionSelection:
           let halfPopupWidth = rem * 500/2;
@@ -80,7 +80,7 @@ export const ModView = () => {
         default:          
           break;
     }
-  }, [roadBuilderToolMode])
+  }, [roadBuilderToolMode])*/
 
   let dragData: DragContextData = {
     onNetSectionItemChange: onNetSectionItemChange,
@@ -103,36 +103,33 @@ export const ModView = () => {
       document.removeEventListener("click", onMouseClick);
     };
   }, [draggingItem]);
-  
-  let content : JSX.Element | null = null;
+
+  let content: JSX.Element | null = null;
   switch (roadBuilderToolMode) {
     case RoadBuilderToolModeEnum.Picker:
-      content = (
-        <div className={styles.pickerHint}>Click on a Road</div>
-      )
+      content = <div className={styles.pickerHint}>Click on a Road</div>;
       break;
-    case RoadBuilderToolModeEnum.ActionSelection:  
+    /*case RoadBuilderToolModeEnum.ActionSelection:  
       content = (
         <ActionPopup popupPosition={actionPopupPosition} />
       );
-      break;
+      break;*/
     case RoadBuilderToolModeEnum.Editing:
+      case RoadBuilderToolModeEnum.EditingSingle:
       content = (
         <>
-        <LaneListPanel />
-        <BottomView />
-        <LaneListItemDrag ref={dragItemRef} />
+          <LaneListPanel />
+          <BottomView />
+          <LaneListItemDrag ref={dragItemRef} />
         </>
-      )
+      );
       break;
     default:
-      return (<></>);      
+      return <></>;
   }
   return (
     <DragContext.Provider value={dragData}>
-      <div className={styles.view}>
-        {content}              
-      </div>
+      <div className={styles.view}>{content}</div>
     </DragContext.Provider>
   );
 };
