@@ -18,6 +18,7 @@ using System.Linq;
 using Unity.Burst.Intrinsics;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Entities.UniversalDelegates;
 
 namespace RoadBuilder.Systems
 {
@@ -49,15 +50,24 @@ namespace RoadBuilder.Systems
 		{
 			while (UpdatedRoadPrefabsQueue.Count > 0)
 			{
+				if (roadGenerationData is null)
+				{
+					Mod.Log.Warn("Generating roads before generation data was initialized");
+				}
+
 				var roadPrefab = UpdatedRoadPrefabsQueue.Dequeue();
-				var roadPrefabGeneration = new RoadPrefabGenerationUtil(roadPrefab, roadGenerationData);
+				var roadPrefabGeneration = new RoadPrefabGenerationUtil(roadPrefab, roadGenerationData ?? new());
+
+				roadPrefabGeneration.GenerateRoad();
 
 				if (!roadPrefab.WasGenerated)
 				{
-					prefabSystem.AddPrefab(roadPrefab);
-				}
+					roadPrefab.WasGenerated = true;
 
-				roadPrefabGeneration.GenerateRoad();
+					prefabSystem.AddPrefab(roadPrefab);
+
+					continue;
+				}
 
 				// Update all existing roads that use this road configuration
 				var job = new ApplyUpdatedJob()

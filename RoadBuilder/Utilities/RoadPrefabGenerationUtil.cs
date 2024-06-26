@@ -6,6 +6,7 @@ using HarmonyLib;
 
 using RoadBuilder.Domain;
 using RoadBuilder.Domain.Configuration;
+using RoadBuilder.Domain.Enums;
 
 using System;
 using System.Collections.Generic;
@@ -33,16 +34,41 @@ namespace RoadBuilder.Utilities
 
 		public void GenerateRoad()
 		{
-			DummyGenerateRoad(RoadPrefab);
+			var cfg = RoadPrefab.Config;
 
-			if (!RoadPrefab.WasGenerated)
-			{
-				RoadPrefab.WasGenerated = true;
-			}
-			else
+			RoadPrefab.isDirty = true;
+			RoadPrefab.active = true;
+			RoadPrefab.name = cfg.ID;
+			RoadPrefab.m_SpeedLimit = cfg.SpeedLimit;
+			RoadPrefab.m_RoadType = cfg.Category.HasFlag(RoadCategory.PublicTransport) ? RoadType.PublicTransport : RoadType.Normal;
+			RoadPrefab.m_TrafficLights = cfg.GeneratesTrafficLights;
+			RoadPrefab.m_HighwayRules = cfg.Category.HasFlag(RoadCategory.Highway);
+			RoadPrefab.m_MaxSlopeSteepness = cfg.MaxSlopeSteepness;
+			RoadPrefab.m_InvertMode = CompositionInvertMode.FlipLefthandTraffic;
+			RoadPrefab.m_ZoneBlock = cfg.GeneratesZoningBlocks ? _roadGenerationData.ZoneBlockPrefab : null;
+			RoadPrefab.m_AggregateType = _roadGenerationData.AggregateNetPrefabs.TryGetValue(cfg.AggregateType, out var aggregate) ? aggregate : null;
+			//RoadPrefab.m_NodeStates = new NetNodeStateInfo[basePrefab.m_NodeStates.Length];
+			//RoadPrefab.m_EdgeStates = new NetEdgeStateInfo[basePrefab.m_EdgeStates.Length];
+			RoadPrefab.m_Sections = GenerateSections().ToArray();
+
+			RoadPrefab.components.Clear();
+			RoadPrefab.components.AddRange(GenerateComponents());
+
+			if (RoadPrefab.WasGenerated)
 			{
 				RoadPrefab.Config.ID = $"{PlatformManager.instance.userSpecificPath}-{Guid.NewGuid()}";
 			}
+		}
+
+		private IEnumerable<NetSectionInfo> GenerateSections()
+		{
+			return new NetSectionInfo[0];
+		}
+
+		private IEnumerable<ComponentBase> GenerateComponents()
+		{
+			return new ComponentBase[0];
+			//yield return new ServiceObject { }
 		}
 
 		public void DummyGenerateRoad(RoadBuilderPrefab prefab)
