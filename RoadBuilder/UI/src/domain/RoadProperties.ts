@@ -10,6 +10,7 @@ export interface RoadProperties {
 
 export interface RoadLane {
     SectionPrefabName: string;
+    Invert: boolean;
 }
 
 // Flag Enum

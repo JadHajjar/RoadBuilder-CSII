@@ -27,7 +27,8 @@ export const BottomView = () => {
 
     let onAddItem = (item: NetSectionItem, index: number) => { 
         let rLane : RoadLane = {
-            SectionPrefabName: item.PrefabName
+            SectionPrefabName: item.PrefabName,
+            Invert: false            
         };
         let nList = [
             ...roadLanes.slice(0, index),
