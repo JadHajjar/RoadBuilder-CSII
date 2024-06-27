@@ -16,9 +16,10 @@ export const LaneListPanel = () => {
     let [searchQuery, setSearchQuery] = useState<string>();
     
 
-    let allNetSections = useValue(allNetSections$);        
+    let allNetSections = useValue(allNetSections$);                
     let items = allNetSections
-        .filter((val, idx) => searchQuery == undefined || searchQuery == '' || val.DisplayName.indexOf(searchQuery) >= 0)        
+        .filter((val, idx) => val.PrefabName)
+        .filter((val, idx) => searchQuery == undefined || searchQuery == '' || val.DisplayName.indexOf(searchQuery) >= 0)                
         .map((val, idx) => <LaneListItem key={idx} netSection={val}/>);        
 
     return (

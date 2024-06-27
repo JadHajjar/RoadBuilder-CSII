@@ -6,12 +6,10 @@ import mod from "mod.json";
 import styles from "./ModIconButton.module.scss";
 import trafficIcon from "images/mod-icon.svg";
 import { RoadBuilderToolModeEnum } from "domain/RoadBuilderToolMode";
-import { toggleTool } from "mods/bindings";
-
-const RoadBuilderToolMode$ = bindValue(mod.id, "RoadBuilderToolMode", RoadBuilderToolModeEnum.None);
+import { roadBuilderToolMode$, toggleTool } from "mods/bindings";
 
 export default () => {
-  const roadBuilderToolMode = useValue(RoadBuilderToolMode$);
+  const roadBuilderToolMode = useValue(roadBuilderToolMode$);
   return (
     <Tooltip tooltip="Road Builder">
       <Button
