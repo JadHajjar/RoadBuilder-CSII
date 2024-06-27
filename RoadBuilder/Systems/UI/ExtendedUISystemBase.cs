@@ -385,6 +385,7 @@ namespace RoadBuilder.Systems.UI
 			var fields = type.GetFields(BindingFlags.Public | BindingFlags.Instance);
 			var obj = Activator.CreateInstance(type);
 
+			reader.ReadMapBegin();
 			foreach (var propertyInfo in properties)
 			{
 				if (reader.ReadProperty(propertyInfo.Name))
@@ -400,6 +401,7 @@ namespace RoadBuilder.Systems.UI
 					fieldInfo.SetValue(obj, ReadGeneric(reader, fieldInfo.FieldType));
 				}
 			}
+			reader.ReadMapEnd();
 
 			return obj;
 		}
