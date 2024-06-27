@@ -341,10 +341,10 @@ namespace RoadBuilder.Systems.UI
 				return val;
 			}
 
-			if (type == typeof(Array))
+			if (type.IsArray)
 			{
 				var length = (int)reader.ReadArrayBegin();
-				var array = (Array)Activator.CreateInstance(type.GetElementType(), length);
+				var array = (Array)Activator.CreateInstance(type, length);
 
 				for (var i = 0; i < length; i++)
 				{
