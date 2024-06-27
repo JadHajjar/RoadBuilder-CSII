@@ -8,16 +8,17 @@ export interface DragContextData {
     roadLane?: RoadLane;
     mousePosition: Number2;
     onNetSectionItemChange: (item?: NetSectionItem) => void;
-    setRoadLane: (roadLane?: RoadLane) => void;
+    setRoadLane: (roadLane?: RoadLane, currentIndex?: number) => void;
     mouseReleased: boolean;
     dragElement?: Element | null;
+    oldIndex?: number;
 }
 
 export const DragContext = createContext<DragContextData>({
     netSectionItem: undefined,
     roadLane: undefined,
     mousePosition: {x: 0, y: 0},
-    onNetSectionItemChange: (item) => {},
-    setRoadLane: (lane?: RoadLane) => {},
+    onNetSectionItemChange: () => {},
+    setRoadLane: () => {},
     mouseReleased: false
 });

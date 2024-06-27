@@ -1,4 +1,4 @@
-import { MouseEventHandler, startTransition, useEffect, useRef, useState, useTransition } from "react";
+import { MouseEventHandler, startTransition, useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { BottomView } from "../BottomView/BottomView";
 import { LaneListPanel } from "../LaneListPanel/LaneListPanel";
 import { DragContext, DragContextData } from "mods/Contexts/DragContext";
@@ -25,21 +25,26 @@ export const ModView = () => {
   let [draggingLane, setDraggingLane] = useState<RoadLane | undefined>();
   let [mousePosition, setMousePosition] = useState<Number2>({ x: 0, y: 0 });
   let [mouseReleased, setMouseReleased] = useState<boolean>(false);
+  let [fromDragIndex, setFromDragIndex] = useState<number | undefined>(undefined);
   let [actionPopupPosition, setActionPopupPosition] = useState<Number2>({ x: 0, y: 0 });
-  let [netSectionDict, setNetSectionDict] = useState<NetSectionsStore>({});
+  let [netSectionDict, setNetSectionDict] = useState<NetSectionsStore>();
   let dragItemRef = useRef<HTMLDivElement>(null);
-  
   let allNetSections = useValue(allNetSections$);
-
-  useEffect(() => {
+  // let nStore = allNetSections.reduce<Record<string, NetSectionItem>>(
+  //   (record: Record<string, NetSectionItem>, cVal: NetSectionItem, cIdx) => {
+  //     record[cVal.PrefabName] = cVal;
+  //     return record;
+  //   }, 
+  // {});
+  let nStore = useMemo(() => {
     let nStore = allNetSections.reduce<Record<string, NetSectionItem>>(
       (record: Record<string, NetSectionItem>, cVal: NetSectionItem, cIdx) => {
         record[cVal.PrefabName] = cVal;
         return record;
       }, 
-    {});    
-    setNetSectionDict(nStore);
-  }, [allNetSections])
+    {});
+    return nStore;
+  }, [allNetSections]);   
   
 
   let onNetSectionItemChange = (item?: NetSectionItem) => {
@@ -61,17 +66,15 @@ export const ModView = () => {
 
   let onMouseDown = (evt: MouseEvent) => {};
 
-  let onMouseRelease = (evt: MouseEvent) => {
+  let onMouseRelease = (evt: MouseEvent) => {    
+    let isDragging = draggingItem != undefined || draggingLane != undefined;
     if (evt.button == MouseButtons.Secondary && roadBuilderToolMode == RoadBuilderToolModeEnum.Picker) {
       toggleTool();
-      /*} else if (evt.button == MouseButtons.Secondary && roadBuilderToolMode == RoadBuilderToolModeEnum.ActionSelection) {
-      toggleTool();
-      toggleTool();*/
-    } else if (evt.button == MouseButtons.Primary && draggingItem) {
-      //TODO: send message to bottom view that a new lane has been added
+    } else if (evt.button == MouseButtons.Primary && isDragging) {      
       setMouseReleased(true);
-    } else if (evt.button == MouseButtons.Secondary) {
+    } else if (evt.button == MouseButtons.Secondary && isDragging) {
       setDraggingItem(undefined);
+      setDragRoadLane(undefined, undefined); 
     }
   };
 
@@ -99,8 +102,10 @@ export const ModView = () => {
     }
   }, [roadBuilderToolMode])*/
 
-  let setDragRoadLane = (lane?: RoadLane) => {
+  let setDragRoadLane = (lane?: RoadLane, currentIndex?: number) => {
+    setFromDragIndex(currentIndex);
     setDraggingLane(lane);
+    setMouseReleased(false);
   }
 
   let dragData: DragContextData = {
@@ -111,6 +116,7 @@ export const ModView = () => {
     setRoadLane: setDragRoadLane,
     mouseReleased: mouseReleased,
     dragElement: dragItemRef.current,
+    oldIndex: fromDragIndex
   };
 
   useEffect(() => {
@@ -125,7 +131,7 @@ export const ModView = () => {
       document.removeEventListener("mouseup", onMouseRelease);
       document.removeEventListener("click", onMouseClick);
     };
-  }, [draggingItem]);
+  }, [draggingItem, draggingLane]);
 
   let content: JSX.Element | null = null;
   switch (roadBuilderToolMode) {
@@ -152,7 +158,7 @@ export const ModView = () => {
   }
   return (
     <DragContext.Provider value={dragData}>
-      <NetSectionsStoreContext.Provider value={netSectionDict}>
+      <NetSectionsStoreContext.Provider value={nStore}>
         <div className={styles.view}>{content}</div>
       </NetSectionsStoreContext.Provider>      
     </DragContext.Provider>

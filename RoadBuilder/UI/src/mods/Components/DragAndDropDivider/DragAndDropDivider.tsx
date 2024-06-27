@@ -4,11 +4,13 @@ import { DragContext } from 'mods/Contexts/DragContext';
 import classNames from 'classnames';
 import { NetSectionItem } from 'domain/NetSectionItem';
 import { MouseButtons, intersects } from 'mods/util';
+import { RoadLane } from 'domain/RoadProperties';
 
 type _Props = {
     listIdx: number;
     onAddItem: (item: NetSectionItem, index: number) => void;
-    onEvaluateDragAndDrop: () => void;
+    onEvaluateDragAndDrop: (idx: number) => void;
+    onMoveLane: (lane: RoadLane, oldIndex: number, newIndex: number) => void;
     first?: boolean;
     last?: boolean;
 }
@@ -19,19 +21,29 @@ export const DragAndDropDivider = (props: _Props) => {
     let containerClasses = classNames(
         styles.container,
         {
-            [styles.hidden]: dragContext.netSectionItem === undefined
+            [styles.hidden]: !dragContext.netSectionItem && !dragContext.roadLane
         }
     );
 
     useEffect(() => {
-        if (dragContext.mouseReleased && dragContext.netSectionItem && dragContext.dragElement && containerRef.current) {
+        let isDragging = dragContext.netSectionItem || dragContext.roadLane;  
+        if (dragContext.mouseReleased && dragContext.dragElement != undefined && isDragging && containerRef.current != undefined) {
             let bounds = dragContext.dragElement.getBoundingClientRect();
             let bounds2 = containerRef.current.getBoundingClientRect();            
             if (intersects(bounds, bounds2)) {                
-                props.onAddItem(dragContext.netSectionItem, props.listIdx);
+                if (dragContext.roadLane) {
+                    props.onMoveLane(
+                        dragContext.roadLane, 
+                        dragContext.oldIndex!, 
+                        props.listIdx
+                    );
+                } else if (dragContext.netSectionItem) {
+                    props.onAddItem(dragContext.netSectionItem, props.listIdx);
+                }                
                 dragContext.onNetSectionItemChange(undefined);
-            }            
-            props.onEvaluateDragAndDrop();
+                dragContext.setRoadLane(undefined, undefined);
+            }                     
+            props.onEvaluateDragAndDrop(props.listIdx);
         }
     }, [dragContext.mouseReleased]);
 

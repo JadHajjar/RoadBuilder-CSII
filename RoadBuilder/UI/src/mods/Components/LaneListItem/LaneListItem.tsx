@@ -1,10 +1,11 @@
 import { Number2, Tooltip } from 'cs2/ui';
 import styles from './LaneListItem.module.scss';
 import { NetSectionItem } from 'domain/NetSectionItem';
-import { CSSProperties, MouseEventHandler, forwardRef, useContext, useState } from 'react';
+import { CSSProperties, MouseEventHandler, forwardRef, useContext, useEffect, useState } from 'react';
 import classNames from 'classnames';
 import { DragContext } from 'mods/Contexts/DragContext';
 import { MouseButtons } from 'mods/util';
+import { NetSectionsStoreContext } from 'mods/Contexts/NetSectionsStore';
 
 export const LaneListItem = ({netSection} : {netSection: NetSectionItem}) => {
     // let [dragging, setDragging] = useState(false);
@@ -47,15 +48,29 @@ export const LaneListItem = ({netSection} : {netSection: NetSectionItem}) => {
     )
 }
 
+enum DragType {
+    None,
+    Order,
+    Add
+}
+
 export const LaneListItemDrag = forwardRef<HTMLDivElement>((props, ref) => {
-    let dragData = useContext(DragContext);        
+    let dragData = useContext(DragContext);     
+    let sectionsStore = useContext(NetSectionsStoreContext);   
     let [position, setPosition] = useState<Number2>({x: 0, y: 0});
 
-    if (dragData.netSectionItem == undefined) {
-        return (<></>)
+    let dragType = DragType.None;
+    if (dragData.netSectionItem) {
+        dragType = DragType.Add;
+    } 
+    if (dragData.roadLane) {
+        dragType = DragType.Order;
     }
-
-    let netSection = dragData.netSectionItem;
+    if (dragType == DragType.None) {
+        return (<></>);
+    }
+    let netSection = dragType == DragType.Add? dragData.netSectionItem! : sectionsStore[dragData.roadLane!.SectionPrefabName];
+    
     let offsetStyle : CSSProperties = {
         left: `calc( ${dragData.mousePosition.x}px - 66rem)`,
         top: `calc( ${dragData.mousePosition.y}px - 40rem)`
