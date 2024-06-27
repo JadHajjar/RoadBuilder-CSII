@@ -14,12 +14,14 @@ import { roadBuilderToolMode$, toggleTool } from "mods/bindings";
 import ActionPopup from "mods/Components/ActionPopup/ActionPopup";
 import { useRem } from "cs2/utils";
 import { tool } from "cs2/bindings";
+import { RoadLane } from "domain/RoadProperties";
 
 export const ModView = () => {
   const roadBuilderToolMode = useValue(roadBuilderToolMode$);
   let rem = useRem();
 
   let [draggingItem, setDraggingItem] = useState<NetSectionItem | undefined>();
+  let [draggingLane, setDraggingLane] = useState<RoadLane | undefined>();
   let [mousePosition, setMousePosition] = useState<Number2>({ x: 0, y: 0 });
   let [mouseReleased, setMouseReleased] = useState<boolean>(false);
   let [actionPopupPosition, setActionPopupPosition] = useState<Number2>({ x: 0, y: 0 });
@@ -82,10 +84,16 @@ export const ModView = () => {
     }
   }, [roadBuilderToolMode])*/
 
+  let setDragRoadLane = (lane?: RoadLane) => {
+    setDraggingLane(lane);
+  }
+
   let dragData: DragContextData = {
     onNetSectionItemChange: onNetSectionItemChange,
     mousePosition: mousePosition,
     netSectionItem: draggingItem,
+    roadLane: draggingLane,
+    setRoadLane: setDragRoadLane,
     mouseReleased: mouseReleased,
     dragElement: dragItemRef.current,
   };
