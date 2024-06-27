@@ -19,7 +19,7 @@ export const BottomView = () => {
     let allNetSections = useValue(allNetSections$);
     let [evaluationCount, setEvaluationCount] = useState(0);            
 
-    const netSectionData = allNetSections        
+    let netSectionData = allNetSections        
         .reduce<Record<string, NetSectionItem>>((record: Record<string, NetSectionItem>, cVal: NetSectionItem, cIdx) => {
             record[cVal.PrefabName] = cVal;
             return record;
@@ -62,8 +62,8 @@ export const BottomView = () => {
         ]);
     }
 
-    let items = roadLanes.flatMap((val, idx) => {  
-        let sectionData = netSectionData[val.SectionPrefabName];      
+    let items = roadLanes.filter((val) => val.SectionPrefabName).flatMap((val, idx) => {      
+        let sectionData = netSectionData[val.SectionPrefabName];            
         return [
             <DragAndDropDivider onAddItem={onAddItem} key={idx*2} listIdx={idx} onEvaluateDragAndDrop={onEvaluateDragAndDrop}/>,
             <RoadButtonSmall index={idx} onDelete={onDeleteItem} item={sectionData} key={idx * 2 + 1} />
