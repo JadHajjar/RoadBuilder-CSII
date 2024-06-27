@@ -1,10 +1,5 @@
-﻿using RoadBuilder.Domain.Enums;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using RoadBuilder.Domain.Configuration;
+using RoadBuilder.Domain.Enums;
 
 namespace RoadBuilder.Domain.UI
 {
@@ -17,5 +12,30 @@ namespace RoadBuilder.Domain.UI
 		public float MaxSlopeSteepness;
 		public string AggregateType;
 		public RoadCategory Category;
+
+		public static RoadPropertiesUIBinder From(RoadConfig config)
+		{
+			return new RoadPropertiesUIBinder
+			{
+				Name = config.Name,
+				Category = config.Category,
+				AggregateType = config.AggregateType,
+				SpeedLimit = config.SpeedLimit,
+				GeneratesTrafficLights = config.GeneratesTrafficLights,
+				GeneratesZoningBlocks = config.GeneratesZoningBlocks,
+				MaxSlopeSteepness = config.MaxSlopeSteepness,
+			};
+		}
+
+		public void Fill(RoadConfig config)
+		{
+			config.Name = Name;
+			config.Category = Category;
+			config.AggregateType = AggregateType;
+			config.SpeedLimit = SpeedLimit;
+			config.GeneratesTrafficLights = GeneratesTrafficLights;
+			config.GeneratesZoningBlocks = GeneratesZoningBlocks;
+			config.MaxSlopeSteepness = MaxSlopeSteepness;
+		}
 	}
 }

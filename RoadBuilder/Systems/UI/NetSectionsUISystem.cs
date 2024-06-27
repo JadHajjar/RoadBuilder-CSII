@@ -51,7 +51,7 @@ namespace RoadBuilder.Systems.UI
 
             for (var i = 0; i < entities.Length; i++)
             {
-                if (!prefabSystem.TryGetPrefab<PrefabBase>(entities[i], out var prefab) || prefab is not NetSectionPrefab)
+                if (!prefabSystem.TryGetPrefab<NetSectionPrefab>(entities[i], out var prefab))
                 {
                     continue;
                 }

@@ -42,7 +42,7 @@ namespace RoadBuilder.Systems
 		{
 			base.InitializeRaycast();
 
-			m_ToolRaycastSystem.netLayerMask = Layer.Road;
+			m_ToolRaycastSystem.netLayerMask = Layer.Road | Layer.TrainTrack | Layer.TramTrack | Layer.SubwayTrack;
 			m_ToolRaycastSystem.typeMask = TypeMask.Net;
 			m_ToolRaycastSystem.collisionMask = CollisionMask.Overground | CollisionMask.OnGround | CollisionMask.Underground;
 		}

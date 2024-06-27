@@ -1,10 +1,13 @@
 ﻿using Game.Prefabs;
 using Game.Tools;
 using Game.UI.InGame;
+
+using RoadBuilder.Domain.Configuration;
 using RoadBuilder.Domain.Enums;
 using RoadBuilder.Domain.UI;
 
 using System;
+using System.Linq;
 
 using Unity.Entities;
 
@@ -41,23 +44,13 @@ namespace RoadBuilder.Systems.UI
             toolSystem.EventToolChanged += OnToolChanged;
 
             RoadBuilderMode = CreateBinding("RoadBuilderToolMode", RoadBuilderToolMode.None);
-            RoadProperties = CreateBinding("GetRoadProperties", "SetRoadProperties", new RoadPropertiesUIBinder(), UpdateRoadProperties);
-            RoadLanes = CreateBinding("GetRoadLanes", "SetRoadLanes", new RoadLaneUIBinder[0], UpdateRoadLanes);
+            RoadProperties = CreateBinding("GetRoadProperties", "SetRoadProperties", new RoadPropertiesUIBinder(), _ => UpdateRoad());
+            RoadLanes = CreateBinding("GetRoadLanes", "SetRoadLanes", new RoadLaneUIBinder[0], _ => UpdateRoad());
 
 			CreateTrigger("ToggleTool", ToggleTool);
             CreateTrigger("CreateNewPrefab", () => CreateNewPrefab(workingEntity));
             CreateTrigger("ClearTool", ClearTool);
         }
-
-		private void UpdateRoadLanes(RoadLaneUIBinder[] obj)
-		{
-
-		}
-
-		private void UpdateRoadProperties(RoadPropertiesUIBinder binder)
-		{
-
-		}
 
 		private void OnToolChanged(ToolBaseSystem system)
         {
@@ -91,23 +84,43 @@ namespace RoadBuilder.Systems.UI
         }
 
         public void EditPrefab(Entity entity)
-        {
-            workingEntity = entity;
-            RoadBuilderMode.Value = RoadBuilderToolMode.Editing;
+		{
+			RoadBuilderMode.Value = RoadBuilderToolMode.Editing;
 
-            var config = roadBuilderSystem.GetOrGenerateConfiguration(workingEntity);
-
-
+			SetWorkingEntity(entity);
 		}
 
 		public void CreateNewPrefab(Entity entity)
-        {
-            workingEntity = entity;
+		{
 			RoadBuilderMode.Value = RoadBuilderToolMode.EditingSingle;
+			
+            SetWorkingEntity(entity);
+		}
+
+		private void SetWorkingEntity(Entity entity)
+		{
+			workingEntity = entity;
 
 			var config = roadBuilderSystem.GetOrGenerateConfiguration(workingEntity);
 
+			RoadProperties.Value = RoadPropertiesUIBinder.From(config);
+			RoadLanes.Value = RoadLaneUIBinder.From(config);
+		}
 
+		private void UpdateRoad()
+		{
+            var createNew = RoadBuilderMode.Value is RoadBuilderToolMode.EditingSingle;
+			var config = createNew
+                ? roadBuilderSystem.GenerateConfiguration(workingEntity)
+                : roadBuilderSystem.GetOrGenerateConfiguration(workingEntity);
+
+            RoadProperties.Value.Fill(config);
+
+			config.Lanes = RoadLanes.Value.Select(x => x.ToLaneConfig()).ToList();
+
+            roadBuilderSystem.UpdateRoad(config, workingEntity, createNew);
+
+            RoadBuilderMode.Value = RoadBuilderToolMode.Editing;
 		}
 	}
 }
