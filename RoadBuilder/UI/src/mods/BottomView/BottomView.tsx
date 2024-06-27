@@ -11,6 +11,7 @@ import { useValue } from 'cs2/api';
 import { clearTool, createNewPrefab, setRoadLanes, roadBuilderToolMode$, roadLanes$, allNetSections$ } from 'mods/bindings';
 import { RoadBuilderToolModeEnum } from 'domain/RoadBuilderToolMode';
 import { RoadLane } from 'domain/RoadProperties';
+import { NetSectionsStoreContext } from 'mods/Contexts/NetSectionsStore';
 
 export const BottomView = () => {
     let dragContext = useContext(DragContext);
@@ -18,13 +19,8 @@ export const BottomView = () => {
     let roadLanes = useValue(roadLanes$);
     let allNetSections = useValue(allNetSections$);
     let [evaluationCount, setEvaluationCount] = useState(0);            
-
-    let netSectionData = allNetSections        
-        .reduce<Record<string, NetSectionItem>>((record: Record<string, NetSectionItem>, cVal: NetSectionItem, cIdx) => {
-            record[cVal.PrefabName] = cVal;
-            return record;
-        }, {});
-
+    let netSectionData = useContext(NetSectionsStoreContext);
+    
     let onAddItem = (item: NetSectionItem, index: number) => { 
         let rLane : RoadLane = {
             SectionPrefabName: item.PrefabName,

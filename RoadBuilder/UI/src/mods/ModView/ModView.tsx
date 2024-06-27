@@ -10,11 +10,12 @@ import styles from "./ModView.module.scss";
 import { MouseButtons } from "mods/util";
 import { bindValue, useValue } from "cs2/api";
 import { RoadBuilderToolModeEnum } from "domain/RoadBuilderToolMode";
-import { roadBuilderToolMode$, toggleTool } from "mods/bindings";
+import { allNetSections$, roadBuilderToolMode$, toggleTool } from "mods/bindings";
 import ActionPopup from "mods/Components/ActionPopup/ActionPopup";
 import { useRem } from "cs2/utils";
 import { tool } from "cs2/bindings";
 import { RoadLane } from "domain/RoadProperties";
+import { NetSectionsStore, NetSectionsStoreContext } from "mods/Contexts/NetSectionsStore";
 
 export const ModView = () => {
   const roadBuilderToolMode = useValue(roadBuilderToolMode$);
@@ -25,7 +26,21 @@ export const ModView = () => {
   let [mousePosition, setMousePosition] = useState<Number2>({ x: 0, y: 0 });
   let [mouseReleased, setMouseReleased] = useState<boolean>(false);
   let [actionPopupPosition, setActionPopupPosition] = useState<Number2>({ x: 0, y: 0 });
+  let [netSectionDict, setNetSectionDict] = useState<NetSectionsStore>({});
   let dragItemRef = useRef<HTMLDivElement>(null);
+  
+  let allNetSections = useValue(allNetSections$);
+
+  useEffect(() => {
+    let nStore = allNetSections.reduce<Record<string, NetSectionItem>>(
+      (record: Record<string, NetSectionItem>, cVal: NetSectionItem, cIdx) => {
+        record[cVal.PrefabName] = cVal;
+        return record;
+      }, 
+    {});    
+    setNetSectionDict(nStore);
+  }, [allNetSections])
+  
 
   let onNetSectionItemChange = (item?: NetSectionItem) => {
     setDraggingItem(item);
@@ -137,7 +152,9 @@ export const ModView = () => {
   }
   return (
     <DragContext.Provider value={dragData}>
-      <div className={styles.view}>{content}</div>
+      <NetSectionsStoreContext.Provider value={netSectionDict}>
+        <div className={styles.view}>{content}</div>
+      </NetSectionsStoreContext.Provider>      
     </DragContext.Provider>
   );
 };
