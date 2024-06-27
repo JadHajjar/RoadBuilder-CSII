@@ -74,7 +74,7 @@ namespace RoadBuilder.Utilities
 				yield return new NetSectionInfo
 				{
 					m_Section = section,
-					m_Flip = true,
+					m_Invert = item.Invert,
 				};
 			}
 		}
@@ -84,23 +84,33 @@ namespace RoadBuilder.Utilities
 			var uIObject = ScriptableObject.CreateInstance<UIObject>();
 			var serviceObject = ScriptableObject.CreateInstance<ServiceObject>();
 			var netPollution = ScriptableObject.CreateInstance<NetPollution>();
-			var waterPipeConnection = ScriptableObject.CreateInstance<WaterPipeConnection>();
-			var electricityConnection = ScriptableObject.CreateInstance<ElectricityConnection>();
 			var undergroundNetSections = ScriptableObject.CreateInstance<UndergroundNetSections>();
 			var netSubObjects = ScriptableObject.CreateInstance<NetSubObjects>();
 			var placeableNet = ScriptableObject.CreateInstance<PlaceableNet>();
 
-			uIObject.m_Group = _roadGenerationData.UIGroupPrefabs["RoadsMediumRoads"];
-			uIObject.m_Priority = 999;
+			uIObject.m_Group = _roadGenerationData.UIGroupPrefabs["Roads"];
+			uIObject.m_Priority = 999999;
 
-			serviceObject.m_Service = _roadGenerationData.ServicePrefabs["Road"];
+			serviceObject.m_Service = _roadGenerationData.ServicePrefabs["Roads"];
 
-			electricityConnection.m_Voltage = ElectricityConnection.Voltage.Low;
-			electricityConnection.m_Direction = Game.Net.FlowDirection.Both;
-			electricityConnection.m_Capacity = 400000;
-			electricityConnection.m_RequireAll = new NetPieceRequirements[0];
-			electricityConnection.m_RequireAny = new NetPieceRequirements[0];
-			electricityConnection.m_RequireNone = new NetPieceRequirements[0];
+			if (RoadPrefab.Config.HasUndergroundWaterPipes)
+			{
+				yield return ScriptableObject.CreateInstance<WaterPipeConnection>();
+			}
+
+			if (RoadPrefab.Config.HasUndergroundElectricityCable)
+			{
+				var electricityConnection = ScriptableObject.CreateInstance<ElectricityConnection>();
+
+				electricityConnection.m_Voltage = ElectricityConnection.Voltage.Low;
+				electricityConnection.m_Direction = Game.Net.FlowDirection.Both;
+				electricityConnection.m_Capacity = 400000;
+				electricityConnection.m_RequireAll = RoadPrefab.Config.RequiresUpgradeForElectricity ? new NetPieceRequirements[] { NetPieceRequirements.Lighting } : new NetPieceRequirements[0];
+				electricityConnection.m_RequireAny = new NetPieceRequirements[0];
+				electricityConnection.m_RequireNone = new NetPieceRequirements[0];
+
+				yield return electricityConnection;
+			}
 
 			placeableNet.m_AllowParallelMode = true;
 			placeableNet.m_XPReward = 3;
@@ -112,13 +122,11 @@ namespace RoadBuilder.Utilities
 
 			netSubObjects.m_SubObjects = GenerateSubObjects().ToArray();
 
-			undergroundNetSections.m_Sections = GenerateUndergroundNetSections().ToArray();
+			undergroundNetSections.m_Sections = Fix(GenerateUndergroundNetSections()).ToArray();
 
 			yield return uIObject;
 			yield return serviceObject;
 			yield return netPollution;
-			yield return waterPipeConnection;
-			yield return electricityConnection;
 			yield return undergroundNetSections;
 			yield return netSubObjects;
 			yield return placeableNet;
@@ -126,7 +134,70 @@ namespace RoadBuilder.Utilities
 
 		private IEnumerable<NetSectionInfo> GenerateUndergroundNetSections()
 		{
-			yield break;
+			if (RoadPrefab.Config.HasUndergroundWaterPipes)
+			{
+				yield return new NetSectionInfo
+				{
+					m_Section = _roadGenerationData.NetSectionPrefabs["Sewage Pipe Section 1.5"],
+					m_Offset = new float3(0, -1.25f, 0)
+				};
+
+				yield return new NetSectionInfo
+				{
+					m_Section = _roadGenerationData.NetSectionPrefabs["Pipeline Spacing Section 1"],
+					m_Offset = new float3(0, -1.25f, 0)
+				};
+			}
+
+			if (RoadPrefab.Config.HasUndergroundElectricityCable)
+			{
+				yield return new NetSectionInfo
+				{
+					m_Section = _roadGenerationData.NetSectionPrefabs["Ground Cable Section 1"],
+					m_RequireAll = RoadPrefab.Config.RequiresUpgradeForElectricity ? new[] { NetPieceRequirements.Lighting } : null,
+					m_Offset = new float3(0, -0.65f, 0)
+				};
+			}
+
+			if (RoadPrefab.Config.HasUndergroundWaterPipes)
+			{
+				if (RoadPrefab.Config.HasUndergroundElectricityCable)
+				{
+					yield return new NetSectionInfo
+					{
+						m_Section = _roadGenerationData.NetSectionPrefabs["Pipeline Spacing Section 1"],
+						m_Offset = new float3(0, -0.85f, 0)
+					};
+				}
+
+				yield return new NetSectionInfo
+				{
+					m_Section = _roadGenerationData.NetSectionPrefabs["Water Pipe Section 1"],
+					m_Offset = new float3(0, -0.85f, 0)
+				};
+				yield return new NetSectionInfo
+				{
+					m_Section = _roadGenerationData.NetSectionPrefabs["Pipeline Spacing Section 1"],
+					m_Offset = new float3(0, -1.45f, 0)
+				};
+				yield return new NetSectionInfo
+				{
+					m_Section = _roadGenerationData.NetSectionPrefabs["Stormwater Pipe Section 1.5"],
+					m_Offset = new float3(0, -1.45f, 0)
+				};
+			}
+		}
+
+		private IEnumerable<NetSectionInfo> Fix(IEnumerable<NetSectionInfo> sections)
+		{
+			foreach (var item in sections)
+			{
+				item.m_RequireAll ??= new NetPieceRequirements[0];
+				item.m_RequireAny ??= new NetPieceRequirements[0];
+				item.m_RequireNone ??= new NetPieceRequirements[0];
+
+				yield return item;
+			}
 		}
 
 		private IEnumerable<NetSubObjectInfo> GenerateSubObjects()
@@ -141,6 +212,14 @@ namespace RoadBuilder.Utilities
 					m_RequireElevated = true,
 				};
 			}
+
+			yield return new NetSubObjectInfo
+			{
+				m_Object = RoadPrefab.Config.IsOneWay() ? _roadGenerationData.OutsideConnectionOneWay : _roadGenerationData.OutsideConnectionTwoWay,
+				m_Position = new float3(0, 5, 0),
+				m_Placement = NetObjectPlacement.Node,
+				m_RequireOutsideConnection = true,
+			};
 		}
 
 		public void DummyGenerateRoad(RoadBuilderPrefab prefab)

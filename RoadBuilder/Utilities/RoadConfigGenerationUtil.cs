@@ -1,23 +1,10 @@
-﻿using Colossal.PSI.Common;
-
-using Game.Prefabs;
-
-using HarmonyLib;
+﻿using Game.Prefabs;
 
 using RoadBuilder.Domain;
 using RoadBuilder.Domain.Configuration;
 using RoadBuilder.Domain.Enums;
 
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Unity.Entities;
-
-using Unity.Mathematics;
-
-using UnityEngine;
 
 namespace RoadBuilder.Utilities
 {
@@ -46,6 +33,9 @@ namespace RoadBuilder.Utilities
 				EdgeStates = RoadPrefab.m_EdgeStates.ToList(),
 				NodeStates = RoadPrefab.m_NodeStates.ToList(),
 				PillarPrefabName = FindPillarPrefab(RoadPrefab),
+				HasUndergroundWaterPipes = RoadPrefab.Has<WaterPipeConnection>(),
+				HasUndergroundElectricityCable = RoadPrefab.Has<ElectricityConnection>(),
+				RequiresUpgradeForElectricity = RoadPrefab.TryGet<ElectricityConnection>(out var electricityConnections) && electricityConnections.m_RequireAll.Contains(NetPieceRequirements.Lighting),
 			};
 
 			if (RoadPrefab.m_HighwayRules)
@@ -62,7 +52,8 @@ namespace RoadBuilder.Utilities
 
 			config.Lanes.AddRange(RoadPrefab.m_Sections.Select(x => new LaneConfig
 			{
-				SectionPrefabName = x.m_Section.name
+				SectionPrefabName = x.m_Section.name,
+				Invert = x.m_Invert
 			}));
 
 			return config;

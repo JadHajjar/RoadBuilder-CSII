@@ -18,12 +18,15 @@ namespace RoadBuilder.Domain.Configuration
 		public string OriginalID;
 		public string ID;
 		public string Name;
-		public float SpeedLimit;
-		public bool GeneratesTrafficLights;
-		public bool GeneratesZoningBlocks;
-		public float MaxSlopeSteepness;
 		public string AggregateType;
 		public string PillarPrefabName;
+		public float SpeedLimit;
+		public float MaxSlopeSteepness;
+		public bool GeneratesTrafficLights;
+		public bool GeneratesZoningBlocks;
+		public bool HasUndergroundWaterPipes;
+		public bool HasUndergroundElectricityCable;
+		public bool RequiresUpgradeForElectricity;
 		public RoadCategory Category;
 		public List<LaneConfig> Lanes = new();
 		public List<NetEdgeStateInfo> EdgeStates = new();
@@ -40,6 +43,9 @@ namespace RoadBuilder.Domain.Configuration
 			reader.Read(out MaxSlopeSteepness);
 			reader.Read(out AggregateType);
 			reader.Read(out PillarPrefabName);
+			reader.Read(out HasUndergroundWaterPipes);
+			reader.Read(out HasUndergroundElectricityCable);
+			reader.Read(out RequiresUpgradeForElectricity);
 			reader.Read(out int category);
 
 			Category = (RoadCategory)category;
@@ -69,6 +75,9 @@ namespace RoadBuilder.Domain.Configuration
 			writer.Write(MaxSlopeSteepness);
 			writer.Write(AggregateType);
 			writer.Write(PillarPrefabName);
+			writer.Write(HasUndergroundWaterPipes);
+			writer.Write(HasUndergroundElectricityCable);
+			writer.Write(RequiresUpgradeForElectricity);
 			writer.Write((int)Category);
 
 			writer.Write(Lanes.Count);

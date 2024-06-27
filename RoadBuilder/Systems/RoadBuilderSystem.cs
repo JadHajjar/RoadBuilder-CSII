@@ -6,10 +6,11 @@ using Game.Common;
 using Game.Prefabs;
 using Game.Tools;
 
+using HarmonyLib;
+
 using RoadBuilder.Domain;
 using RoadBuilder.Domain.Components;
 using RoadBuilder.Domain.Configuration;
-using RoadBuilder.Domain.Enums;
 using RoadBuilder.Utilities;
 
 using System.Collections.Generic;
@@ -202,38 +203,6 @@ namespace RoadBuilder.Systems
 			return new RoadConfigGenerationUtil(roadPrefab, roadGenerationData).GenerateConfiguration();
 		}
 
-		protected override void OnGamePreload(Purpose purpose, GameMode mode)
-		{
-			base.OnGamePreload(purpose, mode);
-
-			roadGenerationData = new();
-
-			var zoneBlockDataQuery = SystemAPI.QueryBuilder().WithAll<ZoneBlockData>().Build();
-			var zoneBlockDataEntities = zoneBlockDataQuery.ToEntityArray(Allocator.Temp);
-
-			for (var i = 0; i < zoneBlockDataEntities.Length; i++)
-			{
-				if (prefabSystem.TryGetPrefab<ZoneBlockPrefab>(zoneBlockDataEntities[i], out var prefab))
-				{
-					if (prefab.name == "Zone Block")
-					{
-						roadGenerationData.ZoneBlockPrefab = prefab;
-					}
-				}
-			}
-
-			var aggregateNetDataQuery = SystemAPI.QueryBuilder().WithAll<AggregateNetData>().Build();
-			var aggregateNetDataEntities = aggregateNetDataQuery.ToEntityArray(Allocator.Temp);
-
-			for (var i = 0; i < aggregateNetDataEntities.Length; i++)
-			{
-				if (prefabSystem.TryGetPrefab<AggregateNetPrefab>(aggregateNetDataEntities[i], out var prefab))
-				{
-					roadGenerationData.AggregateNetPrefabs[prefab.name] = prefab;
-				}
-			}
-		}
-
 		public void UpdateRoad(RoadConfig config, Entity entity, bool createNewPrefab)
 		{
 			if (!EntityManager.TryGetComponent<PrefabRef>(entity, out var prefabRef))
@@ -267,6 +236,103 @@ namespace RoadBuilder.Systems
 			{
 				m_Prefab = prefabSystem.GetEntity(roadPrefab)
 			});
+		}
+
+		protected override void OnGamePreload(Purpose purpose, GameMode mode)
+		{
+			base.OnGamePreload(purpose, mode);
+
+			roadGenerationData = new();
+
+			var zoneBlockDataQuery = SystemAPI.QueryBuilder().WithAll<ZoneBlockData>().Build();
+			var zoneBlockDataEntities = zoneBlockDataQuery.ToEntityArray(Allocator.Temp);
+
+			for (var i = 0; i < zoneBlockDataEntities.Length; i++)
+			{
+				if (prefabSystem.TryGetPrefab<ZoneBlockPrefab>(zoneBlockDataEntities[i], out var prefab))
+				{
+					if (prefab.name == "Zone Block")
+					{
+						roadGenerationData.ZoneBlockPrefab = prefab;
+
+						break;
+					}
+				}
+			}
+
+			var outsideConnectionDataQuery = SystemAPI.QueryBuilder().WithAll<OutsideConnectionData, TrafficSpawnerData>().Build();
+			var outsideConnectionDataEntities = outsideConnectionDataQuery.ToEntityArray(Allocator.Temp);
+
+			for (var i = 0; i < outsideConnectionDataEntities.Length; i++)
+			{
+				if (prefabSystem.TryGetPrefab<MarkerObjectPrefab>(outsideConnectionDataEntities[i], out var prefab))
+				{
+					if (prefab.name == "Road Outside Connection - Oneway")
+					{
+						roadGenerationData.OutsideConnectionOneWay = prefab;
+					}
+					
+					if (prefab.name == "Road Outside Connection - Twoway")
+					{
+						roadGenerationData.OutsideConnectionTwoWay = prefab;
+					}
+				}
+			}
+
+			var aggregateNetDataQuery = SystemAPI.QueryBuilder().WithAll<AggregateNetData>().Build();
+			var aggregateNetDataEntities = aggregateNetDataQuery.ToEntityArray(Allocator.Temp);
+
+			for (var i = 0; i < aggregateNetDataEntities.Length; i++)
+			{
+				if (prefabSystem.TryGetPrefab<AggregateNetPrefab>(aggregateNetDataEntities[i], out var prefab))
+				{
+					roadGenerationData.AggregateNetPrefabs[prefab.name] = prefab;
+				}
+			}
+
+			var netSectionDataQuery = SystemAPI.QueryBuilder().WithAll<NetSectionData>().Build();
+			var netSectionDataEntities = netSectionDataQuery.ToEntityArray(Allocator.Temp);
+
+			for (var i = 0; i < netSectionDataEntities.Length; i++)
+			{
+				if (prefabSystem.TryGetPrefab<NetSectionPrefab>(netSectionDataEntities[i], out var prefab))
+				{
+					roadGenerationData.NetSectionPrefabs[prefab.name] = prefab;
+				}
+			}
+
+			var serviceObjectDataQuery = SystemAPI.QueryBuilder().WithAll<ServiceData>().Build();
+			var serviceObjectDataEntities = serviceObjectDataQuery.ToEntityArray(Allocator.Temp);
+
+			for (var i = 0; i < serviceObjectDataEntities.Length; i++)
+			{
+				if (prefabSystem.TryGetPrefab<ServicePrefab>(serviceObjectDataEntities[i], out var prefab))
+				{
+					roadGenerationData.ServicePrefabs[prefab.name] = prefab;
+				}
+			}
+
+			var pillarDataQuery = SystemAPI.QueryBuilder().WithAll<PillarData>().Build();
+			var pillarDataEntities = pillarDataQuery.ToEntityArray(Allocator.Temp);
+
+			for (var i = 0; i < pillarDataEntities.Length; i++)
+			{
+				if (prefabSystem.TryGetPrefab<StaticObjectPrefab>(pillarDataEntities[i], out var prefab))
+				{
+					roadGenerationData.PillarPrefabs[prefab.name] = prefab;
+				}
+			}
+
+			var uIGroupElementQuery = SystemAPI.QueryBuilder().WithAll<UIGroupElement>().Build();
+			var uIGroupElementEntities = uIGroupElementQuery.ToEntityArray(Allocator.Temp);
+
+			for (var i = 0; i < uIGroupElementEntities.Length; i++)
+			{
+				if (prefabSystem.TryGetPrefab<UIGroupPrefab>(uIGroupElementEntities[i], out var prefab))
+				{
+					roadGenerationData.UIGroupPrefabs[prefab.name] = prefab;
+				}
+			}
 		}
 	}
 }
