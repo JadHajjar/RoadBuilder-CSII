@@ -16,6 +16,7 @@ import { useRem } from "cs2/utils";
 import { tool } from "cs2/bindings";
 import { RoadLane } from "domain/RoadProperties";
 import { NetSectionsStore, NetSectionsStoreContext } from "mods/Contexts/NetSectionsStore";
+import { RoadPropertiesPanel } from "mods/RoadPropertiesPanel/RoadPropertiesPanel";
 
 export const ModView = () => {
   const roadBuilderToolMode = useValue(roadBuilderToolMode$);
@@ -149,6 +150,7 @@ export const ModView = () => {
         <>
           <LaneListPanel />
           <BottomView />
+          <RoadPropertiesPanel />
           <LaneListItemDrag ref={dragItemRef} />
         </>
       );
