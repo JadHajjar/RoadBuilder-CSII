@@ -1,26 +1,19 @@
 import styles from './BottomView.module.scss';
 import { RoadButtonSmall } from '../Components/RoadButtonSmall/RoadButtonSmall';
 import { DragAndDropDivider, DragAndDropDividerRef } from 'mods/Components/DragAndDropDivider/DragAndDropDivider';
-import { Button, Number2 } from 'cs2/ui';
+import { Button } from 'cs2/ui';
 import { NetSectionItem } from 'domain/NetSectionItem';
-import { range } from 'mods/util';
-import { CSSProperties, MouseEvent, startTransition, useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { CSSProperties, useContext, useEffect, useRef } from 'react';
 import { DragContext } from 'mods/Contexts/DragContext';
-import { tool } from 'cs2/bindings';
 import { useValue } from 'cs2/api';
-import { clearTool, createNewPrefab, setRoadLanes, roadBuilderToolMode$, roadLanes$, allNetSections$ } from 'mods/bindings';
+import { clearTool, createNewPrefab, setRoadLanes, roadBuilderToolMode$, roadLanes$ } from 'mods/bindings';
 import { RoadBuilderToolModeEnum } from 'domain/RoadBuilderToolMode';
 import { RoadLane } from 'domain/RoadProperties';
-import { NetSectionsStoreContext } from 'mods/Contexts/NetSectionsStore';
 
 export const BottomView = () => {
     let dragContext = useContext(DragContext);
     let toolMode = useValue(roadBuilderToolMode$);
     let roadLanes = useValue(roadLanes$);
-    // let [foo, setFoo] = useState<number[]>([]);
-    let allNetSections = useValue(allNetSections$);
-    let [evaluationCount, setEvaluationCount] = useState(0);            
-    let netSectionData = useContext(NetSectionsStoreContext);
     let dividersRef = useRef<DragAndDropDividerRef[]>([]);
 
     useEffect(() => {
@@ -35,13 +28,13 @@ export const BottomView = () => {
                 let divider = dividersRef.current[i];
                 if (divider.intersects(dragBounds)) {
                     if (dragContext.roadLane) {                        
-                        onMoveLane(
+                        moveLane(
                             dragContext.roadLane, 
                             dragContext.oldIndex!, 
                             divider.listIdx
                         );
                     } else if (dragContext.netSectionItem) {
-                        onAddItem(dragContext.netSectionItem, divider.listIdx);
+                        addItem(dragContext.netSectionItem, divider.listIdx);
                     } 
                     break;
                 }
@@ -51,7 +44,7 @@ export const BottomView = () => {
         }                
     }, [dragContext.mouseReleased]);
 
-    let onMoveLane = (lane: RoadLane, oldIndex: number, newIndex: number) => {
+    let moveLane = (lane: RoadLane, oldIndex: number, newIndex: number) => {
         let nList = [
             ...roadLanes.slice(0, oldIndex),
             ...roadLanes.slice(Math.min(oldIndex+1, roadLanes.length))
@@ -67,7 +60,7 @@ export const BottomView = () => {
         setRoadLanes(nList);
     }
 
-    let onAddItem = (item: NetSectionItem, index: number) => { 
+    let addItem = (item: NetSectionItem, index: number) => { 
         let rLane : RoadLane = {
             SectionPrefabName: item.PrefabName,
             Invert: false            
@@ -79,29 +72,8 @@ export const BottomView = () => {
         ];
         setRoadLanes(nList);        
     }
-    let onEvaluateDragAndDrop = (idx: number) => {
-        if (evaluationCount + 1 == roadLanes.length + 1) {
-            dragContext.onNetSectionItemChange(undefined);
-            dragContext.setRoadLane(undefined, undefined);            
-            console.log("EVAL CLEAR");
-            setEvaluationCount(0);
-        } else {
-            console.log("EVAL", idx, evaluationCount, roadLanes.length);
-            setEvaluationCount((prevState) => prevState + 1);            
-        }        
-    };
-    // let onClickItem = (index: number, evt: any) => {
-    //     setSelectedItem(index);
-    //     let boundRect = evt.target.getBoundingClientRect();                
-    //     let propertyPos = {
-    //         x: evt.target.offsetLeft, 
-    //         y: evt.currentTarget.clientTop
-    //     };
-    //     console.log(propertyPos);
-    //     setPropertiesPosition(propertyPos);
-    // }
-
-    let onDeleteItem = (idx: number) => {
+    
+    let deleteLane = (idx: number) => {
         setRoadLanes([
             ...roadLanes.slice(0, idx),
             ...roadLanes.slice(Math.min(idx+1, roadLanes.length))
@@ -110,18 +82,15 @@ export const BottomView = () => {
 
     let items = roadLanes.filter((val) => val.SectionPrefabName).flatMap((val, idx) => {              
         return [
-            <DragAndDropDivider ref={elem => dividersRef.current[idx] = elem!} onMoveLane={onMoveLane} onAddItem={onAddItem} key={idx*2} listIdx={idx} onEvaluateDragAndDrop={onEvaluateDragAndDrop}/>,
-            <RoadButtonSmall index={idx} onDelete={onDeleteItem} roadLane={val} key={idx * 2 + 1} />
+            <DragAndDropDivider ref={elem => dividersRef.current[idx] = elem!} key={idx*2} listIdx={idx}/>,
+            <RoadButtonSmall index={idx} onDelete={deleteLane} roadLane={val} key={idx * 2 + 1} />
         ]
     });
     items.push(
-        <DragAndDropDivider 
-            onMoveLane={onMoveLane}
-            onAddItem={onAddItem}             
+        <DragAndDropDivider                        
             ref={elem => dividersRef.current[roadLanes.length] = elem!}
-            key={items.length} listIdx={roadLanes.length}
-            onEvaluateDragAndDrop={onEvaluateDragAndDrop} />
-    )
+            key={items.length} listIdx={roadLanes.length} />
+    );
     
     let copyButtonStyle : CSSProperties = {
         visibility: toolMode == RoadBuilderToolModeEnum.EditingSingle? 'hidden' : 'initial'
