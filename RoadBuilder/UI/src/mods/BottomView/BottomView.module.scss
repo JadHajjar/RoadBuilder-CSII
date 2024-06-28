@@ -17,8 +17,12 @@
 }
 
 .view {
+    max-width: 80%;
+}
+
+.view > div {
     position: relative;
-    min-width: 20%;
+    min-width: 20%;    
     height: 100%;
     padding: 24rem;
     padding-bottom: 0rem;

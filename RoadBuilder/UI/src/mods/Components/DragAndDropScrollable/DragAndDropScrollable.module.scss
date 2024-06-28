@@ -1,0 +1,27 @@
+.view {
+    position: relative;
+    overflow-y: visible;
+}
+
+.view > div {
+    overflow-y: visible;
+}
+
+.scrollButton {
+    $size: 38rem;    
+
+    position: absolute;    
+    bottom: 110rem;
+    height: $size;
+    width: $size;
+
+    background-color: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(3px);
+    &.scrollRight {
+        right: -$size;
+    }
+    &.scrollLeft {
+        left: -$size;
+    }
+}
+

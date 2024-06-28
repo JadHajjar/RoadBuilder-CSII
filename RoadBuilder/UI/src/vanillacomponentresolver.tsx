@@ -1,7 +1,7 @@
 import { Bounds1, Color, Theme, UniqueFocusKey } from "cs2/bindings";
 import { InputAction } from "cs2/input";
 import { ModuleRegistry } from "cs2/modding";
-import { BalloonDirection, FocusKey, PanelTheme } from "cs2/ui";
+import { BalloonDirection, FocusKey, PanelTheme, ScrollController } from "cs2/ui";
 import { CSSProperties, EventHandler, HTMLAttributes, MouseEventHandler, MutableRefObject, ReactNode } from "react";
 
 // These are specific to the types of components that this mod uses.
@@ -214,6 +214,7 @@ const registryIndex = {
     FOCUS_DISABLED: ["game-ui/common/focus/focus-key.ts", "FOCUS_DISABLED"],
     FOCUS_AUTO: ["game-ui/common/focus/focus-key.ts", "FOCUS_AUTO"],
     useUniqueFocusKey: ["game-ui/common/focus/focus-key.ts", "useUniqueFocusKey"],
+    useScrollController: ["game-ui/common/hooks/use-scroll-controller.tsx", "useScrollController"]
 }
 
 export class VanillaComponentResolver {
@@ -263,5 +264,6 @@ export class VanillaComponentResolver {
     public get FOCUS_DISABLED(): UniqueFocusKey { return this.cachedData["FOCUS_DISABLED"] ?? this.updateCache("FOCUS_DISABLED") }
     public get FOCUS_AUTO(): UniqueFocusKey { return this.cachedData["FOCUS_AUTO"] ?? this.updateCache("FOCUS_AUTO") }
     public get useUniqueFocusKey(): (focusKey: FocusKey, debugName: string) => UniqueFocusKey | null { return this.cachedData["useUniqueFocusKey"] ?? this.updateCache("useUniqueFocusKey") }
+    public get useScrollController(): () => ScrollController { return this.cachedData['useScrollController'] ?? this.updateCache('useScrollController');}
 
 } 

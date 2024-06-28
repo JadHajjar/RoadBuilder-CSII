@@ -1,7 +1,7 @@
 import styles from './BottomView.module.scss';
 import { RoadButtonSmall } from '../Components/RoadButtonSmall/RoadButtonSmall';
 import { DragAndDropDivider, DragAndDropDividerRef } from 'mods/Components/DragAndDropDivider/DragAndDropDivider';
-import { Button } from 'cs2/ui';
+import { Button, Scrollable } from 'cs2/ui';
 import { NetSectionItem } from 'domain/NetSectionItem';
 import { CSSProperties, useContext, useEffect, useRef } from 'react';
 import { DragContext } from 'mods/Contexts/DragContext';
@@ -9,12 +9,19 @@ import { useValue } from 'cs2/api';
 import { clearTool, createNewPrefab, setRoadLanes, roadBuilderToolMode$, roadLanes$ } from 'mods/bindings';
 import { RoadBuilderToolModeEnum } from 'domain/RoadBuilderToolMode';
 import { RoadLane } from 'domain/RoadProperties';
+import { VanillaComponentResolver } from 'vanillacomponentresolver';
+import { DragAndDropScrollable } from 'mods/Components/DragAndDropScrollable/DragAndDropScrollable';
 
 export const BottomView = () => {
     let dragContext = useContext(DragContext);
     let toolMode = useValue(roadBuilderToolMode$);
     let roadLanes = useValue(roadLanes$);
     let dividersRef = useRef<DragAndDropDividerRef[]>([]);
+    let scrollController = VanillaComponentResolver.instance.useScrollController();
+
+    useEffect(() => {
+        
+    }, [scrollController])
 
     useEffect(() => {
         dividersRef.current = dividersRef.current.slice(0, roadLanes.length + 1);
@@ -98,10 +105,10 @@ export const BottomView = () => {
 
     return (
         <div className={styles.viewContainer}>
-            <div className={styles.view}>                
+            <DragAndDropScrollable className={styles.view} trackVisibility='always' horizontal controller={scrollController}>
                 {items}                
                 {roadLanes.length == 0 && !dragContext.netSectionItem? <div className={styles.hint}>Drag Lanes Here</div> : <></>}                
-            </div>            
+            </DragAndDropScrollable>            
             <div className={styles.bottomBG}>
                 <Button style={copyButtonStyle} className={styles.copyButton} variant='flat' onSelect={createNewPrefab}>Copy to New Prefab</Button>
                 <Button className={styles.closeButton} src='Media/Glyphs/Close.svg' variant='icon' onSelect={clearTool} />
