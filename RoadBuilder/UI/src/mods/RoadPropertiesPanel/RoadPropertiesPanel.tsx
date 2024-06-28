@@ -14,15 +14,11 @@ const DropdownStyle: Theme | any = getModule("game-ui/menu/themes/dropdown.modul
 export const RoadPropertiesPanel = () => {
     let roadProperties = useValue(roadProperties$);    
     useEffect(() => {            
+        console.log(roadProperties);
     }, [roadProperties]);
 
     let roadCategories = Object.entries(RoadCategory)
-        .filter((value, idx, arr) => idx < arr.length/2 && Number(value[0]) != 0).map(([k,v]) => [v,k]);    
-    let roadCategoryOptions = roadCategories.map(([key, val]) => (
-        <>
-            <DropdownItem value={val} key={val}>{key}</DropdownItem>
-        </>
-    ));
+        .filter((value, idx, arr) => idx < arr.length/2 && Number(value[0]) != 0).map(([k,v]) => [v,k]);        
 
     let onTextChange = (field: keyof RoadProperties) => (evt: ChangeEvent<HTMLInputElement>) => {
         //TODO: Add a delay to setting the properties or change to save "onFocusEnd"
@@ -42,7 +38,20 @@ export const RoadPropertiesPanel = () => {
             ...roadProperties,
             [field]: !roadProperties[field]
         });
-    };    
+    };   
+    
+    let onDropdownChange = <T,>(field: keyof RoadProperties) => (value: string) => {           
+        setRoadProperties({
+            ...roadProperties,
+            [field]: Number(value) as T
+        });
+    }
+
+    let roadCategoryOptions = roadCategories.map(([key, val]) => (
+        <>
+            <DropdownItem onChange={onDropdownChange<RoadCategory>('Category')} value={String(val)} key={val}>{key}</DropdownItem>
+        </>
+    ));
 
     return (
         <div className={styles.panel}>          
