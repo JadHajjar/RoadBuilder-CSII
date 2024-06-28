@@ -11,4 +11,9 @@
     backdrop-filter: var(--panelBlur);    
 
     color: var(--textColorDim);
+    pointer-events: auto;
+}
+
+.textInput {
+    @include _base.textInputBasic();
 }

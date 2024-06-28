@@ -156,6 +156,7 @@ type DataInput = { //idk what this should be named
 type IntInput = {
     min?: number;
     max?: number;
+    className: string;
 } & Partial<DataInput>;
 
 type BoundIntInputField = IntInput;

@@ -4,7 +4,12 @@ import { Theme } from 'cs2/bindings';
 import { getModule } from 'cs2/modding';
 import { useLocalization } from 'cs2/l10n';
 import { useState } from 'react';
-import { AssetGridTheme, TextInput, TextInputTheme } from '../TextInput/TextInput';
+import { TextInput, TextInputTheme } from '../TextInput/TextInput';
+
+const AssetGridTheme: Theme | any = getModule(
+    "game-ui/game/components/asset-menu/asset-grid/asset-grid.module.scss",
+    "classes"
+  );
 
 export const SearchTextBox = (props: {onChange?: (val: string) => void}) => {
     const {translate} = useLocalization();

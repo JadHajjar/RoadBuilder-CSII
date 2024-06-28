@@ -4,6 +4,42 @@ $bottomBarOffset: 121rem;
 
 $laneButtonSize: 64rem;
 
+@mixin textInputBasic {
+    padding: 3rem 5rem;
+    background-color: rgba(0, 0, 0, .15);
+    border-radius: 3rem;
+    line-height: 1.25em;
+    color: #eee;
+    border-style: solid;
+    border-top-width: var(--stroke1);
+    border-left-width: var(--stroke1);
+    border-bottom-width: var(--stroke1);
+    border-right-width: var(--stroke1);
+    border-color: rgba(255, 255, 255, .2);
+
+    &:hover {
+        background-color: rgba(255, 255, 255, .1)
+    }
+
+    &:active, &:focus, &.active {
+        background-color: rgba(255, 255, 255, .2);
+        border-top-color: var(--accentColorLight);
+        border-left-color: var(--accentColorLight);
+        border-bottom-color: var(--accentColorLight);
+        border-right-color: var(--accentColorLight)
+    }
+
+    &.focused {
+        border-color: #c7ff65
+    }
+
+    &[disabled], &[disabled]:hover, &[disabled]:active {
+        background-color: rgba(0, 0, 0, 0);
+        border-color: rgba(255, 255, 255, .15);
+        color: rgba(128, 128, 128, .5)
+    }
+}
+
 @mixin basicLightButton($hasImage: false) {    
     border-radius: 50%;
     padding: 4rem;

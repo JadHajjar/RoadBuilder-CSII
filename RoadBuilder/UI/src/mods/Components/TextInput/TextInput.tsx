@@ -31,8 +31,3 @@ export const TextInputTheme: Theme | any = getModule(
     "game-ui/editor/widgets/item/editor-item.module.scss",
     "classes"
   );
-
-export const AssetGridTheme: Theme | any = getModule(
-    "game-ui/game/components/asset-menu/asset-grid/asset-grid.module.scss",
-    "classes"
-  );
