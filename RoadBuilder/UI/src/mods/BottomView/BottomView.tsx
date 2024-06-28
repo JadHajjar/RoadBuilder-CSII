@@ -103,15 +103,21 @@ export const BottomView = () => {
         visibility: toolMode == RoadBuilderToolModeEnum.EditingSingle? 'hidden' : 'initial'
     };
 
+    let isDragging = dragContext.netSectionItem || dragContext.roadLane;  
     return (
         <div className={styles.viewContainer}>
-            <DragAndDropScrollable className={styles.view} trackVisibility='always' horizontal controller={scrollController}>
+            <div className={styles.view}> {/*trackVisibility='always' horizontal controller={scrollController}>*/}
                 {items}                
                 {roadLanes.length == 0 && !dragContext.netSectionItem? <div className={styles.hint}>Drag Lanes Here</div> : <></>}                
-            </DragAndDropScrollable>            
+            </div>            
             <div className={styles.bottomBG}>
-                <Button style={copyButtonStyle} className={styles.copyButton} variant='flat' onSelect={createNewPrefab}>Copy to New Prefab</Button>
-                <Button className={styles.closeButton} src='Media/Glyphs/Close.svg' variant='icon' onSelect={clearTool} />
+                {isDragging? 
+                    <></> : 
+                    <>
+                        <Button style={copyButtonStyle} className={styles.copyButton} variant='flat' onSelect={createNewPrefab}>Copy to New Prefab</Button>
+                        <Button className={styles.closeButton} src='Media/Glyphs/Close.svg' variant='icon' onSelect={clearTool} />
+                    </>
+                }
             </div>
         </div>        
     )

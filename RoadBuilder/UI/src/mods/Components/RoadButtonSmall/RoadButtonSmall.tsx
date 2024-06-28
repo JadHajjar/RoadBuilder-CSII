@@ -64,25 +64,10 @@ export const RoadButtonSmall = (props: _Props) => {
             <div className={styles.informationBar}>
                 <div className={styles.laneName}>
                     {item.DisplayName}
+                    3.5 m                    
                 </div>                
             </div>              
             {popup}
         </div>            
     )
 }
-
-export const DragLaneRepresentation = forwardRef<HTMLDivElement>((props, ref) => {
-    let dragData = useContext(DragContext);
-    if (dragData.roadLane == undefined) {
-        return (<></>);
-    }
-
-    let lane = dragData.roadLane;
-    return (
-        <div className={classNames(styles.button, styles.dragRepresentation)}>
-            <div className={styles.frame}>                    
-            </div>
-            <img src='Media/Placeholder.svg'/>                      
-        </div>
-    )
-});

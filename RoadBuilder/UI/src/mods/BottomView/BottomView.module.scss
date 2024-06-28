@@ -1,10 +1,12 @@
+@use '../base.scss' as base;
+
 .viewContainer {
     position: absolute;    
     left: 20%;
     right: 20%;
     // The Vanilla Prefab Picker width => calc( var(--assetMenuColumns) * ( var(--assetMenuItemSize) + var(--assetMenuItemGap) ) - var(--assetMenuItemGap) + 40rem);
     height: auto;//120rem;    
-    bottom: 121rem;
+    bottom: base.$bottomBarOffset;
     z-index: 0;
 
     display: flex;
@@ -17,10 +19,6 @@
 }
 
 .view {
-    max-width: 80%;
-}
-
-.view > div {
     position: relative;
     min-width: 20%;    
     height: 100%;
@@ -33,7 +31,7 @@
     justify-content: center;   
     align-items: flex-end;     
 
-    background: linear-gradient(to top,rgba(217, 217, 217, 0) 82rem, rgba(255, 255, 255, 0.3) 82rem, rgba(217, 217, 217, 0) 140rem);
+    background: linear-gradient(to top,rgba(217, 217, 217, 0) base.$bottomBarHeight, rgba(255, 255, 255, 0.3) base.$bottomBarHeight, rgba(217, 217, 217, 0) base.$bottomViewHeight);
     pointer-events: auto;
 }
 
@@ -41,7 +39,7 @@
     position: absolute;
     width: 100vw;
     bottom: 0px;    
-    height: 80rem;
+    height: base.$bottomBarHeight;
     background-color:  var(--panelColorNormal);
     backdrop-filter:  var(--panelBlur);
     z-index: -1;
