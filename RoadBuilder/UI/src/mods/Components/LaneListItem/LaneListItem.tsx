@@ -75,11 +75,16 @@ export const LaneListItemDrag = forwardRef<HTMLDivElement>((props, ref) => {
         left: `calc( ${dragData.mousePosition.x}px - 66rem)`,
         top: `calc( ${dragData.mousePosition.y}px - 40rem)`
     }
+    let containerClasses = classNames(
+        styles.item, 
+        styles.dragRepresentation,
+        {[styles.bottomRow]: dragType == DragType.Order}
+    )
     // if (!netSection.Thumbnail){
         netSection.Thumbnail = 'Media/Placeholder.svg';
     // }    
     return (
-        <div style={offsetStyle} className={classNames(styles.item, styles.dragRepresentation)} ref={ref}>
+        <div style={offsetStyle} className={containerClasses} ref={ref}>
             <img className={styles.image} src={netSection.Thumbnail}/>
             <div className={styles.label}>
                 {netSection.DisplayName}
