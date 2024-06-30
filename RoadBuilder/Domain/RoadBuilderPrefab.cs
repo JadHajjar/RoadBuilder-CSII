@@ -12,6 +12,9 @@ namespace RoadBuilder.Domain
 		public RoadBuilderPrefab(RoadConfig config)
 		{
 			Config = config;
+			name = config.ID;
+
+			m_Sections = new NetSectionInfo[0];
 		}
 	}
 }

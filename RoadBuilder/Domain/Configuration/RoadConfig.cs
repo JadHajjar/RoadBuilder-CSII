@@ -73,8 +73,8 @@ namespace RoadBuilder.Domain.Configuration
 			writer.Write(GeneratesTrafficLights);
 			writer.Write(GeneratesZoningBlocks);
 			writer.Write(MaxSlopeSteepness);
-			writer.Write(AggregateType);
-			writer.Write(PillarPrefabName);
+			writer.Write(AggregateType ?? string.Empty);
+			writer.Write(PillarPrefabName ?? string.Empty);
 			writer.Write(HasUndergroundWaterPipes);
 			writer.Write(HasUndergroundElectricityCable);
 			writer.Write(RequiresUpgradeForElectricity);

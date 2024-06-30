@@ -1,4 +1,6 @@
 ﻿using Game.Prefabs;
+using Game.SceneFlow;
+using Game.UI.InGame;
 
 using RoadBuilder.Domain;
 using RoadBuilder.Domain.Configuration;
@@ -11,12 +13,14 @@ namespace RoadBuilder.Utilities
 	public class RoadConfigGenerationUtil
 	{
 		private readonly RoadGenerationData _roadGenerationData;
+		private readonly PrefabUISystem _prefabUISystem;
 
 		public RoadPrefab RoadPrefab { get; }
 
-		public RoadConfigGenerationUtil(RoadPrefab prefab, RoadGenerationData roadGenerationData)
+		public RoadConfigGenerationUtil(RoadPrefab prefab, RoadGenerationData roadGenerationData, PrefabUISystem prefabUISystem)
 		{
 			_roadGenerationData = roadGenerationData;
+			_prefabUISystem = prefabUISystem;
 
 			RoadPrefab = prefab;
 		}
@@ -25,6 +29,7 @@ namespace RoadBuilder.Utilities
 		{
 			var config = new RoadConfig
 			{
+				Name = $"Custom {GetAssetName(RoadPrefab)}",
 				SpeedLimit = RoadPrefab.m_SpeedLimit,
 				GeneratesTrafficLights = RoadPrefab.m_TrafficLights,
 				GeneratesZoningBlocks = RoadPrefab.m_ZoneBlock is not null,
@@ -75,6 +80,18 @@ namespace RoadBuilder.Utilities
 			}
 
 			return null;
+		}
+
+		private string GetAssetName(PrefabBase prefab)
+		{
+			_prefabUISystem.GetTitleAndDescription(prefab, out var titleId, out var _);
+
+			if (GameManager.instance.localizationManager.activeDictionary.TryGetValue(titleId, out var name))
+			{
+				return name;
+			}
+
+			return prefab.name.Replace('_', ' ').FormatWords();
 		}
 	}
 }
