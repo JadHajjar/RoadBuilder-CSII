@@ -1,19 +1,29 @@
-@use '../base.scss' as _base;
+@use "../base.scss" as _base;
 
 .panel {
-    position: absolute;
-    left: 4rem;
-    bottom: _base.$bottomBarOffset + _base.$bottomBarHeight;
-    width: 300rem;
-    height: 250rem;
+  position: absolute;
+  left: 10rem;
+  bottom: 10rem + _base.$bottomBarOffset + _base.$bottomBarHeight;
+  width: 275rem;
+  padding: 10rem 0;
+  background-color: var(--panelColorNormal);
+  backdrop-filter: var(--panelBlur);
+  color: var(--textColorDim);
+  border-bottom-left-radius: var(--panelRadius);
+  border-bottom-right-radius: var(--panelRadius);
+  border-top-left-radius: var(--panelRadius);
+  border-top-right-radius: var(--panelRadius);
+  pointer-events: auto;
+}
 
-    background-color: var(--panelColorNormal);
-    backdrop-filter: var(--panelBlur);    
-
-    color: var(--textColorDim);
-    pointer-events: auto;
+.title {
+  color: var(--focusedColor);
+  text-transform: uppercase;
+  text-align: center;
+  font-size: 12rem;
+  margin-bottom: 6rem;
 }
 
 .textInput {
-    @include _base.textInputBasic();
+  @include _base.textInputBasic();
 }

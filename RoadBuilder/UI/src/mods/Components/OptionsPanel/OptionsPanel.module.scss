@@ -1,0 +1,45 @@
+.sortIcon {
+  height: 2.5em;
+  width: 2.5em;
+  padding: 0.5rem;
+  background: none;
+}
+
+.sortIcon img {
+  height: 1.5em;
+  width: 1.5em;
+}
+
+.optionRow {
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+
+.optionSection {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 2rem 12rem;
+  justify-content: space-between;
+}
+
+.optionLabel {
+  max-height: 26rem;
+  margin-right: 15rem;
+  font-size: var(--fontSizeM);
+  font-weight: bold;
+}
+
+.optionContent {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  flex: 1;
+  gap: 1em;
+}
+
+.optionContent > .singleButton {
+  margin: 2rem !important;
+}

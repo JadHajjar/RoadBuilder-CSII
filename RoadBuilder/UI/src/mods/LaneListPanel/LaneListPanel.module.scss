@@ -1,37 +1,37 @@
 .panel {
-    position: absolute;
-    width: 340rem;
-    top: 80rem;
-    bottom: 300rem;
-    right: 6rem;
-    z-index: 0;
+  position: absolute;
+  width: 320rem;
+  top: 80rem;
+  bottom: 300rem;
+  right: 65rem;
+  z-index: 0;
 
-    background-color: var(--panelColorNormal);
-    backdrop-filter: var(--panelBlur);
-    border-radius: var(--panelRadius);
+  background-color: var(--panelColorNormal);
+  backdrop-filter: var(--panelBlur);
+  border-radius: var(--panelRadius);
 
-    pointer-events: auto;
+  pointer-events: auto;
 
-    padding: 8rem 4rem;    
-    overflow: hidden;
+  padding: 8rem 4rem;
+  overflow: hidden;
 
-    animation: entry 0.2s;    
+  animation: entry 0.2s;
 
-    .list > :first-child {
-        display: flex;
-        flex-wrap: wrap;        
-        flex-direction: row;        
-        justify-content: left;                                 
-        align-items: center;        
-    }
+  .list > :first-child {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+  }
 }
 
 @keyframes entry {
-    0% {
-        right: -10rem;
-        opacity: 0;
-    }
-    100% {
-        opacity: 1;
-    }
+  0% {
+    right: -10rem;
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }

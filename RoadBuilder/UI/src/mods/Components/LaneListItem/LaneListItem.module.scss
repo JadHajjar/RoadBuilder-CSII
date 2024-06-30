@@ -1,99 +1,96 @@
 .container {
-    margin: 8rem;
-    margin-top: 0;
-    margin-bottom: 16rem;
-    width: 132rem;
-    height: 160rem;
+  margin: 0 4rem 8rem 4rem;
+  width: 89rem;
+  height: 110rem;
 
-    &.moving {
-        background-color: rgba($color: #000000, $alpha: 0.3);
-        border-radius: 4rem;
-    }
+  &.moving {
+    background-color: rgba($color: #000000, $alpha: 0.3);
+    border-radius: 4rem;
+  }
 }
 
 @keyframes startDrag-item {
-    0% {
-        height: 160rem;        
-    }
-    100% {
-        height: 100rem;
-    }
+  0% {
+    height: 160rem;
+  }
+  100% {
+    height: 100rem;
+  }
 }
 @keyframes startDrag-label {
-    0% {
-        transform: scale(1);
-    }
-    100% {
-        transform: scale(1, 0);
-        opacity: 0;
-    }
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1, 0);
+    opacity: 0;
+  }
 }
 
 .item {
-    padding: 8rem;
-    background-color: rgba($color: #ffffff, $alpha: 0.15);    
-    width: auto;
-    height: 160rem;
-    border-radius: 4rem;    
-    flex-grow: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    overflow: hidden;    
-    transform: scale(1);
-    
-    transition: width 0.25s, height 0.25s, box-shadow 0.25s, transform 0.25s;
+  padding: 4rem;
+  background-color: rgba($color: #ffffff, $alpha: 0.15);
+  width: auto;
+  height: 110rem;
+  border-radius: 4rem;
+  flex-grow: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+  transform: scale(1);
 
-    &:hover {
-        transform: scale(1.1);
-        box-shadow: 0px 4rem 5rem 2rem rgba($color: #000000, $alpha: 0.3);
+  transition: width 0.25s, height 0.25s, box-shadow 0.25s, transform 0.25s;
+
+  &:hover {
+    transform: scale(1.1);
+    box-shadow: 0px 4rem 5rem 2rem rgba($color: #000000, $alpha: 0.3);
+  }
+
+  &.moving {
+    display: none;
+  }
+
+  &.dragRepresentation {
+    position: absolute;
+    height: 100rem;
+    .label {
+      transform: scale(1, 0);
+      animation: startDrag-label 0.2s;
     }
+    animation: startDrag-item 0.2s;
 
-    &.moving {
-        display: none;                   
+    &.bottomRow {
+      animation: none;
+      .label {
+        display: none;
+      }
     }
-
-    &.dragRepresentation {
-        position: absolute;
-        height: 100rem;        
-        .label {
-            transform: scale(1, 0);
-            animation: startDrag-label 0.2s;        
-        }
-        animation: startDrag-item 0.2s;     
-
-        &.bottomRow {
-            animation: none;            
-            .label {
-                display: none;
-            }
-        }
-    }
+  }
 }
 
 .image {
-    width: 80rem;
-    height: 80rem;
-    background-color: rgba($color: #000000, $alpha: 0.3);
-    backdrop-filter: blur(2px);   
-    padding: 4rem;
-    border-radius: 4rem;               
+  width: 50rem;
+  height: 50rem;
+  padding: 4rem;
+  border-radius: 4rem;
 }
 
 .label {
-    color: var(--normalTextColor);
-    margin-top: 4rem;
-    width: 120rem;
-    height: 2lh;
-    text-align: center;    
-    text-overflow: ellipsis;        
-    overflow: hidden;
+  color: var(--normalTextColor);
+  margin-top: 4rem;
+  width: 80rem;
+  font-size: 12rem;
+  height: 2lh;
+  text-align: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
 
-    transform-origin: top center;
+  transform-origin: top center;
 
-    transition: transform 0.25s;
+  transition: transform 0.25s;
 
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
 }

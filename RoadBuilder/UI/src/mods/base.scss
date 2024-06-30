@@ -5,78 +5,81 @@ $bottomBarOffset: 121rem;
 $laneButtonSize: 64rem;
 
 @mixin textInputBasic {
-    padding: 3rem 5rem;
-    background-color: rgba(0, 0, 0, .15);
-    border-radius: 3rem;
-    line-height: 1.25em;
-    color: #eee;
-    border-style: solid;
-    border-top-width: var(--stroke1);
-    border-left-width: var(--stroke1);
-    border-bottom-width: var(--stroke1);
-    border-right-width: var(--stroke1);
-    border-color: rgba(255, 255, 255, .2);
+  background-color: rgba(0, 0, 0, 0.15);
+  color: #eee;
+  width: 150rem;
+  padding: 0.25em 0.5em;
+  line-height: 1.15em;
+  font-size: 1em;
+  border-width: 2.5rem;
+  border-radius: 5rem;
+  border-style: solid;
+  border-color: rgba(255, 255, 255, 0.2);
 
-    &:hover {
-        background-color: rgba(255, 255, 255, .1)
-    }
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
 
-    &:active, &:focus, &.active {
-        background-color: rgba(255, 255, 255, .2);
-        border-top-color: var(--accentColorLight);
-        border-left-color: var(--accentColorLight);
-        border-bottom-color: var(--accentColorLight);
-        border-right-color: var(--accentColorLight)
-    }
+  &:active,
+  &:focus,
+  &.active {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-top-color: var(--accentColorLight);
+    border-left-color: var(--accentColorLight);
+    border-bottom-color: var(--accentColorLight);
+    border-right-color: var(--accentColorLight);
+  }
 
-    &.focused {
-        border-color: #c7ff65
-    }
+  &.focused {
+    border-color: #c7ff65;
+  }
 
-    &[disabled], &[disabled]:hover, &[disabled]:active {
-        background-color: rgba(0, 0, 0, 0);
-        border-color: rgba(255, 255, 255, .15);
-        color: rgba(128, 128, 128, .5)
-    }
+  &[disabled],
+  &[disabled]:hover,
+  &[disabled]:active {
+    background-color: rgba(0, 0, 0, 0);
+    border-color: rgba(255, 255, 255, 0.15);
+    color: rgba(128, 128, 128, 0.5);
+  }
 }
 
-@mixin basicLightButton($hasImage: false) {    
-    border-radius: 50%;
-    padding: 4rem;
-    color: var(--normalTextColor);    
-    background-color: rgba(255, 255, 255, 0.3);
-    font-weight: bold;
-    text-align: center;  
-    border: none;
+@mixin basicLightButton($hasImage: false) {
+  border-radius: 50%;
+  padding: 4rem;
+  color: var(--normalTextColor);
+  background-color: rgba(255, 255, 255, 0.3);
+  font-weight: bold;
+  text-align: center;
+  border: none;
 
-    @if $hasImage {
-        img {
-            filter: invert(1);
-        }
-    }    
-
-    &:hover {
-        background-color: rgba(255, 255, 255, 0.4);
+  @if $hasImage {
+    img {
+      filter: invert(1);
     }
-    &:active {
-        background: rgba(255, 255, 255, 0.5);   
-    } 
+  }
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.4);
+  }
+  &:active {
+    background: rgba(255, 255, 255, 0.5);
+  }
 }
 
 @mixin basicButton() {
-    padding: 8rem;
-    border-radius: 4rem;
-    background-color: rgba(217, 217, 217, 0.71);
-    backdrop-filter: blur(4px);
-    text-align: center;
-    color: black;
-    border: none;
+  padding: 8rem;
+  border-radius: 4rem;
+  background-color: rgba(217, 217, 217, 0.71);
+  backdrop-filter: blur(4px);
+  text-align: center;
+  color: black;
+  border: none;
 
-    &:hover {
-        background: rgba(217, 217, 217, 0.8);
-    }
+  &:hover {
+    background: rgba(217, 217, 217, 0.8);
+  }
 
-    &:active {
-        background: rgba(217, 217, 217, 1.0);
-    }
+  &:active {
+    background: rgba(217, 217, 217, 1);
+  }
 }

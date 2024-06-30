@@ -1,4 +1,5 @@
 ﻿using Game.Prefabs;
+using Game.Simulation;
 using Game.Tools;
 using Game.UI.InGame;
 
@@ -23,10 +24,12 @@ namespace RoadBuilder.Systems.UI
         private RoadBuilderSystem roadBuilderSystem;
         private RoadBuilderToolSystem roadBuilderToolSystem;
         private DefaultToolSystem defaultToolSystem;
+		private SimulationSystem simulationSystem;
 
-        private ValueBindingHelper<RoadBuilderToolMode> RoadBuilderMode;
+		private ValueBindingHelper<RoadBuilderToolMode> RoadBuilderMode;
 		private ValueBindingHelper<RoadPropertiesUIBinder> RoadProperties;
 		private ValueBindingHelper<RoadLaneUIBinder[]> RoadLanes;
+		private ValueBindingHelper<bool> IsPaused;
 
 		public RoadBuilderToolMode Mode => RoadBuilderMode;
 
@@ -40,17 +43,26 @@ namespace RoadBuilder.Systems.UI
             roadBuilderSystem = World.GetOrCreateSystemManaged<RoadBuilderSystem>();
 			roadBuilderToolSystem = World.GetOrCreateSystemManaged<RoadBuilderToolSystem>();
             defaultToolSystem = World.GetOrCreateSystemManaged<DefaultToolSystem>();
+			simulationSystem = World.GetOrCreateSystemManaged<SimulationSystem>();
 
             toolSystem.EventToolChanged += OnToolChanged;
 
             RoadBuilderMode = CreateBinding("RoadBuilderToolMode", RoadBuilderToolMode.None);
-            RoadProperties = CreateBinding("GetRoadProperties", "SetRoadProperties", new RoadPropertiesUIBinder(), _ => UpdateRoad());
+			RoadProperties = CreateBinding("GetRoadProperties", "SetRoadProperties", new RoadPropertiesUIBinder(), _ => UpdateRoad());
             RoadLanes = CreateBinding("GetRoadLanes", "SetRoadLanes", new RoadLaneUIBinder[0], _ => UpdateRoad());
+			IsPaused = CreateBinding("IsPaused", simulationSystem.selectedSpeed == 0f);
 
 			CreateTrigger("ToggleTool", ToggleTool);
             CreateTrigger("CreateNewPrefab", () => CreateNewPrefab(workingEntity));
             CreateTrigger("ClearTool", ClearTool);
         }
+
+		protected override void OnUpdate()
+		{
+            IsPaused.Value = simulationSystem.selectedSpeed == 0f;
+
+			base.OnUpdate();
+		}
 
 		private void OnToolChanged(ToolBaseSystem system)
         {

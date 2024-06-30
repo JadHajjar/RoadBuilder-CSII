@@ -9,6 +9,7 @@ export const allNetSections$ = bindValue<NetSectionItem[]>("RoadBuilder", "NetSe
 export const roadBuilderToolMode$ = bindValue(mod.id, "RoadBuilderToolMode", RoadBuilderToolModeEnum.None);
 export const roadLanes$ = bindValue<RoadLane[]>(mod.id, "GetRoadLanes", []);
 export const roadProperties$ = bindValue<RoadProperties>(mod.id, "GetRoadProperties");
+export const isPaused$ = bindValue<boolean>(mod.id, "IsPaused");
 
 // export const editPrefab = trigger.bind(null, mod.id, "ActionPopup.Edit");
 // export const createFromTemplate = trigger.bind(null, mod.id, "ActionPopup.New");
