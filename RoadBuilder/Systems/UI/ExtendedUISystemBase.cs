@@ -1,11 +1,14 @@
-﻿using Colossal.UI.Binding;
+﻿using Colossal.Reflection;
+using Colossal.UI.Binding;
 
 using Game.UI;
 
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 
 using Unity.Entities;
 
@@ -130,13 +133,13 @@ namespace RoadBuilder.Systems.UI
 
 			writer.TypeBegin(type.FullName);
 
-			foreach (var propertyInfo in properties)
+			foreach (var propertyInfo in properties.Where(x => !x.HasAttribute<WriterIgnoreAttribute>()))
 			{
 				writer.PropertyName(propertyInfo.Name);
 				WriteGeneric(writer, propertyInfo.GetValue(obj));
 			}
 
-			foreach (var fieldInfo in fields)
+			foreach (var fieldInfo in fields.Where(x => !x.HasAttribute<WriterIgnoreAttribute>()))
 			{
 				writer.PropertyName(fieldInfo.Name);
 				WriteGeneric(writer, fieldInfo.GetValue(obj));
@@ -413,7 +416,7 @@ namespace RoadBuilder.Systems.UI
       
 			foreach (var propertyInfo in properties)
 			{
-				if (reader.ReadProperty(propertyInfo.Name))
+				if (!propertyInfo.HasAttribute<ReaderIgnoreAttribute>() && reader.ReadProperty(propertyInfo.Name))
 				{
 					propertyInfo.SetValue(obj, ReadGeneric(reader, propertyInfo.PropertyType));
 				}
@@ -421,7 +424,7 @@ namespace RoadBuilder.Systems.UI
 
 			foreach (var fieldInfo in fields)
 			{
-				if (reader.ReadProperty(fieldInfo.Name))
+				if (!fieldInfo.HasAttribute<ReaderIgnoreAttribute>() && reader.ReadProperty(fieldInfo.Name))
 				{
 					fieldInfo.SetValue(obj, ReadGeneric(reader, fieldInfo.FieldType));
 				}
@@ -432,4 +435,7 @@ namespace RoadBuilder.Systems.UI
 			return obj;
 		}
 	}
+
+	public class ReaderIgnoreAttribute : Attribute { }
+	public class WriterIgnoreAttribute : Attribute { }
 }

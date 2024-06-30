@@ -1,72 +1,91 @@
 .view {
-    position: absolute;
-    width: 200rem;
-    height: 160rem;    
-    bottom: 220rem;      
-    background-color: var(--panelColorNormal);
-    backdrop-filter: var(--panelBlur);
-    border-radius: 3rem;  
-    padding: 4rem;
+  position: absolute;
+  width: 300rem;
+  bottom: 175rem;
+  background-color: var(--panelColorNormal);
+  backdrop-filter: var(--panelBlur);
+  color: var(--textColorDim);
+  border-bottom-left-radius: var(--panelRadius);
+  border-bottom-right-radius: var(--panelRadius);
+  border-top-left-radius: var(--panelRadius);
+  border-top-right-radius: var(--panelRadius);
+  padding-bottom: 10rem;
 
-    display: flex;
-    flex-direction: column;
-    transform-origin: bottom center;
+  display: flex;
+  flex-direction: column;
+  transform-origin: bottom center;
 
-    animation: enter 0.2s;
-    color: rgba($color: #FFF, $alpha: 1.0);
+  //animation: enter 0.2s;
+  color: rgba($color: #fff, $alpha: 1);
 }
 
 .topBar {
-    display: flex;
-    width: 100%;
-    flex-direction: row;
-    justify-content: flex-end;    
-    align-items: center;
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  justify-content: flex-end;
+  background-color: var(--panelColorDark);
+  border-top-left-radius: var(--panelRadius);
+  border-top-right-radius: var(--panelRadius);
+  padding: 5rem;
+  align-items: center;
+  justify-content: space-between;
 
-    & .deleteButton {
-        mask-image: url(coui://gameui/Media/Glyphs/Trash.svg);
+  & .deleteButton {
+    margin-left: 5rem;
+    mask-image: url(coui://gameui/Media/Glyphs/Trash.svg);
+
+    &:hover {
+      background-color: rgb(186, 26, 17);
     }
-    & .closeButton {
-        mask-image: url(coui://gameui/Media/Glyphs/Close.svg);
+  }
+  & .closeButton {
+    mask-image: url(coui://gameui/Media/Glyphs/Close.svg);
+  }
+  > button {
+    background-color: rgba(255, 255, 255, 0.7);
+    mask-size: 100%;
+    &:hover {
+      background-color: white;
     }
-    > button {        
-        background-color: rgba(255,255,255, 0.7);
-        mask-size: 100%;
-        &:hover {
-            background-color: white;
-        }
-    }
+  }
+}
+
+.title {
+  coh-font-fit-mode: shrink;
+  height: 22rem;
+  flex: 1;
 }
 
 .content {
-    position: relative;
-    display: flex;
-    flex-grow: 1;
-    width: 100%;
-    flex-direction: row;
-    justify-content: center;
+  position: relative;
+  display: flex;
+  flex-grow: 1;
+  width: 100%;
+  flex-direction: column;
+  padding-top: 10rem;
 
-    .caret{
-        position: absolute;
-        display: block;
-        bottom: -24rem;
-        width: 80rem;
-        height: 20rem;
-        background-color: var(--panelColorNormal);
-        backdrop-filter: var(--panelBlur);
-        mask-image: url(coui://gameui/Media/Misc/BalloonArrowBottom.svg#1);
-        mask-size: 100% 80rem;
-        mask-position: 50% 95%;
-    }
+  .caret {
+    position: absolute;
+    display: block;
+    bottom: -30rem;
+    width: 80rem;
+    height: 20rem;
+    background-color: var(--panelColorNormal);
+    backdrop-filter: var(--panelBlur);
+    mask-image: url(coui://gameui/Media/Misc/BalloonArrowBottom.svg#1);
+    mask-size: 100% 80rem;
+    mask-position: 50% 95%;
+  }
 }
 
 @keyframes enter {
-    0% {
-        opacity: 0;
-        transform: translate(0rem, 10rem);
-    }
-    100% {
-        opacity: 1;
-        transform: translate(0rem, 0rem);
-    }
+  0% {
+    opacity: 0;
+    transform: translate(0rem, 10rem);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(0rem, 0rem);
+  }
 }

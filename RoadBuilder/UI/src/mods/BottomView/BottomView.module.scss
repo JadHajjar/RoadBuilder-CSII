@@ -1,125 +1,134 @@
-@use '../base.scss' as base;
+@use "../base.scss" as base;
 
 .viewContainer {
-    position: absolute;    
-    left: 20%;
-    right: 20%;
-    // The Vanilla Prefab Picker width => calc( var(--assetMenuColumns) * ( var(--assetMenuItemSize) + var(--assetMenuItemGap) ) - var(--assetMenuItemGap) + 40rem);
-    height: auto;//120rem;    
-    bottom: base.$bottomBarOffset;
-    z-index: 0;
+  position: absolute;
+  left: 20%;
+  right: 20%;
+  // The Vanilla Prefab Picker width => calc( var(--assetMenuColumns) * ( var(--assetMenuItemSize) + var(--assetMenuItemGap) ) - var(--assetMenuItemGap) + 40rem);
+  height: auto; //120rem;
+  bottom: base.$bottomBarOffset;
+  z-index: 0;
 
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: center;   
-    align-items: flex-end;         
-    
-    animation: entry 0.2s;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: flex-end;
+
+  animation: entry 0.2s;
 }
 
 .view {
-    position: relative;
-    min-width: 20%;    
-    height: 100%;
-    padding: 24rem;
-    padding-bottom: 0rem;
+  position: relative;
+  min-width: 20%;
+  height: 100%;
+  padding-top: 24rem;
+  padding-bottom: 0rem;
 
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: center;   
-    align-items: flex-end;     
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: flex-end;
 
-    background: linear-gradient(to top,rgba(217, 217, 217, 0) base.$bottomBarHeight, rgba(255, 255, 255, 0.3) base.$bottomBarHeight, rgba(217, 217, 217, 0) base.$bottomViewHeight);
-    pointer-events: auto;
+  background: linear-gradient(
+    to top,
+    rgba(217, 217, 217, 0) base.$bottomBarHeight,
+    rgba(255, 255, 255, 0.2) base.$bottomBarHeight,
+    rgba(255, 255, 255, 0.1) base.$bottomViewHeight,
+    rgba(255, 255, 255, 0) base.$bottomViewHeight + 24rem
+  );
+  pointer-events: auto;
 }
 
 .bottomBG {
-    position: absolute;
-    width: 100vw;
-    bottom: 0px;    
-    height: base.$bottomBarHeight;
-    background-color:  var(--panelColorNormal);
-    backdrop-filter:  var(--panelBlur);
-    z-index: -1;
+  position: absolute;
+  width: 100vw;
+  bottom: -1rem;
+  height: base.$bottomBarHeight;
+  background-color: var(--panelColorNormal);
+  backdrop-filter: var(--panelBlur);
+  z-index: -1;
 
-    padding: 8rem 32rem;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    pointer-events: auto;
+  padding: 8rem 32rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  pointer-events: auto;
+
+  &.paused {
+    width: calc(100vw - 10rem);
+  }
 }
 
 .copyButton {
-    padding: 8rem;
-    border-radius: 8rem;
-    background-color: rgba(255, 255, 255, 0.3);  
+  padding: 8rem;
+  border-radius: 8rem;
+  background-color: rgba(255, 255, 255, 0.3);
+  border: none;
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.4);
     border: none;
-    &:hover {
-        background-color: rgba(255, 255, 255, 0.4);  
-        border: none;
-    }
-    &:active {
-        background: rgba(255, 255, 255, 0.5);   
-        border: none;
-    }
+  }
+  &:active {
+    background: rgba(255, 255, 255, 0.5);
+    border: none;
+  }
 }
 
 .closeButton {
-    position: relative;    
-    border-radius: 50%;
-    width: 24rem;
-    height: 24rem;
-    padding: 4rem;
-    background-color: rgba(255, 255, 255, 0.3);
-    font-weight: bold;
+  position: relative;
+  border-radius: 50%;
+  width: 24rem;
+  height: 24rem;
+  padding: 4rem;
+  background-color: rgba(255, 255, 255, 0.3);
+  font-weight: bold;
 
-    img {
-        filter: invert(1);
-    }
+  img {
+    filter: invert(1);
+  }
 
-    &:hover {
-        background-color: rgba(255, 255, 255, 0.4);
-    }
-    &:active {
-        background: rgba(255, 255, 255, 0.5);   
-    } 
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.4);
+  }
+  &:active {
+    background: rgba(255, 255, 255, 0.5);
+  }
 }
 
-
 .hint {
-    position: absolute;
-    font-size: var(--fontSizeXL);
-    bottom: 25%;
-    padding-bottom: 80rem;
-    left: 0;
-    right: 0;
-    text-align: center;
-    font-weight: bold;    
-    // backdrop-filter: blur(3px);
-    color: var(--normalTextColor);
+  position: absolute;
+  font-size: var(--fontSizeXL);
+  bottom: 25%;
+  padding-bottom: 80rem;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-weight: bold;
+  // backdrop-filter: blur(3px);
+  color: var(--normalTextColor);
 
-    animation: hintEntry 0.2s;
+  animation: hintEntry 0.2s;
 }
 
 @keyframes hintEntry {
-    0% {
-        opacity: 0;
-    }
-    100% {
-        opacity: 1;
-    }
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 @keyframes entry {
-    0% {
-        opacity: 0;
-        bottom: 100rem;
-        z-index: -100;
-    }    
-    100% {
-        opacity: 1;
-    }
+  0% {
+    opacity: 0;
+    bottom: 100rem;
+    z-index: -100;
+  }
+  100% {
+    opacity: 1;
+  }
 }

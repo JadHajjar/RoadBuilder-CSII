@@ -89,26 +89,11 @@ namespace RoadBuilder.Systems
 			}
 		}
 
-		private struct ApplyUpdatedJob : IJobChunk
+		protected override void OnGamePreload(Purpose purpose, GameMode mode)
 		{
-			internal Entity Prefab;
-			internal EntityTypeHandle EntityTypeHandle;
-			internal ComponentTypeHandle<PrefabRef> PrefabRefTypeHandle;
-			internal EntityCommandBuffer.ParallelWriter CommandBuffer;
+			base.OnGamePreload(purpose, mode);
 
-			public void Execute(in ArchetypeChunk chunk, int unfilteredChunkIndex, bool useEnabledMask, in v128 chunkEnabledMask)
-			{
-				var entities = chunk.GetNativeArray(EntityTypeHandle);
-				var prefabRefs = chunk.GetNativeArray(ref PrefabRefTypeHandle);
-
-				for (var i = 0; i < prefabRefs.Length; i++)
-				{
-					if (prefabRefs[i].m_Prefab == Prefab)
-					{
-						CommandBuffer.AddComponent(unfilteredChunkIndex, entities[i], default(Updated));
-					}
-				}
-			}
+			FillRoadGenerationData();
 		}
 
 		public void Deserialize<TReader>(TReader reader) where TReader : IReader
@@ -144,39 +129,6 @@ namespace RoadBuilder.Systems
 			InitializeExistingRoadPrefabs(configs);
 		}
 
-		private void InitializeExistingRoadPrefabs(List<RoadConfig> configs)
-		{
-			foreach (var config in configs)
-			{
-				config.ApplyVersionChanges();
-
-				RoadBuilderPrefab roadPrefab;
-
-				if (prefabSystem.TryGetPrefab(new PrefabID(typeof(RoadBuilderPrefab).Name, config.ID), out var prefabBase))
-				{
-					roadPrefab = (RoadBuilderPrefab)prefabBase;
-
-					roadPrefab.Config = config;
-				}
-				else
-				{
-					roadPrefab = new(config);
-
-					prefabSystem.AddPrefab(roadPrefab);
-				}
-
-				var roadPrefabGeneration = new RoadPrefabGenerationUtil(roadPrefab, roadGenerationData ?? new());
-
-				roadPrefabGeneration.GenerateRoad();
-				roadPrefab.WasGenerated = true;
-				roadPrefab.name = roadPrefab.Config.ID;
-
-				Configurations.Add(roadPrefab);
-
-				prefabSystem.UpdatePrefab(roadPrefab);
-			}
-		}
-
 		public void Serialize<TWriter>(TWriter writer) where TWriter : IWriter
 		{
 			Mod.Log.Info(nameof(Serialize));
@@ -206,17 +158,21 @@ namespace RoadBuilder.Systems
 			InitializeExistingRoadPrefabs(LoadLocalConfigs().ToList());
 		}
 
-		private IEnumerable<RoadConfig> LoadLocalConfigs()
+		public void UpdateRoad(RoadConfig config, Entity entity, bool createNewPrefab)
 		{
-			foreach (var config in LocalSaveUtil.LoadConfigs())
+			if (!EntityManager.TryGetComponent<PrefabRef>(entity, out var prefabRef))
 			{
-				if (_updatedRoadPrefabsQueue.Any(x => x.Config.ID == config.ID))
-				{
-					continue;
-				}
-
-				yield return config;
+				return;
 			}
+
+			if (createNewPrefab || !prefabSystem.TryGetPrefab<RoadBuilderPrefab>(prefabRef, out var roadPrefab))
+			{
+				CreateNewRoadPrefab(config, entity);
+
+				return;
+			}
+
+			_updatedRoadPrefabsQueue.Enqueue(roadPrefab);
 		}
 
 		public RoadConfig GetOrGenerateConfiguration(Entity entity)
@@ -254,21 +210,37 @@ namespace RoadBuilder.Systems
 			return new RoadConfigGenerationUtil(roadPrefab, roadGenerationData, prefabUISystem).GenerateConfiguration();
 		}
 
-		public void UpdateRoad(RoadConfig config, Entity entity, bool createNewPrefab)
+		private void InitializeExistingRoadPrefabs(List<RoadConfig> configs)
 		{
-			if (!EntityManager.TryGetComponent<PrefabRef>(entity, out var prefabRef))
+			foreach (var config in configs)
 			{
-				return;
+				config.ApplyVersionChanges();
+
+				RoadBuilderPrefab roadPrefab;
+
+				if (prefabSystem.TryGetPrefab(new PrefabID(typeof(RoadBuilderPrefab).Name, config.ID), out var prefabBase))
+				{
+					roadPrefab = (RoadBuilderPrefab)prefabBase;
+
+					roadPrefab.Config = config;
+				}
+				else
+				{
+					roadPrefab = new(config);
+
+					prefabSystem.AddPrefab(roadPrefab);
+				}
+
+				var roadPrefabGeneration = new RoadPrefabGenerationUtil(roadPrefab, roadGenerationData ?? new());
+
+				roadPrefabGeneration.GenerateRoad();
+				roadPrefab.WasGenerated = true;
+				roadPrefab.name = roadPrefab.Config.ID;
+
+				Configurations.Add(roadPrefab);
+
+				prefabSystem.UpdatePrefab(roadPrefab);
 			}
-
-			if (createNewPrefab || !prefabSystem.TryGetPrefab<RoadBuilderPrefab>(prefabRef, out var roadPrefab))
-			{
-				CreateNewRoadPrefab(config, entity);
-
-				return;
-			}
-
-			_updatedRoadPrefabsQueue.Enqueue(roadPrefab);
 		}
 
 		private void CreateNewRoadPrefab(RoadConfig config, Entity entity)
@@ -292,13 +264,6 @@ namespace RoadBuilder.Systems
 			{
 				m_Prefab = prefabSystem.GetEntity(roadPrefab)
 			});
-		}
-
-		protected override void OnGamePreload(Purpose purpose, GameMode mode)
-		{
-			base.OnGamePreload(purpose, mode);
-
-			FillRoadGenerationData();
 		}
 
 		private void FillRoadGenerationData()
@@ -392,6 +357,41 @@ namespace RoadBuilder.Systems
 				if (prefabSystem.TryGetPrefab<UIGroupPrefab>(uIGroupElementEntities[i], out var prefab))
 				{
 					roadGenerationData.UIGroupPrefabs[prefab.name] = prefab;
+				}
+			}
+		}
+
+		private IEnumerable<RoadConfig> LoadLocalConfigs()
+		{
+			foreach (var config in LocalSaveUtil.LoadConfigs())
+			{
+				if (_updatedRoadPrefabsQueue.Any(x => x.Config.ID == config.ID))
+				{
+					continue;
+				}
+
+				yield return config;
+			}
+		}
+
+		private struct ApplyUpdatedJob : IJobChunk
+		{
+			internal Entity Prefab;
+			internal EntityTypeHandle EntityTypeHandle;
+			internal ComponentTypeHandle<PrefabRef> PrefabRefTypeHandle;
+			internal EntityCommandBuffer.ParallelWriter CommandBuffer;
+
+			public void Execute(in ArchetypeChunk chunk, int unfilteredChunkIndex, bool useEnabledMask, in v128 chunkEnabledMask)
+			{
+				var entities = chunk.GetNativeArray(EntityTypeHandle);
+				var prefabRefs = chunk.GetNativeArray(ref PrefabRefTypeHandle);
+
+				for (var i = 0; i < prefabRefs.Length; i++)
+				{
+					if (prefabRefs[i].m_Prefab == Prefab)
+					{
+						CommandBuffer.AddComponent(unfilteredChunkIndex, entities[i], default(Updated));
+					}
 				}
 			}
 		}

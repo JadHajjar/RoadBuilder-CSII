@@ -1,121 +1,130 @@
-@use '../../base.scss' as base;
+@use "../../base.scss" as base;
 
 .container {
-    height: base.$bottomBarHeight + base.$laneButtonSize + 4rem;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+  height: base.$bottomBarHeight + base.$laneButtonSize + 4rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
 }
 
-.button {    
-    position: relative;
-    width: base.$laneButtonSize;    
-    height: base.$laneButtonSize;    
+.button {
+  position: relative;
+  width: base.$laneButtonSize;
+  height: base.$laneButtonSize;
 
-    transition: transform 0.2s;
-    margin: 0 16rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    backdrop-filter: blur(2px);   
+  transition: transform 0.2s;
+  margin: 0 16rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 
-    img {                
-        width: 80%;
-        height: 80%;
+  img {
+    width: 80%;
+    height: 80%;
+  }
+
+  &:hover {
+    transform: scale(1.05);
+
+    & .closeButton {
+      display: flex;
+
+      animation: closeButton-enter 0.1s;
     }
+  }
 
-    &:hover {
-        transform: scale(1.05);
-
-        & .closeButton {
-            display: flex;
-
-            animation: closeButton-enter 0.1s;
-        }
+  &.dragging {
+    background: rgba(0, 0, 0, 0.3);
+    img {
+      visibility: hidden;
     }
-
-    &.dragging {        
-        background: rgba(0,0,0, 0.3);
-        img {
-            visibility: hidden;
-        }        
-    }
-}
-
-.frame {    
-    position: absolute;
-    left: -8rem;
-    right: -8rem;
-    bottom: -8rem;
-    top: -8rem;
-
-    border: 3px solid rgba($color: #fff, $alpha: 0.3);
-    background-color: rgba(0, 0, 0, .2);    
-    backdrop-filter: blur(8px);    
-    mask-image: url('../../../images/bottom_button_border_mask.svg');        
-    mask-size: 100%;
+  }
 }
 
 .closeButton {
-    display: none;
-    position: absolute; 
-    right: -18rem;
-    top: -18rem;  
+  display: none;
+  position: absolute;
+  right: -18rem;
+  top: -18rem;
 
-    background-color: #FF0000;
-    border-radius: 50%;
-    width: 24rem;
-    height: 24rem;
-    
-    align-items: center;
-    justify-content: center;
+  background-color: #ff0000;
+  border-radius: 50%;
+  width: 24rem;
+  height: 24rem;
 
-    img {
-        filter: invert(1);        
-    }    
+  align-items: center;
+  justify-content: center;
+
+  img {
+    filter: invert(1);
+  }
 }
 
 @keyframes closeButton-enter {
-    0% {
-        transform: scale(0);
-        opacity: 0;
-    }
-    100% {
-        transform: scale(1);
-        opacity: 1;
-    }
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
-.informationBar {    
-    height: base.$bottomBarHeight;
-    margin-top: 20rem;
-    width: 130rem;
+.informationBar {
+  height: base.$bottomBarHeight;
+  width: 130rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+  color: var(--normalTextColor);
+  padding-top: 0px;
+  padding-bottom: 0px;
+  font-size: 0.8em;
+
+  border: 1rem solid rgba(225, 225, 225, 0.1);
+  border-width: 0 1rem;
+
+  .laneName {
+    height: 40%;
+    padding: 4rem 8rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    height: 1lh;
+    text-align: center;
+  }
+
+  .laneDesign {
+    height: 60%;
+    background-color: rgb(40, 40, 40);
     display: flex;
-    flex-direction: column;
     justify-content: center;
-    align-items: stretch;
-    color:  var(--normalTextColor) ;
-    padding-top: 0px;
-    padding-left: 8rem;
-    padding-right: 8rem;
-    padding-bottom: 0px;
-    font-size: 0.8em;
+    align-content: center;
 
-    border: 1rem solid rgba(225,225,225,0.3);    
-    border-width: 0 1rem;
+    .arrow {
+      height: 22rem;
+      width: 22rem;
+      mask-size: 100%;
+      background-color: #fff;
+      mask-image: url(coui://gameui/Media/Glyphs/ArrowRight.svg);
+      margin-top: 4rem;
 
-    .laneName {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        height: 1lh;
-        text-align: center;
+      &.up {
+        transform: rotate(-90deg);
+      }
+
+      &.down {
+        transform: rotate(90deg);
+      }
     }
+  }
 }
 
 .container:nth-child(2) .informationBar {
-    border-left: 2rem solid rgba(225,225,225,0.3);
+  border-left: 2rem solid rgba(225, 225, 225, 0.1);
 }

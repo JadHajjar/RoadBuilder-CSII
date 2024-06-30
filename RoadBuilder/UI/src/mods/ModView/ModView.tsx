@@ -35,18 +35,15 @@ export const ModView = () => {
   //   (record: Record<string, NetSectionItem>, cVal: NetSectionItem, cIdx) => {
   //     record[cVal.PrefabName] = cVal;
   //     return record;
-  //   }, 
+  //   },
   // {});
   let nStore = useMemo(() => {
-    let nStore = allNetSections.reduce<Record<string, NetSectionItem>>(
-      (record: Record<string, NetSectionItem>, cVal: NetSectionItem, cIdx) => {
-        record[cVal.PrefabName] = cVal;
-        return record;
-      }, 
-    {});
+    let nStore = allNetSections.reduce<Record<string, NetSectionItem>>((record: Record<string, NetSectionItem>, cVal: NetSectionItem, cIdx) => {
+      record[cVal.PrefabName] = cVal;
+      return record;
+    }, {});
     return nStore;
-  }, [allNetSections]);   
-  
+  }, [allNetSections]);
 
   let onNetSectionItemChange = (item?: NetSectionItem) => {
     setDraggingItem(item);
@@ -67,15 +64,15 @@ export const ModView = () => {
 
   let onMouseDown = (evt: MouseEvent) => {};
 
-  let onMouseRelease = (evt: MouseEvent) => {    
+  let onMouseRelease = (evt: MouseEvent) => {
     let isDragging = draggingItem != undefined || draggingLane != undefined;
     if (evt.button == MouseButtons.Secondary && roadBuilderToolMode == RoadBuilderToolModeEnum.Picker) {
       toggleTool();
-    } else if (evt.button == MouseButtons.Primary && isDragging) {      
+    } else if (evt.button == MouseButtons.Primary && isDragging) {
       setMouseReleased(true);
     } else if (evt.button == MouseButtons.Secondary && isDragging) {
       setDraggingItem(undefined);
-      setDragRoadLane(undefined, undefined); 
+      setDragRoadLane(undefined, undefined);
     }
   };
 
@@ -107,7 +104,7 @@ export const ModView = () => {
     setFromDragIndex(currentIndex);
     setDraggingLane(lane);
     setMouseReleased(false);
-  }
+  };
 
   let dragData: DragContextData = {
     onNetSectionItemChange: onNetSectionItemChange,
@@ -117,7 +114,7 @@ export const ModView = () => {
     setRoadLane: setDragRoadLane,
     mouseReleased: mouseReleased,
     dragElement: dragItemRef.current,
-    oldIndex: fromDragIndex
+    oldIndex: fromDragIndex,
   };
 
   useEffect(() => {
@@ -137,7 +134,7 @@ export const ModView = () => {
   let content: JSX.Element | null = null;
   switch (roadBuilderToolMode) {
     case RoadBuilderToolModeEnum.Picker:
-      content = <div className={styles.pickerHint}>Click on a Road</div>;
+      content = <div className={styles.pickerHint}>Select on a Road to edit</div>;
       break;
     /*case RoadBuilderToolModeEnum.ActionSelection:  
       content = (
@@ -162,7 +159,7 @@ export const ModView = () => {
     <DragContext.Provider value={dragData}>
       <NetSectionsStoreContext.Provider value={nStore}>
         <div className={styles.view}>{content}</div>
-      </NetSectionsStoreContext.Provider>      
+      </NetSectionsStoreContext.Provider>
     </DragContext.Provider>
   );
 };

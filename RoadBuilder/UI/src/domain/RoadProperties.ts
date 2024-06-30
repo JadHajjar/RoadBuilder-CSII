@@ -10,8 +10,26 @@ export interface RoadProperties {
 
 export interface RoadLane {
     SectionPrefabName: string;
-    Invert: boolean;
+    Invert?: boolean;
+    Width?: number;
+    Options?: OptionSection[];
 }
+
+export interface OptionSection {
+    id: number;
+    name: string;
+    options: OptionItem[];
+  }
+  
+  export interface OptionItem {
+    id: number;
+    name: string;
+    icon: string;
+    selected: boolean;
+    isValue: boolean;
+    value: string;
+  }
+  
 
 // Flag Enum
 export enum RoadCategory {
