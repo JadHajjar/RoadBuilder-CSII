@@ -1,7 +1,9 @@
+@use '../../base.scss' as base;
+
 .container {
     position: relative;
     width: 64rem;
-    height: 110rem;
+    height: base.$bottomViewHeight - base.$bottomBarHeight;
     margin-bottom: 82rem;
     transform: scale(1);
     transition: width 0.2s, opacity 0.2s, transform 0.2s;   
@@ -9,8 +11,7 @@
     justify-content: center; 
 
     .divider {
-        height: 110%;
-        margin-top: -20%;
+        height: 110%;        
         width: 4rem;
         background-color: rgba($color: #fff, $alpha: 0.35);                    
         transition: background-color 0.2s;    

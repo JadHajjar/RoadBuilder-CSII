@@ -1,15 +1,16 @@
 export interface RoadProperties {
-    name: string;
-    speedLimit: number;
-    generatesTrafficLights: boolean;
-    generatesZoningBlocks: boolean;
-    maxSlopeSteepness: number; // ignore
-    aggregateType: string; // ignore
-    category: RoadCategory;
+    Name: string;
+    SpeedLimit: number;
+    GeneratesTrafficLights: boolean;
+    GeneratesZoningBlocks: boolean;
+    MaxSlopeSteepness: number; // ignore
+    AggregateType: string; // ignore
+    Category: RoadCategory;
 }
 
 export interface RoadLane {
     SectionPrefabName: string;
+    Invert: boolean;
 }
 
 // Flag Enum

@@ -1,0 +1,19 @@
+@use '../base.scss' as _base;
+
+.panel {
+    position: absolute;
+    left: 4rem;
+    bottom: _base.$bottomBarOffset + _base.$bottomBarHeight;
+    width: 300rem;
+    height: 250rem;
+
+    background-color: var(--panelColorNormal);
+    backdrop-filter: var(--panelBlur);    
+
+    color: var(--textColorDim);
+    pointer-events: auto;
+}
+
+.textInput {
+    @include _base.textInputBasic();
+}

@@ -1,39 +1,42 @@
-import { ForwardedRef, MouseEventHandler, forwardRef, useContext, useEffect, useRef } from 'react';
+import { ForwardedRef, MouseEventHandler, forwardRef, useCallback, useContext, useEffect, useImperativeHandle, useRef } from 'react';
 import styles from './DragAndDropDivider.module.scss';
 import { DragContext } from 'mods/Contexts/DragContext';
 import classNames from 'classnames';
 import { NetSectionItem } from 'domain/NetSectionItem';
 import { MouseButtons, intersects } from 'mods/util';
+import { RoadLane } from 'domain/RoadProperties';
 
 type _Props = {
     listIdx: number;
-    onAddItem: (item: NetSectionItem, index: number) => void;
-    onEvaluateDragAndDrop: () => void;
     first?: boolean;
     last?: boolean;
 }
-export const DragAndDropDivider = (props: _Props) => {    
-    let dragContext = useContext(DragContext);    
-    let containerRef = useRef<HTMLDivElement>(null);
 
+export interface DragAndDropDividerRef {
+    intersects: (other: DOMRect) => boolean;
+    listIdx: number;
+}
+
+export const DragAndDropDivider = forwardRef<DragAndDropDividerRef, _Props>((props: _Props, ref) => {    
+    let dragContext = useContext(DragContext);    
+    let containerRef = useRef<HTMLDivElement>(null);      
     let containerClasses = classNames(
         styles.container,
         {
-            [styles.hidden]: dragContext.netSectionItem === undefined
+            [styles.hidden]: !dragContext.netSectionItem && !dragContext.roadLane
         }
     );
 
-    useEffect(() => {
-        if (dragContext.mouseReleased && dragContext.netSectionItem && dragContext.dragElement && containerRef.current) {
-            let bounds = dragContext.dragElement.getBoundingClientRect();
-            let bounds2 = containerRef.current.getBoundingClientRect();            
-            if (intersects(bounds, bounds2)) {                
-                props.onAddItem(dragContext.netSectionItem, props.listIdx);
-                dragContext.onNetSectionItemChange(undefined);
-            }            
-            props.onEvaluateDragAndDrop();
-        }
-    }, [dragContext.mouseReleased]);
+    useImperativeHandle(ref, () => {
+        let _intersects = (other: DOMRect) => {
+            if (containerRef.current != undefined) {
+                let bounds = containerRef.current.getBoundingClientRect();            
+                return intersects(bounds, other);                                       
+            }
+            return false;
+        };
+        return {intersects: _intersects, listIdx: props.listIdx};
+    }, [containerRef, props.listIdx]);
 
     return (
         <div className={containerClasses} ref={containerRef}>
@@ -41,4 +44,4 @@ export const DragAndDropDivider = (props: _Props) => {
             </div>
         </div>        
     )
-};
+});

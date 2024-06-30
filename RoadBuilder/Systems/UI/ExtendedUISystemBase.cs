@@ -410,7 +410,7 @@ namespace RoadBuilder.Systems.UI
 			var obj = Activator.CreateInstance(type);
 
 			reader.ReadMapBegin();
-
+      
 			foreach (var propertyInfo in properties)
 			{
 				if (reader.ReadProperty(propertyInfo.Name))

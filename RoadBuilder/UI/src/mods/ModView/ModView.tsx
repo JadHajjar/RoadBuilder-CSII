@@ -1,4 +1,4 @@
-import { MouseEventHandler, startTransition, useEffect, useRef, useState, useTransition } from "react";
+import { MouseEventHandler, startTransition, useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { BottomView } from "../BottomView/BottomView";
 import { LaneListPanel } from "../LaneListPanel/LaneListPanel";
 import { DragContext, DragContextData } from "mods/Contexts/DragContext";
@@ -10,20 +10,43 @@ import styles from "./ModView.module.scss";
 import { MouseButtons } from "mods/util";
 import { bindValue, useValue } from "cs2/api";
 import { RoadBuilderToolModeEnum } from "domain/RoadBuilderToolMode";
-import { roadBuilderToolMode$, toggleTool } from "mods/bindings";
+import { allNetSections$, roadBuilderToolMode$, toggleTool } from "mods/bindings";
 import ActionPopup from "mods/Components/ActionPopup/ActionPopup";
 import { useRem } from "cs2/utils";
 import { tool } from "cs2/bindings";
+import { RoadLane } from "domain/RoadProperties";
+import { NetSectionsStore, NetSectionsStoreContext } from "mods/Contexts/NetSectionsStore";
+import { RoadPropertiesPanel } from "mods/RoadPropertiesPanel/RoadPropertiesPanel";
 
 export const ModView = () => {
   const roadBuilderToolMode = useValue(roadBuilderToolMode$);
   let rem = useRem();
 
   let [draggingItem, setDraggingItem] = useState<NetSectionItem | undefined>();
+  let [draggingLane, setDraggingLane] = useState<RoadLane | undefined>();
   let [mousePosition, setMousePosition] = useState<Number2>({ x: 0, y: 0 });
   let [mouseReleased, setMouseReleased] = useState<boolean>(false);
+  let [fromDragIndex, setFromDragIndex] = useState<number | undefined>(undefined);
   let [actionPopupPosition, setActionPopupPosition] = useState<Number2>({ x: 0, y: 0 });
+  let [netSectionDict, setNetSectionDict] = useState<NetSectionsStore>();
   let dragItemRef = useRef<HTMLDivElement>(null);
+  let allNetSections = useValue(allNetSections$);
+  // let nStore = allNetSections.reduce<Record<string, NetSectionItem>>(
+  //   (record: Record<string, NetSectionItem>, cVal: NetSectionItem, cIdx) => {
+  //     record[cVal.PrefabName] = cVal;
+  //     return record;
+  //   }, 
+  // {});
+  let nStore = useMemo(() => {
+    let nStore = allNetSections.reduce<Record<string, NetSectionItem>>(
+      (record: Record<string, NetSectionItem>, cVal: NetSectionItem, cIdx) => {
+        record[cVal.PrefabName] = cVal;
+        return record;
+      }, 
+    {});
+    return nStore;
+  }, [allNetSections]);   
+  
 
   let onNetSectionItemChange = (item?: NetSectionItem) => {
     setDraggingItem(item);
@@ -44,17 +67,15 @@ export const ModView = () => {
 
   let onMouseDown = (evt: MouseEvent) => {};
 
-  let onMouseRelease = (evt: MouseEvent) => {
+  let onMouseRelease = (evt: MouseEvent) => {    
+    let isDragging = draggingItem != undefined || draggingLane != undefined;
     if (evt.button == MouseButtons.Secondary && roadBuilderToolMode == RoadBuilderToolModeEnum.Picker) {
       toggleTool();
-      /*} else if (evt.button == MouseButtons.Secondary && roadBuilderToolMode == RoadBuilderToolModeEnum.ActionSelection) {
-      toggleTool();
-      toggleTool();*/
-    } else if (evt.button == MouseButtons.Primary && draggingItem) {
-      //TODO: send message to bottom view that a new lane has been added
+    } else if (evt.button == MouseButtons.Primary && isDragging) {      
       setMouseReleased(true);
-    } else if (evt.button == MouseButtons.Secondary) {
+    } else if (evt.button == MouseButtons.Secondary && isDragging) {
       setDraggingItem(undefined);
+      setDragRoadLane(undefined, undefined); 
     }
   };
 
@@ -82,12 +103,21 @@ export const ModView = () => {
     }
   }, [roadBuilderToolMode])*/
 
+  let setDragRoadLane = (lane?: RoadLane, currentIndex?: number) => {
+    setFromDragIndex(currentIndex);
+    setDraggingLane(lane);
+    setMouseReleased(false);
+  }
+
   let dragData: DragContextData = {
     onNetSectionItemChange: onNetSectionItemChange,
     mousePosition: mousePosition,
     netSectionItem: draggingItem,
+    roadLane: draggingLane,
+    setRoadLane: setDragRoadLane,
     mouseReleased: mouseReleased,
     dragElement: dragItemRef.current,
+    oldIndex: fromDragIndex
   };
 
   useEffect(() => {
@@ -102,7 +132,7 @@ export const ModView = () => {
       document.removeEventListener("mouseup", onMouseRelease);
       document.removeEventListener("click", onMouseClick);
     };
-  }, [draggingItem]);
+  }, [draggingItem, draggingLane]);
 
   let content: JSX.Element | null = null;
   switch (roadBuilderToolMode) {
@@ -120,6 +150,7 @@ export const ModView = () => {
         <>
           <LaneListPanel />
           <BottomView />
+          <RoadPropertiesPanel />
           <LaneListItemDrag ref={dragItemRef} />
         </>
       );
@@ -129,7 +160,9 @@ export const ModView = () => {
   }
   return (
     <DragContext.Provider value={dragData}>
-      <div className={styles.view}>{content}</div>
+      <NetSectionsStoreContext.Provider value={nStore}>
+        <div className={styles.view}>{content}</div>
+      </NetSectionsStoreContext.Provider>      
     </DragContext.Provider>
   );
 };

@@ -1,5 +1,7 @@
+@use '../../base.scss' as base;
+
 .container {
-    height: 200rem;
+    height: base.$bottomBarHeight + base.$laneButtonSize + 4rem;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -9,8 +11,8 @@
 
 .button {    
     position: relative;
-    width: 80rem;    
-    height: 80rem;    
+    width: base.$laneButtonSize;    
+    height: base.$laneButtonSize;    
 
     transition: transform 0.2s;
     margin: 0 16rem;
@@ -33,6 +35,13 @@
 
             animation: closeButton-enter 0.1s;
         }
+    }
+
+    &.dragging {        
+        background: rgba(0,0,0, 0.3);
+        img {
+            visibility: hidden;
+        }        
     }
 }
 
@@ -81,8 +90,8 @@
 }
 
 .informationBar {    
-    flex-grow: 1;
-    margin-top: 50rem;
+    height: base.$bottomBarHeight;
+    margin-top: 20rem;
     width: 130rem;
     display: flex;
     flex-direction: column;
@@ -95,7 +104,8 @@
     padding-bottom: 0px;
     font-size: 0.8em;
 
-    border-right: 2rem solid rgba(225,225,225,0.3);    
+    border: 1rem solid rgba(225,225,225,0.3);    
+    border-width: 0 1rem;
 
     .laneName {
         overflow: hidden;

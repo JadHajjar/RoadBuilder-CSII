@@ -61,6 +61,13 @@
             animation: startDrag-label 0.2s;        
         }
         animation: startDrag-item 0.2s;     
+
+        &.bottomRow {
+            animation: none;            
+            .label {
+                display: none;
+            }
+        }
     }
 }
 
