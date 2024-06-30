@@ -105,6 +105,19 @@ namespace RoadBuilder.Systems
 			}
 		}
 
+		protected override void OnStopRunning()
+		{
+			base.OnStopRunning();
+
+			var entities = highlightedQuery.ToEntityArray(Allocator.Temp);
+
+			for (var i = 0; i < entities.Length; i++)
+			{
+				EntityManager.RemoveComponent<Highlighted>(entities[i]);
+				EntityManager.AddComponent<BatchesUpdated>(entities[i]);
+			}
+		}
+
 		public override bool TrySetPrefab(PrefabBase prefab)
 		{
 			return false;

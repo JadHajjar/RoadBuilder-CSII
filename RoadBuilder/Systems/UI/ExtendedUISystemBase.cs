@@ -27,7 +27,7 @@ namespace RoadBuilder.Systems.UI
 		public ValueBindingHelper<T> CreateBinding<T>(string key, string setterKey, T initialValue, Action<T> updateCallBack = null)
 		{
 			var helper = new ValueBindingHelper<T>(new(Mod.Id, key, initialValue, new GenericUIWriter<T>()), updateCallBack);
-			var trigger = new TriggerBinding<T>(Mod.Id, setterKey, helper.UpdateCallback, new GenericUIReader<T>());
+			var trigger = new TriggerBinding<T>(Mod.Id, setterKey, helper.UpdateCallback, GenericUIReader<T>.Create());
 
 			AddBinding(helper.Binding);
 			AddBinding(trigger);
@@ -55,7 +55,7 @@ namespace RoadBuilder.Systems.UI
 
 		public TriggerBinding<T1> CreateTrigger<T1>(string key, Action<T1> action)
 		{
-			var binding = new TriggerBinding<T1>(Mod.Id, key, action, new GenericUIReader<T1>());
+			var binding = new TriggerBinding<T1>(Mod.Id, key, action, GenericUIReader<T1>.Create());
 
 			AddBinding(binding);
 
@@ -64,7 +64,7 @@ namespace RoadBuilder.Systems.UI
 
 		public TriggerBinding<T1, T2> CreateTrigger<T1, T2>(string key, Action<T1, T2> action)
 		{
-			var binding = new TriggerBinding<T1, T2>(Mod.Id, key, action, new GenericUIReader<T1>(), new GenericUIReader<T2>());
+			var binding = new TriggerBinding<T1, T2>(Mod.Id, key, action, GenericUIReader<T1>.Create(), GenericUIReader<T2>.Create());
 
 			AddBinding(binding);
 
@@ -73,7 +73,7 @@ namespace RoadBuilder.Systems.UI
 
 		public TriggerBinding<T1, T2, T3> CreateTrigger<T1, T2, T3>(string key, Action<T1, T2, T3> action)
 		{
-			var binding = new TriggerBinding<T1, T2, T3>(Mod.Id, key, action, new GenericUIReader<T1>(), new GenericUIReader<T2>(), new GenericUIReader<T3>());
+			var binding = new TriggerBinding<T1, T2, T3>(Mod.Id, key, action, GenericUIReader<T1>.Create(), GenericUIReader<T2>.Create(), GenericUIReader<T3>.Create());
 
 			AddBinding(binding);
 
@@ -82,7 +82,7 @@ namespace RoadBuilder.Systems.UI
 
 		public TriggerBinding<T1, T2, T3, T4> CreateTrigger<T1, T2, T3, T4>(string key, Action<T1, T2, T3, T4> action)
 		{
-			var binding = new TriggerBinding<T1, T2, T3, T4>(Mod.Id, key, action, new GenericUIReader<T1>(), new GenericUIReader<T2>(), new GenericUIReader<T3>(), new GenericUIReader<T4>());
+			var binding = new TriggerBinding<T1, T2, T3, T4>(Mod.Id, key, action, GenericUIReader<T1>.Create(), GenericUIReader<T2>.Create(), GenericUIReader<T3>.Create(), GenericUIReader<T4>.Create());
 
 			AddBinding(binding);
 
@@ -262,6 +262,30 @@ namespace RoadBuilder.Systems.UI
 
 	public class GenericUIReader<T> : IReader<T>
 	{
+		private static readonly Dictionary<Type, object> _readers = (Dictionary<Type, object>)typeof(ValueReaders).GetField("s_Readers", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null);
+
+		public static IReader<T> Create()
+		{
+			var type = typeof(T);
+
+			return (IReader<T>)Create(type);
+		}
+
+		private static object Create(Type type)
+		{
+			if (_readers.TryGetValue(type, out var valueReader))
+			{
+				return valueReader;
+			}
+
+			if (typeof(IJsonReadable).IsAssignableFrom(type))
+			{
+				return Activator.CreateInstance(typeof(ValueReader<>).MakeGenericType(type));
+			}
+
+			return _readers[type] = new GenericUIReader<T>();
+		}
+
 		public void Read(IJsonReader reader, out T value)
 		{
 			value = (T)ReadGeneric(reader, typeof(T));
@@ -320,7 +344,7 @@ namespace RoadBuilder.Systems.UI
 				return val;
 			}
 
-			if (type == typeof(Enum))
+			if (type.IsEnum)
 			{
 				reader.Read(out int val);
 
@@ -358,17 +382,17 @@ namespace RoadBuilder.Systems.UI
 				return array;
 			}
 
-			if (type == typeof(IEnumerable))
+			if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
 			{
 				var length = reader.ReadArrayBegin();
-				var genericListType = typeof(List<>).MakeGenericType(type.GetElementType());
+				var genericListType = typeof(List<>).MakeGenericType(type.GenericTypeArguments[0]);
 				var genericList = (IList)Activator.CreateInstance(genericListType);
 
 				for (var i = 0ul; i < length; i++)
 				{
 					reader.ReadArrayElement(i);
 
-					genericList.Add(ReadGeneric(reader, type.GetElementType()));
+					genericList.Add(ReadGeneric(reader, type.GenericTypeArguments[0]));
 				}
 
 				reader.ReadArrayEnd();
@@ -386,6 +410,7 @@ namespace RoadBuilder.Systems.UI
 			var obj = Activator.CreateInstance(type);
 
 			reader.ReadMapBegin();
+      
 			foreach (var propertyInfo in properties)
 			{
 				if (reader.ReadProperty(propertyInfo.Name))
@@ -401,6 +426,7 @@ namespace RoadBuilder.Systems.UI
 					fieldInfo.SetValue(obj, ReadGeneric(reader, fieldInfo.FieldType));
 				}
 			}
+
 			reader.ReadMapEnd();
 
 			return obj;

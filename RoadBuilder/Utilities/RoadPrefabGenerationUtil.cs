@@ -57,7 +57,7 @@ namespace RoadBuilder.Utilities
 
 			if (RoadPrefab.WasGenerated)
 			{
-				RoadPrefab.Config.ID = $"{PlatformManager.instance.userSpecificPath}-{Guid.NewGuid()}";
+				RoadPrefab.Config.ID = $"{Guid.NewGuid()}-{PlatformManager.instance.userSpecificPath}";
 			}
 		}
 
@@ -124,8 +124,8 @@ namespace RoadBuilder.Utilities
 
 			undergroundNetSections.m_Sections = Fix(GenerateUndergroundNetSections()).ToArray();
 
-			yield return uIObject;
-			yield return serviceObject;
+			//yield return uIObject;
+			//yield return serviceObject;
 			yield return netPollution;
 			yield return undergroundNetSections;
 			yield return netSubObjects;

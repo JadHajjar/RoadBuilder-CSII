@@ -6,6 +6,7 @@ using Game.Input;
 using Game.Modding;
 using Game.Prefabs;
 using Game.SceneFlow;
+using Game.Serialization;
 using Game.Tools;
 
 using HarmonyLib;
@@ -13,6 +14,8 @@ using RoadBuilder.Systems;
 using RoadBuilder.Systems.UI;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+
 using Unity.Entities;
 using Unity.Mathematics;
 
@@ -34,13 +37,14 @@ namespace RoadBuilder
 
 			//AssetDatabase.global.LoadSettings(nameof(RoadBuilder), Settings, new Setting(this));
 
+			updateSystem.UpdateBefore<RoadBuilderSerializeSystem>(SystemUpdatePhase.Serialize);
 			updateSystem.UpdateAt<RoadBuilderSystem>(SystemUpdatePhase.Modification1);
 			updateSystem.UpdateAt<RoadBuilderToolSystem>(SystemUpdatePhase.ToolUpdate);
 			updateSystem.UpdateAt<RoadBuilderUISystem>(SystemUpdatePhase.UIUpdate);
 			updateSystem.UpdateAt<NetSectionsUISystem>(SystemUpdatePhase.UIUpdate);
 		}
 
-        public void OnDispose()
+		public void OnDispose()
 		{
 			Log.Info(nameof(OnDispose));
 
