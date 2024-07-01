@@ -9,11 +9,15 @@ using Game.Tools;
 using RoadBuilder.Domain;
 using RoadBuilder.Domain.Enums;
 using RoadBuilder.Systems.UI;
+using System.Linq;
+
 using Unity.Collections;
 
 using Unity.Entities;
 
 using Unity.Jobs;
+
+using UnityEngine.InputSystem;
 
 namespace RoadBuilder.Systems
 {
@@ -35,7 +39,16 @@ namespace RoadBuilder.Systems
 
 			highlightedQuery = GetEntityQuery(ComponentType.ReadOnly<Highlighted>());
 
-			applyAction = InputManager.instance.FindAction("Tool", "Apply");
+			applyAction = Mod.Settings.GetAction(nameof(RoadBuilder) + "Apply");
+
+			var builtInApplyAction = InputManager.instance.FindAction(InputManager.kToolMap, "Apply");
+			var mimicApplyBinding = applyAction.bindings.FirstOrDefault(b => b.group == nameof(Mouse));
+			var builtInApplyBinding = builtInApplyAction.bindings.FirstOrDefault(b => b.group == nameof(Mouse));
+
+			mimicApplyBinding.path = builtInApplyBinding.path;
+			mimicApplyBinding.modifiers = builtInApplyBinding.modifiers;
+
+			InputManager.instance.SetBinding(mimicApplyBinding, out _);
 		}
 
 		public override void InitializeRaycast()
@@ -47,15 +60,10 @@ namespace RoadBuilder.Systems
 			m_ToolRaycastSystem.collisionMask = CollisionMask.Overground | CollisionMask.OnGround | CollisionMask.Underground;
 		}
 
-		protected override void OnStartRunning()
-		{
-			base.OnStartRunning();
-
-			applyAction.shouldBeEnabled = roadBuilderUISystem.Mode is RoadBuilderToolMode.Picker;
-		}
-
 		protected override JobHandle OnUpdate(JobHandle inputDeps)
 		{
+			applyAction.shouldBeEnabled = roadBuilderUISystem.Mode is RoadBuilderToolMode.Picker;
+
 			if (roadBuilderUISystem.Mode is RoadBuilderToolMode.Picker)
 			{
 				HandlePicker();
@@ -108,6 +116,8 @@ namespace RoadBuilder.Systems
 		protected override void OnStopRunning()
 		{
 			base.OnStopRunning();
+
+			applyAction.shouldBeEnabled = false;
 
 			var entities = highlightedQuery.ToEntityArray(Allocator.Temp);
 

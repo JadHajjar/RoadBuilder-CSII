@@ -61,7 +61,7 @@ export const RoadButtonSmall = (props: _Props) => {
         <div className={styles.laneDesign}>
           <img className={classNames(styles.arrow, props.roadLane.Invert ? styles.down : styles.up)} />
         </div>
-        <div className={styles.laneName}>{props.roadLane.Width + " m"}</div>
+        <div className={styles.laneName}>{props.roadLane.Width! > 0 && props.roadLane.Width + " m"}</div>
       </div>
       {popup}
     </div>

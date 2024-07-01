@@ -10,6 +10,7 @@ export interface RoadProperties {
 
 export interface RoadLane {
     SectionPrefabName: string;
+    Index: number;
     Invert?: boolean;
     Width?: number;
     Options?: OptionSection[];
