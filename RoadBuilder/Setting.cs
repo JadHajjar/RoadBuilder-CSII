@@ -14,6 +14,7 @@ namespace RoadBuilder
 	[FileLocation("ModsSettings/" + nameof(RoadBuilder) + "/" + nameof(RoadBuilder))]
 	[SettingsUIGroupOrder(kButtonGroup, kToggleGroup, kSliderGroup, kDropdownGroup)]
 	[SettingsUIShowGroupName(kButtonGroup, kToggleGroup, kSliderGroup, kDropdownGroup)]
+	[SettingsUIMouseAction(nameof(RoadBuilder) + "Apply", "CustomUsage")]
 	public class Setting : ModSetting
 	{
 		public const string kSection = "Main";
@@ -28,7 +29,8 @@ namespace RoadBuilder
 
 		}
 
-
+		[SettingsUIMouseBinding(nameof(RoadBuilder) + "Apply"), SettingsUIHidden]
+		public ProxyBinding ApplyMimic { get; set; }
 
 		[SettingsUISection(kSection, kButtonGroup)]
 		public bool Button { set => Mod.Log.Info("Button clicked"); }

@@ -1,47 +1,27 @@
-﻿using Colossal.UI.Binding;
+﻿using Colossal.IO.AssetDatabase.Internal;
+using Colossal.UI.Binding;
+
+using Game.Prefabs;
+using Game.UI;
 
 using RoadBuilder.Domain.Configuration;
+using RoadBuilder.Utilities;
 
+using System.Collections.Generic;
 using System.Linq;
+
+using Unity.Entities;
 
 namespace RoadBuilder.Domain.UI
 {
 	public class RoadLaneUIBinder : IJsonReadable
 	{
 		public string SectionPrefabName;
+		public int Index;
 		public bool Invert;
 		public float Width;
-		public OptionSectionUIEntry[] Options;
-
-		public static RoadLaneUIBinder[] From(RoadConfig config)
-		{
-			return config.Lanes.Select(x => new RoadLaneUIBinder
-			{
-				SectionPrefabName = x.SectionPrefabName,
-				Invert = x.Invert,
-				Width = x.SectionPrefabName.Contains("Median") ? 2F : 3.5F,
-				Options = new OptionSectionUIEntry[]
-				{
-					new() {
-						Id = 1,
-						Name = "Direction",
-						Options = new OptionItemUIEntry[]
-						{
-							new() {
-								Name = "Backward",
-								Selected = x.Invert,
-								Id = 0,
-							},
-							new() {
-								Name = "Forward",
-								Selected = !x.Invert,
-								Id = 1,
-							},
-						}
-					}
-				}
-			}).ToArray();
-		}
+		public NetSectionItem NetSection;
+		public List<OptionSectionUIEntry> Options;
 
 		public LaneConfig ToLaneConfig()
 		{
@@ -59,6 +39,11 @@ namespace RoadBuilder.Domain.UI
 			if (reader.ReadProperty(nameof(SectionPrefabName)))
 			{
 				reader.Read(out SectionPrefabName);
+			}
+
+			if (reader.ReadProperty(nameof(Index)))
+			{
+				reader.Read(out Index);
 			}
 
 			reader.ReadMapEnd();

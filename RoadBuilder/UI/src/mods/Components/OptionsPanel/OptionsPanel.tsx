@@ -9,9 +9,11 @@ import { Tooltip } from "cs2/ui";
 
 type _Props = {
   options: OptionSection[];
+  Index: number;
 };
 
 export const OptionsPanelComponent = (props: _Props) => {
+  console.log(props);
   return (
     <>
       {props.options.map((section) => (
@@ -23,7 +25,7 @@ export const OptionsPanelComponent = (props: _Props) => {
                 option.isValue ? (
                   <>
                     <VanillaComponentResolver.instance.ToolButton
-                      onSelect={() => trigger(mod.id, "OptionClicked", section.id, option.id, -1)}
+                      onSelect={() => trigger(mod.id, "OptionClicked", props.Index, section.id, option.id, -1)}
                       src="Media/Glyphs/ThickStrokeArrowDown.svg"
                       focusKey={VanillaComponentResolver.instance.FOCUS_DISABLED}
                       className={
@@ -36,7 +38,7 @@ export const OptionsPanelComponent = (props: _Props) => {
                     <div className={VanillaComponentResolver.instance.mouseToolOptionsTheme.numberField}>{option.value}</div>
 
                     <VanillaComponentResolver.instance.ToolButton
-                      onSelect={() => trigger(mod.id, "OptionClicked", section.id, option.id, 1)}
+                      onSelect={() => trigger(mod.id, "OptionClicked", props.Index, section.id, option.id, 1)}
                       src="Media/Glyphs/ThickStrokeArrowUp.svg"
                       focusKey={VanillaComponentResolver.instance.FOCUS_DISABLED}
                       className={
@@ -50,7 +52,7 @@ export const OptionsPanelComponent = (props: _Props) => {
                   <VanillaComponentResolver.instance.ToolButton
                     selected={option.selected}
                     tooltip={option.name}
-                    onSelect={() => trigger(mod.id, "OptionClicked", section.id, option.id, 0)}
+                    onSelect={() => trigger(mod.id, "OptionClicked", props.Index, section.id, option.id, 0)}
                     src={option.icon}
                     focusKey={VanillaComponentResolver.instance.FOCUS_DISABLED}
                     className={VanillaComponentResolver.instance.toolButtonTheme.button + " " + styles.singleButton}

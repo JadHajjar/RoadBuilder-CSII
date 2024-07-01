@@ -25,7 +25,7 @@ export const EditPropertiesPopup = (props: _Props) => {
       </div>
       <div className={styles.content}>
         {props.lane.Options && props.lane.Options.length !== 0 ? (
-          <OptionsPanelComponent options={props.lane.Options}></OptionsPanelComponent>
+          <OptionsPanelComponent Index={props.lane.Index} options={props.lane.Options}></OptionsPanelComponent>
         ) : (
           <span> No Options Available</span>
         )}

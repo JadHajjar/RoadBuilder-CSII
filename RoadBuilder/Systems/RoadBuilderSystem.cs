@@ -34,6 +34,7 @@ namespace RoadBuilder.Systems
 		private RoadGenerationData roadGenerationData;
 
 		public List<RoadBuilderPrefab> Configurations { get; } = new();
+		public RoadGenerationData RoadGenerationData => roadGenerationData;
 
 		protected override void OnCreate()
 		{

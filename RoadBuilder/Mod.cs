@@ -31,9 +31,11 @@ namespace RoadBuilder
 		{
 			Log.Info(nameof(OnLoad));
 
-			//Settings = new Setting(this);
-			//Settings.RegisterInOptionsUI();
-			//GameManager.instance.localizationManager.AddSource("en-US", new LocaleEN(Settings));
+			Settings = new Setting(this);
+			Settings.RegisterKeyBindings();
+			Settings.RegisterInOptionsUI();
+
+			GameManager.instance.localizationManager.AddSource("en-US", new LocaleEN(Settings));
 
 			//AssetDatabase.global.LoadSettings(nameof(RoadBuilder), Settings, new Setting(this));
 

@@ -20,7 +20,7 @@ namespace RoadBuilder.Domain.UI
 				Name = config.Name,
 				Category = config.Category,
 				AggregateType = config.AggregateType,
-				SpeedLimit = config.SpeedLimit,
+				SpeedLimit = config.SpeedLimit / 2f,
 				GeneratesTrafficLights = config.GeneratesTrafficLights,
 				GeneratesZoningBlocks = config.GeneratesZoningBlocks,
 				MaxSlopeSteepness = config.MaxSlopeSteepness,
@@ -32,7 +32,7 @@ namespace RoadBuilder.Domain.UI
 			config.Name = Name;
 			config.Category = Category;
 			config.AggregateType = AggregateType;
-			config.SpeedLimit = SpeedLimit;
+			config.SpeedLimit = SpeedLimit * 2f;
 			config.GeneratesTrafficLights = GeneratesTrafficLights;
 			config.GeneratesZoningBlocks = GeneratesZoningBlocks;
 			config.MaxSlopeSteepness = MaxSlopeSteepness;
