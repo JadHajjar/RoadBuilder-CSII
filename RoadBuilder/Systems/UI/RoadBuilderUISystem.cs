@@ -34,6 +34,7 @@ namespace RoadBuilder.Systems.UI
         private ValueBindingHelper<RoadBuilderToolMode> RoadBuilderMode;
 		private ValueBindingHelper<RoadPropertiesUIBinder> RoadProperties;
 		private ValueBindingHelper<RoadLaneUIBinder[]> RoadLanes;
+		private ValueBindingHelper<bool> IsPaused;
 
 		public RoadBuilderToolMode Mode => RoadBuilderMode;
 
