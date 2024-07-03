@@ -12,6 +12,8 @@ using Game.Tools;
 using HarmonyLib;
 using RoadBuilder.Systems;
 using RoadBuilder.Systems.UI;
+using RoadBuilder.Utilities;
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -35,12 +37,16 @@ namespace RoadBuilder
 			Settings.RegisterKeyBindings();
 			Settings.RegisterInOptionsUI();
 
-			GameManager.instance.localizationManager.AddSource("en-US", new LocaleEN(Settings));
+			foreach (var item in new LocaleHelper("RoadBuilder.Locale.json").GetAvailableLanguages())
+			{
+				GameManager.instance.localizationManager.AddSource(item.LocaleId, item);
+			}
 
-			//AssetDatabase.global.LoadSettings(nameof(RoadBuilder), Settings, new Setting(this));
+			AssetDatabase.global.LoadSettings(nameof(RoadBuilder), Settings, new Setting(this));
 
 			updateSystem.UpdateBefore<RoadBuilderSerializeSystem>(SystemUpdatePhase.Serialize);
 			updateSystem.UpdateAt<RoadBuilderSystem>(SystemUpdatePhase.Modification1);
+			updateSystem.UpdateAt<RoadBuilderApplyTagSystem>(SystemUpdatePhase.Modification1);
 			updateSystem.UpdateAt<RoadBuilderToolSystem>(SystemUpdatePhase.ToolUpdate);
 			updateSystem.UpdateAt<RoadBuilderUISystem>(SystemUpdatePhase.UIUpdate);
 			updateSystem.UpdateAt<NetSectionsUISystem>(SystemUpdatePhase.UIUpdate);

@@ -4,8 +4,10 @@ using Game.UI.InGame;
 
 using RoadBuilder.Domain;
 using RoadBuilder.Domain.Configuration;
+using RoadBuilder.Domain.Configurations;
 using RoadBuilder.Domain.Enums;
 
+using System;
 using System.Linq;
 
 namespace RoadBuilder.Utilities
@@ -15,56 +17,97 @@ namespace RoadBuilder.Utilities
 		private readonly RoadGenerationData _roadGenerationData;
 		private readonly PrefabUISystem _prefabUISystem;
 
-		public RoadPrefab RoadPrefab { get; }
+		public NetGeometryPrefab NetworkPrefab { get; }
 
-		public RoadConfigGenerationUtil(RoadPrefab prefab, RoadGenerationData roadGenerationData, PrefabUISystem prefabUISystem)
+		public RoadConfigGenerationUtil(NetGeometryPrefab prefab, RoadGenerationData roadGenerationData, PrefabUISystem prefabUISystem)
 		{
 			_roadGenerationData = roadGenerationData;
 			_prefabUISystem = prefabUISystem;
 
-			RoadPrefab = prefab;
+			NetworkPrefab = prefab;
 		}
 
-		public RoadConfig GenerateConfiguration()
+		public INetworkConfig GenerateConfiguration()
+		{
+			INetworkConfig config;
+
+			if (NetworkPrefab is RoadPrefab roadPrefab)
+			{
+				config = GenerateRoadConfig(roadPrefab);
+			}
+			else if (NetworkPrefab is TrackPrefab trackPrefab)
+			{
+				config = GenerateTrackConfig(trackPrefab);
+			}
+			else if (NetworkPrefab is FencePrefab fencePrefab)
+			{
+				config = GenerateFenceConfig(fencePrefab);
+			}
+			else
+			{
+				throw new Exception("Invalid Prefab");
+			}
+
+			config.Name = $"Custom {GetAssetName(NetworkPrefab)}";
+			config.MaxSlopeSteepness = NetworkPrefab.m_MaxSlopeSteepness;
+			config.AggregateType = NetworkPrefab.m_AggregateType?.name;
+			config.EdgeStates = NetworkPrefab.m_EdgeStates.ToList();
+			config.NodeStates = NetworkPrefab.m_NodeStates.ToList();
+			config.PillarPrefabName = FindPillarPrefab(NetworkPrefab);
+			config.HasUndergroundWaterPipes = NetworkPrefab.Has<WaterPipeConnection>();
+			config.HasUndergroundElectricityCable = NetworkPrefab.Has<ElectricityConnection>();
+			config.RequiresUpgradeForElectricity = NetworkPrefab.TryGet<ElectricityConnection>(out var electricityConnections) && electricityConnections.m_RequireAll.Contains(NetPieceRequirements.Lighting);
+
+			config.Lanes.AddRange(NetworkPrefab.m_Sections
+				.Where(x => x.m_RequireAll.Length == 0 && x.m_RequireAny.Length == 0)
+				.Select(x => new LaneConfig
+				{
+					SectionPrefabName = x.m_Section.name,
+					Invert = x.m_Invert
+				}));
+
+			return config;
+		}
+
+		private INetworkConfig GenerateRoadConfig(RoadPrefab roadPrefab)
 		{
 			var config = new RoadConfig
 			{
-				Name = $"Custom {GetAssetName(RoadPrefab)}",
-				SpeedLimit = RoadPrefab.m_SpeedLimit,
-				GeneratesTrafficLights = RoadPrefab.m_TrafficLights,
-				GeneratesZoningBlocks = RoadPrefab.m_ZoneBlock is not null,
-				MaxSlopeSteepness = RoadPrefab.m_MaxSlopeSteepness,
-				AggregateType = RoadPrefab.m_AggregateType?.name,
-				EdgeStates = RoadPrefab.m_EdgeStates.ToList(),
-				NodeStates = RoadPrefab.m_NodeStates.ToList(),
-				PillarPrefabName = FindPillarPrefab(RoadPrefab),
-				HasUndergroundWaterPipes = RoadPrefab.Has<WaterPipeConnection>(),
-				HasUndergroundElectricityCable = RoadPrefab.Has<ElectricityConnection>(),
-				RequiresUpgradeForElectricity = RoadPrefab.TryGet<ElectricityConnection>(out var electricityConnections) && electricityConnections.m_RequireAll.Contains(NetPieceRequirements.Lighting),
+				SpeedLimit = roadPrefab.m_SpeedLimit,
+				GeneratesTrafficLights = roadPrefab.m_TrafficLights,
+				GeneratesZoningBlocks = roadPrefab.m_ZoneBlock is not null
 			};
 
-			if (RoadPrefab.m_HighwayRules)
+			if (roadPrefab.m_HighwayRules)
 			{
 				config.Category |= RoadCategory.Highway;
 			}
 
-			switch (RoadPrefab.m_RoadType)
+			switch (roadPrefab.m_RoadType)
 			{
 				case RoadType.PublicTransport:
 					config.Category |= RoadCategory.PublicTransport;
 					break;
 			}
 
-			config.Lanes.AddRange(RoadPrefab.m_Sections.Select(x => new LaneConfig
-			{
-				SectionPrefabName = x.m_Section.name,
-				Invert = x.m_Invert
-			}));
+			return config;
+		}
+
+		private INetworkConfig GenerateTrackConfig(TrackPrefab trackPrefab)
+		{
+			var config = new TrackConfig();
 
 			return config;
 		}
 
-		private string FindPillarPrefab(RoadPrefab RoadPrefab)
+		private INetworkConfig GenerateFenceConfig(FencePrefab fencePrefab)
+		{
+			var config = new FenceConfig();
+
+			return config;
+		}
+
+		private string FindPillarPrefab(NetGeometryPrefab RoadPrefab)
 		{
 			if (!RoadPrefab.TryGet<NetSubObjects>(out var netSubObjects))
 			{

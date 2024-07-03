@@ -37,6 +37,7 @@ namespace RoadBuilder.Systems.UI
 		private ValueBindingHelper<bool> IsPaused;
 
 		public RoadBuilderToolMode Mode => RoadBuilderMode;
+		public Entity WorkingEntity => workingEntity;
 
 		protected override void OnCreate()
 		{
@@ -123,16 +124,22 @@ namespace RoadBuilder.Systems.UI
 
 			var config = roadBuilderSystem.GetOrGenerateConfiguration(workingEntity);
 
+			if (config == null)
+				return;
+
 			RoadProperties.Value = RoadPropertiesUIBinder.From(config);
 			RoadLanes.Value = From(config, roadBuilderSystem.RoadGenerationData);
 		}
 
-		private void UpdateRoad(Action<RoadConfig> action)
+		private void UpdateRoad(Action<INetworkConfig> action)
 		{
 			var createNew = RoadBuilderMode.Value is RoadBuilderToolMode.EditingSingle;
 			var config = createNew
 				? roadBuilderSystem.GenerateConfiguration(workingEntity)
 				: roadBuilderSystem.GetOrGenerateConfiguration(workingEntity);
+
+			if (config == null)
+				return;
 
 			action(config);
 
@@ -143,12 +150,12 @@ namespace RoadBuilder.Systems.UI
 			RoadLanes.Value = From(config, roadBuilderSystem.RoadGenerationData);
 		}
 
-		private void UpdateProperties(RoadConfig config, RoadPropertiesUIBinder roadProperties)
+		private void UpdateProperties(INetworkConfig config, RoadPropertiesUIBinder roadProperties)
 		{
 			roadProperties.Fill(config);
 		}
 
-		private void UpdateLaneOrder(RoadConfig config, RoadLaneUIBinder[] roadLanes)
+		private void UpdateLaneOrder(INetworkConfig config, RoadLaneUIBinder[] roadLanes)
 		{
 			var newLanes = new List<LaneConfig>();
 
@@ -169,7 +176,7 @@ namespace RoadBuilder.Systems.UI
 			config.Lanes = newLanes;
 		}
 
-		private void LaneOptionClicked(RoadConfig config, int index, int option, int id, int value)
+		private void LaneOptionClicked(INetworkConfig config, int index, int option, int id, int value)
 		{
 			var existingLane = config.Lanes.ElementAtOrDefault(index);
 
@@ -179,7 +186,7 @@ namespace RoadBuilder.Systems.UI
 			}
 		}
 
-		private RoadLaneUIBinder[] From(RoadConfig config, RoadGenerationData roadGenerationData)
+		private RoadLaneUIBinder[] From(INetworkConfig config, RoadGenerationData roadGenerationData)
 		{
 			var binders = new RoadLaneUIBinder[config.Lanes.Count];
 

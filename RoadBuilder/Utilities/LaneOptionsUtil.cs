@@ -54,7 +54,7 @@ namespace RoadBuilder.Utilities
 			};
 		}
 
-		public static void OptionClicked(RoadConfig config, LaneConfig lane, int optionId, int id, int value)
+		public static void OptionClicked(INetworkConfig config, LaneConfig lane, int optionId, int id, int value)
 		{
 			switch (optionId)
 			{

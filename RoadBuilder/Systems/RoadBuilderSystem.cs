@@ -3,6 +3,7 @@ using Colossal.Serialization.Entities;
 
 using Game;
 using Game.Common;
+using Game.Net;
 using Game.Prefabs;
 using Game.Tools;
 using Game.UI.InGame;
@@ -10,6 +11,7 @@ using Game.UI.InGame;
 using RoadBuilder.Domain;
 using RoadBuilder.Domain.Components;
 using RoadBuilder.Domain.Configuration;
+using RoadBuilder.Domain.Prefabs;
 using RoadBuilder.Utilities;
 
 using System.Collections.Generic;
@@ -21,11 +23,11 @@ using Unity.Entities;
 
 namespace RoadBuilder.Systems
 {
-	public partial class RoadBuilderSystem : GameSystemBase, ISerializable, IDefaultSerializable
+    public partial class RoadBuilderSystem : GameSystemBase, ISerializable, IDefaultSerializable
 	{
 		public const ushort CURRENT_VERSION = 1;
 
-		private readonly Queue<RoadBuilderPrefab> _updatedRoadPrefabsQueue = new();
+		private readonly Queue<INetworkBuilderPrefab> _updatedRoadPrefabsQueue = new();
 
 		private PrefabSystem prefabSystem;
 		private PrefabUISystem prefabUISystem;
@@ -33,7 +35,7 @@ namespace RoadBuilder.Systems
 		private EntityQuery prefabRefQuery;
 		private RoadGenerationData roadGenerationData;
 
-		public List<RoadBuilderPrefab> Configurations { get; } = new();
+		public List<INetworkBuilderPrefab> Configurations { get; } = new();
 		public RoadGenerationData RoadGenerationData => roadGenerationData;
 
 		protected override void OnCreate()
@@ -68,19 +70,19 @@ namespace RoadBuilder.Systems
 					roadPrefab.WasGenerated = true;
 
 					Configurations.Add(roadPrefab);
-					prefabSystem.AddPrefab(roadPrefab);
+					prefabSystem.AddPrefab(roadPrefab.Prefab);
 
 					continue;
 				}
 
-				roadPrefab.name = roadPrefab.Config.ID;
+				roadPrefab.Prefab.name = roadPrefab.Config.ID;
 
-				prefabSystem.UpdatePrefab(roadPrefab);
+				prefabSystem.UpdatePrefab(roadPrefab.Prefab);
 
 				// Update all existing roads that use this road configuration
 				var job = new ApplyUpdatedJob()
 				{
-					Prefab = prefabSystem.GetEntity(roadPrefab),
+					Prefab = prefabSystem.GetEntity(roadPrefab.Prefab),
 					EntityTypeHandle = SystemAPI.GetEntityTypeHandle(),
 					PrefabRefTypeHandle = SystemAPI.GetComponentTypeHandle<PrefabRef>(true),
 					CommandBuffer = modificationBarrier.CreateCommandBuffer().AsParallelWriter()
@@ -106,7 +108,7 @@ namespace RoadBuilder.Systems
 			reader.Read(out ushort version);
 			reader.Read(out int length);
 
-			var configs = new List<RoadConfig>();
+			var configs = new List<INetworkConfig>();
 
 			//for (var i = 0; i < length; i++)
 			//{
@@ -159,7 +161,7 @@ namespace RoadBuilder.Systems
 			InitializeExistingRoadPrefabs(LoadLocalConfigs().ToList());
 		}
 
-		public void UpdateRoad(RoadConfig config, Entity entity, bool createNewPrefab)
+		public void UpdateRoad(INetworkConfig config, Entity entity, bool createNewPrefab)
 		{
 			if (!EntityManager.TryGetComponent<PrefabRef>(entity, out var prefabRef))
 			{
@@ -176,16 +178,16 @@ namespace RoadBuilder.Systems
 			_updatedRoadPrefabsQueue.Enqueue(roadPrefab);
 		}
 
-		public RoadConfig GetOrGenerateConfiguration(Entity entity)
+		public INetworkConfig GetOrGenerateConfiguration(Entity entity)
 		{
 			if (!EntityManager.TryGetComponent<PrefabRef>(entity, out var prefabRef))
 			{
-				return new();
+				return null;
 			}
 
-			if (!prefabSystem.TryGetPrefab<RoadPrefab>(prefabRef, out var roadPrefab))
+			if (!prefabSystem.TryGetPrefab<NetGeometryPrefab>(prefabRef, out var roadPrefab))
 			{
-				return new();
+				return null;
 			}
 
 			if (roadPrefab is RoadBuilderPrefab roadBuilderPrefab)
@@ -196,66 +198,66 @@ namespace RoadBuilder.Systems
 			return new RoadConfigGenerationUtil(roadPrefab, roadGenerationData, prefabUISystem).GenerateConfiguration();
 		}
 
-		public RoadConfig GenerateConfiguration(Entity entity)
+		public INetworkConfig GenerateConfiguration(Entity entity)
 		{
 			if (!EntityManager.TryGetComponent<PrefabRef>(entity, out var prefabRef))
 			{
-				return new();
+				return null;
 			}
 
-			if (!prefabSystem.TryGetPrefab<RoadPrefab>(prefabRef, out var roadPrefab))
+			if (!prefabSystem.TryGetPrefab<NetGeometryPrefab>(prefabRef, out var roadPrefab))
 			{
-				return new();
+				return null;
 			}
 
 			return new RoadConfigGenerationUtil(roadPrefab, roadGenerationData, prefabUISystem).GenerateConfiguration();
 		}
 
-		private void InitializeExistingRoadPrefabs(List<RoadConfig> configs)
+		private void InitializeExistingRoadPrefabs(List<INetworkConfig> configs)
 		{
 			foreach (var config in configs)
 			{
 				config.ApplyVersionChanges();
 
-				RoadBuilderPrefab roadPrefab;
+				INetworkBuilderPrefab roadPrefab;
 
-				if (prefabSystem.TryGetPrefab(new PrefabID(typeof(RoadBuilderPrefab).Name, config.ID), out var prefabBase))
+				if (prefabSystem.TryGetPrefab(new PrefabID(nameof(INetworkBuilderPrefab), config.ID), out var prefabBase))
 				{
-					roadPrefab = (RoadBuilderPrefab)prefabBase;
+					roadPrefab = prefabBase as INetworkBuilderPrefab;
 
 					roadPrefab.Config = config;
 				}
 				else
 				{
-					roadPrefab = new(config);
+					roadPrefab = RoadPrefabGenerationUtil.CreatePrefab(config);
 
-					prefabSystem.AddPrefab(roadPrefab);
+					prefabSystem.AddPrefab(roadPrefab.Prefab);
 				}
 
 				var roadPrefabGeneration = new RoadPrefabGenerationUtil(roadPrefab, roadGenerationData ?? new());
 
 				roadPrefabGeneration.GenerateRoad();
 				roadPrefab.WasGenerated = true;
-				roadPrefab.name = roadPrefab.Config.ID;
+				roadPrefab.Prefab.name = roadPrefab.Config.ID;
 
 				Configurations.Add(roadPrefab);
 
-				prefabSystem.UpdatePrefab(roadPrefab);
+				prefabSystem.UpdatePrefab(roadPrefab.Prefab);
 			}
 		}
 
-		private void CreateNewRoadPrefab(RoadConfig config, Entity entity)
+		private void CreateNewRoadPrefab(INetworkConfig config, Entity entity)
 		{
-			var roadPrefab = new RoadBuilderPrefab(config);
+			var roadPrefab = RoadPrefabGenerationUtil.CreatePrefab(config);
 			var roadPrefabGeneration = new RoadPrefabGenerationUtil(roadPrefab, roadGenerationData ?? new());
 
 			roadPrefab.WasGenerated = true;
 
 			roadPrefabGeneration.GenerateRoad();
 
-			roadPrefab.name = roadPrefab.Config.ID;
+			roadPrefab.Prefab.name = roadPrefab.Config.ID;
 
-			prefabSystem.AddPrefab(roadPrefab);
+			prefabSystem.AddPrefab(roadPrefab.Prefab);
 
 			Configurations.Add(roadPrefab);
 
@@ -263,7 +265,7 @@ namespace RoadBuilder.Systems
 			EntityManager.AddComponent<RoadBuilderNetwork>(entity);
 			EntityManager.SetComponentData(entity, new PrefabRef
 			{
-				m_Prefab = prefabSystem.GetEntity(roadPrefab)
+				m_Prefab = prefabSystem.GetEntity(roadPrefab.Prefab)
 			});
 		}
 
@@ -362,7 +364,7 @@ namespace RoadBuilder.Systems
 			}
 		}
 
-		private IEnumerable<RoadConfig> LoadLocalConfigs()
+		private IEnumerable<INetworkConfig> LoadLocalConfigs()
 		{
 			foreach (var config in LocalSaveUtil.LoadConfigs())
 			{

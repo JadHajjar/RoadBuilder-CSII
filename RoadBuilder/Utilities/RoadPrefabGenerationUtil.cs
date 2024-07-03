@@ -3,7 +3,10 @@
 using Game.Prefabs;
 
 using RoadBuilder.Domain;
+using RoadBuilder.Domain.Configuration;
+using RoadBuilder.Domain.Configurations;
 using RoadBuilder.Domain.Enums;
+using RoadBuilder.Domain.Prefabs;
 
 using System;
 using System.Collections.Generic;
@@ -19,51 +22,77 @@ namespace RoadBuilder.Utilities
 	{
 		private readonly RoadGenerationData _roadGenerationData;
 
-		public RoadBuilderPrefab RoadPrefab { get; }
+		public INetworkBuilderPrefab NetworkPrefab { get; }
 
-		public RoadPrefabGenerationUtil(RoadBuilderPrefab prefab, RoadGenerationData roadGenerationData)
+		public RoadPrefabGenerationUtil(INetworkBuilderPrefab prefab, RoadGenerationData roadGenerationData)
 		{
 			_roadGenerationData = roadGenerationData;
 
-			RoadPrefab = prefab;
+			NetworkPrefab = prefab;
+		}
+
+		public static INetworkBuilderPrefab CreatePrefab(INetworkConfig config)
+		{
+			if (config is RoadConfig roadConfig)
+			{
+				return new RoadBuilderPrefab(roadConfig);
+			}
+
+			if (config is TrackConfig trackConfig)
+			{
+				return new TrackBuilderPrefab(trackConfig);
+			}
+
+			if (config is FenceConfig fenceConfig)
+			{
+				return new FenceBuilderPrefab(fenceConfig);
+			}
+
+			throw new Exception("Unknown config type " + (config?.GetType().Name ?? "NULL"));
 		}
 
 		public void GenerateRoad()
 		{
-			var cfg = RoadPrefab.Config;
+			var cfg = NetworkPrefab.Config;
+			var prefab = NetworkPrefab.Prefab;
 
-			RoadPrefab.isDirty = true;
-			RoadPrefab.name = cfg.ID;
-			RoadPrefab.m_SpeedLimit = cfg.SpeedLimit;
-			RoadPrefab.m_RoadType = cfg.Category.HasFlag(RoadCategory.PublicTransport) ? RoadType.PublicTransport : RoadType.Normal;
-			RoadPrefab.m_TrafficLights = cfg.GeneratesTrafficLights;
-			RoadPrefab.m_HighwayRules = cfg.Category.HasFlag(RoadCategory.Highway);
-			RoadPrefab.m_MaxSlopeSteepness = cfg.MaxSlopeSteepness;
-			RoadPrefab.m_InvertMode = CompositionInvertMode.FlipLefthandTraffic;
-			RoadPrefab.m_ZoneBlock = cfg.GeneratesZoningBlocks ? _roadGenerationData.ZoneBlockPrefab : null;
-			RoadPrefab.m_AggregateType = _roadGenerationData.AggregateNetPrefabs.TryGetValue(cfg.AggregateType, out var aggregate) ? aggregate : null;
-			RoadPrefab.m_NodeStates = cfg.NodeStates.ToArray();
-			RoadPrefab.m_EdgeStates = cfg.EdgeStates.ToArray();
-			RoadPrefab.m_Sections = GenerateSections().ToArray();
+			prefab.isDirty = true;
+			prefab.name = cfg.ID;
+			prefab.m_MaxSlopeSteepness = cfg.MaxSlopeSteepness;
+			prefab.m_InvertMode = CompositionInvertMode.FlipLefthandTraffic;
+			prefab.m_AggregateType = _roadGenerationData.AggregateNetPrefabs.TryGetValue(cfg.AggregateType, out var aggregate) ? aggregate : null;
+			prefab.m_NodeStates = cfg.NodeStates.ToArray();
+			prefab.m_EdgeStates = cfg.EdgeStates.ToArray();
+			prefab.m_Sections = GenerateSections().ToArray();
 
-			RoadPrefab.components.Clear();
-			RoadPrefab.components.AddRange(GenerateComponents());
-
-			foreach (var item in RoadPrefab.components)
+			if (cfg is RoadConfig roadConfig)
 			{
-				item.prefab = RoadPrefab;
+				var roadPrefab = NetworkPrefab as RoadPrefab;
+				roadPrefab.m_SpeedLimit = roadConfig.SpeedLimit;
+				roadPrefab.m_RoadType = roadConfig.Category.HasFlag(RoadCategory.PublicTransport) ? RoadType.PublicTransport : RoadType.Normal;
+				roadPrefab.m_TrafficLights = roadConfig.GeneratesTrafficLights;
+				roadPrefab.m_HighwayRules = roadConfig.Category.HasFlag(RoadCategory.Highway);
+				roadPrefab.m_ZoneBlock = roadConfig.GeneratesZoningBlocks ? _roadGenerationData.ZoneBlockPrefab : null;
+			}
+
+			prefab.components.Clear();
+			prefab.components.AddRange(GenerateComponents());
+
+			foreach (var item in prefab.components)
+			{
+				item.prefab = prefab;
 				item.name = item.GetType().Name;
 			}
 
-			if (RoadPrefab.WasGenerated)
+			if (NetworkPrefab.WasGenerated)
 			{
-				RoadPrefab.Config.ID = $"{Guid.NewGuid()}-{PlatformManager.instance.userSpecificPath}";
+				NetworkPrefab.Config.ID = $"{NetworkPrefab.GetType().Name.ToLower()[0]}{Guid.NewGuid()}-{PlatformManager.instance.userSpecificPath}";
 			}
 		}
 
 		private IEnumerable<NetSectionInfo> GenerateSections()
 		{
-			foreach (var item in RoadPrefab.Config.Lanes)
+			foreach (var item in NetworkPrefab.Config.Lanes)
 			{
 				if (!_roadGenerationData.NetSectionPrefabs.TryGetValue(item.SectionPrefabName, out var section))
 				{
@@ -93,19 +122,19 @@ namespace RoadBuilder.Utilities
 
 			serviceObject.m_Service = _roadGenerationData.ServicePrefabs["Roads"];
 
-			if (RoadPrefab.Config.HasUndergroundWaterPipes)
+			if (NetworkPrefab.Config.HasUndergroundWaterPipes)
 			{
 				yield return ScriptableObject.CreateInstance<WaterPipeConnection>();
 			}
 
-			if (RoadPrefab.Config.HasUndergroundElectricityCable)
+			if (NetworkPrefab.Config.HasUndergroundElectricityCable)
 			{
 				var electricityConnection = ScriptableObject.CreateInstance<ElectricityConnection>();
 
 				electricityConnection.m_Voltage = ElectricityConnection.Voltage.Low;
 				electricityConnection.m_Direction = Game.Net.FlowDirection.Both;
 				electricityConnection.m_Capacity = 400000;
-				electricityConnection.m_RequireAll = RoadPrefab.Config.RequiresUpgradeForElectricity ? new NetPieceRequirements[] { NetPieceRequirements.Lighting } : new NetPieceRequirements[0];
+				electricityConnection.m_RequireAll = NetworkPrefab.Config.RequiresUpgradeForElectricity ? new NetPieceRequirements[] { NetPieceRequirements.Lighting } : new NetPieceRequirements[0];
 				electricityConnection.m_RequireAny = new NetPieceRequirements[0];
 				electricityConnection.m_RequireNone = new NetPieceRequirements[0];
 
@@ -134,7 +163,7 @@ namespace RoadBuilder.Utilities
 
 		private IEnumerable<NetSectionInfo> GenerateUndergroundNetSections()
 		{
-			if (RoadPrefab.Config.HasUndergroundWaterPipes)
+			if (NetworkPrefab.Config.HasUndergroundWaterPipes)
 			{
 				yield return new NetSectionInfo
 				{
@@ -149,19 +178,19 @@ namespace RoadBuilder.Utilities
 				};
 			}
 
-			if (RoadPrefab.Config.HasUndergroundElectricityCable)
+			if (NetworkPrefab.Config.HasUndergroundElectricityCable)
 			{
 				yield return new NetSectionInfo
 				{
 					m_Section = _roadGenerationData.NetSectionPrefabs["Ground Cable Section 1"],
-					m_RequireAll = RoadPrefab.Config.RequiresUpgradeForElectricity ? new[] { NetPieceRequirements.Lighting } : null,
+					m_RequireAll = NetworkPrefab.Config.RequiresUpgradeForElectricity ? new[] { NetPieceRequirements.Lighting } : null,
 					m_Offset = new float3(0, -0.65f, 0)
 				};
 			}
 
-			if (RoadPrefab.Config.HasUndergroundWaterPipes)
+			if (NetworkPrefab.Config.HasUndergroundWaterPipes)
 			{
-				if (RoadPrefab.Config.HasUndergroundElectricityCable)
+				if (NetworkPrefab.Config.HasUndergroundElectricityCable)
 				{
 					yield return new NetSectionInfo
 					{
@@ -202,7 +231,7 @@ namespace RoadBuilder.Utilities
 
 		private IEnumerable<NetSubObjectInfo> GenerateSubObjects()
 		{
-			if (_roadGenerationData.PillarPrefabs.TryGetValue(RoadPrefab.Config.PillarPrefabName, out var pillar))
+			if (_roadGenerationData.PillarPrefabs.TryGetValue(NetworkPrefab.Config.PillarPrefabName, out var pillar))
 			{
 				yield return new NetSubObjectInfo
 				{
@@ -215,75 +244,10 @@ namespace RoadBuilder.Utilities
 
 			yield return new NetSubObjectInfo
 			{
-				m_Object = RoadPrefab.Config.IsOneWay() ? _roadGenerationData.OutsideConnectionOneWay : _roadGenerationData.OutsideConnectionTwoWay,
+				m_Object = NetworkPrefab.Config.IsOneWay() ? _roadGenerationData.OutsideConnectionOneWay : _roadGenerationData.OutsideConnectionTwoWay,
 				m_Position = new float3(0, 5, 0),
 				m_Placement = NetObjectPlacement.Node,
 				m_RequireOutsideConnection = true,
-			};
-		}
-
-		public void DummyGenerateRoad(RoadBuilderPrefab prefab)
-		{
-			var prefabs = new List<PrefabBase>();//Traverse.Create(_prefabSystem).Field<List<PrefabBase>>("m_Prefabs").Value;
-			var basePrefab = (RoadPrefab)prefabs.FirstOrDefault(p => p.name == "Small Road");
-			var roadLanePrefab = (NetSectionPrefab)prefabs.FirstOrDefault(p => p.name == "Car Drive Section 3");
-			var sidewalk5Prefab = (NetSectionPrefab)prefabs.FirstOrDefault(p => p.name == "Sidewalk 5");
-
-			var baseComponents = new ComponentBase[basePrefab.components.Count];
-			basePrefab.components.CopyTo(baseComponents);
-
-			prefab.m_SpeedLimit = 80;
-			prefab.m_RoadType = RoadType.Normal;
-			prefab.m_TrafficLights = false;
-			prefab.m_HighwayRules = false;
-			prefab.m_MaxSlopeSteepness = 0.2f;
-			prefab.m_InvertMode = CompositionInvertMode.FlipLefthandTraffic;
-			prefab.isDirty = true;
-			prefab.active = true;
-			prefab.m_Sections = new NetSectionInfo[basePrefab.m_Sections.Length];
-			prefab.m_ZoneBlock = basePrefab.m_ZoneBlock;
-			prefab.m_AggregateType = basePrefab.m_AggregateType;
-			prefab.m_NodeStates = new NetNodeStateInfo[basePrefab.m_NodeStates.Length];
-			prefab.m_EdgeStates = new NetEdgeStateInfo[basePrefab.m_EdgeStates.Length];
-
-			prefab.components.AddRange(baseComponents);
-			basePrefab.m_Sections.CopyTo(prefab.m_Sections, 0);
-			basePrefab.m_NodeStates.CopyTo(prefab.m_NodeStates, 0);
-			basePrefab.m_EdgeStates.CopyTo(prefab.m_EdgeStates, 0);
-			prefab.name = "Test Road Prefab";
-			prefab.m_Sections[1].m_Section = sidewalk5Prefab;
-			prefab.m_Sections[5].m_Section = sidewalk5Prefab;
-			prefab.m_Sections = new NetSectionInfo[]
-			{
-				prefab.m_Sections[0],
-				prefab.m_Sections[1],
-				new()
-				{
-					m_Section = roadLanePrefab,
-					m_Flip = false,
-					m_Invert = true,
-					m_RequireAll = new NetPieceRequirements[0],
-					m_RequireAny = new NetPieceRequirements[0],
-					m_RequireNone = new NetPieceRequirements[0],
-					m_Median = false,
-					m_Offset = float3.zero
-				},
-				prefab.m_Sections[2],
-				prefab.m_Sections[3],
-				prefab.m_Sections[4],
-				new()
-				{
-					m_Section = roadLanePrefab,
-					m_Flip = false,
-					m_Invert = false,
-					m_RequireAll = new NetPieceRequirements[0],
-					m_RequireAny = new NetPieceRequirements[0],
-					m_RequireNone = new NetPieceRequirements[0],
-					m_Median = false,
-					m_Offset = float3.zero
-				},
-				prefab.m_Sections[5],
-				prefab.m_Sections[6]
 			};
 		}
 	}

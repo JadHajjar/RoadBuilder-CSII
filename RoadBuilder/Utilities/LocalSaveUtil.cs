@@ -1,6 +1,7 @@
 ﻿using Colossal.Json;
 
 using RoadBuilder.Domain.Configuration;
+using RoadBuilder.Domain.Configurations;
 using RoadBuilder.Systems;
 
 using System;
@@ -11,7 +12,7 @@ namespace RoadBuilder.Utilities
 {
 	public static class LocalSaveUtil
 	{
-		public static void Save(RoadConfig roadConfig)
+		public static void Save(INetworkConfig roadConfig)
 		{
 			DeletePreviousLocalConfig(roadConfig);
 
@@ -21,7 +22,7 @@ namespace RoadBuilder.Utilities
 			File.WriteAllText(Path.Combine(FoldersUtil.ContentFolder, $"{roadConfig.ID}.json"), JSON.Dump(roadConfig));
 		}
 
-		public static void DeletePreviousLocalConfig(RoadConfig roadConfig)
+		public static void DeletePreviousLocalConfig(INetworkConfig roadConfig)
 		{
 			var fileName = Path.Combine(FoldersUtil.ContentFolder, $"{roadConfig.OriginalID}.json");
 
@@ -31,20 +32,33 @@ namespace RoadBuilder.Utilities
 			}
 		}
 
-		internal static IEnumerable<RoadConfig> LoadConfigs()
+		internal static IEnumerable<INetworkConfig> LoadConfigs()
 		{
+			var list = new List<INetworkConfig>();
+
 			if (!Directory.Exists(FoldersUtil.ContentFolder))
 			{
-				yield break;
+				return list;
 			}
 
 			foreach (var item in Directory.EnumerateFiles(FoldersUtil.ContentFolder, "*.json"))
 			{
-				RoadConfig roadConfig;
-
 				try
 				{
-					roadConfig = JSON.MakeInto<RoadConfig>(JSON.Load(File.ReadAllText(item)));
+					switch (Path.GetFileName(item)[0])
+					{
+						case 'r':
+							list.Add(JSON.MakeInto<RoadConfig>(JSON.Load(File.ReadAllText(item))));
+							break;
+						case 't':
+							list.Add(JSON.MakeInto<TrackConfig>(JSON.Load(File.ReadAllText(item))));
+							break;
+						case 'f':
+							list.Add(JSON.MakeInto<FenceConfig>(JSON.Load(File.ReadAllText(item))));
+							break;
+						default:
+							throw new Exception("file name is invalid");
+					}
 				}
 				catch (Exception ex)
 				{
@@ -52,9 +66,9 @@ namespace RoadBuilder.Utilities
 
 					continue;
 				}
-
-				yield return roadConfig;
 			}
+
+			return list;
 		}
 	}
 }

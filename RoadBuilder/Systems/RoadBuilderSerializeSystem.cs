@@ -1,11 +1,10 @@
 ﻿using Game;
 using Game.Prefabs;
 using Game.Tools;
-
-using RoadBuilder.Domain;
 using RoadBuilder.Domain.Components;
 using RoadBuilder.Domain.Configuration;
-
+using RoadBuilder.Domain.Configurations;
+using RoadBuilder.Domain.Prefabs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +16,7 @@ using Unity.Entities;
 
 namespace RoadBuilder.Systems
 {
-	public partial class RoadBuilderSerializeSystem : GameSystemBase
+    public partial class RoadBuilderSerializeSystem : GameSystemBase
 	{
 		private static PrefabSystem prefabSystem;
 		private EntityQuery roadBuilderNetsQuery;
@@ -35,9 +34,20 @@ namespace RoadBuilder.Systems
 
 		public static void RegisterRoadID(string id)
 		{
-			if (!prefabSystem.TryGetPrefab(new PrefabID(typeof(RoadBuilderPrefab).Name, id), out _))
+			if (!prefabSystem.TryGetPrefab(new PrefabID(nameof(INetworkBuilderPrefab), id), out _))
 			{
-				prefabSystem.AddPrefab(new RoadBuilderPrefab(new RoadConfig { ID = id }));
+				switch (id[0])
+				{
+					case 'r':
+						prefabSystem.AddPrefab(new RoadBuilderPrefab(new RoadConfig { ID = id }));
+						break;
+					case 't':
+						prefabSystem.AddPrefab(new TrackBuilderPrefab(new TrackConfig { ID = id }));
+						break;
+					case 'f':
+						prefabSystem.AddPrefab(new FenceBuilderPrefab(new FenceConfig { ID = id }));
+						break;
+				}
 			}
 		}
 

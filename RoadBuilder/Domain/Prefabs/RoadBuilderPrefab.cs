@@ -2,12 +2,14 @@
 
 using RoadBuilder.Domain.Configuration;
 
-namespace RoadBuilder.Domain
+namespace RoadBuilder.Domain.Prefabs
 {
-	public class RoadBuilderPrefab : RoadPrefab
+	public class RoadBuilderPrefab : RoadPrefab, INetworkBuilderPrefab
 	{
 		public bool WasGenerated { get; set; }
 		public RoadConfig Config { get; set; }
+		NetGeometryPrefab INetworkBuilderPrefab.Prefab => this;
+		INetworkConfig INetworkBuilderPrefab.Config { get => Config; set => Config = value as RoadConfig; }
 
 		public RoadBuilderPrefab(RoadConfig config)
 		{
