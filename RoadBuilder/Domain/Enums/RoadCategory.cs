@@ -10,6 +10,8 @@ namespace RoadBuilder.Domain.Enums
 		PublicTransport = 2,
 		Train = 4,
 		Tram = 8,
-		Metro = 16,
+		Subway = 16,
+		Gravel = 32,
+		Tiled = 64,
 	}
 }

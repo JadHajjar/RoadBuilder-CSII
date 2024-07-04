@@ -1,13 +1,7 @@
-﻿using Game.Net;
-
-using RoadBuilder.Domain.Configuration;
+﻿using RoadBuilder.Domain.Configuration;
 using RoadBuilder.Domain.UI;
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RoadBuilder.Utilities
 {
@@ -20,11 +14,13 @@ namespace RoadBuilder.Utilities
 
 		public static List<OptionSectionUIEntry> GenerateOptions(LaneConfig lane)
 		{
-			var options=new List<OptionSectionUIEntry>();
+			var options = new List<OptionSectionUIEntry>();
 
 			if (true) // if lane supports invert
+			{
 				options.Add(GetInvertOption(lane));
-		
+			}
+
 			return options;
 		}
 

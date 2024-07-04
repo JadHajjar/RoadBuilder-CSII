@@ -8,7 +8,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices;
 
 using Unity.Entities;
 
@@ -413,7 +412,7 @@ namespace RoadBuilder.Systems.UI
 			var obj = Activator.CreateInstance(type);
 
 			reader.ReadMapBegin();
-      
+
 			foreach (var propertyInfo in properties)
 			{
 				if (!propertyInfo.HasAttribute<ReaderIgnoreAttribute>() && reader.ReadProperty(propertyInfo.Name))

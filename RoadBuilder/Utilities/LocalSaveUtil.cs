@@ -12,19 +12,20 @@ namespace RoadBuilder.Utilities
 {
 	public static class LocalSaveUtil
 	{
-		public static void Save(INetworkConfig roadConfig)
+		public static void Save(INetworkConfig config)
 		{
-			DeletePreviousLocalConfig(roadConfig);
+			DeletePreviousLocalConfig(config);
 
-			roadConfig.Version = RoadBuilderSystem.CURRENT_VERSION;
-			roadConfig.OriginalID = roadConfig.ID;
+			config.Version = RoadBuilderSystem.CURRENT_VERSION;
+			config.OriginalID = config.ID;
+			config.Type = config.GetType().Name;
 
-			File.WriteAllText(Path.Combine(FoldersUtil.ContentFolder, $"{roadConfig.ID}.json"), JSON.Dump(roadConfig));
+			File.WriteAllText(Path.Combine(FoldersUtil.ContentFolder, $"{config.ID}.json"), JSON.Dump(config));
 		}
 
-		public static void DeletePreviousLocalConfig(INetworkConfig roadConfig)
+		public static void DeletePreviousLocalConfig(INetworkConfig config)
 		{
-			var fileName = Path.Combine(FoldersUtil.ContentFolder, $"{roadConfig.OriginalID}.json");
+			var fileName = Path.Combine(FoldersUtil.ContentFolder, $"{config.OriginalID}.json");
 
 			if (File.Exists(fileName))
 			{
@@ -45,19 +46,21 @@ namespace RoadBuilder.Utilities
 			{
 				try
 				{
-					switch (Path.GetFileName(item)[0])
+					var json = JSON.Load(File.ReadAllText(item));
+
+					switch (json["Type"].ToString())
 					{
-						case 'r':
-							list.Add(JSON.MakeInto<RoadConfig>(JSON.Load(File.ReadAllText(item))));
+						case nameof(RoadConfig):
+							list.Add(JSON.MakeInto<RoadConfig>(json));
 							break;
-						case 't':
-							list.Add(JSON.MakeInto<TrackConfig>(JSON.Load(File.ReadAllText(item))));
+						case nameof(TrackConfig):
+							list.Add(JSON.MakeInto<TrackConfig>(json));
 							break;
-						case 'f':
-							list.Add(JSON.MakeInto<FenceConfig>(JSON.Load(File.ReadAllText(item))));
+						case nameof(FenceConfig):
+							list.Add(JSON.MakeInto<FenceConfig>(json));
 							break;
 						default:
-							throw new Exception("file name is invalid");
+							break;
 					}
 				}
 				catch (Exception ex)

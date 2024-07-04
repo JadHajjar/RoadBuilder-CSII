@@ -18,13 +18,13 @@ using UnityEngine;
 
 namespace RoadBuilder.Utilities
 {
-	public class RoadPrefabGenerationUtil
+	public class NetworkPrefabGenerationUtil
 	{
 		private readonly RoadGenerationData _roadGenerationData;
 
 		public INetworkBuilderPrefab NetworkPrefab { get; }
 
-		public RoadPrefabGenerationUtil(INetworkBuilderPrefab prefab, RoadGenerationData roadGenerationData)
+		public NetworkPrefabGenerationUtil(INetworkBuilderPrefab prefab, RoadGenerationData roadGenerationData)
 		{
 			_roadGenerationData = roadGenerationData;
 
@@ -51,7 +51,19 @@ namespace RoadBuilder.Utilities
 			throw new Exception("Unknown config type " + (config?.GetType().Name ?? "NULL"));
 		}
 
-		public void GenerateRoad()
+		public void GenerateRoad(bool generateId = true)
+		{
+			try
+			{
+				GenerateRoadInternal(generateId);
+			}
+			catch (Exception ex)
+			{
+				Mod.Log.Error(ex, "Unhandled Error During Road Generation");
+			}
+		}
+
+		private void GenerateRoadInternal(bool generateId)
 		{
 			var cfg = NetworkPrefab.Config;
 			var prefab = NetworkPrefab.Prefab;
@@ -61,8 +73,8 @@ namespace RoadBuilder.Utilities
 			prefab.m_MaxSlopeSteepness = cfg.MaxSlopeSteepness;
 			prefab.m_InvertMode = CompositionInvertMode.FlipLefthandTraffic;
 			prefab.m_AggregateType = _roadGenerationData.AggregateNetPrefabs.TryGetValue(cfg.AggregateType, out var aggregate) ? aggregate : null;
-			prefab.m_NodeStates = cfg.NodeStates.ToArray();
-			prefab.m_EdgeStates = cfg.EdgeStates.ToArray();
+			prefab.m_NodeStates = GenerateNodeStates().ToArray();
+			prefab.m_EdgeStates = GenerateEdgeStates().ToArray();
 			prefab.m_Sections = GenerateSections().ToArray();
 
 			if (cfg is RoadConfig roadConfig)
@@ -84,9 +96,83 @@ namespace RoadBuilder.Utilities
 				item.name = item.GetType().Name;
 			}
 
-			if (NetworkPrefab.WasGenerated)
+			if (generateId)
 			{
 				NetworkPrefab.Config.ID = $"{NetworkPrefab.GetType().Name.ToLower()[0]}{Guid.NewGuid()}-{PlatformManager.instance.userSpecificPath}";
+			}
+		}
+
+		private IEnumerable<NetNodeStateInfo> GenerateNodeStates()
+		{
+			if ((NetworkPrefab.Config.Category & RoadCategory.Gravel) != 0)
+			{
+				yield return new NetNodeStateInfo
+				{
+					m_RequireAll = new NetPieceRequirements[0],
+					m_RequireAny = new NetPieceRequirements[0],
+					m_RequireNone = new NetPieceRequirements[0],
+					m_SetState = new[]
+					{
+						NetPieceRequirements.Gravel
+					}
+				};
+
+				yield break;
+			}
+			else if ((NetworkPrefab.Config.Category & RoadCategory.Tiled) != 0)
+			{
+				yield return new NetNodeStateInfo
+				{
+					m_RequireAll = new NetPieceRequirements[0],
+					m_RequireAny = new NetPieceRequirements[0],
+					m_RequireNone = new NetPieceRequirements[0],
+					m_SetState = new[]
+					{
+						NetPieceRequirements.Tiles
+					}
+				};
+
+				yield break;
+			}
+			else if ((NetworkPrefab.Config.Category & (RoadCategory.Train | RoadCategory.Subway | RoadCategory.Gravel)) == 0)
+			{
+				yield return new NetNodeStateInfo
+				{
+					m_RequireAll = new NetPieceRequirements[0],
+					m_RequireAny = new NetPieceRequirements[0],
+					m_RequireNone = new NetPieceRequirements[0],
+					m_SetState = new[]
+					{
+						NetPieceRequirements.Sidewalk,
+						NetPieceRequirements.OppositeSidewalk,
+						NetPieceRequirements.Pavement
+					}
+				};
+
+				yield break;
+			}
+		}
+
+		private IEnumerable<NetEdgeStateInfo> GenerateEdgeStates()
+		{
+			if ((NetworkPrefab.Config.Category & (RoadCategory.Train | RoadCategory.Subway)) == 0)
+			{
+				yield return new NetEdgeStateInfo
+				{
+					m_RequireAll = new NetPieceRequirements[0],
+					m_RequireAny = new NetPieceRequirements[0],
+					m_RequireNone = new NetPieceRequirements[0],
+					m_SetState = new[]
+					{
+						((NetworkPrefab.Config.Category & RoadCategory.Gravel) != 0)
+							? NetPieceRequirements.Gravel :
+							((NetworkPrefab.Config.Category & RoadCategory.Tiled) != 0)
+							? NetPieceRequirements.Tiles 
+							: NetPieceRequirements.Pavement
+					}
+				};
+
+				yield break;
 			}
 		}
 

@@ -1,16 +1,8 @@
-﻿using Colossal.IO.AssetDatabase.Internal;
-using Colossal.UI.Binding;
-
-using Game.Prefabs;
-using Game.UI;
+﻿using Colossal.UI.Binding;
 
 using RoadBuilder.Domain.Configuration;
-using RoadBuilder.Utilities;
 
 using System.Collections.Generic;
-using System.Linq;
-
-using Unity.Entities;
 
 namespace RoadBuilder.Domain.UI
 {

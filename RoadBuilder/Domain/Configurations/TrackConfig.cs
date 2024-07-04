@@ -1,10 +1,7 @@
 ﻿using Colossal.Serialization.Entities;
 
-using Game.Prefabs;
-
 using RoadBuilder.Domain.Configuration;
 using RoadBuilder.Domain.Enums;
-using RoadBuilder.Systems;
 
 using System.Collections.Generic;
 
@@ -12,6 +9,7 @@ namespace RoadBuilder.Domain.Configurations
 {
 	public class TrackConfig : INetworkConfig
 	{
+		public string Type { get; set; }
 		public ushort Version { get; set; }
 		public string OriginalID { get; set; }
 		public string ID { get; set; }
@@ -25,12 +23,9 @@ namespace RoadBuilder.Domain.Configurations
 		public bool RequiresUpgradeForElectricity { get; set; }
 		public RoadCategory Category { get; set; }
 		public List<LaneConfig> Lanes { get; set; } = new();
-		public List<NetEdgeStateInfo> EdgeStates { get; set; } = new();
-		public List<NetNodeStateInfo> NodeStates { get; set; } = new();
 
 		public void Deserialize<TReader>(TReader reader) where TReader : IReader
 		{
-			reader.Read(out ushort version);
 			reader.Read(out string iD);
 			reader.Read(out string name);
 			reader.Read(out string aggregateType);
@@ -42,7 +37,6 @@ namespace RoadBuilder.Domain.Configurations
 			reader.Read(out bool requiresUpgradeForElectricity);
 			reader.Read(out int category);
 
-			Version = version;
 			ID = iD;
 			Name = name;
 			AggregateType = aggregateType;
@@ -58,7 +52,7 @@ namespace RoadBuilder.Domain.Configurations
 
 			for (var i = 0; i < laneCount; i++)
 			{
-				var lane = new LaneConfig();
+				var lane = new LaneConfig { Version = Version };
 
 				reader.Read(lane);
 
@@ -70,7 +64,6 @@ namespace RoadBuilder.Domain.Configurations
 
 		public void Serialize<TWriter>(TWriter writer) where TWriter : IWriter
 		{
-			writer.Write(RoadBuilderSystem.CURRENT_VERSION);
 			writer.Write(ID);
 			writer.Write(Name);
 			writer.Write(AggregateType ?? string.Empty);

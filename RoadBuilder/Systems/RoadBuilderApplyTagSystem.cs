@@ -7,12 +7,6 @@ using Game.Tools;
 using RoadBuilder.Domain.Components;
 using RoadBuilder.Domain.Prefabs;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using Unity.Collections;
 using Unity.Entities;
 
@@ -39,9 +33,6 @@ namespace RoadBuilder.Systems
 		protected override void OnUpdate()
 		{
 			var entities = segmentQuery.ToEntityArray(Allocator.Temp);
-
-			Mod.Log.Info(World.GetOrCreateSystemManaged<UpdateSystem>().currentPhase);
-			Mod.Log.Info(entities.Length);
 
 			for (var i = 0; i < entities.Length; i++)
 			{

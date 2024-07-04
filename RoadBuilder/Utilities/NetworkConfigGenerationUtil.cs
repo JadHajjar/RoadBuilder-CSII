@@ -12,14 +12,14 @@ using System.Linq;
 
 namespace RoadBuilder.Utilities
 {
-	public class RoadConfigGenerationUtil
+	public class NetworkConfigGenerationUtil
 	{
 		private readonly RoadGenerationData _roadGenerationData;
 		private readonly PrefabUISystem _prefabUISystem;
 
 		public NetGeometryPrefab NetworkPrefab { get; }
 
-		public RoadConfigGenerationUtil(NetGeometryPrefab prefab, RoadGenerationData roadGenerationData, PrefabUISystem prefabUISystem)
+		public NetworkConfigGenerationUtil(NetGeometryPrefab prefab, RoadGenerationData roadGenerationData, PrefabUISystem prefabUISystem)
 		{
 			_roadGenerationData = roadGenerationData;
 			_prefabUISystem = prefabUISystem;
@@ -51,12 +51,20 @@ namespace RoadBuilder.Utilities
 			config.Name = $"Custom {GetAssetName(NetworkPrefab)}";
 			config.MaxSlopeSteepness = NetworkPrefab.m_MaxSlopeSteepness;
 			config.AggregateType = NetworkPrefab.m_AggregateType?.name;
-			config.EdgeStates = NetworkPrefab.m_EdgeStates.ToList();
-			config.NodeStates = NetworkPrefab.m_NodeStates.ToList();
 			config.PillarPrefabName = FindPillarPrefab(NetworkPrefab);
 			config.HasUndergroundWaterPipes = NetworkPrefab.Has<WaterPipeConnection>();
 			config.HasUndergroundElectricityCable = NetworkPrefab.Has<ElectricityConnection>();
 			config.RequiresUpgradeForElectricity = NetworkPrefab.TryGet<ElectricityConnection>(out var electricityConnections) && electricityConnections.m_RequireAll.Contains(NetPieceRequirements.Lighting);
+
+			if (NetworkPrefab.m_EdgeStates.Any(x => x.m_SetState.Any(y => y == NetPieceRequirements.Gravel) && x.m_RequireAny.Length == 0 && x.m_RequireAll.Length == 0))
+			{
+				config.Category |= RoadCategory.Gravel;
+			}
+
+			if (NetworkPrefab.m_EdgeStates.Any(x => x.m_SetState.Any(y => y == NetPieceRequirements.Tiles) && x.m_RequireAny.Length == 0 && x.m_RequireAll.Length == 0))
+			{
+				config.Category |= RoadCategory.Tiled;
+			}
 
 			config.Lanes.AddRange(NetworkPrefab.m_Sections
 				.Where(x => x.m_RequireAll.Length == 0 && x.m_RequireAny.Length == 0)
@@ -95,7 +103,25 @@ namespace RoadBuilder.Utilities
 
 		private INetworkConfig GenerateTrackConfig(TrackPrefab trackPrefab)
 		{
-			var config = new TrackConfig();
+			var config = new TrackConfig
+			{
+				SpeedLimit = trackPrefab.m_SpeedLimit
+			};
+
+			if (trackPrefab.m_TrackType.HasFlag(Game.Net.TrackTypes.Train))
+			{
+				config.Category |= RoadCategory.Train;
+			}
+
+			if (trackPrefab.m_TrackType.HasFlag(Game.Net.TrackTypes.Tram))
+			{
+				config.Category |= RoadCategory.Tram;
+			}
+
+			if (trackPrefab.m_TrackType.HasFlag(Game.Net.TrackTypes.Subway))
+			{
+				config.Category |= RoadCategory.Subway;
+			}
 
 			return config;
 		}
