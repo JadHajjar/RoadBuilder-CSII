@@ -6,27 +6,31 @@ using Game.Net;
 using Game.Prefabs;
 using Game.Tools;
 
-using RoadBuilder.Domain;
+using RoadBuilder.Domain.Components;
 using RoadBuilder.Domain.Enums;
+using RoadBuilder.Domain.Prefabs;
 using RoadBuilder.Systems.UI;
+
+using System;
 using System.Linq;
 
 using Unity.Collections;
 
 using Unity.Entities;
-
 using Unity.Jobs;
 
 using UnityEngine.InputSystem;
 
 namespace RoadBuilder.Systems
 {
-    public partial class RoadBuilderToolSystem : ToolBaseSystem
+	public partial class RoadBuilderToolSystem : ToolBaseSystem
 	{
 		private PrefabSystem prefabSystem;
 		private RoadBuilderUISystem roadBuilderUISystem;
 		private EntityQuery highlightedQuery;
+		private EntityQuery roadBuilderNetworkQuery;
 		private ProxyAction applyAction;
+		private ProxyAction cancelAction;
 
 		public override string toolID { get; } = "RoadBuilderTool";
 
@@ -38,8 +42,10 @@ namespace RoadBuilder.Systems
 			roadBuilderUISystem = World.GetOrCreateSystemManaged<RoadBuilderUISystem>();
 
 			highlightedQuery = GetEntityQuery(ComponentType.ReadOnly<Highlighted>());
+			roadBuilderNetworkQuery = GetEntityQuery(ComponentType.ReadOnly<RoadBuilderNetwork>());
 
 			applyAction = Mod.Settings.GetAction(nameof(RoadBuilder) + "Apply");
+			cancelAction = Mod.Settings.GetAction(nameof(RoadBuilder) + "Cancel");
 
 			var builtInApplyAction = InputManager.instance.FindAction(InputManager.kToolMap, "Apply");
 			var mimicApplyBinding = applyAction.bindings.FirstOrDefault(b => b.group == nameof(Mouse));
@@ -48,7 +54,15 @@ namespace RoadBuilder.Systems
 			mimicApplyBinding.path = builtInApplyBinding.path;
 			mimicApplyBinding.modifiers = builtInApplyBinding.modifiers;
 
+			var builtInCancelAction = InputManager.instance.FindAction(InputManager.kToolMap, "Mouse Cancel");
+			var mimicCancelBinding = cancelAction.bindings.FirstOrDefault(b => b.group == nameof(Mouse));
+			var builtInCancelBinding = builtInCancelAction.bindings.FirstOrDefault(b => b.group == nameof(Mouse));
+
+			mimicCancelBinding.path = builtInCancelBinding.path;
+			mimicCancelBinding.modifiers = builtInCancelBinding.modifiers;
+
 			InputManager.instance.SetBinding(mimicApplyBinding, out _);
+			InputManager.instance.SetBinding(mimicCancelBinding, out _);
 		}
 
 		public override void InitializeRaycast()
@@ -62,53 +76,129 @@ namespace RoadBuilder.Systems
 
 		protected override JobHandle OnUpdate(JobHandle inputDeps)
 		{
+			cancelAction.shouldBeEnabled = true;
+
+			if (cancelAction.WasPerformedThisFrame())
+			{
+				if (roadBuilderUISystem.Mode is RoadBuilderToolMode.Picker)
+				{
+					roadBuilderUISystem.ClearTool();
+				}
+				else
+				{
+					roadBuilderUISystem.Mode = RoadBuilderToolMode.Picker;
+				}
+			}
+
 			applyAction.shouldBeEnabled = roadBuilderUISystem.Mode is RoadBuilderToolMode.Picker;
 
-			if (roadBuilderUISystem.Mode is RoadBuilderToolMode.Picker)
+			switch (roadBuilderUISystem.Mode)
 			{
-				HandlePicker();
+				case RoadBuilderToolMode.Picker:
+				{
+					var raycastHit = HandlePicker(out var entity);
+
+					HandleHighlight(highlightedQuery, raycastHit ? x => x == entity : null);
+
+					if (raycastHit)
+					{
+						TryHighlightEntity(entity);
+					}
+
+					break;
+				}
+
+				case RoadBuilderToolMode.Editing:
+				{
+					HandleHighlight(roadBuilderNetworkQuery, IsWorkingEntityPrefab);
+
+					break;
+				}
+
+				case RoadBuilderToolMode.EditingSingle:
+				{
+					HandleHighlight(highlightedQuery, x => x == roadBuilderUISystem.WorkingEntity);
+
+					TryHighlightEntity(roadBuilderUISystem.WorkingEntity);
+
+					break;
+				}
 			}
 
 			return base.OnUpdate(inputDeps);
 		}
 
-		private void HandlePicker()
+		private void TryHighlightEntity(Entity entity)
 		{
-			var raycastHit = GetRaycastResult(out var entity, out RaycastHit hit);
-			var entities = highlightedQuery.ToEntityArray(Allocator.Temp);
-
-			if (raycastHit)
+			if (!EntityManager.HasComponent<Highlighted>(entity))
 			{
-				if (applyAction.WasPressedThisFrame()
-					&& EntityManager.TryGetComponent<PrefabRef>(entity, out var prefabRef)
-					&& prefabSystem.TryGetPrefab<RoadPrefab>(prefabRef, out var prefab))
-				{
-					if (prefab is RoadBuilderPrefab)
-					{
-						roadBuilderUISystem.EditPrefab(entity);
-					}
-					else
-					{
-						roadBuilderUISystem.CreateNewPrefab(entity);
-					}
+				EntityManager.AddComponent<Highlighted>(entity);
+				EntityManager.AddComponent<BatchesUpdated>(entity);
+			}
+		}
 
-					return;
-				}
-				else if (!EntityManager.HasComponent<Highlighted>(entity))
+		private bool IsWorkingEntityPrefab(Entity entity)
+		{
+			if (!EntityManager.TryGetComponent<PrefabRef>(entity, out var prefabRef))
+			{
+				return false;
+			}
+
+			return EntityManager.GetComponentData<PrefabRef>(roadBuilderUISystem.WorkingEntity).m_Prefab == prefabRef;
+		}
+
+		private bool HandlePicker(out Entity entity)
+		{
+			if (!GetRaycastResult(out entity, out var hit))
+			{
+				return false;
+			}
+
+			if (!EntityManager.TryGetComponent<PrefabRef>(entity, out var prefabRef))
+			{
+				return false;
+			}
+
+			if (!prefabSystem.TryGetPrefab<NetGeometryPrefab>(prefabRef, out var prefab))
+			{
+				return false;
+			}
+
+			if (prefab is not (RoadPrefab or TrackPrefab or FencePrefab))
+			{
+				return false;
+			}
+
+			if (applyAction.WasPerformedThisFrame())
+			{
+				if (prefab is INetworkBuilderPrefab)
 				{
-					EntityManager.AddComponent<Highlighted>(entity);
-					EntityManager.AddComponent<BatchesUpdated>(entity);
+					roadBuilderUISystem.EditPrefab(entity);
+				}
+				else
+				{
+					roadBuilderUISystem.CreateNewPrefab(entity);
 				}
 			}
 
+			return true;
+		}
+
+		private void HandleHighlight(EntityQuery query, Func<Entity, bool> shouldBeHighlighted)
+		{
+			var entities = query.ToEntityArray(Allocator.Temp);
+
 			for (var i = 0; i < entities.Length; i++)
 			{
-				if (raycastHit && entity == entities[i])
+				if (shouldBeHighlighted != null && shouldBeHighlighted(entities[i]))
 				{
-					continue;
+					EntityManager.AddComponent<Highlighted>(entities[i]);
+				}
+				else
+				{
+					EntityManager.RemoveComponent<Highlighted>(entities[i]);
 				}
 
-				EntityManager.RemoveComponent<Highlighted>(entities[i]);
 				EntityManager.AddComponent<BatchesUpdated>(entities[i]);
 			}
 		}
@@ -118,6 +208,7 @@ namespace RoadBuilder.Systems
 			base.OnStopRunning();
 
 			applyAction.shouldBeEnabled = false;
+			cancelAction.shouldBeEnabled = false;
 
 			var entities = highlightedQuery.ToEntityArray(Allocator.Temp);
 

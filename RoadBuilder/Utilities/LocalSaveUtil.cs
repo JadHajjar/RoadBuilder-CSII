@@ -1,6 +1,7 @@
 ﻿using Colossal.Json;
 
 using RoadBuilder.Domain.Configuration;
+using RoadBuilder.Domain.Configurations;
 using RoadBuilder.Systems;
 
 using System;
@@ -11,19 +12,20 @@ namespace RoadBuilder.Utilities
 {
 	public static class LocalSaveUtil
 	{
-		public static void Save(RoadConfig roadConfig)
+		public static void Save(INetworkConfig config)
 		{
-			DeletePreviousLocalConfig(roadConfig);
+			DeletePreviousLocalConfig(config);
 
-			roadConfig.Version = RoadBuilderSystem.CURRENT_VERSION;
-			roadConfig.OriginalID = roadConfig.ID;
+			config.Version = RoadBuilderSystem.CURRENT_VERSION;
+			config.OriginalID = config.ID;
+			config.Type = config.GetType().Name;
 
-			File.WriteAllText(Path.Combine(FoldersUtil.ContentFolder, $"{roadConfig.ID}.json"), JSON.Dump(roadConfig));
+			File.WriteAllText(Path.Combine(FoldersUtil.ContentFolder, $"{config.ID}.json"), JSON.Dump(config));
 		}
 
-		public static void DeletePreviousLocalConfig(RoadConfig roadConfig)
+		public static void DeletePreviousLocalConfig(INetworkConfig config)
 		{
-			var fileName = Path.Combine(FoldersUtil.ContentFolder, $"{roadConfig.OriginalID}.json");
+			var fileName = Path.Combine(FoldersUtil.ContentFolder, $"{config.OriginalID}.json");
 
 			if (File.Exists(fileName))
 			{
@@ -31,20 +33,35 @@ namespace RoadBuilder.Utilities
 			}
 		}
 
-		internal static IEnumerable<RoadConfig> LoadConfigs()
+		internal static IEnumerable<INetworkConfig> LoadConfigs()
 		{
+			var list = new List<INetworkConfig>();
+
 			if (!Directory.Exists(FoldersUtil.ContentFolder))
 			{
-				yield break;
+				return list;
 			}
 
 			foreach (var item in Directory.EnumerateFiles(FoldersUtil.ContentFolder, "*.json"))
 			{
-				RoadConfig roadConfig;
-
 				try
 				{
-					roadConfig = JSON.MakeInto<RoadConfig>(JSON.Load(File.ReadAllText(item)));
+					var json = JSON.Load(File.ReadAllText(item));
+
+					switch (json["Type"].ToString())
+					{
+						case nameof(RoadConfig):
+							list.Add(JSON.MakeInto<RoadConfig>(json));
+							break;
+						case nameof(TrackConfig):
+							list.Add(JSON.MakeInto<TrackConfig>(json));
+							break;
+						case nameof(FenceConfig):
+							list.Add(JSON.MakeInto<FenceConfig>(json));
+							break;
+						default:
+							break;
+					}
 				}
 				catch (Exception ex)
 				{
@@ -52,9 +69,9 @@ namespace RoadBuilder.Utilities
 
 					continue;
 				}
-
-				yield return roadConfig;
 			}
+
+			return list;
 		}
 	}
 }

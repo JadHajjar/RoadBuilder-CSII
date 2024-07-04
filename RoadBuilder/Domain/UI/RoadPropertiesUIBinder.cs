@@ -13,28 +13,28 @@ namespace RoadBuilder.Domain.UI
 		public string AggregateType;
 		public RoadCategory Category;
 
-		public static RoadPropertiesUIBinder From(RoadConfig config)
+		public static RoadPropertiesUIBinder From(INetworkConfig config)
 		{
 			return new RoadPropertiesUIBinder
 			{
 				Name = config.Name,
 				Category = config.Category,
 				AggregateType = config.AggregateType,
-				SpeedLimit = config.SpeedLimit / 2f,
-				GeneratesTrafficLights = config.GeneratesTrafficLights,
-				GeneratesZoningBlocks = config.GeneratesZoningBlocks,
+				//SpeedLimit = config.SpeedLimit / 2f,
+				//GeneratesTrafficLights = config.GeneratesTrafficLights,
+				//GeneratesZoningBlocks = config.GeneratesZoningBlocks,
 				MaxSlopeSteepness = config.MaxSlopeSteepness,
 			};
 		}
 
-		public void Fill(RoadConfig config)
+		public void Fill(INetworkConfig config)
 		{
 			config.Name = Name;
 			config.Category = Category;
 			config.AggregateType = AggregateType;
-			config.SpeedLimit = SpeedLimit * 2f;
-			config.GeneratesTrafficLights = GeneratesTrafficLights;
-			config.GeneratesZoningBlocks = GeneratesZoningBlocks;
+			//config.SpeedLimit = SpeedLimit * 2f;
+			//config.GeneratesTrafficLights = GeneratesTrafficLights;
+			//config.GeneratesZoningBlocks = GeneratesZoningBlocks;
 			config.MaxSlopeSteepness = MaxSlopeSteepness;
 		}
 	}

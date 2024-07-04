@@ -31,12 +31,13 @@ namespace RoadBuilder.Systems.UI
 		private DefaultToolSystem defaultToolSystem;
 		private SimulationSystem simulationSystem;
 
-        private ValueBindingHelper<RoadBuilderToolMode> RoadBuilderMode;
+		private ValueBindingHelper<RoadBuilderToolMode> RoadBuilderMode;
 		private ValueBindingHelper<RoadPropertiesUIBinder> RoadProperties;
 		private ValueBindingHelper<RoadLaneUIBinder[]> RoadLanes;
 		private ValueBindingHelper<bool> IsPaused;
 
-		public RoadBuilderToolMode Mode => RoadBuilderMode;
+		public RoadBuilderToolMode Mode { get => RoadBuilderMode; set => RoadBuilderMode.Value = value; }
+		public Entity WorkingEntity => workingEntity;
 
 		protected override void OnCreate()
 		{
@@ -57,8 +58,8 @@ namespace RoadBuilder.Systems.UI
 			RoadLanes = CreateBinding("GetRoadLanes", new RoadLaneUIBinder[0]);
 			IsPaused = CreateBinding("IsPaused", simulationSystem.selectedSpeed == 0f);
 
-			CreateTrigger<RoadPropertiesUIBinder> ("SetRoadProperties", x => UpdateRoad(c => UpdateProperties(c, x)));
-			CreateTrigger<RoadLaneUIBinder[]> ("SetRoadLanes", x => UpdateRoad(c => UpdateLaneOrder(c, x)));
+			CreateTrigger<RoadPropertiesUIBinder>("SetRoadProperties", x => UpdateRoad(c => UpdateProperties(c, x)));
+			CreateTrigger<RoadLaneUIBinder[]>("SetRoadLanes", x => UpdateRoad(c => UpdateLaneOrder(c, x)));
 			CreateTrigger<int, int, int, int>("OptionClicked", (i, x, y, z) => UpdateRoad(c => LaneOptionClicked(c, i, x, y, z)));
 			CreateTrigger("ToggleTool", ToggleTool);
 			CreateTrigger("CreateNewPrefab", () => CreateNewPrefab(workingEntity));
@@ -95,7 +96,7 @@ namespace RoadBuilder.Systems.UI
 			}
 		}
 
-		private void ClearTool()
+		public void ClearTool()
 		{
 			RoadBuilderMode.Value = RoadBuilderToolMode.None;
 
@@ -123,16 +124,26 @@ namespace RoadBuilder.Systems.UI
 
 			var config = roadBuilderSystem.GetOrGenerateConfiguration(workingEntity);
 
+			if (config == null)
+			{
+				return;
+			}
+
 			RoadProperties.Value = RoadPropertiesUIBinder.From(config);
 			RoadLanes.Value = From(config, roadBuilderSystem.RoadGenerationData);
 		}
 
-		private void UpdateRoad(Action<RoadConfig> action)
+		private void UpdateRoad(Action<INetworkConfig> action)
 		{
 			var createNew = RoadBuilderMode.Value is RoadBuilderToolMode.EditingSingle;
 			var config = createNew
 				? roadBuilderSystem.GenerateConfiguration(workingEntity)
 				: roadBuilderSystem.GetOrGenerateConfiguration(workingEntity);
+
+			if (config == null)
+			{
+				return;
+			}
 
 			action(config);
 
@@ -143,12 +154,12 @@ namespace RoadBuilder.Systems.UI
 			RoadLanes.Value = From(config, roadBuilderSystem.RoadGenerationData);
 		}
 
-		private void UpdateProperties(RoadConfig config, RoadPropertiesUIBinder roadProperties)
+		private void UpdateProperties(INetworkConfig config, RoadPropertiesUIBinder roadProperties)
 		{
 			roadProperties.Fill(config);
 		}
 
-		private void UpdateLaneOrder(RoadConfig config, RoadLaneUIBinder[] roadLanes)
+		private void UpdateLaneOrder(INetworkConfig config, RoadLaneUIBinder[] roadLanes)
 		{
 			var newLanes = new List<LaneConfig>();
 
@@ -169,7 +180,7 @@ namespace RoadBuilder.Systems.UI
 			config.Lanes = newLanes;
 		}
 
-		private void LaneOptionClicked(RoadConfig config, int index, int option, int id, int value)
+		private void LaneOptionClicked(INetworkConfig config, int index, int option, int id, int value)
 		{
 			var existingLane = config.Lanes.ElementAtOrDefault(index);
 
@@ -179,7 +190,7 @@ namespace RoadBuilder.Systems.UI
 			}
 		}
 
-		private RoadLaneUIBinder[] From(RoadConfig config, RoadGenerationData roadGenerationData)
+		private RoadLaneUIBinder[] From(INetworkConfig config, RoadGenerationData roadGenerationData)
 		{
 			var binders = new RoadLaneUIBinder[config.Lanes.Count];
 
