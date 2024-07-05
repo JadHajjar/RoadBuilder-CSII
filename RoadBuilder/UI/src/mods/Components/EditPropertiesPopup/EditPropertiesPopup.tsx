@@ -24,11 +24,13 @@ export const EditPropertiesPopup = (props: _Props) => {
         <Button className={styles.deleteButton} onSelect={props.onDelete.bind(null, props.index)} variant="icon" />
       </div>
       <div className={styles.content}>
-        {props.lane.Options && props.lane.Options.length !== 0 ? (
-          <OptionsPanelComponent Index={props.lane.Index} options={props.lane.Options}></OptionsPanelComponent>
-        ) : (
-          <span> No Options Available</span>
-        )}
+        <div className={styles.options}>
+          {props.lane.Options && props.lane.Options.length !== 0 ? (
+            <OptionsPanelComponent Index={props.lane.Index} options={props.lane.Options}></OptionsPanelComponent>
+          ) : (
+            <span> No Options Available</span>
+          )}
+        </div>        
         <div className={styles.caret}></div>
       </div>
     </div>
