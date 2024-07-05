@@ -15,7 +15,7 @@
   height: base.$laneButtonSize;
 
   transition: transform 0.2s;
-  margin: 0 16rem;
+  margin: 0 0rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -76,7 +76,7 @@
 
 .informationBar {
   height: base.$bottomBarHeight;
-  width: 130rem;
+  width: 100rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
