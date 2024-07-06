@@ -51,6 +51,10 @@ declare module "cs2/input" {
   	AnyChildren = "anyChildren",
   	FocusedChild = "focusedChild"
   }
+  export enum FocusLimits {
+  	Center = "center",
+  	Bounds = "bounds"
+  }
   export export const FocusContext: import("react").Context<FocusController>;
   export export const disabledFocusController: FocusController;
   export export abstract class FocusControllerBase implements FocusController {
@@ -115,16 +119,17 @@ declare module "cs2/input" {
   	getFocusedBounds(): FocusDOMRect | null;
   	protected get debugFocusedChild(): FocusController | null;
   }
-  export export function useMultiChildFocusController(focusKey: UniqueFocusKey | null, activation: FocusActivation): MultiChildFocusController;
+  export export function useMultiChildFocusController(focusKey: UniqueFocusKey | null, activation: FocusActivation, limits: FocusLimits): MultiChildFocusController;
   export interface RefocusCallback {
   	(previousElement: FocusController | null): void;
   }
   export export class MultiChildFocusController extends FocusControllerBase {
-  	private readonly activation;
+  	readonly activation: FocusActivation;
+  	readonly limits: FocusLimits;
   	readonly children: Map<UniqueFocusKey, FocusController>;
   	private _focusedChildKey;
   	onRefocus: RefocusCallback | null;
-  	constructor(focusKey: UniqueFocusKey | null, activation: FocusActivation);
+  	constructor(focusKey: UniqueFocusKey | null, activation: FocusActivation, limits: FocusLimits);
   	get focusedChildKey(): UniqueFocusKey | null;
   	set focusedChildKey(nextFocusedChildKey: UniqueFocusKey | null);
   	has(focusKey: UniqueFocusKey): boolean;
@@ -190,7 +195,7 @@ declare module "cs2/input" {
   }
   export export function transformNavigationInput(value: Number2, dir: NavigationDirection): Number2;
   export export function getClosestKey(controller: MultiChildFocusController, pos: Number2, anchor: Number2): UniqueFocusKey | null;
-  export export function getClosestKeyInDirection(controller: MultiChildFocusController, pos: Number2, dir: Number2, anchor: Number2, ignoreKey?: UniqueFocusKey): UniqueFocusKey | null;
+  export export function getClosestKeyInDirection(controller: MultiChildFocusController, focusedElement: FocusController, dir: Number2, anchor: Number2, ignoreKey?: UniqueFocusKey): UniqueFocusKey | null;
   export export const focusAnchorCenter: Number2;
   export export const focusAnchorTop: Number2;
   export export const focusAnchorLeft: Number2;
@@ -202,15 +207,17 @@ declare module "cs2/input" {
   	initialFocused?: UniqueFocusKey | null;
   	direction?: NavigationDirection;
   	activation?: FocusActivation;
+  	limits?: FocusLimits;
   	onRefocus?: (controller: MultiChildFocusController, lastElement: FocusController | null) => UniqueFocusKey | null;
   	onChange?: (key: UniqueFocusKey | null) => void;
   	allowFocusExit?: boolean;
   	forceFocus?: UniqueFocusKey | null;
+  	debugName?: string;
   }
   /**
    * Automatic navigation in lists, grids and forms.
    */
-  export export const AutoNavigationScope: ({ focusKey, initialFocused, direction, activation, children, onChange, onRefocus, allowFocusExit, forceFocus }: React$1.PropsWithChildren<AutoNavigationScopeProps>) => JSX.Element;
+  export export const AutoNavigationScope: ({ focusKey, initialFocused, direction, activation, limits, children, onChange, onRefocus, allowFocusExit, forceFocus, debugName }: React$1.PropsWithChildren<AutoNavigationScopeProps>) => JSX.Element;
   export interface FocusBoundaryProps {
   	disabled?: boolean;
   	onFocusChange?: FocusCallback;
@@ -334,6 +341,7 @@ declare module "cs2/input" {
   	debugName?: string;
   	focused: UniqueFocusKey | null;
   	activation?: FocusActivation;
+  	limits?: FocusLimits;
   }
   /**
    * A stateless component that allows you to control which child inside of it is focused.
@@ -345,13 +353,14 @@ declare module "cs2/input" {
    *
    * Optionally, a `focusKey` for the component itself can be set.
    */
-  export export const FocusScope: ({ focusKey, debugName, focused, activation, children }: React$1.PropsWithChildren<FocusScopeProps>) => JSX.Element;
+  export export const FocusScope: ({ focusKey, debugName, focused, activation, limits, children }: React$1.PropsWithChildren<FocusScopeProps>) => JSX.Element;
   export interface NavigationScopeProps {
   	focusKey?: FocusKey;
   	debugName?: string;
   	focused: UniqueFocusKey | null;
   	direction?: NavigationDirection;
   	activation?: FocusActivation;
+  	limits?: FocusLimits;
   	onChange: (key: UniqueFocusKey | null) => void;
   	onRefocus?: (controller: MultiChildFocusController, lastElement: FocusController | null) => UniqueFocusKey | null;
   	allowFocusExit?: boolean;
@@ -365,7 +374,7 @@ declare module "cs2/input" {
    *
    * Optionally, a `focusKey` for the component itself can be set.
    */
-  export export const NavigationScope: ({ focusKey, debugName, focused, direction, activation, children, onChange, onRefocus, allowFocusExit, }: React$1.PropsWithChildren<NavigationScopeProps>) => JSX.Element;
+  export export const NavigationScope: ({ focusKey, debugName, focused, direction, activation, limits, children, onChange, onRefocus, allowFocusExit, }: React$1.PropsWithChildren<NavigationScopeProps>) => JSX.Element;
   export export function refocusClosestKeyIfNoFocus(focusController: MultiChildFocusController, lastElement: FocusController | null): UniqueFocusKey | null;
   export export function refocusClosestKey(focusController: MultiChildFocusController, lastElement: FocusController | null): UniqueFocusKey | null;
   export interface SelectableFocusBoundaryProps {
@@ -393,6 +402,7 @@ declare module "cs2/input" {
   }
   export interface ControlPath {
   	name: string;
+  	group: string;
   	displayName?: string;
   }
   export enum GamepadType {
@@ -435,6 +445,7 @@ declare module "cs2/input" {
   	"Leave Underground Mode": Action;
   	"Leave Info View": Action;
   	"Switch Tab": Action1D;
+  	"Switch Option Section": Action1D;
   	"Switch DLC": Action1D;
   	"Switch Ordering": Action1D;
   	"Switch Radio Network": Action1D;
@@ -483,6 +494,11 @@ declare module "cs2/input" {
   	"Unset Binding": Action;
   	"Reset Binding": Action;
   	"Switch Savegame Location": Action1D;
+  	"Show Advanced": Action;
+  	"Hide Advanced": Action;
+  	"Select Directory": Action;
+  	"Search Options": Action;
+  	"Clear Search": Action;
   	"Debug UI": Action;
   	"Debug Prefab Tool": Action;
   	"Debug Change Field": Action1D;
@@ -526,7 +542,6 @@ declare module "cs2/input" {
   export export const InputActionHints: React$1.FC<InputActionHintsProps>;
   export interface ControlIconProps extends ClassProps {
   	binding: ControlPath;
-  	group: string;
   	modifier: boolean;
   	shortName?: ShortInputPathOption;
   	style?: React$1.CSSProperties;
@@ -535,7 +550,7 @@ declare module "cs2/input" {
   }
   export export const ControlIcon: React$1.FC<ControlIconProps>;
   export export const ActionHintLayout: ({ children, className, ...props }: ButtonProps) => JSX.Element;
-  export export function useInputControlIcon(binding: ControlPath, group: string): string | null;
+  export export function useInputControlIcon(binding: ControlPath): string | null;
   export export function useGamepadType(): GamepadType;
   export enum GamepadButton$1 {
   	buttonSouth = 0,
