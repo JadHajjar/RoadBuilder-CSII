@@ -4,24 +4,36 @@
 }
 
 .view > div {
-    overflow-y: visible;
+    overflow-y: auto;
+    display: none;
+
+    &:first-child {
+        overflow-y: visible;
+        display: auto;
+    }
 }
+
 
 .scrollButton {
     $size: 38rem;    
 
     position: absolute;    
-    bottom: 110rem;
+    bottom: 60rem;    
     height: $size;
     width: $size;
-
+    font-size: 4em;
+    
     background-color: rgba(255, 255, 255, 0.8);
+    mask-size: contain;
     backdrop-filter: blur(3px);
+    pointer-events: auto;
     &.scrollRight {
         right: -$size;
+        mask-image: url(coui://gameui/Media/Glyphs/ArrowRight.svg);
     }
     &.scrollLeft {
         left: -$size;
+        mask-image: url(coui://gameui/Media/Glyphs/ArrowLeft.svg);
     }
 }
 

@@ -3,7 +3,7 @@
 .viewContainer {
   position: absolute;
   left: 20%;
-  right: 20%;
+  right: 20%;  
   // The Vanilla Prefab Picker width => calc( var(--assetMenuColumns) * ( var(--assetMenuItemSize) + var(--assetMenuItemGap) ) - var(--assetMenuItemGap) + 40rem);
   height: auto; //120rem;
   bottom: base.$bottomBarOffset;
@@ -19,6 +19,10 @@
 }
 
 .view {
+  max-width: 100%;
+}
+
+.view > div:first-child {
   position: relative;
   min-width: 20%;
   height: 100%;

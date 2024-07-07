@@ -85,12 +85,10 @@ export const BottomView = () => {
   let isDragging = dragContext.netSectionItem || dragContext.roadLane;
   return (
     <div className={styles.viewContainer}>
-      <div className={styles.view}>
-        {" "}
-        {/*trackVisibility='always' horizontal controller={scrollController}>*/}
+      <DragAndDropScrollable className={styles.view} trackVisibility='always' horizontal controller={scrollController}>
         {items}
         {roadLanes.length == 0 && !dragContext.netSectionItem ? <div className={styles.hint}>Drag Lanes Here</div> : <></>}
-      </div>
+      </DragAndDropScrollable>
       <div className={styles.bottomBG + " " + (isPaused && styles.paused)}>
         {isDragging ? (
           <></>
