@@ -11,6 +11,7 @@ import { RoadBuilderToolModeEnum } from "domain/RoadBuilderToolMode";
 import { RoadLane } from "domain/RoadProperties";
 import { VanillaComponentResolver } from "vanillacomponentresolver";
 import { DragAndDropScrollable } from "mods/Components/DragAndDropScrollable/DragAndDropScrollable";
+import { DeleteAreaDnD } from "mods/Components/DeleteAreaDnD/DeleteAreaDnD";
 
 export const BottomView = () => {
   let dragContext = useContext(DragContext);
@@ -101,6 +102,7 @@ export const BottomView = () => {
           </>
         )}
       </div>
+      <DeleteAreaDnD onRemove={deleteLane} />
     </div>
   );
 };

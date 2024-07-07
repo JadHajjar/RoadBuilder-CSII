@@ -1,0 +1,41 @@
+@use '../../base.scss' as _base;
+
+$height: _base.$bottomBarHeight + 30rem;
+
+.area {
+    position: absolute;
+    bottom: -1 * $height;
+    width: calc(100vw - 10rem);
+    z-index: 2;
+    height: $height;
+    backdrop-filter: blur(24px);    
+    pointer-events: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    transition: opacity 0.15s;
+    &.hidden {
+        opacity: 0;
+        pointer-events: none;
+    }
+}
+.target {    
+    padding: 8rem 50rem;
+    width: 50%;
+    text-align: center;
+    border: 1rem solid rgba(255, 255, 255, 0.2);
+    border-radius: 4rem;
+    color: var(--normalTextColor); 
+    background-color: rgba(255, 255, 255, 0);       
+
+    transition: background-color 0.15s;
+    img {
+        filter: invert(1);
+        height: 40rem;
+    }    
+
+    &:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+    }    
+}
