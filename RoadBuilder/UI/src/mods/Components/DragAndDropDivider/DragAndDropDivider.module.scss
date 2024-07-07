@@ -20,12 +20,9 @@
     height: 200rem;
     bottom: -100rem;    
     width: 80rem;        
-    // background-color: rgba($color: #fff, $alpha: 0.35);
+    // for Debugging uncomment: background-color: rgba($color: #fff, $alpha: 0.35);
     transition: background-color 0.2s;
     border-radius: 2rem;
-    &:hover, &.highlighted {
-      // background-color: var(--accentColorNormal-hover);
-    }
   }
 
   &.hidden {
