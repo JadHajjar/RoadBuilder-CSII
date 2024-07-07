@@ -40,7 +40,7 @@ export const DragAndDropScrollable = (props: _Props) => {
         if (scrollLeft > 0) {             
             nState |= ArrowState.Left;
         }            
-        if (scrollLeft < maxScrollLeft) {
+        if (scrollLeft < maxScrollLeft - 1) {
             nState |= ArrowState.Right;
         }
         setArrowState(nState);
