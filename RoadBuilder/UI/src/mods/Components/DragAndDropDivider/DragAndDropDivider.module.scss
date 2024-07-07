@@ -1,8 +1,13 @@
 @use "../../base.scss" as base;
 
+
+.container:has(.divider:hover) {
+  width: 64rem;
+}
+
 .container {
   position: relative;
-  width: 64rem;
+  width: 0rem;
   height: base.$bottomViewHeight - base.$bottomBarHeight;
   margin-bottom: 82rem;
   transform: scale(1);
@@ -11,18 +16,13 @@
   justify-content: center;
 
   .divider {
+    position: absolute;
     height: 110%;
-    width: 4rem;
+    width: 32rem;    
     background-color: rgba($color: #fff, $alpha: 0.35);
     transition: background-color 0.2s;
     border-radius: 2rem;
-  }
-
-  &:hover,
-  &.highlighted {
-    width: 84rem;
-
-    .divider {
+    &:hover, &.highlighted {
       background-color: var(--accentColorNormal-hover);
     }
   }
