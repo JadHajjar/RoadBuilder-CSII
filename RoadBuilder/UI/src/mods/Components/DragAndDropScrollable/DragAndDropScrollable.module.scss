@@ -23,10 +23,18 @@
     width: $size;
     font-size: 4em;
     
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: rgb(255, 255, 255);
+    opacity: 0.8;
     mask-size: contain;
+    mask-position: center;
     backdrop-filter: blur(3px);
     pointer-events: auto;
+    transition: opacity 0.2s;
+
+    &:hover {
+        opacity: 1;
+    }
+
     &.scrollRight {
         right: -$size;
         mask-image: url(coui://gameui/Media/Glyphs/ArrowRight.svg);
@@ -34,6 +42,9 @@
     &.scrollLeft {
         left: -$size;
         mask-image: url(coui://gameui/Media/Glyphs/ArrowLeft.svg);
+    }
+    &[data-hidden="true"] {
+        visibility: hidden;
     }
 }
 
