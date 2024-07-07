@@ -1,13 +1,9 @@
 @use "../../base.scss" as base;
 
-
-.container:has(.divider:hover) {
-  width: 64rem;
-}
-
 .container {
   position: relative;
-  width: 0rem;
+  z-index: 5;
+  width: 2rem;
   height: base.$bottomViewHeight - base.$bottomBarHeight;
   margin-bottom: 82rem;
   transform: scale(1);
@@ -15,15 +11,20 @@
   display: flex;
   justify-content: center;
 
+  &.highlighted {
+    width: 40rem;
+  }
+
   .divider {
     position: absolute;
-    height: 110%;
-    width: 32rem;    
-    background-color: rgba($color: #fff, $alpha: 0.35);
+    height: 200rem;
+    bottom: -100rem;    
+    width: 80rem;        
+    // background-color: rgba($color: #fff, $alpha: 0.35);
     transition: background-color 0.2s;
     border-radius: 2rem;
     &:hover, &.highlighted {
-      background-color: var(--accentColorNormal-hover);
+      // background-color: var(--accentColorNormal-hover);
     }
   }
 
