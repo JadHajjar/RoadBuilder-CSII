@@ -1,7 +1,7 @@
 import { Number2, Tooltip } from "cs2/ui";
 import styles from "./LaneListItem.module.scss";
 import { NetSectionItem } from "domain/NetSectionItem";
-import { CSSProperties, MouseEventHandler, forwardRef, useContext, useEffect, useState } from "react";
+import { CSSProperties, MouseEventHandler, forwardRef, useContext, useEffect, useRef, useState } from "react";
 import classNames from "classnames";
 import { DragContext } from "mods/Contexts/DragContext";
 import { MouseButtons } from "mods/util";
@@ -51,7 +51,7 @@ enum DragType {
   Add,
 }
 
-export const LaneListItemDrag = forwardRef<HTMLDivElement>((props, ref) => {
+export const LaneListItemDrag = forwardRef<HTMLDivElement>((props, ref) => {  
   let dragData = useContext(DragContext);
   let sectionsStore = useContext(NetSectionsStoreContext);
   let [position, setPosition] = useState<Number2>({ x: 0, y: 0 });
@@ -69,8 +69,8 @@ export const LaneListItemDrag = forwardRef<HTMLDivElement>((props, ref) => {
   let netSection = dragType == DragType.Add ? dragData.netSectionItem! : sectionsStore[dragData.roadLane!.SectionPrefabName];
 
   let offsetStyle: CSSProperties = {
-    left: `calc( ${dragData.mousePosition.x}px - 66rem)`,
-    top: `calc( ${dragData.mousePosition.y}px - 40rem)`,
+    left: `calc( ${dragData.mousePosition.x}px - 40rem)`,
+    top: `calc( ${dragData.mousePosition.y}px - 30rem)`,
   };
   let containerClasses = classNames(styles.item, styles.dragRepresentation, { [styles.bottomRow]: dragType == DragType.Order });
 

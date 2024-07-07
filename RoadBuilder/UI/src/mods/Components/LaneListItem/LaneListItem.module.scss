@@ -53,7 +53,8 @@
 
   &.dragRepresentation {
     position: absolute;
-    height: 100rem;
+    height: auto;
+    background: none;
     .label {
       transform: scale(1, 0);
       animation: startDrag-label 0.2s;
@@ -64,7 +65,7 @@
       animation: none;
       background: none;
       .label {
-        display: none;
+        transform: scale(1, 0);
       }
     }
   }
