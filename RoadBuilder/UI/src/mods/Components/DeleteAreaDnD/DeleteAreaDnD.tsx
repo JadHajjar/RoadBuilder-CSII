@@ -10,7 +10,7 @@ export const DeleteAreaDnD = (props: {onRemove: (index: number) => void}) => {
     let localize = useLocalization();
     let [hovered, setHovered] = useState(false);
     let tooltip = localize.translate("Prompt[DragToDelete]", "Drag Here to Remove")!;
-    let isDragging = (dragCtx.roadLane || dragCtx.netSectionItem) !== undefined;
+    let isDragging = dragCtx.roadLane !== undefined;
     let classes = classNames(styles.area, {[styles.hidden]: !isDragging})
 
     useEffect(() => {
