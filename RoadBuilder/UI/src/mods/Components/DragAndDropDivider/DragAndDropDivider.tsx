@@ -31,14 +31,14 @@ export const DragAndDropDivider = forwardRef<DragAndDropDividerRef, _Props>((pro
 
     useImperativeHandle(ref, () => {
         let _intersects = (other: DOMRect) => {
-            if (containerRef.current != undefined) {
-                let bounds = containerRef.current.getBoundingClientRect();            
-                return intersects(bounds, other);                                       
-            }
-            return false;
+            // if (containerRef.current != undefined) {
+            //     let bounds = containerRef.current.getBoundingClientRect();            
+            //     return intersects(bounds, other);                                       
+            // }
+            return highlighted;
         };
         return {intersects: _intersects, listIdx: props.listIdx};
-    }, [containerRef, props.listIdx]);
+    }, [containerRef, props.listIdx, highlighted]);
 
     return (
         <div className={containerClasses} ref={containerRef}>
