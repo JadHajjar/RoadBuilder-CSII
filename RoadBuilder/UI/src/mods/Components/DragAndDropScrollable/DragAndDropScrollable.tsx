@@ -23,9 +23,13 @@ export const DragAndDropScrollable = (props: _Props) => {
     let [arrowState, setArrowState] = useState<ArrowState>(ArrowState.None);
 
     let onMouseOver = (dir: 'left' | 'right') => () => {        
-        let dx = 10 * rem * (dir == 'left'? -1 : 1);
-        setScrollRoutine(setInterval(() => {
-            scrollController.scrollBy(dx, 0);
+        if (!scrollRef.current) {
+            return;
+        }
+        let dx = 10 * rem * (dir == 'left'? -1 : 1);        
+        setScrollRoutine(setInterval(() => {         
+            console.log(scrollRef.current?.scrollLeft);   
+            scrollController.scrollBy(dx, 0);            
         }, Math.round(1000/30)));                
     }
 
@@ -48,7 +52,7 @@ export const DragAndDropScrollable = (props: _Props) => {
 
     useEffect(() => {
         updateArrowState();
-    }, [scrollRef, props.children]);
+    }, [scrollRef.current, props.children]);
 
     let onOverflowX = useCallback((overflow: boolean) => {             
         updateArrowState();
