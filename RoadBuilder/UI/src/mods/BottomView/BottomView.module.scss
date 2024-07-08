@@ -69,7 +69,30 @@
   }
 }
 
-.copyButton {
+.bottomLeftButtonBar {
+  display: flex;
+  flex-direction: row;  
+  column-gap: 20rem;
+  > * {
+    margin-right: 20rem;
+  }
+  > *:last-child {
+    margin-right: 0;
+  }
+}
+
+.backButton {  
+  img {
+    width: 1.5em;
+    height: 1.5em;
+    filter: invert(1);
+  }
+  &:hover img {
+    filter: invert(1);
+  }
+}
+
+.copyButton, .backButton {
   padding: 8rem;
   border-radius: 8rem;
   background-color: rgba(255, 255, 255, 0.3);

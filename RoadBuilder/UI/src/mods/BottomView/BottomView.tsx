@@ -6,7 +6,7 @@ import { NetSectionItem } from "domain/NetSectionItem";
 import { CSSProperties, useContext, useEffect, useRef } from "react";
 import { DragContext } from "mods/Contexts/DragContext";
 import { useValue } from "cs2/api";
-import { clearTool, createNewPrefab, setRoadLanes, roadBuilderToolMode$, roadLanes$, isPaused$ } from "mods/bindings";
+import { clearTool, createNewPrefab, setRoadLanes, roadBuilderToolMode$, roadLanes$, isPaused$, toggleTool } from "mods/bindings";
 import { RoadBuilderToolModeEnum } from "domain/RoadBuilderToolMode";
 import { RoadLane } from "domain/RoadProperties";
 import { VanillaComponentResolver } from "vanillacomponentresolver";
@@ -95,9 +95,14 @@ export const BottomView = () => {
           <></>
         ) : (
           <>
+          <div className={styles.bottomLeftButtonBar}>
+            <Button className={styles.backButton} variant="flat" onSelect={() => {toggleTool(); toggleTool();}}>
+              <img src="coui://gameui/Media/Glyphs/ArrowLeft.svg" />
+            </Button>
             <Button style={copyButtonStyle} className={styles.copyButton} variant="flat" onSelect={createNewPrefab}>
               Copy to New Prefab
-            </Button>
+            </Button>            
+          </div>            
             <Button className={styles.closeButton} src="Media/Glyphs/Close.svg" variant="icon" onSelect={clearTool} />
           </>
         )}
