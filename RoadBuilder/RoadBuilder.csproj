@@ -49,6 +49,9 @@
 		<Reference Include="Colossal.Core">
 			<Private>false</Private>
 		</Reference>
+		<Reference Include="Colossal.Collections">
+			<Private>false</Private>
+		</Reference>
 		<Reference Include="Colossal.Logging">
 			<Private>false</Private>
 		</Reference>
