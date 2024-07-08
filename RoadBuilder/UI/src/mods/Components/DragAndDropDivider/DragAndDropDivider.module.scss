@@ -2,7 +2,8 @@
 
 .container {
   position: relative;
-  width: 64rem;
+  z-index: 5;
+  width: 2rem;
   height: base.$bottomViewHeight - base.$bottomBarHeight;
   margin-bottom: 82rem;
   transform: scale(1);
@@ -10,21 +11,18 @@
   display: flex;
   justify-content: center;
 
-  .divider {
-    height: 110%;
-    width: 4rem;
-    background-color: rgba($color: #fff, $alpha: 0.35);
-    transition: background-color 0.2s;
-    border-radius: 2rem;
+  &.highlighted {
+    width: 40rem;
   }
 
-  &:hover,
-  &.highlighted {
-    width: 84rem;
-
-    .divider {
-      background-color: var(--accentColorNormal-hover);
-    }
+  .divider {
+    position: absolute;
+    height: 200rem;
+    bottom: -100rem;    
+    width: 80rem;        
+    // for Debugging uncomment: background-color: rgba($color: #fff, $alpha: 0.35);
+    transition: background-color 0.2s;
+    border-radius: 2rem;
   }
 
   &.hidden {

@@ -1,4 +1,7 @@
 import { Number2 } from "cs2/ui";
+import { roadLanes$, setRoadLanes } from "./bindings";
+import { useValue } from "cs2/api";
+import { RoadLane } from "domain/RoadProperties";
 
 export const classNames = (classes: {[className in string]: boolean}, ...baseClasses: string[]) => {
     let re = baseClasses.join(' ');
@@ -26,3 +29,7 @@ export const intersects = (rect1: DOMRect, rect2: DOMRect) => {
         rect1.bottom < rect2.top || 
         rect1.top > rect2.bottom);
 }
+
+export const removeAt = (arr: any[],  idx: number) => {    
+    return [...arr.slice(0, idx), ...arr.slice(Math.min(idx + 1, arr.length))];
+};

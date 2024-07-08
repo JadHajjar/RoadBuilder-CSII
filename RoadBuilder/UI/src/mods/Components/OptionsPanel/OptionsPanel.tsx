@@ -12,8 +12,7 @@ type _Props = {
   Index: number;
 };
 
-export const OptionsPanelComponent = (props: _Props) => {
-  console.log(props);
+export const OptionsPanelComponent = (props: _Props) => {  
   return (
     <>
       {props.options.map((section) => (

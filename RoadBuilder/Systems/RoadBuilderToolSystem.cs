@@ -84,10 +84,6 @@ namespace RoadBuilder.Systems
 				{
 					roadBuilderUISystem.ClearTool();
 				}
-				else
-				{
-					roadBuilderUISystem.Mode = RoadBuilderToolMode.Picker;
-				}
 			}
 
 			applyAction.shouldBeEnabled = roadBuilderUISystem.Mode is RoadBuilderToolMode.Picker;

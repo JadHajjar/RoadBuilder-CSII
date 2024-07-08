@@ -174,6 +174,7 @@ declare module "cs2/ui" {
   	"Leave Underground Mode": Action;
   	"Leave Info View": Action;
   	"Switch Tab": Action1D;
+  	"Switch Option Section": Action1D;
   	"Switch DLC": Action1D;
   	"Switch Ordering": Action1D;
   	"Switch Radio Network": Action1D;
@@ -222,6 +223,11 @@ declare module "cs2/ui" {
   	"Unset Binding": Action;
   	"Reset Binding": Action;
   	"Switch Savegame Location": Action1D;
+  	"Show Advanced": Action;
+  	"Hide Advanced": Action;
+  	"Select Directory": Action;
+  	"Search Options": Action;
+  	"Clear Search": Action;
   	"Debug UI": Action;
   	"Debug Prefab Tool": Action;
   	"Debug Change Field": Action1D;
@@ -430,6 +436,8 @@ declare module "cs2/ui" {
   	className?: string;
   	style?: CSSProperties;
   	onScroll?: () => void;
+  	onOverflowX?: (overflow: boolean) => void;
+  	onOverflowY?: (overflow: boolean) => void;
   	autoScroll?: boolean;
   	autoScrollSettings?: AutoScrollSettings;
   }

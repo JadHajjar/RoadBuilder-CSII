@@ -1,16 +1,17 @@
 import styles from "./BottomView.module.scss";
 import { RoadButtonSmall } from "../Components/RoadButtonSmall/RoadButtonSmall";
 import { DragAndDropDivider, DragAndDropDividerRef } from "mods/Components/DragAndDropDivider/DragAndDropDivider";
-import { Button, Scrollable } from "cs2/ui";
+import { Button, Scrollable, Tooltip } from "cs2/ui";
 import { NetSectionItem } from "domain/NetSectionItem";
 import { CSSProperties, useContext, useEffect, useRef } from "react";
 import { DragContext } from "mods/Contexts/DragContext";
 import { useValue } from "cs2/api";
-import { clearTool, createNewPrefab, setRoadLanes, roadBuilderToolMode$, roadLanes$, isPaused$ } from "mods/bindings";
+import { clearTool, createNewPrefab, setRoadLanes, roadBuilderToolMode$, roadLanes$, isPaused$, toggleTool } from "mods/bindings";
 import { RoadBuilderToolModeEnum } from "domain/RoadBuilderToolMode";
 import { RoadLane } from "domain/RoadProperties";
 import { VanillaComponentResolver } from "vanillacomponentresolver";
 import { DragAndDropScrollable } from "mods/Components/DragAndDropScrollable/DragAndDropScrollable";
+import { DeleteAreaDnD } from "mods/Components/DeleteAreaDnD/DeleteAreaDnD";
 
 export const BottomView = () => {
   let dragContext = useContext(DragContext);
@@ -85,24 +86,30 @@ export const BottomView = () => {
   let isDragging = dragContext.netSectionItem || dragContext.roadLane;
   return (
     <div className={styles.viewContainer}>
-      <div className={styles.view}>
-        {" "}
-        {/*trackVisibility='always' horizontal controller={scrollController}>*/}
+      <DragAndDropScrollable className={styles.view} trackVisibility='always' horizontal controller={scrollController}>
         {items}
         {roadLanes.length == 0 && !dragContext.netSectionItem ? <div className={styles.hint}>Drag Lanes Here</div> : <></>}
-      </div>
+      </DragAndDropScrollable>
       <div className={styles.bottomBG + " " + (isPaused && styles.paused)}>
         {isDragging ? (
           <></>
         ) : (
           <>
+          <div className={styles.bottomLeftButtonBar}>
+            <Tooltip tooltip={"Pick a different road"}>
+              <Button className={styles.backButton} variant="flat" onSelect={() => {toggleTool(); toggleTool();}}>
+                <img src="coui://gameui/Media/Glyphs/ArrowLeft.svg" />
+              </Button>            
+            </Tooltip>            
             <Button style={copyButtonStyle} className={styles.copyButton} variant="flat" onSelect={createNewPrefab}>
               Copy to New Prefab
-            </Button>
+            </Button>            
+          </div>            
             <Button className={styles.closeButton} src="Media/Glyphs/Close.svg" variant="icon" onSelect={clearTool} />
           </>
         )}
       </div>
+      <DeleteAreaDnD onRemove={deleteLane} />
     </div>
   );
 };
