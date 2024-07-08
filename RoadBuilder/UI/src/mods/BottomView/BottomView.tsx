@@ -1,7 +1,7 @@
 import styles from "./BottomView.module.scss";
 import { RoadButtonSmall } from "../Components/RoadButtonSmall/RoadButtonSmall";
 import { DragAndDropDivider, DragAndDropDividerRef } from "mods/Components/DragAndDropDivider/DragAndDropDivider";
-import { Button, Scrollable } from "cs2/ui";
+import { Button, Scrollable, Tooltip } from "cs2/ui";
 import { NetSectionItem } from "domain/NetSectionItem";
 import { CSSProperties, useContext, useEffect, useRef } from "react";
 import { DragContext } from "mods/Contexts/DragContext";
@@ -96,9 +96,11 @@ export const BottomView = () => {
         ) : (
           <>
           <div className={styles.bottomLeftButtonBar}>
-            <Button className={styles.backButton} variant="flat" onSelect={() => {toggleTool(); toggleTool();}}>
-              <img src="coui://gameui/Media/Glyphs/ArrowLeft.svg" />
-            </Button>
+            <Tooltip tooltip={"Pick a different road"}>
+              <Button className={styles.backButton} variant="flat" onSelect={() => {toggleTool(); toggleTool();}}>
+                <img src="coui://gameui/Media/Glyphs/ArrowLeft.svg" />
+              </Button>            
+            </Tooltip>            
             <Button style={copyButtonStyle} className={styles.copyButton} variant="flat" onSelect={createNewPrefab}>
               Copy to New Prefab
             </Button>            
