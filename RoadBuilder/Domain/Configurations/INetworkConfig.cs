@@ -4,7 +4,7 @@ using RoadBuilder.Domain.Enums;
 
 using System.Collections.Generic;
 
-namespace RoadBuilder.Domain.Configuration
+namespace RoadBuilder.Domain.Configurations
 {
 	public interface INetworkConfig : ISerializable
 	{

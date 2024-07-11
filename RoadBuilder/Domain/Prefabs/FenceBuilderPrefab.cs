@@ -1,6 +1,5 @@
 ﻿using Game.Prefabs;
 
-using RoadBuilder.Domain.Configuration;
 using RoadBuilder.Domain.Configurations;
 
 namespace RoadBuilder.Domain.Prefabs

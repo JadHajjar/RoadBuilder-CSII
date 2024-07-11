@@ -6,6 +6,7 @@ using Game.SceneFlow;
 using Game.UI;
 using Game.UI.InGame;
 
+using RoadBuilder.Domain.Components;
 using RoadBuilder.Domain.UI;
 using RoadBuilder.Utilities;
 
@@ -38,7 +39,7 @@ namespace RoadBuilder.Systems.UI
 
 			if (mode != GameMode.Game)
 			{
-				return;
+				//return;
 			}
 
 			var entityQuery = SystemAPI.QueryBuilder()
@@ -49,11 +50,50 @@ namespace RoadBuilder.Systems.UI
 			var entities = entityQuery.ToEntityArray(Allocator.Temp);
 			var sections = new List<NetSectionItem>();
 
+			var medianGroup = new Domain.Prefabs.LaneGroupPrefab
+			{
+				name = "RoadBuilder.MedianGroup",
+				Options = new RoadBuilderLaneOptionInfo[]
+				{
+					new()
+					{
+						DefaultValue = "2",
+						IsValue = true,
+						Name = "Median Width",
+						Options = new RoadBuilderLaneOptionItemInfo[]
+						{
+							new(){Value = "0"},
+							new(){Value = "1"},
+							new(){Value = "2"},
+							new(){Value = "5"}
+						}
+					}
+				}
+			};
+
+			prefabSystem.AddPrefab(medianGroup);
+
 			for (var i = 0; i < entities.Length; i++)
 			{
 				if (!prefabSystem.TryGetPrefab<NetSectionPrefab>(entities[i], out var prefab))
 				{
 					continue;
+				}
+
+				if (prefab.name.StartsWith("Road Median "))
+				{
+					Mod.Log.Info(prefab.name);
+
+					var laneInfo = prefab.AddComponent<RoadBuilderLaneGroupItem>();
+					laneInfo.GroupPrefab = medianGroup;
+					laneInfo.Combination = new LaneOptionCombination[]
+					{
+						new LaneOptionCombination
+						{
+							OptionName = "Median Width",
+							Value = prefab.name.Remove(0, "Road Median ".Length)
+						}
+					};
 				}
 
 				sections.Add(new NetSectionItem

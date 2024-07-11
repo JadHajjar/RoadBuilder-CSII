@@ -12,8 +12,6 @@ using RoadBuilder.Domain.Prefabs;
 using Unity.Collections;
 using Unity.Entities;
 
-using static Game.Prefabs.TriggerPrefabData;
-
 namespace RoadBuilder.Systems
 {
 	public partial class RoadBuilderApplyTagSystem : GameSystemBase
@@ -48,8 +46,8 @@ namespace RoadBuilder.Systems
 
 					if (EntityManager.TryGetComponent<Edge>(entity, out var edge))
 					{
-					EntityManager.AddComponent<RoadBuilderNetwork>(edge.m_Start);
-					EntityManager.AddComponent<RoadBuilderNetwork>(edge.m_End);
+						EntityManager.AddComponent<RoadBuilderNetwork>(edge.m_Start);
+						EntityManager.AddComponent<RoadBuilderNetwork>(edge.m_End);
 					}
 				}
 			}

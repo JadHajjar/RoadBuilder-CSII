@@ -1,6 +1,6 @@
 ﻿using Colossal.Serialization.Entities;
 
-namespace RoadBuilder.Domain.Configuration
+namespace RoadBuilder.Domain.Configurations
 {
 	public class LaneConfig : ISerializable
 	{

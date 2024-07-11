@@ -1,4 +1,4 @@
-﻿using RoadBuilder.Domain.Configuration;
+﻿using RoadBuilder.Domain.Configurations;
 using RoadBuilder.Domain.Enums;
 
 namespace RoadBuilder.Domain.UI

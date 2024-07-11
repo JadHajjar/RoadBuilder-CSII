@@ -41,6 +41,10 @@
 	</Target>
 
 	<ItemGroup>
+	  <Compile Remove="Systems\RoadBuilderUpdateNetSystem.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Lib.Harmony" Version="2.2.2" />
 		
 		<Reference Include="Game">
@@ -108,6 +112,7 @@
 	<ItemGroup>
 		<None Include="$(ModPropsFile)" Link="Properties\Mod.props" />
 		<None Include="$(ModTargetsFile)" Link="Properties\Mod.targets" />
+		<None Include="Systems\RoadBuilderUpdateNetSystem.cs" />
 	</ItemGroup>
 
 </Project>

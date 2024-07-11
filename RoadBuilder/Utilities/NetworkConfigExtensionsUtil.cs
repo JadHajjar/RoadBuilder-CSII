@@ -1,6 +1,6 @@
 ﻿using Game.Prefabs;
 
-using RoadBuilder.Domain.Configuration;
+using RoadBuilder.Domain.Configurations;
 
 using System.Linq;
 

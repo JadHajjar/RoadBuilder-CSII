@@ -3,7 +3,6 @@ using Game.Prefabs;
 using Game.Tools;
 
 using RoadBuilder.Domain.Components;
-using RoadBuilder.Domain.Configuration;
 using RoadBuilder.Domain.Configurations;
 using RoadBuilder.Domain.Prefabs;
 

@@ -1,6 +1,6 @@
 ﻿using Colossal.UI.Binding;
 
-using RoadBuilder.Domain.Configuration;
+using RoadBuilder.Domain.Configurations;
 
 using System.Collections.Generic;
 

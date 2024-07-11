@@ -10,10 +10,10 @@ using Game.UI.InGame;
 
 using RoadBuilder.Domain;
 using RoadBuilder.Domain.Components;
-using RoadBuilder.Domain.Configuration;
 using RoadBuilder.Domain.Configurations;
 using RoadBuilder.Domain.Prefabs;
 using RoadBuilder.Utilities;
+using RoadBuilder.Utilities.Searcher;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -368,7 +368,16 @@ namespace RoadBuilder.Systems
 
 		private void RunUpdateSegments(Entity entity)
 		{
+			var qq = SystemAPI.QueryBuilder().WithAny<Edge, Game.Net.SubLane, Lane, NetCompositionData, EdgeGeometry, NodeGeometry, Node>().WithNone<Updated, BatchesUpdated, Temp >().Build();
+
+			EntityManager.AddComponent<Updated>(qq);
+			EntityManager.AddComponent<BatchesUpdated>(qq);
+
+			return;
 			var ents = prefabRefQuery.ToEntityArray(Allocator.Temp);
+
+			new Update2(EntityManager).Update(ref ents);
+
 
 			for (var i = 0; i < ents.Length; i++)
 			{
@@ -387,6 +396,14 @@ namespace RoadBuilder.Systems
 							EntityManager.AddComponent<Updated>(edge.m_Start);
 							EntityManager.AddComponent<Updated>(edge.m_End);
 						}
+					}
+				}
+
+				if (EntityManager.TryGetBuffer<Game.Net.SubLane>(entity, true, out var subLanes))
+				{
+					for (var j = 0; j < edges.Length; j++)
+					{
+						EntityManager.AddComponent<Updated>(subLanes[i].m_SubLane);
 					}
 				}
 			}

@@ -6,7 +6,7 @@ using Game.UI;
 using Game.UI.InGame;
 
 using RoadBuilder.Domain;
-using RoadBuilder.Domain.Configuration;
+using RoadBuilder.Domain.Configurations;
 using RoadBuilder.Domain.Enums;
 using RoadBuilder.Domain.UI;
 using RoadBuilder.Utilities;

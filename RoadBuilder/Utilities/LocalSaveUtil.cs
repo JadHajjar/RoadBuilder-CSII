@@ -1,6 +1,5 @@
 ﻿using Colossal.Json;
 
-using RoadBuilder.Domain.Configuration;
 using RoadBuilder.Domain.Configurations;
 using RoadBuilder.Systems;
 

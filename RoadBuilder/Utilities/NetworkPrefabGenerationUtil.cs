@@ -3,7 +3,6 @@
 using Game.Prefabs;
 
 using RoadBuilder.Domain;
-using RoadBuilder.Domain.Configuration;
 using RoadBuilder.Domain.Configurations;
 using RoadBuilder.Domain.Enums;
 using RoadBuilder.Domain.Prefabs;
@@ -167,7 +166,7 @@ namespace RoadBuilder.Utilities
 						((NetworkPrefab.Config.Category & RoadCategory.Gravel) != 0)
 							? NetPieceRequirements.Gravel :
 							((NetworkPrefab.Config.Category & RoadCategory.Tiled) != 0)
-							? NetPieceRequirements.Tiles 
+							? NetPieceRequirements.Tiles
 							: NetPieceRequirements.Pavement
 					}
 				};
