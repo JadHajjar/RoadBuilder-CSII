@@ -13,6 +13,7 @@ export interface RoadLane {
     Index: number;
     Invert?: boolean;
     Width?: number;
+	  IsGroup: boolean;
     Options?: OptionSection[];
 }
 

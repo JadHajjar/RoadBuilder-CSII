@@ -5,5 +5,6 @@
 		public string PrefabName;
 		public string DisplayName;
 		public string Thumbnail;
+		public bool IsGroup;
 	}
 }

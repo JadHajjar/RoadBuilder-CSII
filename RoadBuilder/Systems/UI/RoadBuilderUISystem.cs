@@ -197,13 +197,14 @@ namespace RoadBuilder.Systems.UI
 			for (var i = 0; i < binders.Length; i++)
 			{
 				var lane = config.Lanes[i];
-				var validSection = roadGenerationData.NetSectionPrefabs.TryGetValue(lane.SectionPrefabName, out var section);
+				var validSection = NetworkPrefabGenerationUtil.GetNetSection(roadGenerationData, lane, out var section);
 
 				binders[i] = new RoadLaneUIBinder
 				{
-					SectionPrefabName = lane.SectionPrefabName,
 					Index = i,
 					Invert = lane.Invert,
+					SectionPrefabName = string.IsNullOrEmpty(lane.GroupPrefabName) ? lane.SectionPrefabName : lane.GroupPrefabName,
+					IsGroup = !string.IsNullOrEmpty(lane.GroupPrefabName),
 					Width = validSection ? section.CalculateWidth() : 1F,
 					Options = LaneOptionsUtil.GenerateOptions(lane),
 					NetSection = !validSection ? new() : new()

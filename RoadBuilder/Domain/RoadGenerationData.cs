@@ -1,5 +1,7 @@
 ﻿using Game.Prefabs;
 
+using RoadBuilder.Domain.Prefabs;
+
 using System.Collections.Generic;
 
 namespace RoadBuilder.Domain
@@ -14,5 +16,6 @@ namespace RoadBuilder.Domain
 		public Dictionary<string, ServicePrefab> ServicePrefabs { get; set; } = new();
 		public Dictionary<string, StaticObjectPrefab> PillarPrefabs { get; set; } = new();
 		public Dictionary<string, UIGroupPrefab> UIGroupPrefabs { get; set; } = new();
+		public Dictionary<string, LaneGroupPrefab> LaneGroupPrefabs { get; set; } = new();
 	}
 }

@@ -364,6 +364,8 @@ namespace RoadBuilder.Systems
 					RoadGenerationData.UIGroupPrefabs[prefab.name] = prefab;
 				}
 			}
+
+			RoadGenerationData.LaneGroupPrefabs = World.GetOrCreateSystemManaged<NetSectionsSystem>().LaneGroups;
 		}
 
 		private void RunUpdateSegments(Entity entity)

@@ -1,7 +1,4 @@
-﻿using Colossal.Serialization.Entities;
-
-using Game;
-using Game.Prefabs;
+﻿using Game.Prefabs;
 using Game.SceneFlow;
 using Game.UI;
 using Game.UI.InGame;
@@ -12,7 +9,6 @@ using RoadBuilder.Utilities;
 
 using System.Collections.Generic;
 
-using Unity.Collections;
 using Unity.Entities;
 
 namespace RoadBuilder.Systems.UI
@@ -21,6 +17,7 @@ namespace RoadBuilder.Systems.UI
 	{
 		private PrefabSystem prefabSystem;
 		private PrefabUISystem prefabUISystem;
+		private NetSectionsSystem netSectionsSystem;
 		private ValueBindingHelper<NetSectionItem[]> _NetSections;
 
 		protected override void OnCreate()
@@ -29,71 +26,22 @@ namespace RoadBuilder.Systems.UI
 
 			prefabSystem = World.GetOrCreateSystemManaged<PrefabSystem>();
 			prefabUISystem = World.GetOrCreateSystemManaged<PrefabUISystem>();
+			netSectionsSystem = World.GetOrCreateSystemManaged<NetSectionsSystem>();
 
-			_NetSections = CreateBinding("NetSections", new NetSectionItem[0]);
+			_NetSections = CreateBinding("NetSections", GetSections());
+
+			netSectionsSystem.SectionsAdded += () => _NetSections.Value = GetSections();
 		}
 
-		protected override void OnGameLoadingComplete(Purpose purpose, GameMode mode)
+		private NetSectionItem[] GetSections()
 		{
-			base.OnGameLoadingComplete(purpose, mode);
-
-			if (mode != GameMode.Game)
-			{
-				//return;
-			}
-
-			var entityQuery = SystemAPI.QueryBuilder()
-				.WithAll<NetSectionData>()
-				.WithOptions(EntityQueryOptions.IncludePrefab)
-				.Build();
-
-			var entities = entityQuery.ToEntityArray(Allocator.Temp);
 			var sections = new List<NetSectionItem>();
 
-			var medianGroup = new Domain.Prefabs.LaneGroupPrefab
+			foreach (var prefab in netSectionsSystem.NetSections.Values)
 			{
-				name = "RoadBuilder.MedianGroup",
-				Options = new RoadBuilderLaneOptionInfo[]
-				{
-					new()
-					{
-						DefaultValue = "2",
-						IsValue = true,
-						Name = "Median Width",
-						Options = new RoadBuilderLaneOptionItemInfo[]
-						{
-							new(){Value = "0"},
-							new(){Value = "1"},
-							new(){Value = "2"},
-							new(){Value = "5"}
-						}
-					}
-				}
-			};
-
-			prefabSystem.AddPrefab(medianGroup);
-
-			for (var i = 0; i < entities.Length; i++)
-			{
-				if (!prefabSystem.TryGetPrefab<NetSectionPrefab>(entities[i], out var prefab))
+				if (prefab.Has<RoadBuilderLaneGroupItem>())
 				{
 					continue;
-				}
-
-				if (prefab.name.StartsWith("Road Median "))
-				{
-					Mod.Log.Info(prefab.name);
-
-					var laneInfo = prefab.AddComponent<RoadBuilderLaneGroupItem>();
-					laneInfo.GroupPrefab = medianGroup;
-					laneInfo.Combination = new LaneOptionCombination[]
-					{
-						new LaneOptionCombination
-						{
-							OptionName = "Median Width",
-							Value = prefab.name.Remove(0, "Road Median ".Length)
-						}
-					};
 				}
 
 				sections.Add(new NetSectionItem
@@ -104,7 +52,18 @@ namespace RoadBuilder.Systems.UI
 				});
 			}
 
-			_NetSections.Value = sections.ToArray();
+			foreach (var prefab in netSectionsSystem.LaneGroups.Values)
+			{
+				sections.Add(new NetSectionItem
+				{
+					IsGroup = true,
+					PrefabName = prefab.name,
+					DisplayName = GetAssetName(prefab),
+					Thumbnail = ImageSystem.GetThumbnail(prefab)
+				});
+			}
+
+			return sections.ToArray();
 		}
 
 		private string GetAssetName(PrefabBase prefab)

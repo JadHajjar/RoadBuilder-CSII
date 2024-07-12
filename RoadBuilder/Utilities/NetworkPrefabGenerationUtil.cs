@@ -3,6 +3,7 @@
 using Game.Prefabs;
 
 using RoadBuilder.Domain;
+using RoadBuilder.Domain.Components;
 using RoadBuilder.Domain.Configurations;
 using RoadBuilder.Domain.Enums;
 using RoadBuilder.Domain.Prefabs;
@@ -179,9 +180,9 @@ namespace RoadBuilder.Utilities
 		{
 			foreach (var item in NetworkPrefab.Config.Lanes)
 			{
-				if (!_roadGenerationData.NetSectionPrefabs.TryGetValue(item.SectionPrefabName, out var section))
+				if (!GetNetSection(_roadGenerationData, item, out var section))
 				{
-					Mod.Log.Warn($"NET SECTION '{item.SectionPrefabName}' could not be found");
+					Mod.Log.Warn($"NET SECTION '{item.SectionPrefabName ?? item.GroupPrefabName}' could not be found");
 					continue;
 				}
 
@@ -191,6 +192,56 @@ namespace RoadBuilder.Utilities
 					m_Invert = item.Invert,
 				};
 			}
+		}
+
+		public static bool GetNetSection(RoadGenerationData roadGenerationData, LaneConfig item, out NetSectionPrefab section)
+		{
+			if (!string.IsNullOrEmpty(item.SectionPrefabName)
+				&& roadGenerationData.NetSectionPrefabs.TryGetValue(item.SectionPrefabName, out section))
+			{
+				return true;
+			}
+			else if (!string.IsNullOrEmpty(item.GroupPrefabName)
+				&& roadGenerationData.LaneGroupPrefabs.TryGetValue(item.GroupPrefabName, out var group)
+				&& GetNetSection(item, group, out section))
+			{
+				return true;
+			}
+
+			section = default;
+			return false;
+		}
+
+		private static bool GetNetSection(LaneConfig lane, LaneGroupPrefab group, out NetSectionPrefab section)
+		{
+			var defaults = group.Options.ToDictionary(x => x.Name, x => x.DefaultValue);
+
+			foreach (var item in group.LinkedSections)
+			{
+				if (!item.TryGet<RoadBuilderLaneGroupItem>(out var groupItem))
+				{
+					continue;
+				}
+
+				var matched = true;
+
+				foreach (var combination in groupItem.Combination)
+				{
+					if (!combination.Value.Equals(lane.GroupOptions.TryGetValue(combination.OptionName, out var optionValue) ? optionValue : defaults[combination.OptionName], StringComparison.InvariantCultureIgnoreCase))
+					{
+						matched = false;
+					}
+				}
+
+				if (matched)
+				{
+					section = item;
+					return true;
+				}
+			}
+
+			section = default;
+			return false;
 		}
 
 		private IEnumerable<ComponentBase> GenerateComponents()

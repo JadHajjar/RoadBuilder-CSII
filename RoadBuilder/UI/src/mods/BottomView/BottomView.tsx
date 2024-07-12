@@ -59,6 +59,7 @@ export const BottomView = () => {
   let addItem = (item: NetSectionItem, index: number) => {
     let rLane: RoadLane = {
       SectionPrefabName: item.PrefabName,
+      IsGroup: item.IsGroup,
       Index: -1,
     };
     let nList = [...roadLanes.slice(0, index), rLane, ...roadLanes.slice(index)];
@@ -86,7 +87,7 @@ export const BottomView = () => {
   let isDragging = dragContext.netSectionItem || dragContext.roadLane;
   return (
     <div className={styles.viewContainer}>
-      <DragAndDropScrollable className={styles.view} trackVisibility='always' horizontal controller={scrollController}>
+      <DragAndDropScrollable className={styles.view} trackVisibility="always" horizontal controller={scrollController}>
         {items}
         {roadLanes.length == 0 && !dragContext.netSectionItem ? <div className={styles.hint}>Drag Lanes Here</div> : <></>}
       </DragAndDropScrollable>
@@ -95,16 +96,23 @@ export const BottomView = () => {
           <></>
         ) : (
           <>
-          <div className={styles.bottomLeftButtonBar}>
-            <Tooltip tooltip={"Pick a different road"}>
-              <Button className={styles.backButton} variant="flat" onSelect={() => {toggleTool(); toggleTool();}}>
-                <img src="coui://gameui/Media/Glyphs/ArrowLeft.svg" />
-              </Button>            
-            </Tooltip>            
-            <Button style={copyButtonStyle} className={styles.copyButton} variant="flat" onSelect={createNewPrefab}>
-              Copy to New Prefab
-            </Button>            
-          </div>            
+            <div className={styles.bottomLeftButtonBar}>
+              <Tooltip tooltip={"Pick a different road"}>
+                <Button
+                  className={styles.backButton}
+                  variant="flat"
+                  onSelect={() => {
+                    toggleTool();
+                    toggleTool();
+                  }}
+                >
+                  <img src="coui://gameui/Media/Glyphs/ArrowLeft.svg" />
+                </Button>
+              </Tooltip>
+              <Button style={copyButtonStyle} className={styles.copyButton} variant="flat" onSelect={createNewPrefab}>
+                Copy to New Prefab
+              </Button>
+            </div>
             <Button className={styles.closeButton} src="Media/Glyphs/Close.svg" variant="icon" onSelect={clearTool} />
           </>
         )}

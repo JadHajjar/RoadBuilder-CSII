@@ -3,6 +3,7 @@ using Colossal.Logging;
 
 using Game;
 using Game.Modding;
+using Game.Prefabs;
 using Game.SceneFlow;
 
 using RoadBuilder.Systems;
@@ -32,6 +33,7 @@ namespace RoadBuilder
 
 			AssetDatabase.global.LoadSettings(nameof(RoadBuilder), Settings, new Setting(this));
 
+			updateSystem.UpdateAfter<NetSectionsSystem, PrefabInitializeSystem>(SystemUpdatePhase.PrefabUpdate);
 			updateSystem.UpdateBefore<RoadBuilderSerializeSystem>(SystemUpdatePhase.Serialize);
 			updateSystem.UpdateAt<RoadBuilderSystem>(SystemUpdatePhase.Modification1);
 			updateSystem.UpdateAt<RoadBuilderApplyTagSystem>(SystemUpdatePhase.Modification1);

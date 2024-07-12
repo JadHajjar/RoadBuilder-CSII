@@ -1,4 +1,6 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace RoadBuilder.Utilities
 {
@@ -16,6 +18,56 @@ namespace RoadBuilder.Utilities
 			}
 
 			return str;
+		}
+
+		public static T Next<T>(this IEnumerable<T> enumerable, T item, bool circleBack = false)
+		{
+			if (!enumerable?.Any() ?? true)
+			{
+				return item;
+			}
+
+			var found = false;
+
+			foreach (var it in enumerable)
+			{
+				if (found)
+				{
+					return it;
+				}
+
+				if (it.Equals(item))
+				{
+					found = true;
+				}
+			}
+
+			return circleBack ? enumerable.FirstOrDefault() : default;
+		}
+
+		public static T Previous<T>(this IEnumerable<T> enumerable, T item, bool circleBack = false)
+		{
+			if (!enumerable?.Any() ?? true)
+			{
+				return item;
+			}
+
+			var found = false;
+
+			foreach (var it in enumerable.Reverse())
+			{
+				if (found)
+				{
+					return it;
+				}
+
+				if (it.Equals(item))
+				{
+					found = true;
+				}
+			}
+
+			return circleBack ? enumerable.LastOrDefault() : default;
 		}
 	}
 }
