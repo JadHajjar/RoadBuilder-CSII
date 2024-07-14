@@ -30,6 +30,8 @@ export const EditPropertiesPopup = () => {
     setRoadLanes(nList);
   };
 
+  let currentLane = roadLanes[laneCtx.index];
+
   return (
     <div className={styles.view} style={inlineStyle} onMouseLeave={laneCtx.close}>
       <div className={styles.topBar}>
@@ -38,8 +40,8 @@ export const EditPropertiesPopup = () => {
       </div>
       <div className={styles.content}>
         <div className={styles.options}>
-          {laneCtx.laneData.Options && laneCtx.laneData.Options.length !== 0 ? (
-            <OptionsPanelComponent Index={laneCtx.laneData.Index} options={laneCtx.laneData.Options}></OptionsPanelComponent>
+          {currentLane.Options && currentLane.Options.length !== 0 ? (
+            <OptionsPanelComponent Index={currentLane.Index} options={currentLane.Options}></OptionsPanelComponent>
           ) : (
             <span> No Options Available</span>
           )}
