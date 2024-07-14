@@ -14,14 +14,11 @@ namespace RoadBuilder.Domain.Configurations
 		ushort Version { get; set; }
 		string Name { get; set; }
 		RoadCategory Category { get; set; }
+		RoadAddons Addons { get; set; }
 		float MaxSlopeSteepness { get; set; }
 		string AggregateType { get; set; }
 		List<LaneConfig> Lanes { get; set; }
 		string PillarPrefabName { get; set; }
-		bool HasUndergroundWaterPipes { get; set; }
-		bool HasUndergroundElectricityCable { get; set; }
-		bool RequiresUpgradeForElectricity { get; set; }
-		bool RaisedSidewalk { get; set; }
 
 		void ApplyVersionChanges();
 	}

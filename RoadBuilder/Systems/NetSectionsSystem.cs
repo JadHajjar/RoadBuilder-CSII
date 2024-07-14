@@ -1,6 +1,7 @@
 ﻿using Game;
 using Game.Common;
 using Game.Prefabs;
+using Game.SceneFlow;
 
 using RoadBuilder.Domain.Prefabs;
 using RoadBuilder.LaneGroups;
@@ -49,6 +50,8 @@ namespace RoadBuilder.Systems
 			if (!customGroupsAdded && NetSections.Count > 0)
 			{
 				AddCustomGroups();
+
+				GameManager.instance.localizationManager.ReloadActiveLocale();
 
 				customGroupsAdded = true;
 			}

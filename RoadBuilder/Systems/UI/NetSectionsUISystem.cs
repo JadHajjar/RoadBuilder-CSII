@@ -53,7 +53,7 @@ namespace RoadBuilder.Systems.UI
 					continue;
 				}
 
-				if (!MatchPrefab(prefab))
+				if (!prefab.MatchCategories(activeConfig))
 				{
 					continue;
 				}
@@ -69,7 +69,7 @@ namespace RoadBuilder.Systems.UI
 
 			foreach (var prefab in netSectionsSystem.LaneGroups.Values)
 			{
-				if (!MatchPrefab(prefab))
+				if (!prefab.MatchCategories(activeConfig))
 				{
 					continue;
 				}
@@ -84,19 +84,6 @@ namespace RoadBuilder.Systems.UI
 			}
 
 			return sections.ToArray();
-		}
-
-		private bool MatchPrefab(PrefabBase prefab)
-		{
-			if (activeConfig is null || !prefab.TryGet<RoadBuilderLaneInfoItem>(out var info))
-			{
-				return true;
-			}
-
-			var matchesRequired = (activeConfig.Category & info.RequiredCategories) == info.RequiredCategories;
-			var matchesExcluded = (activeConfig.Category & info.ExcludedCategories) != 0;
-
-			return matchesRequired && !matchesExcluded;
 		}
 
 		private string GetAssetName(PrefabBase prefab)

@@ -74,7 +74,7 @@ namespace RoadBuilder.Systems
 
 				roadPrefab.Prefab.name = roadPrefab.Config.ID;
 
-				prefabSystem.UpdatePrefab(roadPrefab.Prefab);
+				prefabSystem.UpdatePrefab(roadPrefab.Prefab, prefabSystem.GetEntity(roadPrefab.Prefab));
 
 				RunUpdateSegments(prefabSystem.GetEntity(roadPrefab.Prefab));
 			}
@@ -247,7 +247,7 @@ namespace RoadBuilder.Systems
 
 				Configurations.Add(roadPrefab);
 
-				prefabSystem.UpdatePrefab(roadPrefab.Prefab);
+				prefabSystem.UpdatePrefab(roadPrefab.Prefab, prefabSystem.GetEntity(roadPrefab.Prefab));
 			}
 		}
 

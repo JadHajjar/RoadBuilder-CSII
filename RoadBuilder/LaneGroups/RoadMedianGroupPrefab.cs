@@ -1,6 +1,7 @@
 ﻿using Game.Prefabs;
 
 using RoadBuilder.Domain.Components;
+using RoadBuilder.Domain.Enums;
 
 using System.Collections.Generic;
 
@@ -17,6 +18,11 @@ namespace RoadBuilder.LaneGroups
 			{
 				new()
 				{
+					Name = "Decoration",
+					IsDecoration = true,
+				},
+				new()
+				{
 					DefaultValue = "2m",
 					IsValue = true,
 					Name = OptionName,
@@ -31,22 +37,43 @@ namespace RoadBuilder.LaneGroups
 			};
 
 			var laneInfo = AddComponent<RoadBuilderLaneInfoItem>();
-			laneInfo.ExcludedCategories = Domain.Enums.RoadCategory.NonRoad;
+			laneInfo.ExcludedCategories = RoadCategory.NoRaisedSidewalkSupport;
 
 			var uiObj = AddComponent<UIObject>();
 			uiObj.m_Icon = "coui://roadbuildericons/RB_Median.svg";
 
+			SetUp(sections["Highway Median 0"], "0m");
 			SetUp(sections["Road Median 0"], "0m");
+			SetUp(sections["Alley Median 0"], "0m");
 			SetUp(sections["Road Median 1"], "1m");
 			SetUp(sections["Road Median 2"], "2m");
-			SetUp(sections["Road Median 5"], "5m");
+			SetUp(sections["Road Median 5"], "5m", true);
+
+			sections["Highway Median 0"].AddOrGetComponent<RoadBuilderLaneInfoItem>().RequiredCategories = RoadCategory.Highway;
+			sections["Road Median 0"].AddOrGetComponent<RoadBuilderLaneInfoItem>().RequiredCategories = RoadCategory.RaisedSidewalk;
+			sections["Road Median 0"].AddOrGetComponent<RoadBuilderLaneInfoItem>().ExcludedCategories = RoadCategory.Highway;
+			sections["Alley Median 0"].AddOrGetComponent<RoadBuilderLaneInfoItem>().ExcludedCategories = RoadCategory.RaisedSidewalk | RoadCategory.Highway;
 		}
 
-		private void SetUp(NetSectionPrefab prefab, string value)
+		private void SetUp(NetSectionPrefab prefab, string value, bool hasGrass = false)
 		{
 			var laneInfo = prefab.AddComponent<RoadBuilderLaneGroupItem>();
 			laneInfo.GroupPrefab = this;
-			laneInfo.Combination = new LaneOptionCombination[]
+			laneInfo.Combination = hasGrass
+			? new LaneOptionCombination[]
+			{
+				new()
+				{
+					OptionName = "Decoration",
+					Value = string.Empty
+				},
+				new()
+				{
+					OptionName = OptionName,
+					Value = value
+				}
+			}
+			: new LaneOptionCombination[]
 			{
 				new()
 				{

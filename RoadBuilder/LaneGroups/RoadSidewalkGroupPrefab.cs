@@ -36,6 +36,11 @@ namespace RoadBuilder.LaneGroups
 				},
 				new()
 				{
+					Name = "Decoration",
+					IsDecoration = true,
+				},
+				new()
+				{
 					DefaultValue = "3.5",
 					IsValue = true,
 					Name = OptionName2,
@@ -52,7 +57,7 @@ namespace RoadBuilder.LaneGroups
 			};
 
 			var laneInfo = AddComponent<RoadBuilderLaneInfoItem>();
-			laneInfo.ExcludedCategories = Domain.Enums.RoadCategory.NonRoad;
+			laneInfo.RequiredCategories = Domain.Enums.RoadCategory.RaisedSidewalk;
 
 			var uiObj = AddComponent<UIObject>();
 			uiObj.m_Icon = "coui://roadbuildericons/RB_WideSidewalkRight.svg";
@@ -75,6 +80,11 @@ namespace RoadBuilder.LaneGroups
 			laneInfo.GroupPrefab = this;
 			laneInfo.Combination = new LaneOptionCombination[]
 			{
+				new()
+				{
+					OptionName = "Decoration",
+					Value = string.Empty
+				},
 				new()
 				{
 					OptionName = OptionName1,

@@ -52,10 +52,26 @@ namespace RoadBuilder.Utilities
 			config.MaxSlopeSteepness = NetworkPrefab.m_MaxSlopeSteepness;
 			config.AggregateType = NetworkPrefab.m_AggregateType?.name;
 			config.PillarPrefabName = FindPillarPrefab(NetworkPrefab);
-			config.HasUndergroundWaterPipes = NetworkPrefab.Has<WaterPipeConnection>();
-			config.HasUndergroundElectricityCable = NetworkPrefab.Has<ElectricityConnection>();
-			config.RequiresUpgradeForElectricity = NetworkPrefab.TryGet<ElectricityConnection>(out var electricityConnections) && electricityConnections.m_RequireAll.Contains(NetPieceRequirements.Lighting);
-			config.RaisedSidewalk = NetworkPrefab.m_Sections.Any(x => x.m_Section?.name == "Road Side 0");
+
+			if (NetworkPrefab.Has<WaterPipeConnection>())
+			{
+				config.Addons |= RoadAddons.HasUndergroundWaterPipes;
+			}
+
+			if (NetworkPrefab.Has<ElectricityConnection>())
+			{
+				config.Addons |= RoadAddons.HasUndergroundElectricityCable;
+			}
+
+			if (NetworkPrefab.TryGet<ElectricityConnection>(out var electricityConnections) && electricityConnections.m_RequireAll.Contains(NetPieceRequirements.Lighting))
+			{
+				config.Addons |= RoadAddons.RequiresUpgradeForElectricity;
+			}
+
+			if (NetworkPrefab.m_Sections.Any(x => x.m_Section?.name == "Road Side 0"))
+			{
+				config.Category |= RoadCategory.RaisedSidewalk;
+			}
 
 			if (NetworkPrefab.m_EdgeStates.Any(x => x.m_SetState.Any(y => y == NetPieceRequirements.Gravel) && x.m_RequireAny.Length == 0 && x.m_RequireAll.Length == 0))
 			{
@@ -146,7 +162,7 @@ namespace RoadBuilder.Utilities
 			return config;
 		}
 
-		private INetworkConfig GenerateFenceConfig(FencePrefab fencePrefab)
+		private INetworkConfig GenerateFenceConfig(FencePrefab _)
 		{
 			var config = new FenceConfig();
 

@@ -20,8 +20,8 @@ namespace RoadBuilder.Domain.Configurations
 		public bool HasUndergroundWaterPipes { get; set; }
 		public bool HasUndergroundElectricityCable { get; set; }
 		public bool RequiresUpgradeForElectricity { get; set; }
-		public bool RaisedSidewalk { get; set; }
 		public RoadCategory Category { get; set; }
+		public RoadAddons Addons { get; set; }
 		public List<LaneConfig> Lanes { get; set; } = new();
 
 		public void Deserialize<TReader>(TReader reader) where TReader : IReader
@@ -35,8 +35,8 @@ namespace RoadBuilder.Domain.Configurations
 			reader.Read(out bool hasUndergroundWaterPipes);
 			reader.Read(out bool hasUndergroundElectricityCable);
 			reader.Read(out bool requiresUpgradeForElectricity);
-			reader.Read(out bool sidewalk);
 			reader.Read(out int category);
+			reader.Read(out int addons);
 
 			ID = iD;
 			Name = name;
@@ -47,8 +47,8 @@ namespace RoadBuilder.Domain.Configurations
 			HasUndergroundWaterPipes = hasUndergroundWaterPipes;
 			HasUndergroundElectricityCable = hasUndergroundElectricityCable;
 			RequiresUpgradeForElectricity = requiresUpgradeForElectricity;
-			RaisedSidewalk = sidewalk;
 			Category = (RoadCategory)category;
+			Addons = (RoadAddons)addons;
 
 			reader.Read(out int laneCount);
 
@@ -75,8 +75,8 @@ namespace RoadBuilder.Domain.Configurations
 			writer.Write(HasUndergroundWaterPipes);
 			writer.Write(HasUndergroundElectricityCable);
 			writer.Write(RequiresUpgradeForElectricity);
-			writer.Write(RaisedSidewalk);
 			writer.Write((int)Category);
+			writer.Write((int)Addons);
 
 			writer.Write(Lanes.Count);
 

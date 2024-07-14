@@ -1,5 +1,6 @@
 ﻿using Game.Prefabs;
 
+using RoadBuilder.Domain.Components;
 using RoadBuilder.Domain.Configurations;
 
 using System.Linq;
@@ -23,6 +24,32 @@ namespace RoadBuilder.Utilities
 			}
 
 			return subSectionsWidth + netSection.m_Pieces.Max(x => x.m_RequireAll.Length == 0 && x.m_RequireAny.Length == 0 ? x.m_Piece.m_Width : 0f);
+		}
+
+		public static bool MatchCategories(this PrefabBase prefab, INetworkConfig config)
+		{
+			if (config is null || !prefab.TryGet<RoadBuilderLaneInfoItem>(out var info))
+			{
+				return true;
+			}
+
+			var matchesRequired = (config.Category & info.RequiredCategories) == info.RequiredCategories;
+			var matchesExcluded = (config.Category & info.ExcludedCategories) != 0;
+
+			return matchesRequired && !matchesExcluded;
+		}
+
+		public static bool MatchCategories(this RoadBuilderLaneInfoItem info, INetworkConfig config)
+		{
+			if (config is null)
+			{
+				return true;
+			}
+
+			var matchesRequired = (config.Category & info.RequiredCategories) == info.RequiredCategories;
+			var matchesExcluded = (config.Category & info.ExcludedCategories) != 0;
+
+			return matchesRequired && !matchesExcluded;
 		}
 	}
 }

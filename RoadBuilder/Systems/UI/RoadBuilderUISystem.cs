@@ -192,7 +192,7 @@ namespace RoadBuilder.Systems.UI
 
 			if (existingLane != null)
 			{
-				LaneOptionsUtil.OptionClicked(existingLane, option, id, value);
+				LaneOptionsUtil.OptionClicked(config, existingLane, option, id, value);
 			}
 		}
 
@@ -203,7 +203,7 @@ namespace RoadBuilder.Systems.UI
 			for (var i = 0; i < binders.Length; i++)
 			{
 				var lane = config.Lanes[i];
-				var validSection = NetworkPrefabGenerationUtil.GetNetSection(roadGenerationData, lane, out var section, out var groupPrefab);
+				var validSection = NetworkPrefabGenerationUtil.GetNetSection(roadGenerationData, config, lane, out var section, out var groupPrefab);
 
 				binders[i] = new RoadLaneUIBinder
 				{
@@ -211,12 +211,12 @@ namespace RoadBuilder.Systems.UI
 					Invert = lane.Invert,
 					SectionPrefabName = string.IsNullOrEmpty(lane.GroupPrefabName) ? lane.SectionPrefabName : lane.GroupPrefabName,
 					IsGroup = !string.IsNullOrEmpty(lane.GroupPrefabName),
-					Options = LaneOptionsUtil.GenerateOptions(lane),
+					Options = LaneOptionsUtil.GenerateOptions(config, lane),
 					NetSection = !validSection ? new() : new()
 					{
 						PrefabName = section.name,
 						IsGroup = !string.IsNullOrEmpty(lane.GroupPrefabName),
-						DisplayName = GetAssetName(section),
+						DisplayName = GetAssetName((PrefabBase)groupPrefab ?? section),
 						Thumbnail = GetThumbnail(section, groupPrefab, lane.Invert),
 						Width = validSection ? section.CalculateWidth() : 1F,
 					}

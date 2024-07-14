@@ -2,6 +2,7 @@
 
 using RoadBuilder.Domain.Components;
 using RoadBuilder.Domain.Configurations;
+using RoadBuilder.Domain.Enums;
 using RoadBuilder.Domain.Prefabs;
 using RoadBuilder.Domain.UI;
 using RoadBuilder.Systems;
@@ -22,7 +23,7 @@ namespace RoadBuilder.Utilities
 
 		private static readonly NetSectionsSystem _netSectionsSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystemManaged<NetSectionsSystem>();
 
-		public static List<OptionSectionUIEntry> GenerateOptions(LaneConfig lane)
+		public static List<OptionSectionUIEntry> GenerateOptions(INetworkConfig config, LaneConfig lane)
 		{
 			var options = new List<OptionSectionUIEntry>();
 
@@ -33,13 +34,13 @@ namespace RoadBuilder.Utilities
 
 			if (!string.IsNullOrEmpty(lane.GroupPrefabName))
 			{
-				options.AddRange(GenerateGroupOptions(lane));
+				options.AddRange(GenerateGroupOptions(config, lane));
 			}
 
 			return options;
 		}
 
-		private static IEnumerable<OptionSectionUIEntry> GenerateGroupOptions(LaneConfig lane)
+		private static IEnumerable<OptionSectionUIEntry> GenerateGroupOptions(INetworkConfig config, LaneConfig lane)
 		{
 			if (!_netSectionsSystem.LaneGroups.TryGetValue(lane.GroupPrefabName ?? string.Empty, out var group))
 			{
@@ -47,7 +48,7 @@ namespace RoadBuilder.Utilities
 			}
 
 			var index = 0;
-			var remainingSections = group.LinkedSections.ToList();
+			var remainingSections = group.LinkedSections.Where(x => x.MatchCategories(config)).ToList();
 
 			foreach (var option in group.Options)
 			{
@@ -56,10 +57,25 @@ namespace RoadBuilder.Utilities
 					yield break;
 				}
 
-				var entries = new OptionItemUIEntry[option.IsValue ? 1 : option.Options.Length];
-				var value = lane.GroupOptions.TryGetValue(option.Name ?? string.Empty, out var val) ? val : option.DefaultValue;
+				var entries = new OptionItemUIEntry[option.IsDecoration ? 2 : option.IsValue ? 1 : option.Options.Length];
+				var value = GetSelectedOptionValue(config, lane, option);
 
-				if (option.IsValue)
+				if (option.IsDecoration)
+				{
+					entries[0] = new()
+					{
+						Id = 1,
+						Icon = "Media/Game/Icons/Grass.svg",
+						Selected = value is "GT" or "G",
+					};
+					entries[1] = new()
+					{
+						Id = 2,
+						Icon = "Media/Game/Icons/Trees.svg",
+						Selected = value is "GT" or "T",
+					};
+				}
+				else if (option.IsValue)
 				{
 					entries[0] = new()
 					{
@@ -97,6 +113,11 @@ namespace RoadBuilder.Utilities
 		{
 			var value = section.GetComponent<RoadBuilderLaneGroupItem>().Combination.FirstOrDefault(x => x.OptionName == option.Name)?.Value;
 
+			if (option.IsDecoration)
+			{
+				return currentValue is null || value is not null;
+			}
+
 			return value is not null && value == currentValue;
 		}
 
@@ -126,11 +147,11 @@ namespace RoadBuilder.Utilities
 			};
 		}
 
-		public static void OptionClicked(LaneConfig lane, int optionId, int id, int value)
+		public static void OptionClicked(INetworkConfig config, LaneConfig lane, int optionId, int id, int value)
 		{
 			if (optionId < 0)
 			{
-				GroupOptionClicked(lane, -optionId - 1, id, value);
+				GroupOptionClicked(config, lane, -optionId - 1, id, value);
 				return;
 			}
 
@@ -144,13 +165,39 @@ namespace RoadBuilder.Utilities
 			}
 		}
 
-		public static void GroupOptionClicked(LaneConfig lane, int optionId, int id, int value)
+		public static void GroupOptionClicked(INetworkConfig config, LaneConfig lane, int optionId, int id, int value)
 		{
 			var group = _netSectionsSystem.LaneGroups[lane.GroupPrefabName];
 			var option = group.Options[optionId];
 
 			try
 			{
+				if (option.IsDecoration)
+				{
+					var laneIndex = config.Lanes.IndexOf(lane);
+					RoadAddons addon = default;
+
+					if (id == 1)
+					{
+						addon = laneIndex == 0 ? RoadAddons.GrassLeft : laneIndex == config.Lanes.Count - 1 ? RoadAddons.GrassRight : RoadAddons.GrassCenter;
+					}
+					else if (id == 2)
+					{
+						addon = laneIndex == 0 ? RoadAddons.TreesLeft : laneIndex == config.Lanes.Count - 1 ? RoadAddons.TreesRight : RoadAddons.TreesCenter;
+					}
+
+					if (config.Addons.HasFlag(addon))
+					{
+						config.Addons &= ~addon;
+					}
+					else
+					{
+						config.Addons |= addon;
+					}
+
+					return;
+				}
+
 				if (!option.IsValue)
 				{
 					lane.GroupOptions[option.Name] = option.Options[id].Value;
@@ -159,6 +206,7 @@ namespace RoadBuilder.Utilities
 				}
 
 				var remainingSections = group.LinkedSections.ToList();
+
 				foreach (var item in group.Options)
 				{
 					if (remainingSections.Count == 0 || item == option)
@@ -166,12 +214,12 @@ namespace RoadBuilder.Utilities
 						break;
 					}
 
-					var value_ = lane.GroupOptions.TryGetValue(item.Name ?? string.Empty, out var val_) ? val_ : option.DefaultValue;
+					var value_ = GetSelectedOptionValue(config, lane, item);
 
 					remainingSections.RemoveAll(x => !MatchesOptionValue(x, item, value_));
 				}
 
-				var currentValue = lane.GroupOptions.TryGetValue(option.Name ?? string.Empty, out var val) ? val : option.DefaultValue;
+				var currentValue = GetSelectedOptionValue(config, lane, option);
 				var currentOption = option.Options.FirstOrDefault(x => x.Value == currentValue);
 				var validOptions = option.Options.Where(x => remainingSections.Any(s => MatchesOptionValue(s, option, x.Value))).ToList();
 
@@ -186,11 +234,11 @@ namespace RoadBuilder.Utilities
 			}
 			finally
 			{
-				FixGroupOptions(lane, group);
+				FixGroupOptions(config, lane, group);
 			}
 		}
 
-		private static void FixGroupOptions(LaneConfig lane, LaneGroupPrefab group)
+		private static void FixGroupOptions(INetworkConfig config, LaneConfig lane, LaneGroupPrefab group)
 		{
 			var remainingSections = group.LinkedSections.ToList();
 
@@ -203,7 +251,7 @@ namespace RoadBuilder.Utilities
 					return;
 				}
 
-				var value = lane.GroupOptions.TryGetValue(option.Name ?? string.Empty, out var val) ? val : option.DefaultValue;
+				var value = GetSelectedOptionValue(config, lane, option);
 
 				if (!remainingSections.Any(x => MatchesOptionValue(x, option, value)))
 				{
@@ -212,6 +260,24 @@ namespace RoadBuilder.Utilities
 
 				remainingSections.RemoveAll(x => !MatchesOptionValue(x, option, value));
 			}
+		}
+
+		private static string GetSelectedOptionValue(INetworkConfig config, LaneConfig lane, RoadBuilderLaneOptionInfo option)
+		{
+			var value = lane.GroupOptions.TryGetValue(option.Name ?? string.Empty, out var val) ? val : option.DefaultValue;
+
+			if (option.IsDecoration)
+			{
+				var laneIndex = config.Lanes.IndexOf(lane);
+				var addGrass = config.Addons.HasFlag(laneIndex == 0 ? RoadAddons.GrassLeft : laneIndex == config.Lanes.Count - 1 ? RoadAddons.GrassRight : RoadAddons.GrassCenter);
+				var addTrees = config.Addons.HasFlag(laneIndex == 0 ? RoadAddons.TreesLeft : laneIndex == config.Lanes.Count - 1 ? RoadAddons.TreesRight : RoadAddons.TreesCenter);
+
+				value = addGrass && addTrees ? "GT" : addGrass ? "G" : addTrees ? "T" : null;
+
+				Mod.Log.Info($"Deco: {value}");
+			}
+
+			return value;
 		}
 	}
 }
