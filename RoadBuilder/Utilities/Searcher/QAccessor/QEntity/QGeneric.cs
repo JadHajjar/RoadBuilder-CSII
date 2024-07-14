@@ -2,8 +2,6 @@
 
 using Unity.Mathematics;
 
-using UnityEngine;
-
 namespace MoveIt.QAccessor
 {
 	internal partial struct QEntity
@@ -73,6 +71,5 @@ namespace MoveIt.QAccessor
 			TryAddUpdate(m_Entity);
 			return true;
 		}
-
 	}
 }

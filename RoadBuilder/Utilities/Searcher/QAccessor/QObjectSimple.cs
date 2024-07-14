@@ -19,7 +19,9 @@ namespace RoadBuilder.Utilities.Searcher.QAccessor
 		internal QObjectSimple(EntityManager manager, ref QLookup lookup, Entity e)
 		{
 			if (e == Entity.Null)
+			{
 				throw new ArgumentNullException("Creating QObject with null entity");
+			}
 
 			m_Manager = manager;
 			m_Entity = e;
@@ -42,7 +44,7 @@ namespace RoadBuilder.Utilities.Searcher.QAccessor
 		public readonly void Dispose() { }
 
 
-		public readonly override string ToString()
+		public override readonly string ToString()
 		{
 			return $"{m_Identity}/{m_Entity.D()}";
 		}

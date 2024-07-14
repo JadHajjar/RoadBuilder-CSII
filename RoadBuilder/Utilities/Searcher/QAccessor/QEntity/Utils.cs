@@ -25,6 +25,7 @@ namespace MoveIt.QAccessor
 			{
 				Manager.AddComponent<Game.Common.Updated>(e);
 			}
+
 			if (!Manager.HasComponent<Game.Common.BatchesUpdated>(e))
 			{
 				Manager.AddComponent<Game.Common.BatchesUpdated>(e);
@@ -41,7 +42,7 @@ namespace MoveIt.QAccessor
 
 		private static float3 BezierPosition(Bezier4x3 bezier)
 		{
-			float3 total = bezier.b + bezier.c;
+			var total = bezier.b + bezier.c;
 			return total / 2;
 		}
 

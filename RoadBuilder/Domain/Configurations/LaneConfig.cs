@@ -37,8 +37,8 @@ namespace RoadBuilder.Domain.Configurations
 
 		public void Serialize<TWriter>(TWriter writer) where TWriter : IWriter
 		{
-			writer.Write(SectionPrefabName);
-			writer.Write(GroupPrefabName);
+			writer.Write(SectionPrefabName ?? string.Empty);
+			writer.Write(GroupPrefabName ?? string.Empty);
 			writer.Write(Invert);
 
 			writer.Write((ushort)(GroupOptions?.Count ?? 0));

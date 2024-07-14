@@ -72,7 +72,7 @@ namespace RoadBuilder.Utilities
 			prefab.name = cfg.ID;
 			prefab.m_MaxSlopeSteepness = cfg.MaxSlopeSteepness;
 			prefab.m_InvertMode = CompositionInvertMode.FlipLefthandTraffic;
-			prefab.m_AggregateType = _roadGenerationData.AggregateNetPrefabs.TryGetValue(cfg.AggregateType, out var aggregate) ? aggregate : null;
+			prefab.m_AggregateType = _roadGenerationData.AggregateNetPrefabs.TryGetValue(cfg.AggregateType ?? string.Empty, out var aggregate) ? aggregate : null;
 			prefab.m_NodeStates = GenerateNodeStates().ToArray();
 			prefab.m_EdgeStates = GenerateEdgeStates().ToArray();
 			prefab.m_Sections = GenerateSections().ToArray();
@@ -98,7 +98,7 @@ namespace RoadBuilder.Utilities
 
 			if (generateId)
 			{
-				NetworkPrefab.Config.ID = $"{NetworkPrefab.GetType().Name.ToLower()[0]}{Guid.NewGuid()}-{PlatformManager.instance.userSpecificPath}";
+				NetworkPrefab.Prefab.name = NetworkPrefab.Config.ID = $"{NetworkPrefab.GetType().Name.ToLower()[0]}{Guid.NewGuid()}-{PlatformManager.instance.userSpecificPath}";
 			}
 		}
 
@@ -141,10 +141,15 @@ namespace RoadBuilder.Utilities
 					m_RequireAll = new NetPieceRequirements[0],
 					m_RequireAny = new NetPieceRequirements[0],
 					m_RequireNone = new NetPieceRequirements[0],
-					m_SetState = new[]
+					m_SetState = ((NetworkPrefab.Config.Category & (RoadCategory.NonRoad)) == 0)
+					? new[]
 					{
 						NetPieceRequirements.Sidewalk,
 						NetPieceRequirements.OppositeSidewalk,
+						NetPieceRequirements.Pavement
+					}
+					: new[]
+					{
 						NetPieceRequirements.Pavement
 					}
 				};
@@ -178,12 +183,29 @@ namespace RoadBuilder.Utilities
 
 		private IEnumerable<NetSectionInfo> GenerateSections()
 		{
+			var index = 0;
+			var side = _roadGenerationData.NetSectionPrefabs[GetSideName()];
+
+			yield return new NetSectionInfo
+			{
+				m_Section = side,
+				m_Invert = true
+			};
+
 			foreach (var item in NetworkPrefab.Config.Lanes)
 			{
-				if (!GetNetSection(_roadGenerationData, item, out var section))
+				if (!GetNetSection(_roadGenerationData, item, out var section, out _))
 				{
-					Mod.Log.Warn($"NET SECTION '{item.SectionPrefabName ?? item.GroupPrefabName}' could not be found");
+					Mod.Log.Warn($"NET SECTION '{item.SectionPrefabName ?? item.GroupPrefabName ?? "NULL"}' could not be found");
 					continue;
+				}
+
+				if (index++ == NetworkPrefab.Config.Lanes.Count / 2 && NetworkPrefab.Config.Lanes.Count % 2 == 0)
+				{
+					yield return new NetSectionInfo
+					{
+						m_Section = _roadGenerationData.NetSectionPrefabs[GetEmptyMedianName()],
+					};
 				}
 
 				yield return new NetSectionInfo
@@ -192,22 +214,29 @@ namespace RoadBuilder.Utilities
 					m_Invert = item.Invert,
 				};
 			}
+
+			yield return new NetSectionInfo
+			{
+				m_Section = side
+			};
 		}
 
-		public static bool GetNetSection(RoadGenerationData roadGenerationData, LaneConfig item, out NetSectionPrefab section)
+		public static bool GetNetSection(RoadGenerationData roadGenerationData, LaneConfig item, out NetSectionPrefab section, out LaneGroupPrefab groupPrefab)
 		{
 			if (!string.IsNullOrEmpty(item.SectionPrefabName)
-				&& roadGenerationData.NetSectionPrefabs.TryGetValue(item.SectionPrefabName, out section))
+				&& roadGenerationData.NetSectionPrefabs.TryGetValue(item.SectionPrefabName ?? string.Empty, out section))
 			{
+				groupPrefab = default;
 				return true;
 			}
 			else if (!string.IsNullOrEmpty(item.GroupPrefabName)
-				&& roadGenerationData.LaneGroupPrefabs.TryGetValue(item.GroupPrefabName, out var group)
-				&& GetNetSection(item, group, out section))
+				&& roadGenerationData.LaneGroupPrefabs.TryGetValue(item.GroupPrefabName ?? string.Empty, out groupPrefab)
+				&& GetNetSection(item, groupPrefab, out section))
 			{
 				return true;
 			}
 
+			groupPrefab = default;
 			section = default;
 			return false;
 		}
@@ -227,7 +256,7 @@ namespace RoadBuilder.Utilities
 
 				foreach (var combination in groupItem.Combination)
 				{
-					if (!combination.Value.Equals(lane.GroupOptions.TryGetValue(combination.OptionName, out var optionValue) ? optionValue : defaults[combination.OptionName], StringComparison.InvariantCultureIgnoreCase))
+					if (!combination.Value.Equals(lane.GroupOptions.TryGetValue(combination.OptionName ?? string.Empty, out var optionValue) ? optionValue : defaults[combination.OptionName], StringComparison.InvariantCultureIgnoreCase))
 					{
 						matched = false;
 					}
@@ -246,17 +275,27 @@ namespace RoadBuilder.Utilities
 
 		private IEnumerable<ComponentBase> GenerateComponents()
 		{
-			var uIObject = ScriptableObject.CreateInstance<UIObject>();
-			var serviceObject = ScriptableObject.CreateInstance<ServiceObject>();
 			var netPollution = ScriptableObject.CreateInstance<NetPollution>();
 			var undergroundNetSections = ScriptableObject.CreateInstance<UndergroundNetSections>();
 			var netSubObjects = ScriptableObject.CreateInstance<NetSubObjects>();
 			var placeableNet = ScriptableObject.CreateInstance<PlaceableNet>();
 
-			uIObject.m_Group = _roadGenerationData.UIGroupPrefabs["Roads"];
-			uIObject.m_Priority = 999999;
+			GetUIGroup(out var service, out var group);
 
-			serviceObject.m_Service = _roadGenerationData.ServicePrefabs["Roads"];
+			if (service != null)
+			{
+				var serviceObject = ScriptableObject.CreateInstance<ServiceObject>();
+				serviceObject.m_Service = _roadGenerationData.ServicePrefabs[service];
+				yield return serviceObject;
+			}
+
+			if (group != null)
+			{
+				var uIObject = ScriptableObject.CreateInstance<UIObject>();
+				uIObject.m_Group = _roadGenerationData.UIGroupPrefabs[group];
+				uIObject.m_Priority = 999999;
+				yield return uIObject;
+			}
 
 			if (NetworkPrefab.Config.HasUndergroundWaterPipes)
 			{
@@ -289,8 +328,6 @@ namespace RoadBuilder.Utilities
 
 			undergroundNetSections.m_Sections = Fix(GenerateUndergroundNetSections()).ToArray();
 
-			//yield return uIObject;
-			//yield return serviceObject;
 			yield return netPollution;
 			yield return undergroundNetSections;
 			yield return netSubObjects;
@@ -367,7 +404,7 @@ namespace RoadBuilder.Utilities
 
 		private IEnumerable<NetSubObjectInfo> GenerateSubObjects()
 		{
-			if (_roadGenerationData.PillarPrefabs.TryGetValue(NetworkPrefab.Config.PillarPrefabName, out var pillar))
+			if (_roadGenerationData.PillarPrefabs.TryGetValue(NetworkPrefab.Config.PillarPrefabName ?? string.Empty, out var pillar))
 			{
 				yield return new NetSubObjectInfo
 				{
@@ -385,6 +422,139 @@ namespace RoadBuilder.Utilities
 				m_Placement = NetObjectPlacement.Node,
 				m_RequireOutsideConnection = true,
 			};
+		}
+
+		private void GetUIGroup(out string service, out string group)
+		{
+			if (NetworkPrefab.Config.Category.HasFlag(RoadCategory.Train))
+			{
+				service = "Transportation";
+				group = "TransportationTrain";
+			}
+			else if (NetworkPrefab.Config.Category.HasFlag(RoadCategory.Tram))
+			{
+				service = "Transportation";
+				group = "TransportationTram";
+			}
+			else if (NetworkPrefab.Config.Category.HasFlag(RoadCategory.Subway))
+			{
+				service = "Transportation";
+				group = "TransportationSubway";
+			}
+			else if (NetworkPrefab.Config.Category.HasFlag(RoadCategory.PublicTransport))
+			{
+				service = "Transportation";
+				group = "TransportationRoad";
+			}
+			else if (NetworkPrefab.Config.Category.HasFlag(RoadCategory.Highway))
+			{
+				service = "Roads";
+				group = "RoadsHighways";
+			}
+			else if (NetworkPrefab is RoadPrefab)
+			{
+				service = "Roads";
+				var width = NetworkPrefab.Prefab.m_Sections.Sum(x => x.m_Section.CalculateWidth());
+
+				if (width > 45)
+				{
+					group = "RoadsLargeRoads";
+				}
+
+				else if (width > 32)
+				{
+					group = "RoadsMediumRoads";
+				}
+				else
+				{
+					group = "RoadsSmallRoads";
+				}
+			}
+			else
+			{
+				service = null;
+				group = null;
+			}
+		}
+
+		private string GetSideName()
+		{
+			if (NetworkPrefab.Config.RaisedSidewalk)
+			{
+				return "Road Side 0";
+			}
+
+			if (NetworkPrefab.Config.Category.HasFlag(RoadCategory.Train))
+			{
+				return "Train Side 0";
+			}
+
+			if (NetworkPrefab.Config.Category.HasFlag(RoadCategory.Tram))
+			{
+				return "Alley Side 0";
+			}
+
+			if (NetworkPrefab.Config.Category.HasFlag(RoadCategory.Subway))
+			{
+				return "Subway Side 0";
+			}
+
+			if (NetworkPrefab.Config.Category.HasFlag(RoadCategory.Highway))
+			{
+				return "Highway Side 0";
+			}
+
+			if (NetworkPrefab.Config.Category.HasFlag(RoadCategory.Gravel))
+			{
+				return "Gravel Side 0";
+			}
+
+			if (NetworkPrefab.Config.Category.HasFlag(RoadCategory.Tiled))
+			{
+				return "Tiled Side 0";
+			}
+
+			return "Alley Side 0";
+		}
+
+		private string GetEmptyMedianName()
+		{
+			if (NetworkPrefab.Config.Category.HasFlag(RoadCategory.Train))
+			{
+				return "Train Median 0";
+			}
+
+			if (NetworkPrefab.Config.Category.HasFlag(RoadCategory.Tram))
+			{
+				return "Tram Median 0";
+			}
+
+			if (NetworkPrefab.Config.Category.HasFlag(RoadCategory.Subway))
+			{
+				return "Subway Median 0";
+			}
+
+			if (NetworkPrefab.Config.Category.HasFlag(RoadCategory.Highway))
+			{
+				return "Highway Median 0";
+			}
+
+			if (NetworkPrefab.Config.Category.HasFlag(RoadCategory.Gravel))
+			{
+				return "Gravel Median 0";
+			}
+
+			if (NetworkPrefab.Config.Category.HasFlag(RoadCategory.Tiled))
+			{
+				return "Tiled Median 2";
+			}
+
+			if (NetworkPrefab.Config.RaisedSidewalk)
+			{
+				return "Road Median 0";
+			}
+
+			return "Alley Median 0";
 		}
 	}
 }

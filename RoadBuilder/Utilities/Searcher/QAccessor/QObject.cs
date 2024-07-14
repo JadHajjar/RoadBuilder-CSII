@@ -3,7 +3,6 @@
 using MoveIt.QAccessor;
 
 using System;
-using System.Text;
 
 using Unity.Collections;
 using Unity.Entities;
@@ -28,7 +27,9 @@ namespace RoadBuilder.Utilities.Searcher.QAccessor
 		internal QObject(EntityManager manager, ref QLookup lookup, Entity e, Identity identity = Identity.None)
 		{
 			if (e == Entity.Null)
+			{
 				throw new ArgumentNullException("Creating QObject with null entity");
+			}
 
 			m_Manager = manager;
 			m_Entity = e;
@@ -43,12 +44,16 @@ namespace RoadBuilder.Utilities.Searcher.QAccessor
 				for (var i = 0; i < subEntities.Length; i++)
 				{
 					if (subEntities[i] == Entity.Null)
+					{
 						throw new NullReferenceException($"Creating child for {e.D()} with null entity");
+					}
 
 					if (m_Manager.HasComponent<Game.Net.ConnectionLane>(subEntities[i]))
+					{
 						continue;
+					}
 
-					Identity subType = SearcherIterator.GetEntityIdentity(manager, subEntities[i]);
+					var subType = SearcherIterator.GetEntityIdentity(manager, subEntities[i]);
 					m_Children.Add(new(ref lookup, subEntities[i], subType, m_Entity));
 				}
 			}
@@ -103,13 +108,16 @@ namespace RoadBuilder.Utilities.Searcher.QAccessor
 		private static NativeArray<Entity> IterateSubEntities(Entity top, Entity e, int depth, Identity identity, Identity parentIdentity)
 		{
 			if (depth > 3)
+			{
 				throw new Exception($"Moveable.IterateSubEntities depth ({depth}) too deep for {top.D()}/{e.D()}");
+			}
+
 			depth++;
 
 			NativeList<Entity> entities = new(Allocator.Temp);
 
 			// Handle Control Points, Segments, and Netlanes
-			if (identity == Identity.ControlPoint || identity == Identity.Segment || identity == Identity.NetLane)
+			if (identity is Identity.ControlPoint or Identity.Segment or Identity.NetLane)
 			{
 				// Do nothing
 			}
@@ -187,7 +195,10 @@ namespace RoadBuilder.Utilities.Searcher.QAccessor
 				case Identity.Node:
 					var EM = World.DefaultGameObjectInjectionWorld.EntityManager;
 					if (EM.HasComponent<Game.Objects.Attached>(e))
+					{
 						return true;
+					}
+
 					return false;
 
 				default:
@@ -196,7 +207,7 @@ namespace RoadBuilder.Utilities.Searcher.QAccessor
 		}
 		#endregion
 
-		public readonly override string ToString()
+		public override readonly string ToString()
 		{
 			return $"{m_Identity}/{m_Entity.D()}  Children: {(m_Children.IsCreated ? m_Children.Length : "Not Created!")}";
 		}

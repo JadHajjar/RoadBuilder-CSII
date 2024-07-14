@@ -4,6 +4,7 @@ using Game.UI;
 using Game.UI.InGame;
 
 using RoadBuilder.Domain.Components;
+using RoadBuilder.Domain.Configurations;
 using RoadBuilder.Domain.UI;
 using RoadBuilder.Utilities;
 
@@ -19,6 +20,7 @@ namespace RoadBuilder.Systems.UI
 		private PrefabUISystem prefabUISystem;
 		private NetSectionsSystem netSectionsSystem;
 		private ValueBindingHelper<NetSectionItem[]> _NetSections;
+		private INetworkConfig activeConfig;
 
 		protected override void OnCreate()
 		{
@@ -33,6 +35,13 @@ namespace RoadBuilder.Systems.UI
 			netSectionsSystem.SectionsAdded += () => _NetSections.Value = GetSections();
 		}
 
+		internal void RefreshEntries(INetworkConfig config)
+		{
+			activeConfig = config;
+
+			_NetSections.Value = GetSections();
+		}
+
 		private NetSectionItem[] GetSections()
 		{
 			var sections = new List<NetSectionItem>();
@@ -44,26 +53,50 @@ namespace RoadBuilder.Systems.UI
 					continue;
 				}
 
+				if (!MatchPrefab(prefab))
+				{
+					continue;
+				}
+
 				sections.Add(new NetSectionItem
 				{
 					PrefabName = prefab.name,
-					DisplayName = GetAssetName(prefab),
-					Thumbnail = ImageSystem.GetThumbnail(prefab)
+					DisplayName = prefab.name,//GetAssetName(prefab),
+					Thumbnail = ImageSystem.GetIcon(prefab),
+					Width = prefab.CalculateWidth()
 				});
 			}
 
 			foreach (var prefab in netSectionsSystem.LaneGroups.Values)
 			{
+				if (!MatchPrefab(prefab))
+				{
+					continue;
+				}
+
 				sections.Add(new NetSectionItem
 				{
 					IsGroup = true,
 					PrefabName = prefab.name,
 					DisplayName = GetAssetName(prefab),
-					Thumbnail = ImageSystem.GetThumbnail(prefab)
+					Thumbnail = ImageSystem.GetIcon(prefab)
 				});
 			}
 
 			return sections.ToArray();
+		}
+
+		private bool MatchPrefab(PrefabBase prefab)
+		{
+			if (activeConfig is null || !prefab.TryGet<RoadBuilderLaneInfoItem>(out var info))
+			{
+				return true;
+			}
+
+			var matchesRequired = (activeConfig.Category & info.RequiredCategories) == info.RequiredCategories;
+			var matchesExcluded = (activeConfig.Category & info.ExcludedCategories) != 0;
+
+			return matchesRequired && !matchesExcluded;
 		}
 
 		private string GetAssetName(PrefabBase prefab)

@@ -2,10 +2,7 @@
 
 using System;
 
-using Unity.Entities;
 using Unity.Mathematics;
-
-using UnityEngine;
 
 namespace MoveIt.QAccessor
 {
@@ -26,10 +23,7 @@ namespace MoveIt.QAccessor
 
 		private readonly float Node_Angle => Rotation.Y();
 
-		private readonly quaternion Node_Rotation
-		{
-			get => m_Lookup.gnNode.GetRefRO(m_Entity).ValueRO.m_Rotation;
-		}
+		private readonly quaternion Node_Rotation => m_Lookup.gnNode.GetRefRO(m_Entity).ValueRO.m_Rotation;
 
 
 		private readonly bool Node_SetUpdated()
@@ -38,28 +32,34 @@ namespace MoveIt.QAccessor
 
 			if (TryGetBuffer<Game.Net.ConnectedEdge>(out var buffer, true))
 			{
-				for (int i = 0; i < buffer.Length; i++)
+				for (var i = 0; i < buffer.Length; i++)
 				{
-					Entity seg = buffer[i].m_Edge;
-					Game.Net.Edge edge = Manager.GetComponentData<Game.Net.Edge>(seg);
+					var seg = buffer[i].m_Edge;
+					var edge = Manager.GetComponentData<Game.Net.Edge>(seg);
 					if (!m_Entity.Equals(edge.m_Start) && !m_Entity.Equals(edge.m_End))
+					{
 						continue;
+					}
 
 					TryAddUpdate(seg);
 					if (!edge.m_Start.Equals(m_Entity))
+					{
 						TryAddUpdate(edge.m_Start);
+					}
 					else if (!edge.m_End.Equals(m_Entity))
+					{
 						TryAddUpdate(edge.m_End);
+					}
 
 					if (m_Lookup.gnAggregated.HasComponent(seg))
 					{
-						Game.Net.Aggregated aggregated = m_Lookup.gnAggregated.GetRefRO(seg).ValueRO;
+						var aggregated = m_Lookup.gnAggregated.GetRefRO(seg).ValueRO;
 						TryAddUpdate(aggregated.m_Aggregate);
 					}
 				}
 			}
+
 			return true;
 		}
-
 	}
 }

@@ -5,6 +5,7 @@ using Game;
 using Game.Common;
 using Game.Net;
 using Game.Prefabs;
+using Game.SceneFlow;
 using Game.Tools;
 using Game.UI.InGame;
 
@@ -30,8 +31,10 @@ namespace RoadBuilder.Systems
 
 		private readonly Queue<INetworkBuilderPrefab> _updatedRoadPrefabsQueue = new();
 
+		private RoadNameUtil roadNameUtil;
 		private PrefabSystem prefabSystem;
 		private PrefabUISystem prefabUISystem;
+		private NetSectionsSystem netSectionsSystem;
 		private RoadBuilderSerializeSystem roadBuilderSerializeSystem;
 		private ModificationBarrier1 modificationBarrier;
 		private EntityQuery prefabRefQuery;
@@ -45,8 +48,10 @@ namespace RoadBuilder.Systems
 
 			prefabSystem = World.GetOrCreateSystemManaged<PrefabSystem>();
 			prefabUISystem = World.GetOrCreateSystemManaged<PrefabUISystem>();
+			netSectionsSystem = World.GetOrCreateSystemManaged<NetSectionsSystem>();
 			roadBuilderSerializeSystem = World.GetOrCreateSystemManaged<RoadBuilderSerializeSystem>();
 			modificationBarrier = World.GetOrCreateSystemManaged<ModificationBarrier1>();
+			roadNameUtil = new(this, prefabUISystem, netSectionsSystem);
 			prefabRefQuery = SystemAPI.QueryBuilder()
 				.WithAll<RoadBuilderNetwork, PrefabRef>()
 				.WithNone<Updated, Temp>()
@@ -123,6 +128,8 @@ namespace RoadBuilder.Systems
 			Mod.Log.Info($"{configs.Count} configurations loaded");
 
 			InitializeExistingRoadPrefabs(configs);
+
+			GameManager.instance.localizationManager.ReloadActiveLocale();
 		}
 
 		public void Serialize<TWriter>(TWriter writer) where TWriter : IWriter
@@ -261,11 +268,14 @@ namespace RoadBuilder.Systems
 			var prefabRef = new PrefabRef { m_Prefab = prefabEntity };
 
 			EntityManager.SetComponentData(entity, prefabRef);
+			EntityManager.AddComponent<RoadBuilderNetwork>(entity);
 
 			if (EntityManager.TryGetComponent<Edge>(entity, out var edge))
 			{
 				EntityManager.SetComponentData(edge.m_Start, prefabRef);
 				EntityManager.SetComponentData(edge.m_End, prefabRef);
+				EntityManager.AddComponent<RoadBuilderNetwork>(edge.m_Start);
+				EntityManager.AddComponent<RoadBuilderNetwork>(edge.m_End);
 			}
 
 			_updatedRoadPrefabsQueue.Enqueue(roadPrefab);
@@ -365,12 +375,12 @@ namespace RoadBuilder.Systems
 				}
 			}
 
-			RoadGenerationData.LaneGroupPrefabs = World.GetOrCreateSystemManaged<NetSectionsSystem>().LaneGroups;
+			RoadGenerationData.LaneGroupPrefabs = netSectionsSystem.LaneGroups;
 		}
 
 		private void RunUpdateSegments(Entity entity)
 		{
-			var qq = SystemAPI.QueryBuilder().WithAny<Edge, Game.Net.SubLane, Lane, NetCompositionData, EdgeGeometry, NodeGeometry, Node>().WithNone<Updated, BatchesUpdated, Temp >().Build();
+			var qq = SystemAPI.QueryBuilder().WithAny<Edge, Game.Net.SubLane, Lane, NetCompositionData, EdgeGeometry, NodeGeometry, Node>().WithNone<Updated, BatchesUpdated, Temp>().Build();
 
 			EntityManager.AddComponent<Updated>(qq);
 			EntityManager.AddComponent<BatchesUpdated>(qq);

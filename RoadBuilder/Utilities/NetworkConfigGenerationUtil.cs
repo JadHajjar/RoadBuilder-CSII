@@ -3,6 +3,7 @@ using Game.SceneFlow;
 using Game.UI.InGame;
 
 using RoadBuilder.Domain;
+using RoadBuilder.Domain.Components;
 using RoadBuilder.Domain.Configurations;
 using RoadBuilder.Domain.Enums;
 
@@ -54,6 +55,7 @@ namespace RoadBuilder.Utilities
 			config.HasUndergroundWaterPipes = NetworkPrefab.Has<WaterPipeConnection>();
 			config.HasUndergroundElectricityCable = NetworkPrefab.Has<ElectricityConnection>();
 			config.RequiresUpgradeForElectricity = NetworkPrefab.TryGet<ElectricityConnection>(out var electricityConnections) && electricityConnections.m_RequireAll.Contains(NetPieceRequirements.Lighting);
+			config.RaisedSidewalk = NetworkPrefab.m_Sections.Any(x => x.m_Section?.name == "Road Side 0");
 
 			if (NetworkPrefab.m_EdgeStates.Any(x => x.m_SetState.Any(y => y == NetPieceRequirements.Gravel) && x.m_RequireAny.Length == 0 && x.m_RequireAll.Length == 0))
 			{
@@ -67,13 +69,32 @@ namespace RoadBuilder.Utilities
 
 			config.Lanes.AddRange(NetworkPrefab.m_Sections
 				.Where(x => x.m_RequireAll.Length == 0 && x.m_RequireAny.Length == 0)
-				.Select(x => new LaneConfig
-				{
-					SectionPrefabName = x.m_Section.name,
-					Invert = x.m_Invert
-				}));
+				.Select(x => GetLaneConfig(x)));
+
+			// remove sides
+			config.Lanes.RemoveAt(0);
+			config.Lanes.RemoveAt(config.Lanes.Count - 1);
 
 			return config;
+		}
+
+		private static LaneConfig GetLaneConfig(NetSectionInfo section)
+		{
+			if (section.m_Section.TryGet<RoadBuilderLaneGroupItem>(out var groupItem))
+			{
+				return new LaneConfig
+				{
+					GroupPrefabName = groupItem.GroupPrefab.name,
+					GroupOptions = groupItem.Combination.ToDictionary(x => x.OptionName, x => x.Value),
+					Invert = section.m_Invert
+				};
+			}
+
+			return new LaneConfig
+			{
+				SectionPrefabName = section.m_Section.name,
+				Invert = section.m_Invert
+			};
 		}
 
 		private INetworkConfig GenerateRoadConfig(RoadPrefab roadPrefab)

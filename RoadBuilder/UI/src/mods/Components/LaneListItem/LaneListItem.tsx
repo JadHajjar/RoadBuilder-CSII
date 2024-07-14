@@ -29,15 +29,11 @@ export const LaneListItem = ({ netSection }: { netSection: NetSectionItem }) => 
     }
   };
 
-  // if (!netSection.Thumbnail){
-  netSection.Thumbnail = "Media/Placeholder.svg";
-  // }
-
   return (
     <Tooltip tooltip={netSection.DisplayName}>
       <div onMouseDown={onMouseDown} className={classNames(styles.container, containerStyles)}>
         <div className={styles.item + " " + (dragging ? styles.moving : "")}>
-          <img className={styles.image} src={netSection.Thumbnail} />
+          <img className={styles.image} src={netSection.Thumbnail ?? "Media/Placeholder.svg"} />
           <div className={styles.label}>{netSection.DisplayName}</div>
         </div>
       </div>
@@ -51,7 +47,7 @@ enum DragType {
   Add,
 }
 
-export const LaneListItemDrag = forwardRef<HTMLDivElement>((props, ref) => {  
+export const LaneListItemDrag = forwardRef<HTMLDivElement>((props, ref) => {
   let dragData = useContext(DragContext);
   let sectionsStore = useContext(NetSectionsStoreContext);
   let [position, setPosition] = useState<Number2>({ x: 0, y: 0 });

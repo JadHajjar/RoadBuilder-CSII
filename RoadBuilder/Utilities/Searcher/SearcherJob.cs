@@ -57,6 +57,7 @@ namespace RoadBuilder.Utilities.Searcher
 						m_Results.Add(e);
 					}
 				}
+
 				iterator.Dispose();
 			}
 
@@ -79,15 +80,21 @@ namespace RoadBuilder.Utilities.Searcher
 				for (var i = 0; i < iterator.m_EntityList.Length; i++)
 				{
 					if ((m_Filters & Filters.Segments) == 0 && m_Manager.HasComponent<Game.Net.Edge>(iterator.m_EntityList[i]))
+					{
 						continue;
+					}
+
 					if ((m_Filters & Filters.Nodes) == 0 && m_Manager.HasComponent<Game.Net.Node>(iterator.m_EntityList[i]))
+					{
 						continue;
+					}
 
 					if (!m_Results.Contains(iterator.m_EntityList[i]))
 					{
 						m_Results.Add(iterator.m_EntityList[i]);
 					}
 				}
+
 				iterator.Dispose();
 			}
 
@@ -115,6 +122,7 @@ namespace RoadBuilder.Utilities.Searcher
 						m_Results.Add(e);
 					}
 				}
+
 				iterator.Dispose();
 			}
 		}
@@ -123,9 +131,14 @@ namespace RoadBuilder.Utilities.Searcher
 		private readonly bool FilterStatic(Entity e)
 		{
 			if ((m_Filters & Filters.AllStatics) == 0)
+			{
 				return false; // Not looking for a static
+			}
+
 			if ((m_Filters & Filters.AllStatics) == Filters.AllStatics)
+			{
 				return true; // Looking for any static
+			}
 
 			if ((m_Filters & Filters.Buildings) != 0)
 			{
@@ -171,8 +184,13 @@ namespace RoadBuilder.Utilities.Searcher
 		}
 
 		private readonly bool Has<T>(Entity e) where T : IComponentData
-			=> m_Manager.HasComponent<T>(e);
+		{
+			return m_Manager.HasComponent<T>(e);
+		}
+
 		private readonly bool HasOr<T1, T2>(Entity e) where T1 : IComponentData where T2 : IComponentData
-			=> m_Manager.HasComponent<T1>(e) || m_Manager.HasComponent<T2>(e);
+		{
+			return m_Manager.HasComponent<T1>(e) || m_Manager.HasComponent<T2>(e);
+		}
 	}
 }

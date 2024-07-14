@@ -21,6 +21,7 @@ namespace RoadBuilder.Domain.Configurations
 		bool HasUndergroundWaterPipes { get; set; }
 		bool HasUndergroundElectricityCable { get; set; }
 		bool RequiresUpgradeForElectricity { get; set; }
+		bool RaisedSidewalk { get; set; }
 
 		void ApplyVersionChanges();
 	}

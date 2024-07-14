@@ -36,6 +36,8 @@ namespace RoadBuilder.Systems
 		{
 			PrefabBase prefab;
 
+			Mod.Log.Debug($"Try Register: {type} - {id}");
+
 			switch (type)
 			{
 				case nameof(RoadConfig):
@@ -53,6 +55,8 @@ namespace RoadBuilder.Systems
 
 			if (!prefabSystem.TryGetPrefab(prefab.GetPrefabID(), out _))
 			{
+				Mod.Log.Debug($"Added: {type} - {id}");
+
 				prefabSystem.AddPrefab(prefab);
 			}
 		}
@@ -83,12 +87,16 @@ namespace RoadBuilder.Systems
 
 				addedIds.Add(prefab.Config.ID);
 
+				Mod.Log.Debug($"Serializing: {prefab.Config.GetType().Name} - {prefab.Config.ID}");
+
 				networkConfigBuffer.Add(new NetworkConfigBuffer
 				{
 					ConfigurationType = prefab.Config.GetType().Name,
 					ConfigurationID = prefab.Config.ID
 				});
 			}
+
+			Mod.Log.Debug($"Serialized {addedIds.Count}");
 
 			UsedConfigurations = addedIds;
 		}

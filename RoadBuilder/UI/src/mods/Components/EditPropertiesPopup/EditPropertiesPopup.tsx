@@ -14,14 +14,12 @@ import { removeAt } from "mods/util";
 export const EditPropertiesPopup = () => {
   let rem = useRem();
   let laneCtx = useContext(LanePropertiesContext);
-  let netSectionsCtx = useContext(NetSectionsStoreContext);
   let roadLanes = useValue(roadLanes$);
 
   if (!laneCtx.showPopup || laneCtx.laneData == undefined) {
     return <></>;
   }
 
-  let netSectionItem = netSectionsCtx[laneCtx.laneData!.SectionPrefabName];
   let inlineStyle: CSSProperties = {
     left: laneCtx.position.x + "px",
   };
@@ -35,7 +33,7 @@ export const EditPropertiesPopup = () => {
   return (
     <div className={styles.view} style={inlineStyle} onMouseLeave={laneCtx.close}>
       <div className={styles.topBar}>
-        <div className={styles.title}>{netSectionItem?.DisplayName}</div>
+        <div className={styles.title}>{laneCtx.laneData.NetSection?.DisplayName}</div>
         <Button className={styles.deleteButton} onSelect={onDelete} variant="icon" />
       </div>
       <div className={styles.content}>

@@ -2,11 +2,7 @@
 
 using RoadBuilder.Domain.Components;
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RoadBuilder.Domain.Prefabs
 {
@@ -15,5 +11,6 @@ namespace RoadBuilder.Domain.Prefabs
 		public RoadBuilderLaneOptionInfo[] Options;
 
 		public List<NetSectionPrefab> LinkedSections { get; set; } = new();
+		public string DisplayName { get; set; }
 	}
 }

@@ -6,8 +6,10 @@ using Game.UI;
 using Game.UI.InGame;
 
 using RoadBuilder.Domain;
+using RoadBuilder.Domain.Components;
 using RoadBuilder.Domain.Configurations;
 using RoadBuilder.Domain.Enums;
+using RoadBuilder.Domain.Prefabs;
 using RoadBuilder.Domain.UI;
 using RoadBuilder.Utilities;
 
@@ -30,7 +32,7 @@ namespace RoadBuilder.Systems.UI
 		private RoadBuilderToolSystem roadBuilderToolSystem;
 		private DefaultToolSystem defaultToolSystem;
 		private SimulationSystem simulationSystem;
-
+		private NetSectionsUISystem netSectionsUISystem;
 		private ValueBindingHelper<RoadBuilderToolMode> RoadBuilderMode;
 		private ValueBindingHelper<RoadPropertiesUIBinder> RoadProperties;
 		private ValueBindingHelper<RoadLaneUIBinder[]> RoadLanes;
@@ -50,6 +52,7 @@ namespace RoadBuilder.Systems.UI
 			roadBuilderToolSystem = World.GetOrCreateSystemManaged<RoadBuilderToolSystem>();
 			defaultToolSystem = World.GetOrCreateSystemManaged<DefaultToolSystem>();
 			simulationSystem = World.GetOrCreateSystemManaged<SimulationSystem>();
+			netSectionsUISystem = World.GetOrCreateSystemManaged<NetSectionsUISystem>();
 
 			toolSystem.EventToolChanged += OnToolChanged;
 
@@ -129,6 +132,7 @@ namespace RoadBuilder.Systems.UI
 				return;
 			}
 
+			netSectionsUISystem.RefreshEntries(config);
 			RoadProperties.Value = RoadPropertiesUIBinder.From(config);
 			RoadLanes.Value = From(config, roadBuilderSystem.RoadGenerationData);
 		}
@@ -157,6 +161,8 @@ namespace RoadBuilder.Systems.UI
 		private void UpdateProperties(INetworkConfig config, RoadPropertiesUIBinder roadProperties)
 		{
 			roadProperties.Fill(config);
+
+			GameManager.instance.localizationManager.ReloadActiveLocale();
 		}
 
 		private void UpdateLaneOrder(INetworkConfig config, RoadLaneUIBinder[] roadLanes)
@@ -186,7 +192,7 @@ namespace RoadBuilder.Systems.UI
 
 			if (existingLane != null)
 			{
-				LaneOptionsUtil.OptionClicked(config, existingLane, option, id, value);
+				LaneOptionsUtil.OptionClicked(existingLane, option, id, value);
 			}
 		}
 
@@ -197,7 +203,7 @@ namespace RoadBuilder.Systems.UI
 			for (var i = 0; i < binders.Length; i++)
 			{
 				var lane = config.Lanes[i];
-				var validSection = NetworkPrefabGenerationUtil.GetNetSection(roadGenerationData, lane, out var section);
+				var validSection = NetworkPrefabGenerationUtil.GetNetSection(roadGenerationData, lane, out var section, out var groupPrefab);
 
 				binders[i] = new RoadLaneUIBinder
 				{
@@ -205,18 +211,50 @@ namespace RoadBuilder.Systems.UI
 					Invert = lane.Invert,
 					SectionPrefabName = string.IsNullOrEmpty(lane.GroupPrefabName) ? lane.SectionPrefabName : lane.GroupPrefabName,
 					IsGroup = !string.IsNullOrEmpty(lane.GroupPrefabName),
-					Width = validSection ? section.CalculateWidth() : 1F,
 					Options = LaneOptionsUtil.GenerateOptions(lane),
 					NetSection = !validSection ? new() : new()
 					{
 						PrefabName = section.name,
+						IsGroup = !string.IsNullOrEmpty(lane.GroupPrefabName),
 						DisplayName = GetAssetName(section),
-						Thumbnail = ImageSystem.GetThumbnail(section)
+						Thumbnail = GetThumbnail(section, groupPrefab, lane.Invert),
+						Width = validSection ? section.CalculateWidth() : 1F,
 					}
 				};
 			}
 
 			return binders;
+		}
+
+		private static string GetThumbnail(NetSectionPrefab section, LaneGroupPrefab groupPrefab, bool invert)
+		{
+			if (section.TryGet<RoadBuilderLaneInfoItem>(out var sectionInfo))
+			{
+				if (!string.IsNullOrEmpty(invert ? sectionInfo.FrontThumbnail : sectionInfo.BackThumbnail))
+				{
+					return invert ? sectionInfo.FrontThumbnail : sectionInfo.BackThumbnail;
+				}
+			}
+
+			if (ImageSystem.GetIcon(section) is string sectionIcon)
+			{
+				return sectionIcon;
+			}
+
+			if (groupPrefab?.TryGet<RoadBuilderLaneInfoItem>(out var groupInfo) ?? false)
+			{
+				if (!string.IsNullOrEmpty(invert ? groupInfo.FrontThumbnail : groupInfo.BackThumbnail))
+				{
+					return invert ? groupInfo.FrontThumbnail : groupInfo.BackThumbnail;
+				}
+			}
+
+			if (groupPrefab is null)
+			{
+				return null;
+			}
+
+			return ImageSystem.GetIcon(groupPrefab);
 		}
 
 		private string GetAssetName(PrefabBase prefab)

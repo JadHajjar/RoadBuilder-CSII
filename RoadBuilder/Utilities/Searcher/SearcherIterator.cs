@@ -37,7 +37,7 @@ namespace RoadBuilder.Utilities.Searcher
 		public readonly bool Intersect(Game.Common.QuadTreeBoundsXZ bounds)
 		{
 			var b = bounds.m_Bounds.xz;
-			bool result = m_Type switch
+			var result = m_Type switch
 			{
 				SearchTypes.Marquee => MathUtils.Intersect(b, m_SearchRect),
 				SearchTypes.Bounds => MathUtils.Intersect(b, m_SearchOuterBounds),
@@ -58,10 +58,12 @@ namespace RoadBuilder.Utilities.Searcher
 		/// <param name="e">The entity to check and, if valid, add to result</param>
 		public void Iterate(Game.Common.QuadTreeBoundsXZ bounds, Entity e)
 		{
-			if (m_Type == SearchTypes.Marquee || m_Type == SearchTypes.Bounds)
+			if (m_Type is SearchTypes.Marquee or SearchTypes.Bounds)
 			{
 				if (!MathUtils.Intersect(m_SearchOuterBounds, bounds.m_Bounds.xz))
+				{
 					return;
+				}
 			}
 
 			QObjectSimple obj = new(m_Manager, ref m_Lookup, e);
@@ -69,7 +71,7 @@ namespace RoadBuilder.Utilities.Searcher
 			var prefab = m_Manager.GetComponentData<Game.Prefabs.PrefabRef>(e).m_Prefab;
 
 			// Building
-			if (obj.m_Identity == Identity.Building || obj.m_Identity == Identity.Extension)
+			if (obj.m_Identity is Identity.Building or Identity.Extension)
 			{
 				var objRect = Utils.CalculateBuildingCorners(m_Manager, ref obj, prefab);
 
@@ -81,6 +83,7 @@ namespace RoadBuilder.Utilities.Searcher
 							m_EntityList.Add(e);
 							return;
 						}
+
 						break;
 
 					case SearchTypes.Bounds:
@@ -89,6 +92,7 @@ namespace RoadBuilder.Utilities.Searcher
 							m_EntityList.Add(e);
 							return;
 						}
+
 						break;
 
 					case SearchTypes.Point:
@@ -97,6 +101,7 @@ namespace RoadBuilder.Utilities.Searcher
 							m_EntityList.Add(e);
 							return;
 						}
+
 						break;
 
 					default:
@@ -111,7 +116,9 @@ namespace RoadBuilder.Utilities.Searcher
 			if (obj.m_Identity == Identity.Node)
 			{
 				if (!m_Manager.TryGetComponent(e, out Game.Net.Node node))
+				{
 					return;
+				}
 
 				var circle = Utils.GetCircle(m_Manager, e, node);
 
@@ -123,6 +130,7 @@ namespace RoadBuilder.Utilities.Searcher
 							m_EntityList.Add(e);
 							return;
 						}
+
 						break;
 
 					case SearchTypes.Bounds:
@@ -131,6 +139,7 @@ namespace RoadBuilder.Utilities.Searcher
 							m_EntityList.Add(e);
 							return;
 						}
+
 						break;
 
 					case SearchTypes.Point:
@@ -139,11 +148,13 @@ namespace RoadBuilder.Utilities.Searcher
 							m_EntityList.Add(e);
 							return;
 						}
+
 						break;
 
 					default:
 						break;
 				}
+
 				return;
 			}
 
@@ -167,6 +178,7 @@ namespace RoadBuilder.Utilities.Searcher
 								m_EntityList.Add(e);
 								return;
 							}
+
 							break;
 
 						case SearchTypes.Bounds:
@@ -175,6 +187,7 @@ namespace RoadBuilder.Utilities.Searcher
 								m_EntityList.Add(e);
 								return;
 							}
+
 							break;
 
 						case SearchTypes.Point:
@@ -183,6 +196,7 @@ namespace RoadBuilder.Utilities.Searcher
 								m_EntityList.Add(e);
 								return;
 							}
+
 							break;
 
 						default:
@@ -203,6 +217,7 @@ namespace RoadBuilder.Utilities.Searcher
 						m_EntityList.Add(e);
 						return;
 					}
+
 					break;
 
 				case SearchTypes.Bounds:
@@ -211,6 +226,7 @@ namespace RoadBuilder.Utilities.Searcher
 						m_EntityList.Add(e);
 						return;
 					}
+
 					break;
 
 				case SearchTypes.Point:
@@ -219,6 +235,7 @@ namespace RoadBuilder.Utilities.Searcher
 						m_EntityList.Add(e);
 						return;
 					}
+
 					break;
 
 				default:
@@ -235,11 +252,19 @@ namespace RoadBuilder.Utilities.Searcher
 		{
 			var e = areaSearchItem.m_Area;
 			if (m_EntityList.Contains(e))
+			{
 				return;
+			}
+
 			if (m_Manager.HasComponent<Game.Common.Owner>(e))
+			{
 				return;
+			}
+
 			if (!m_Manager.HasComponent<Surface>(e))
+			{
 				return;
+			}
 
 			if (m_Manager.TryGetBuffer<Node>(e, true, out var nodes) && m_Manager.TryGetBuffer<Triangle>(e, true, out var triangles))
 			{

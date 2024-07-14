@@ -28,9 +28,8 @@ namespace RoadBuilder.Utilities.Searcher
 			{
 				if (EntityManager.TryGetComponent<Game.Rendering.CullingInfo>(entities[i], out var cullingInfo))
 				{
-					bounds = i ==0 ? cullingInfo.m_Bounds:(bounds.Encapsulate(cullingInfo.m_Bounds));
+					bounds = i == 0 ? cullingInfo.m_Bounds : bounds.Encapsulate(cullingInfo.m_Bounds);
 				}
-
 			}
 
 			Mod.Log.Info($"{bounds.x} {bounds.y} {bounds.z} {bounds.xy} {bounds.xz} {bounds.yx} {bounds.yz} {bounds.zx} {bounds.zy}");
@@ -47,12 +46,12 @@ namespace RoadBuilder.Utilities.Searcher
 			searcher.SearchBounds(outerBounds);
 
 			Mod.Log.InfoFormat("Results: {0}", searcher.m_Results.Length);
-			foreach (Entity e in searcher.m_Results)
+			foreach (var e in searcher.m_Results)
 			{
 				var entities = GetSubEntities(e);
 				Mod.Log.InfoFormat("sub-entities: {0}", entities.Length);
 
-				for (int i = 0; i < entities.Length; i++)
+				for (var i = 0; i < entities.Length; i++)
 				{
 					EntityManager.AddComponent<Game.Common.Updated>(entities[i]);
 					EntityManager.AddComponent<Game.Common.BatchesUpdated>(entities[i]);
@@ -81,7 +80,7 @@ namespace RoadBuilder.Utilities.Searcher
 
 		private NativeArray<Entity> GetSubEntities(Entity e)
 		{
-			NativeArray<Entity> entities = IterateSubEntities(e, e, 0, Identity.None, Identity.None);
+			var entities = IterateSubEntities(e, e, 0, Identity.None, Identity.None);
 
 			return entities;
 		}
@@ -89,13 +88,16 @@ namespace RoadBuilder.Utilities.Searcher
 		private NativeArray<Entity> IterateSubEntities(Entity top, Entity e, int depth, Identity identity, Identity parentIdentity)
 		{
 			if (depth > 3)
+			{
 				throw new Exception($"Moveable.IterateSubEntities depth ({depth}) too deep for {top.D()}/{e.D()}");
+			}
+
 			depth++;
 
 			NativeList<Entity> entities = new(Allocator.Temp);
 
 			// Handle Control Points, Segments, and Netlanes
-			if (identity == Identity.ControlPoint || identity == Identity.Segment || identity == Identity.NetLane)
+			if (identity is Identity.ControlPoint or Identity.Segment or Identity.NetLane)
 			{
 				// Do nothing
 			}
@@ -105,9 +107,9 @@ namespace RoadBuilder.Utilities.Searcher
 			{
 				if (EntityManager.TryGetBuffer(e, true, out DynamicBuffer<Game.Objects.SubObject> buffer))
 				{
-					for (int i = 0; i < buffer.Length; i++)
+					for (var i = 0; i < buffer.Length; i++)
 					{
-						Entity sub = buffer[i].m_SubObject;
+						var sub = buffer[i].m_SubObject;
 						if (!entities.Contains(sub) && IsValidChild(parentIdentity, sub))
 						{
 							entities.Add(sub);
@@ -122,9 +124,9 @@ namespace RoadBuilder.Utilities.Searcher
 			{
 				if (EntityManager.TryGetBuffer(e, true, out DynamicBuffer<Game.Areas.SubArea> buffer1))
 				{
-					for (int i = 0; i < buffer1.Length; i++)
+					for (var i = 0; i < buffer1.Length; i++)
 					{
-						Entity sub = buffer1[i].m_Area;
+						var sub = buffer1[i].m_Area;
 						if (!entities.Contains(sub) && IsValidChild(parentIdentity, sub))
 						{
 							entities.Add(sub);
@@ -135,9 +137,9 @@ namespace RoadBuilder.Utilities.Searcher
 
 				if (EntityManager.TryGetBuffer(e, true, out DynamicBuffer<Game.Net.SubNet> buffer2))
 				{
-					for (int i = 0; i < buffer2.Length; i++)
+					for (var i = 0; i < buffer2.Length; i++)
 					{
-						Entity sub = buffer2[i].m_SubNet;
+						var sub = buffer2[i].m_SubNet;
 						if (!entities.Contains(sub) && IsValidChild(parentIdentity, sub))
 						{
 							entities.Add(sub);
@@ -148,9 +150,9 @@ namespace RoadBuilder.Utilities.Searcher
 
 				if (EntityManager.TryGetBuffer(e, true, out DynamicBuffer<Game.Net.SubLane> buffer3))
 				{
-					for (int i = 0; i < buffer3.Length; i++)
+					for (var i = 0; i < buffer3.Length; i++)
 					{
-						Entity sub = buffer3[i].m_SubLane;
+						var sub = buffer3[i].m_SubLane;
 						if (!entities.Contains(sub) && IsValidChild(parentIdentity, sub))
 						{
 							entities.Add(sub);
@@ -171,9 +173,12 @@ namespace RoadBuilder.Utilities.Searcher
 			switch (parentIdentity)
 			{
 				case Identity.Node:
-					EntityManager EM = World.DefaultGameObjectInjectionWorld.EntityManager;
+					var EM = World.DefaultGameObjectInjectionWorld.EntityManager;
 					if (EM.HasComponent<Game.Objects.Attached>(e))
+					{
 						return true;
+					}
+
 					return false;
 
 				default:

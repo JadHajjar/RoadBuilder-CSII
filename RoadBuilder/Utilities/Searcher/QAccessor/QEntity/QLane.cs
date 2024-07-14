@@ -1,8 +1,5 @@
-﻿using Colossal.Mathematics;
+﻿using RoadBuilder.Utilities.Searcher;
 
-using RoadBuilder.Utilities.Searcher;
-
-using Unity.Entities;
 using Unity.Mathematics;
 
 using UnityEngine;
@@ -17,7 +14,7 @@ namespace MoveIt.QAccessor
 		{
 			get
 			{
-				float3 mag = Curve.d - Curve.a;
+				var mag = Curve.d - Curve.a;
 				return math.atan2(mag.z, mag.x) * Mathf.Rad2Deg;
 			}
 		}
@@ -29,7 +26,7 @@ namespace MoveIt.QAccessor
 		{
 			TryAddUpdate(m_Entity);
 
-			Game.Net.Edge edge = m_Lookup.gnEdge.GetRefRO(m_Entity).ValueRO;
+			var edge = m_Lookup.gnEdge.GetRefRO(m_Entity).ValueRO;
 			QEntity node = new(ref m_Lookup, edge.m_Start, Identity.Node);
 			node.Node_SetUpdated();
 			node = new(ref m_Lookup, edge.m_End, Identity.Node);
@@ -37,13 +34,11 @@ namespace MoveIt.QAccessor
 
 			if (TryGetComponent<Game.Net.Aggregated>(out var component))
 			{
-				Entity aggregate = component.m_Aggregate;
+				var aggregate = component.m_Aggregate;
 				TryAddUpdate(aggregate);
 			}
 
 			return true;
 		}
-
-
 	}
 }

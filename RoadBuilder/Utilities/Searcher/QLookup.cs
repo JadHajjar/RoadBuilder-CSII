@@ -61,6 +61,9 @@ namespace RoadBuilder.Utilities.Searcher
 			_Lookup.grCullingInfo.Update(_System);
 		}
 
-		public static ref QLookup Get() => ref _Lookup;
+		public static ref QLookup Get()
+		{
+			return ref _Lookup;
+		}
 	}
 }

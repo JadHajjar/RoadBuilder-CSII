@@ -6,5 +6,6 @@
 		public string DisplayName;
 		public string Thumbnail;
 		public bool IsGroup;
+		public float Width;
 	}
 }

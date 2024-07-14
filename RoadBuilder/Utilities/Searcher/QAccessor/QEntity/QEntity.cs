@@ -1,10 +1,7 @@
 ﻿using RoadBuilder.Utilities.Searcher;
-using RoadBuilder.Utilities.Searcher.QAccessor;
 
 using Unity.Entities;
 using Unity.Mathematics;
-
-using UnityEngine;
 
 namespace MoveIt.QAccessor
 {
@@ -70,7 +67,5 @@ namespace MoveIt.QAccessor
 				_ => Generic_SetUpdated(),
 			};
 		}
-
-
 	}
 }

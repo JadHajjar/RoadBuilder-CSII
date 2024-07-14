@@ -12,7 +12,6 @@ namespace RoadBuilder.Domain.UI
 		public bool IsGroup;
 		public int Index;
 		public bool Invert;
-		public float Width;
 		public NetSectionItem NetSection;
 		public List<OptionSectionUIEntry> Options;
 

@@ -11,6 +11,7 @@ namespace RoadBuilder.Domain.UI
 		public bool IsValue { get; set; }
 		public string Value { get; set; }
 		public bool Hidden { get; set; }
+		public bool Disabled { get; set; }
 
 		public void Write(IJsonWriter writer)
 		{
@@ -33,6 +34,9 @@ namespace RoadBuilder.Domain.UI
 
 			writer.PropertyName("value");
 			writer.Write(Value);
+
+			writer.PropertyName("disabled");
+			writer.Write(Disabled);
 
 			writer.TypeEnd();
 		}

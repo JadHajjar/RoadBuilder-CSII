@@ -14,9 +14,9 @@ namespace RoadBuilder.Utilities.Searcher
 	{
 		public static float3 Center(this Bounds3 bounds)
 		{
-			var x = bounds.x.min + (bounds.x.max - bounds.x.min) / 2;
-			var y = bounds.y.min + (bounds.y.max - bounds.y.min) / 2;
-			var z = bounds.z.min + (bounds.z.max - bounds.z.min) / 2;
+			var x = bounds.x.min + ((bounds.x.max - bounds.x.min) / 2);
+			var y = bounds.y.min + ((bounds.y.max - bounds.y.min) / 2);
+			var z = bounds.z.min + ((bounds.z.max - bounds.z.min) / 2);
 			return new float3(x, y, z);
 		}
 
@@ -27,21 +27,21 @@ namespace RoadBuilder.Utilities.Searcher
 
 		public static float2 Center(this Bounds2 bounds)
 		{
-			var x = bounds.x.min + (bounds.x.max - bounds.x.min) / 2;
-			var y = bounds.y.min + (bounds.y.max - bounds.y.min) / 2;
+			var x = bounds.x.min + ((bounds.x.max - bounds.x.min) / 2);
+			var y = bounds.y.min + ((bounds.y.max - bounds.y.min) / 2);
 			return new float2(x, y);
 		}
 
 		public static float Center(this Bounds1 bounds)
 		{
-			return bounds.min + (bounds.max - bounds.min) / 2;
+			return bounds.min + ((bounds.max - bounds.min) / 2);
 			;
 		}
 
 		public static float2 Center2D(this Bounds3 bounds)
 		{
-			var x = bounds.x.min + (bounds.x.max - bounds.x.min) / 2;
-			var z = bounds.z.min + (bounds.z.max - bounds.z.min) / 2;
+			var x = bounds.x.min + ((bounds.x.max - bounds.x.min) / 2);
+			var z = bounds.z.min + ((bounds.z.max - bounds.z.min) / 2);
 			return new float2(x, z);
 		}
 
@@ -94,28 +94,40 @@ namespace RoadBuilder.Utilities.Searcher
 		public static bool IsNodeA(this short idx)
 		{
 			if (idx < 2)
+			{
 				return true;
+			}
+
 			return false;
 		}
 
 		public static bool IsNodeB(this short idx)
 		{
-			if (idx > 1 && idx <= 3)
+			if (idx is > 1 and <= 3)
+			{
 				return true;
+			}
+
 			return false;
 		}
 
 		public static bool IsEnd(this short idx)
 		{
-			if (idx == 0 || idx == 3)
+			if (idx is 0 or 3)
+			{
 				return true;
+			}
+
 			return false;
 		}
 
 		public static bool IsMiddle(this short idx)
 		{
-			if (idx == 1 || idx == 2)
+			if (idx is 1 or 2)
+			{
 				return true;
+			}
+
 			return false;
 		}
 
@@ -207,7 +219,7 @@ namespace RoadBuilder.Utilities.Searcher
 
 		public static quaternion Inverse(this quaternion q)
 		{
-			var num = q.value.x * q.value.x + q.value.y * q.value.y + q.value.z * q.value.z + q.value.w * q.value.w;
+			var num = (q.value.x * q.value.x) + (q.value.y * q.value.y) + (q.value.z * q.value.z) + (q.value.w * q.value.w);
 			var num2 = 1f / num;
 			quaternion result = default;
 			result.value.x = (0f - q.value.x) * num2;
@@ -228,7 +240,7 @@ namespace RoadBuilder.Utilities.Searcher
 
 		public static float3 Lerp(this float3 a, float3 b, float t)
 		{
-			return new float3(a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t, a.z + (b.z - a.z) * t);
+			return new float3(a.x + ((b.x - a.x) * t), a.y + ((b.y - a.y) * t), a.z + ((b.z - a.z) * t));
 		}
 
 		public static float3 LerpAbs(this float3 a, float3 b, float t)
@@ -274,7 +286,7 @@ namespace RoadBuilder.Utilities.Searcher
 			var sqy = q1.y * q1.y;
 			var sqz = q1.z * q1.z;
 			var unit = sqx + sqy + sqz + sqw; // if normalised is one, otherwise is correction factor
-			var test = q1.x * q1.w - q1.y * q1.z;
+			var test = (q1.x * q1.w) - (q1.y * q1.z);
 			float3 v;
 
 			if (test > 0.4995f * unit)
@@ -284,6 +296,7 @@ namespace RoadBuilder.Utilities.Searcher
 				v.z = 0;
 				return ClampDegreesAll(math.degrees(v));
 			}
+
 			if (test < -0.4995f * unit)
 			{ // south pole
 				v.y = -2f * math.atan2(q1.y, q1.x);
@@ -295,14 +308,14 @@ namespace RoadBuilder.Utilities.Searcher
 			quaternion q3 = new(q1.w, q1.z, q1.x, q1.y);
 			var q = q3.value;
 
-			v.y = math.atan2(2f * q.x * q.w + 2f * q.y * q.z, 1 - 2f * (q.z * q.z + q.w * q.w));
-			v.x = math.asin(2f * (q.x * q.z - q.w * q.y));
-			v.z = math.atan2(2f * q.x * q.y + 2f * q.z * q.w, 1 - 2f * (q.y * q.y + q.z * q.z));
+			v.y = math.atan2((2f * q.x * q.w) + (2f * q.y * q.z), 1 - (2f * ((q.z * q.z) + (q.w * q.w))));
+			v.x = math.asin(2f * ((q.x * q.z) - (q.w * q.y)));
+			v.z = math.atan2((2f * q.x * q.y) + (2f * q.z * q.w), 1 - (2f * ((q.y * q.y) + (q.z * q.z))));
 
 			return ClampDegreesAll(math.degrees(v));
 		}
 
-		static float3 ClampDegreesAll(float3 angles)
+		private static float3 ClampDegreesAll(float3 angles)
 		{
 			angles.x = ClampDegrees(angles.x);
 			angles.y = ClampDegrees(angles.y);
@@ -310,11 +323,14 @@ namespace RoadBuilder.Utilities.Searcher
 			return angles;
 		}
 
-		static float ClampDegrees(float angle)
+		private static float ClampDegrees(float angle)
 		{
 			angle %= 360;
 			if (angle < 0)
+			{
 				angle += 360;
+			}
+
 			return angle;
 		}
 

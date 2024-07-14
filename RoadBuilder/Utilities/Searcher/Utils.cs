@@ -1,7 +1,6 @@
 ﻿using Colossal.Entities;
 using Colossal.Mathematics;
 
-using RoadBuilder.Utilities.Searcher;
 using RoadBuilder.Utilities.Searcher.QAccessor;
 
 using System.Linq;
@@ -43,20 +42,21 @@ namespace RoadBuilder.Utilities.Searcher
 			{
 				return GetCircle(geoData);
 			}
+
 			return GetCircle(node);
 		}
 
 		internal static Circle2 GetCircle(Game.Net.NodeGeometry geoData)
 		{
-			float x = geoData.m_Bounds.max.x - geoData.m_Bounds.min.x;
-			float z = geoData.m_Bounds.max.z - geoData.m_Bounds.min.z;
-			float radius = math.max(6f, math.min(x, z)) / 2;
+			var x = geoData.m_Bounds.max.x - geoData.m_Bounds.min.x;
+			var z = geoData.m_Bounds.max.z - geoData.m_Bounds.min.z;
+			var radius = math.max(6f, math.min(x, z)) / 2;
 			return new(radius, geoData.m_Bounds.xz.Center());
 		}
 
 		internal static Circle2 GetCircle(Game.Net.Node node)
 		{
-			float radius = 3f;
+			var radius = 3f;
 			return new(radius, node.m_Position.XZ());
 		}
 
@@ -73,8 +73,8 @@ namespace RoadBuilder.Utilities.Searcher
 		internal static Quad2 CalculateBuildingCorners(EntityManager manager, float2 position, quaternion rotation, Entity prefab, float expand = 0f)
 		{
 			var lotSize = manager.GetComponentData<Game.Prefabs.BuildingData>(prefab).m_LotSize;
-			var offX = lotSize.x * 4 + expand;
-			var offZ = lotSize.y * 4 + expand;
+			var offX = (lotSize.x * 4) + expand;
+			var offZ = (lotSize.y * 4) + expand;
 
 			Quad2 result = new(
 				RotateAroundPivot(position, rotation, new(-offX, 0, -offZ)),
@@ -100,6 +100,7 @@ namespace RoadBuilder.Utilities.Searcher
 				var distance = obj.m_Parent.Position.DistanceXZ(center);
 				data[i] = (results[i], distance);
 			}
+
 			results.Dispose();
 			var result = data.OrderBy(pair => pair.d).ToArray();
 			//DebugDumpCalculateDistance(result);

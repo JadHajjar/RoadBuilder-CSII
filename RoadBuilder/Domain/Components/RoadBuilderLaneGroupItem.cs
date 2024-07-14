@@ -21,11 +21,4 @@ namespace RoadBuilder.Domain.Components
 		public override void GetPrefabComponents(HashSet<ComponentType> components)
 		{ }
 	}
-
-	[Serializable]
-	public class LaneOptionCombination
-	{
-		public string OptionName;
-		public string Value;
-	}
 }

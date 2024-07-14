@@ -2,8 +2,8 @@
 using Game.Common;
 using Game.Prefabs;
 
-using RoadBuilder.Domain.Components;
 using RoadBuilder.Domain.Prefabs;
+using RoadBuilder.LaneGroups;
 
 using System;
 using System.Collections.Generic;
@@ -46,7 +46,7 @@ namespace RoadBuilder.Systems
 				}
 			}
 
-			if (!customGroupsAdded)
+			if (!customGroupsAdded && NetSections.Count > 0)
 			{
 				AddCustomGroups();
 
@@ -58,50 +58,17 @@ namespace RoadBuilder.Systems
 
 		private void AddCustomGroups()
 		{
-			var medianGroup = new LaneGroupPrefab
+			foreach (var type in typeof(NetSectionsSystem).Assembly.GetTypes())
 			{
-				name = "RoadBuilder.MedianGroup",
-				Options = new RoadBuilderLaneOptionInfo[]
+				if (typeof(BaseLaneGroupPrefab).IsAssignableFrom(type) && !type.IsAbstract)
 				{
-					new()
-					{
-						DefaultValue = "2",
-						IsValue = true,
-						Name = "Median Width",
-						Options = new RoadBuilderLaneOptionItemInfo[]
-						{
-							new() { Value = "0" },
-							new() { Value = "1" },
-							new() { Value = "2" },
-							new() { Value = "5" }
-						}
-					}
-				}
-			};
+					var prefab = (BaseLaneGroupPrefab)Activator.CreateInstance(type, NetSections);
 
-			var obj = medianGroup.AddComponent<UIObject>();
-			obj.m_Icon = "coui://uil/Colored/Intersection.svg";
+					prefab.name = type.FullName;
 
-			prefabSystem.AddPrefab(medianGroup);
+					prefabSystem.AddPrefab(prefab);
 
-			LaneGroups[medianGroup.name] = medianGroup;
-
-			foreach (var prefab in NetSections.Values)
-			{
-				if (prefab.name.StartsWith("Road Median "))
-				{
-					var laneInfo = prefab.AddComponent<RoadBuilderLaneGroupItem>();
-					laneInfo.GroupPrefab = medianGroup;
-					laneInfo.Combination = new LaneOptionCombination[]
-					{
-						new()
-						{
-							OptionName = "Median Width",
-							Value = prefab.name.Remove(0, "Road Median ".Length)
-						}
-					};
-
-					medianGroup.LinkedSections.Add(prefab);
+					LaneGroups[prefab.name] = prefab;
 				}
 			}
 		}

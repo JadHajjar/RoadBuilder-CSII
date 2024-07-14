@@ -1,5 +1,6 @@
 ﻿using Colossal.IO.AssetDatabase;
 using Colossal.Logging;
+using Colossal.UI;
 
 using Game;
 using Game.Modding;
@@ -9,6 +10,8 @@ using Game.SceneFlow;
 using RoadBuilder.Systems;
 using RoadBuilder.Systems.UI;
 using RoadBuilder.Utilities;
+
+using System.IO;
 
 namespace RoadBuilder
 {
@@ -21,6 +24,19 @@ namespace RoadBuilder
 		public void OnLoad(UpdateSystem updateSystem)
 		{
 			Log.Info(nameof(OnLoad));
+
+#if DEBUG
+			Log.SetEffectiveness(Level.Debug);
+#endif
+
+			if (GameManager.instance.modManager.TryGetExecutableAsset(this, out var asset))
+			{
+				UIManager.defaultUISystem.AddHostLocation($"roadbuildericons", Path.Combine(Path.GetDirectoryName(asset.path), "PrefabIcons"), false);
+			}
+			else
+			{
+				Log.Error("Load Failed, could not get executable path");
+			}
 
 			Settings = new Setting(this);
 			Settings.RegisterKeyBindings();
