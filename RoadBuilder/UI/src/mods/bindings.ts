@@ -19,3 +19,5 @@ export const clearTool = trigger.bind(null, mod.id, "ClearTool");
 export const createNewPrefab = trigger.bind(null, mod.id, "CreateNewPrefab");
 export const setRoadProperties = (properties: RoadProperties) => trigger(mod.id, "SetRoadProperties", properties);
 export const setRoadLanes = (lanes: RoadLane[]) => { console.log(lanes); trigger(mod.id, "SetRoadLanes", lanes);}
+
+export const laneOptionClicked = (optionIndex: number, netSectionId: number, optionId: number, value: number) => trigger(mod.id, "OptionClicked", optionIndex, netSectionId, optionId, value);
