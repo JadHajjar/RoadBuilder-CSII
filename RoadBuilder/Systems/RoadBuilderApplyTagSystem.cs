@@ -1,4 +1,6 @@
-﻿using Game;
+﻿using Colossal.Entities;
+
+using Game;
 using Game.Common;
 using Game.Net;
 using Game.Prefabs;
@@ -41,6 +43,12 @@ namespace RoadBuilder.Systems
 				if (prefabSystem.GetPrefab<PrefabBase>(EntityManager.GetComponentData<PrefabRef>(entity)) is INetworkBuilderPrefab)
 				{
 					EntityManager.AddComponent<RoadBuilderNetwork>(entity);
+
+					if (EntityManager.TryGetComponent<Edge>(entity, out var edge))
+					{
+						EntityManager.AddComponent<RoadBuilderNetwork>(edge.m_Start);
+						EntityManager.AddComponent<RoadBuilderNetwork>(edge.m_End);
+					}
 				}
 			}
 		}

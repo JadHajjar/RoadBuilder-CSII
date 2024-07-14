@@ -4,7 +4,7 @@ using RoadBuilder.Domain.Enums;
 
 using System.Collections.Generic;
 
-namespace RoadBuilder.Domain.Configuration
+namespace RoadBuilder.Domain.Configurations
 {
 	public interface INetworkConfig : ISerializable
 	{
@@ -14,13 +14,11 @@ namespace RoadBuilder.Domain.Configuration
 		ushort Version { get; set; }
 		string Name { get; set; }
 		RoadCategory Category { get; set; }
+		RoadAddons Addons { get; set; }
 		float MaxSlopeSteepness { get; set; }
 		string AggregateType { get; set; }
 		List<LaneConfig> Lanes { get; set; }
 		string PillarPrefabName { get; set; }
-		bool HasUndergroundWaterPipes { get; set; }
-		bool HasUndergroundElectricityCable { get; set; }
-		bool RequiresUpgradeForElectricity { get; set; }
 
 		void ApplyVersionChanges();
 	}

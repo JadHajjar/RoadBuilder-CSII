@@ -1,3 +1,5 @@
+import { NetSectionItem } from "./NetSectionItem";
+
 export interface RoadProperties {
     Name: string;
     SpeedLimit: number;
@@ -12,7 +14,8 @@ export interface RoadLane {
     SectionPrefabName: string;
     Index: number;
     Invert?: boolean;
-    Width?: number;
+	  IsGroup: boolean;
+    NetSection?: NetSectionItem;
     Options?: OptionSection[];
 }
 
@@ -28,6 +31,7 @@ export interface OptionSection {
     icon: string;
     selected: boolean;
     isValue: boolean;
+    disabled: boolean;
     value: string;
   }
   

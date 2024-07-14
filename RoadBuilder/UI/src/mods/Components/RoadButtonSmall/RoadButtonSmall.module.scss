@@ -21,9 +21,13 @@
   justify-content: center;
   align-items: center;
 
-  img {
+  /*img {
     width: 80%;
     height: 80%;
+  }*/
+
+  .inverted {
+    transform: scale(-1, 1);
   }
 
   &:hover {
@@ -107,19 +111,19 @@
     align-content: center;
 
     .arrow {
-      height: 22rem;
-      width: 22rem;
+      height: 20rem;
+      width: 20rem;
       mask-size: 100%;
       background-color: #fff;
-      mask-image: url(coui://gameui/Media/Glyphs/ArrowRight.svg);
-      margin-top: 4rem;
+      mask-image: url(coui://roadbuildericons/RB_Arrow.svg);
+      margin-top: 6rem;
 
-      &.up {
-        transform: rotate(-90deg);
-      }
+      //&.up {
+      //transform: rotate(-90deg);
+      //}
 
       &.down {
-        transform: rotate(90deg);
+        transform: rotate(180deg);
       }
     }
   }

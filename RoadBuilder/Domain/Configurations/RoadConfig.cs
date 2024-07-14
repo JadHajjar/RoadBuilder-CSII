@@ -4,7 +4,7 @@ using RoadBuilder.Domain.Enums;
 
 using System.Collections.Generic;
 
-namespace RoadBuilder.Domain.Configuration
+namespace RoadBuilder.Domain.Configurations
 {
 	public class RoadConfig : INetworkConfig
 	{
@@ -23,6 +23,7 @@ namespace RoadBuilder.Domain.Configuration
 		public bool HasUndergroundElectricityCable { get; set; }
 		public bool RequiresUpgradeForElectricity { get; set; }
 		public RoadCategory Category { get; set; }
+		public RoadAddons Addons { get; set; }
 		public List<LaneConfig> Lanes { get; set; } = new();
 
 		public void Deserialize<TReader>(TReader reader) where TReader : IReader
@@ -39,6 +40,7 @@ namespace RoadBuilder.Domain.Configuration
 			reader.Read(out bool hasUndergroundElectricityCable);
 			reader.Read(out bool requiresUpgradeForElectricity);
 			reader.Read(out int category);
+			reader.Read(out int addons);
 
 			ID = iD;
 			Name = name;
@@ -52,6 +54,7 @@ namespace RoadBuilder.Domain.Configuration
 			HasUndergroundElectricityCable = hasUndergroundElectricityCable;
 			RequiresUpgradeForElectricity = requiresUpgradeForElectricity;
 			Category = (RoadCategory)category;
+			Addons = (RoadAddons)addons;
 
 			reader.Read(out int laneCount);
 
@@ -81,6 +84,7 @@ namespace RoadBuilder.Domain.Configuration
 			writer.Write(HasUndergroundElectricityCable);
 			writer.Write(RequiresUpgradeForElectricity);
 			writer.Write((int)Category);
+			writer.Write((int)Addons);
 
 			writer.Write(Lanes.Count);
 

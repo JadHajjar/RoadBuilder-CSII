@@ -20,16 +20,24 @@
 	<Import Project="$([System.Environment]::GetEnvironmentVariable('CSII_TOOLPATH', 'EnvironmentVariableTarget.User'))\Mod.props" />
 	<Import Project="$([System.Environment]::GetEnvironmentVariable('CSII_TOOLPATH', 'EnvironmentVariableTarget.User'))\Mod.targets" />
 
-	<Target Name="BuildUI" AfterTargets="AfterBuild">
-		<Exec Command="npm run build" WorkingDirectory="$(ProjectDir)/UI" />
-	</Target>
-
 	<ItemGroup>
 		<EmbeddedResource Include="Locale.json" />
 		<EmbeddedResource Include="Locale\*.json" />
 		<None Remove="Locale.json" />
 		<None Remove="Locale\*.json" />
 	</ItemGroup>
+
+	<Target Name="BuildUI" AfterTargets="AfterBuild">
+		<Exec Command="npm run build" WorkingDirectory="$(ProjectDir)/UI" />
+	</Target>
+
+	<Target Name="CopyFiles" AfterTargets="DeployWIP">
+		<ItemGroup>
+			<IconFiles Include=".\PrefabIcons\*.*" />
+		</ItemGroup>
+
+		<Copy SourceFiles="@(IconFiles)" DestinationFiles="@(IconFiles->'$(DeployDir)\PrefabIcons\%(RecursiveDir)%(Filename)%(Extension)')" />
+	</Target>
 
 	<Target Name="UpdatePublishConfiguration" BeforeTargets="Publish" Condition="'$(ModPublisherCommand)'=='NewVersion'">
 		<PropertyGroup>
@@ -41,12 +49,19 @@
 	</Target>
 
 	<ItemGroup>
+	  <Compile Remove="Systems\RoadBuilderUpdateNetSystem.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Lib.Harmony" Version="2.2.2" />
 		
 		<Reference Include="Game">
 			<Private>false</Private>
 		</Reference>
 		<Reference Include="Colossal.Core">
+			<Private>false</Private>
+		</Reference>
+		<Reference Include="Colossal.Collections">
 			<Private>false</Private>
 		</Reference>
 		<Reference Include="Colossal.Logging">
@@ -105,6 +120,7 @@
 	<ItemGroup>
 		<None Include="$(ModPropsFile)" Link="Properties\Mod.props" />
 		<None Include="$(ModTargetsFile)" Link="Properties\Mod.targets" />
+		<None Include="Systems\RoadBuilderUpdateNetSystem.cs" />
 	</ItemGroup>
 
 </Project>

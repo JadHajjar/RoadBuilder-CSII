@@ -12,7 +12,7 @@ type _Props = {
   Index: number;
 };
 
-export const OptionsPanelComponent = (props: _Props) => {  
+export const OptionsPanelComponent = (props: _Props) => {
   return (
     <>
       {props.options.map((section) => (
@@ -51,7 +51,8 @@ export const OptionsPanelComponent = (props: _Props) => {
                   <VanillaComponentResolver.instance.ToolButton
                     selected={option.selected}
                     tooltip={option.name}
-                    onSelect={() => trigger(mod.id, "OptionClicked", props.Index, section.id, option.id, 0)}
+                    disabled={option.disabled}
+                    onSelect={option.disabled ? undefined : () => trigger(mod.id, "OptionClicked", props.Index, section.id, option.id, 0)}
                     src={option.icon}
                     focusKey={VanillaComponentResolver.instance.FOCUS_DISABLED}
                     className={VanillaComponentResolver.instance.toolButtonTheme.button + " " + styles.singleButton}

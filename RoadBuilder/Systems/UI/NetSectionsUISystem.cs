@@ -1,17 +1,15 @@
-﻿using Colossal.Serialization.Entities;
-
-using Game;
-using Game.Prefabs;
+﻿using Game.Prefabs;
 using Game.SceneFlow;
 using Game.UI;
 using Game.UI.InGame;
 
+using RoadBuilder.Domain.Components;
+using RoadBuilder.Domain.Configurations;
 using RoadBuilder.Domain.UI;
 using RoadBuilder.Utilities;
 
 using System.Collections.Generic;
 
-using Unity.Collections;
 using Unity.Entities;
 
 namespace RoadBuilder.Systems.UI
@@ -20,7 +18,9 @@ namespace RoadBuilder.Systems.UI
 	{
 		private PrefabSystem prefabSystem;
 		private PrefabUISystem prefabUISystem;
+		private NetSectionsSystem netSectionsSystem;
 		private ValueBindingHelper<NetSectionItem[]> _NetSections;
+		private INetworkConfig activeConfig;
 
 		protected override void OnCreate()
 		{
@@ -28,30 +28,32 @@ namespace RoadBuilder.Systems.UI
 
 			prefabSystem = World.GetOrCreateSystemManaged<PrefabSystem>();
 			prefabUISystem = World.GetOrCreateSystemManaged<PrefabUISystem>();
+			netSectionsSystem = World.GetOrCreateSystemManaged<NetSectionsSystem>();
 
-			_NetSections = CreateBinding("NetSections", new NetSectionItem[0]);
+			_NetSections = CreateBinding("NetSections", GetSections());
+
+			netSectionsSystem.SectionsAdded += () => _NetSections.Value = GetSections();
 		}
 
-		protected override void OnGameLoadingComplete(Purpose purpose, GameMode mode)
+		internal void RefreshEntries(INetworkConfig config)
 		{
-			base.OnGameLoadingComplete(purpose, mode);
+			activeConfig = config;
 
-			if (mode != GameMode.Game)
-			{
-				return;
-			}
+			_NetSections.Value = GetSections();
+		}
 
-			var entityQuery = SystemAPI.QueryBuilder()
-				.WithAll<NetSectionData>()
-				.WithOptions(EntityQueryOptions.IncludePrefab)
-				.Build();
-
-			var entities = entityQuery.ToEntityArray(Allocator.Temp);
+		private NetSectionItem[] GetSections()
+		{
 			var sections = new List<NetSectionItem>();
 
-			for (var i = 0; i < entities.Length; i++)
+			foreach (var prefab in netSectionsSystem.NetSections.Values)
 			{
-				if (!prefabSystem.TryGetPrefab<NetSectionPrefab>(entities[i], out var prefab))
+				if (prefab.Has<RoadBuilderLaneGroupItem>())
+				{
+					continue;
+				}
+
+				if (!prefab.MatchCategories(activeConfig))
 				{
 					continue;
 				}
@@ -59,12 +61,29 @@ namespace RoadBuilder.Systems.UI
 				sections.Add(new NetSectionItem
 				{
 					PrefabName = prefab.name,
-					DisplayName = GetAssetName(prefab),
-					Thumbnail = ImageSystem.GetThumbnail(prefab)
+					DisplayName = prefab.name,//GetAssetName(prefab),
+					Thumbnail = ImageSystem.GetIcon(prefab),
+					Width = prefab.CalculateWidth()
 				});
 			}
 
-			_NetSections.Value = sections.ToArray();
+			foreach (var prefab in netSectionsSystem.LaneGroups.Values)
+			{
+				if (!prefab.MatchCategories(activeConfig))
+				{
+					continue;
+				}
+
+				sections.Add(new NetSectionItem
+				{
+					IsGroup = true,
+					PrefabName = prefab.name,
+					DisplayName = GetAssetName(prefab),
+					Thumbnail = ImageSystem.GetIcon(prefab)
+				});
+			}
+
+			return sections.ToArray();
 		}
 
 		private string GetAssetName(PrefabBase prefab)

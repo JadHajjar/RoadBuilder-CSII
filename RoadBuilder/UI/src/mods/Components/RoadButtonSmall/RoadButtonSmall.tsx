@@ -26,15 +26,15 @@ export const RoadButtonSmall = (props: _Props) => {
 
   let dragging = dragState.oldIndex == props.index;
   let onMouseEnter = useCallback(() => {
-    if (containerRef.current == null) {      
+    if (containerRef.current == null) {
       return;
     }
     let bounds = containerRef.current.getBoundingClientRect();
-    let position : Number2 = {
-      x: bounds.x + (bounds.width / 2),
-      y: bounds.top - (20 * rem)
+    let position: Number2 = {
+      x: bounds.x + bounds.width / 2,
+      y: bounds.top - 20 * rem,
     };
-    laneCtx.open(props.roadLane, props.index, position);    
+    laneCtx.open(props.roadLane, props.index, position);
   }, [containerRef.current, laneCtx.open]);
 
   let updateModDragItem = () => {
@@ -54,13 +54,13 @@ export const RoadButtonSmall = (props: _Props) => {
   return (
     <div ref={containerRef} className={styles.container} onMouseEnter={onMouseEnter}>
       <div className={classNames(styles.button, { [styles.dragging]: dragging })} onMouseDown={onMouseDown}>
-        <img src="Media/Placeholder.svg" />
+        <img src={props.roadLane.NetSection?.Thumbnail ?? "Media/Placeholder.svg"} className={props.roadLane.Invert && styles.inverted} />
       </div>
       <div className={styles.informationBar}>
         <div className={styles.laneDesign}>
           <img className={classNames(styles.arrow, props.roadLane.Invert ? styles.down : styles.up)} />
         </div>
-        <div className={styles.laneName}>{props.roadLane.Width! > 0 && props.roadLane.Width + " m"}</div>
+        <div className={styles.laneName}>{props.roadLane.NetSection!.Width! > 0 && props.roadLane.NetSection?.Width + " m"}</div>
       </div>
     </div>
   );

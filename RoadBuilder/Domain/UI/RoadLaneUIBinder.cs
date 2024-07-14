@@ -1,6 +1,6 @@
 ﻿using Colossal.UI.Binding;
 
-using RoadBuilder.Domain.Configuration;
+using RoadBuilder.Domain.Configurations;
 
 using System.Collections.Generic;
 
@@ -9,9 +9,9 @@ namespace RoadBuilder.Domain.UI
 	public class RoadLaneUIBinder : IJsonReadable
 	{
 		public string SectionPrefabName;
+		public bool IsGroup;
 		public int Index;
 		public bool Invert;
-		public float Width;
 		public NetSectionItem NetSection;
 		public List<OptionSectionUIEntry> Options;
 
@@ -19,7 +19,8 @@ namespace RoadBuilder.Domain.UI
 		{
 			return new LaneConfig
 			{
-				SectionPrefabName = SectionPrefabName,
+				SectionPrefabName = IsGroup ? null : SectionPrefabName,
+				GroupPrefabName = IsGroup ? SectionPrefabName : null,
 				Invert = Invert
 			};
 		}
@@ -31,6 +32,11 @@ namespace RoadBuilder.Domain.UI
 			if (reader.ReadProperty(nameof(SectionPrefabName)))
 			{
 				reader.Read(out SectionPrefabName);
+			}
+
+			if (reader.ReadProperty(nameof(IsGroup)))
+			{
+				reader.Read(out IsGroup);
 			}
 
 			if (reader.ReadProperty(nameof(Index)))
