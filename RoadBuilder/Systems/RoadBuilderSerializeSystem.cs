@@ -49,6 +49,9 @@ namespace RoadBuilder.Systems
 				case nameof(FenceConfig):
 					prefab = new FenceBuilderPrefab(new FenceConfig { ID = id });
 					break;
+				case nameof(PathConfig):
+					prefab = new PathBuilderPrefab(new PathConfig { ID = id });
+					break;
 				default:
 					return;
 			}

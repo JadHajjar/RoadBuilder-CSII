@@ -41,7 +41,7 @@ namespace RoadBuilder.LaneGroups
 				},
 				new()
 				{
-					DefaultValue = "3.5",
+					DefaultValue = "3.5m",
 					IsValue = true,
 					Name = OptionName2,
 					Options = new RoadBuilderLaneOptionItemInfo[]

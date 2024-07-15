@@ -48,6 +48,11 @@ namespace RoadBuilder.Utilities
 				return new FenceBuilderPrefab(fenceConfig);
 			}
 
+			if (config is PathConfig pathConfig)
+			{
+				return new PathBuilderPrefab(pathConfig);
+			}
+
 			throw new Exception("Unknown config type " + (config?.GetType().Name ?? "NULL"));
 		}
 

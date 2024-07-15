@@ -69,9 +69,9 @@ namespace RoadBuilder.Systems
 		{
 			base.InitializeRaycast();
 
-			m_ToolRaycastSystem.netLayerMask = Layer.Road | Layer.TrainTrack | Layer.TramTrack | Layer.SubwayTrack;
+			m_ToolRaycastSystem.netLayerMask = Layer.Road | Layer.TrainTrack | Layer.TramTrack | Layer.SubwayTrack | Layer.Pathway | Layer.Fence | Layer.PublicTransportRoad;
 			m_ToolRaycastSystem.typeMask = TypeMask.Net;
-			m_ToolRaycastSystem.collisionMask = CollisionMask.Overground | CollisionMask.OnGround | CollisionMask.Underground;
+			m_ToolRaycastSystem.collisionMask = CollisionMask.OnGround;
 		}
 
 		protected override JobHandle OnUpdate(JobHandle inputDeps)
@@ -160,7 +160,7 @@ namespace RoadBuilder.Systems
 				return false;
 			}
 
-			if (prefab is not (RoadPrefab or TrackPrefab or FencePrefab))
+			if (prefab is not (RoadPrefab or TrackPrefab or FencePrefab or PathwayPrefab))
 			{
 				return false;
 			}

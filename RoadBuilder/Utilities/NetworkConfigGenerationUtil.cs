@@ -43,6 +43,10 @@ namespace RoadBuilder.Utilities
 			{
 				config = GenerateFenceConfig(fencePrefab);
 			}
+			else if (NetworkPrefab is PathwayPrefab pathPrefab)
+			{
+				config = GeneratePathConfig(pathPrefab);
+			}
 			else
 			{
 				throw new Exception("Invalid Prefab");
@@ -165,6 +169,17 @@ namespace RoadBuilder.Utilities
 		private INetworkConfig GenerateFenceConfig(FencePrefab _)
 		{
 			var config = new FenceConfig();
+
+			config.Category |= RoadCategory.Fence;
+
+			return config;
+		}
+
+		private INetworkConfig GeneratePathConfig(PathwayPrefab _)
+		{
+			var config = new PathConfig();
+
+			config.Category |= RoadCategory.Pathway;
 
 			return config;
 		}

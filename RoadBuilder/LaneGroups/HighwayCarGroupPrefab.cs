@@ -28,7 +28,7 @@ namespace RoadBuilder.LaneGroups
 						},
 						new()
 						{
-							Value = "Transport" ,
+							Value = "Transport",
 							ThumbnailUrl = "coui://roadbuildericons/RB_BusWhite.svg"
 						},
 					}
