@@ -48,6 +48,11 @@ namespace RoadBuilder.Utilities
 				return new FenceBuilderPrefab(fenceConfig);
 			}
 
+			if (config is PathConfig pathConfig)
+			{
+				return new PathBuilderPrefab(pathConfig);
+			}
+
 			throw new Exception("Unknown config type " + (config?.GetType().Name ?? "NULL"));
 		}
 
@@ -422,11 +427,13 @@ namespace RoadBuilder.Utilities
 					m_Section = _roadGenerationData.NetSectionPrefabs["Water Pipe Section 1"],
 					m_Offset = new float3(0, -0.85f, 0)
 				};
+
 				yield return new NetSectionInfo
 				{
 					m_Section = _roadGenerationData.NetSectionPrefabs["Pipeline Spacing Section 1"],
 					m_Offset = new float3(0, -1.45f, 0)
 				};
+
 				yield return new NetSectionInfo
 				{
 					m_Section = _roadGenerationData.NetSectionPrefabs["Stormwater Pipe Section 1.5"],
@@ -496,6 +503,11 @@ namespace RoadBuilder.Utilities
 				service = "Roads";
 				group = "RoadsHighways";
 			}
+			else if (NetworkPrefab.Config.Category.HasFlag(RoadCategory.Pathway))
+			{
+				service = "Landscaping";
+				group = "Pathways";
+			}
 			else if (NetworkPrefab is RoadPrefab)
 			{
 				service = "Roads";
@@ -559,6 +571,11 @@ namespace RoadBuilder.Utilities
 				return "Tiled Side 0";
 			}
 
+			if (NetworkPrefab.Config.Category.HasFlag(RoadCategory.Pathway))
+			{
+				return "Pavement Path Side Section 0";
+			}
+
 			return "Alley Side 0";
 		}
 
@@ -592,6 +609,11 @@ namespace RoadBuilder.Utilities
 			if (NetworkPrefab.Config.Category.HasFlag(RoadCategory.Tiled))
 			{
 				return "Tiled Median 2";
+			}
+
+			if (NetworkPrefab.Config.Category.HasFlag(RoadCategory.PublicTransport))
+			{
+				return "Public Transport Median 0";
 			}
 
 			if (NetworkPrefab.Config.Category.HasFlag(RoadCategory.RaisedSidewalk))

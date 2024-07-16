@@ -48,7 +48,7 @@ namespace RoadBuilder.Systems.UI
 
 			foreach (var prefab in netSectionsSystem.NetSections.Values)
 			{
-				if (prefab.Has<RoadBuilderLaneGroupItem>())
+				if (prefab.Has<RoadBuilderLaneGroupItem>() || prefab.Has<RoadBuilderHideComponent>())
 				{
 					continue;
 				}

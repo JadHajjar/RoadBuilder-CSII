@@ -58,6 +58,9 @@ namespace RoadBuilder.Utilities
 						case nameof(FenceConfig):
 							list.Add(JSON.MakeInto<FenceConfig>(json));
 							break;
+						case nameof(PathConfig):
+							list.Add(JSON.MakeInto<PathConfig>(json));
+							break;
 						default:
 							break;
 					}

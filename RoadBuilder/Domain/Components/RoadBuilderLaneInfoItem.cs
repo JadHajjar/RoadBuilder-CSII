@@ -23,5 +23,29 @@ namespace RoadBuilder.Domain.Components
 
 		public override void GetPrefabComponents(HashSet<ComponentType> components)
 		{ }
+
+		public RoadBuilderLaneInfoItem WithRequired(RoadCategory roadCategory)
+		{
+			RequiredCategories = roadCategory;
+			return this;
+		}
+
+		public RoadBuilderLaneInfoItem WithExcluded(RoadCategory roadCategory)
+		{
+			ExcludedCategories = roadCategory;
+			return this;
+		}
+
+		public RoadBuilderLaneInfoItem WithFrontThumbnail(string thumbnail)
+		{
+			FrontThumbnail = thumbnail;
+			return this;
+		}
+
+		public RoadBuilderLaneInfoItem WithBackThumbnail(string thumbnail)
+		{
+			BackThumbnail = thumbnail;
+			return this;
+		}
 	}
 }

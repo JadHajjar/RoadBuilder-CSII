@@ -107,6 +107,7 @@ namespace RoadBuilder.Systems
 					nameof(RoadConfig) => new RoadConfig(),
 					nameof(TrackConfig) => new TrackConfig(),
 					nameof(FenceConfig) => new FenceConfig(),
+					nameof(PathConfig) => new PathConfig(),
 					_ => throw new System.Exception("Unknown Configuration Type: " + type),
 				};
 

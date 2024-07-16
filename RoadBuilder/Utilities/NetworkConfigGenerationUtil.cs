@@ -43,6 +43,10 @@ namespace RoadBuilder.Utilities
 			{
 				config = GenerateFenceConfig(fencePrefab);
 			}
+			else if (NetworkPrefab is PathwayPrefab pathPrefab)
+			{
+				config = GeneratePathConfig(pathPrefab);
+			}
 			else
 			{
 				throw new Exception("Invalid Prefab");
@@ -90,6 +94,11 @@ namespace RoadBuilder.Utilities
 			// remove sides
 			config.Lanes.RemoveAt(0);
 			config.Lanes.RemoveAt(config.Lanes.Count - 1);
+
+			if (NetworkPrefab.m_Sections[(NetworkPrefab.m_Sections.Length - 1) / 2].m_Section.CalculateWidth() == 0)
+			{
+				config.Lanes.RemoveAt((config.Lanes.Count - 1) / 2);
+			}
 
 			return config;
 		}
@@ -165,6 +174,17 @@ namespace RoadBuilder.Utilities
 		private INetworkConfig GenerateFenceConfig(FencePrefab _)
 		{
 			var config = new FenceConfig();
+
+			config.Category |= RoadCategory.Fence;
+
+			return config;
+		}
+
+		private INetworkConfig GeneratePathConfig(PathwayPrefab _)
+		{
+			var config = new PathConfig();
+
+			config.Category |= RoadCategory.Pathway;
 
 			return config;
 		}

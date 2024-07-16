@@ -1,17 +1,18 @@
 ﻿using Game.Prefabs;
 
 using RoadBuilder.Domain.Components;
+using RoadBuilder.Domain.Enums;
 
 using System.Collections.Generic;
 
 namespace RoadBuilder.LaneGroups
 {
-	public class RoadSidewalkGroupPrefab : BaseLaneGroupPrefab
+	public class SidewalkGroupPrefab : BaseLaneGroupPrefab
 	{
 		private const string OptionName1 = "Parking";
 		private const string OptionName2 = "Width";
 
-		public RoadSidewalkGroupPrefab(Dictionary<string, NetSectionPrefab> sections) : base(sections)
+		public SidewalkGroupPrefab(Dictionary<string, NetSectionPrefab> sections) : base(sections)
 		{
 			DisplayName = "Sidewalk";
 			Options = new RoadBuilderLaneOptionInfo[]
@@ -41,7 +42,7 @@ namespace RoadBuilder.LaneGroups
 				},
 				new()
 				{
-					DefaultValue = "3.5",
+					DefaultValue = "3.5m",
 					IsValue = true,
 					Name = OptionName2,
 					Options = new RoadBuilderLaneOptionItemInfo[]
@@ -56,8 +57,7 @@ namespace RoadBuilder.LaneGroups
 				}
 			};
 
-			var laneInfo = AddComponent<RoadBuilderLaneInfoItem>();
-			laneInfo.RequiredCategories = Domain.Enums.RoadCategory.RaisedSidewalk;
+			AddComponent<RoadBuilderLaneInfoItem>().WithRequired(RoadCategory.RaisedSidewalk);
 
 			var uiObj = AddComponent<UIObject>();
 			uiObj.m_Icon = "coui://roadbuildericons/RB_WideSidewalkRight.svg";

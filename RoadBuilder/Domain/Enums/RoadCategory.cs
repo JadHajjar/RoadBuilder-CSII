@@ -14,7 +14,10 @@ namespace RoadBuilder.Domain.Enums
 		Gravel = 32,
 		Tiled = 64,
 		RaisedSidewalk = 128,
-		NonRoad = Highway | PublicTransport | Train | Tram | Subway | Gravel | Tiled,
-		NoRaisedSidewalkSupport = Train | Subway | Gravel | Tiled
+		Fence = 256,
+		Pathway = 512,
+		NonAsphalt = Train | Tram | Subway | Gravel | Tiled | Fence | Pathway,
+		NonRoad = Highway | PublicTransport | Train | Tram | Subway | Gravel | Tiled | Fence | Pathway,
+		NoRaisedSidewalkSupport = Train | Subway | Gravel | Fence | Pathway,
 	}
 }
