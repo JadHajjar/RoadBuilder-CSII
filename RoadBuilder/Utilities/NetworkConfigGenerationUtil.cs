@@ -95,6 +95,11 @@ namespace RoadBuilder.Utilities
 			config.Lanes.RemoveAt(0);
 			config.Lanes.RemoveAt(config.Lanes.Count - 1);
 
+			if (NetworkPrefab.m_Sections[(NetworkPrefab.m_Sections.Length - 1) / 2].m_Section.CalculateWidth() == 0)
+			{
+				config.Lanes.RemoveAt((config.Lanes.Count - 1) / 2);
+			}
+
 			return config;
 		}
 

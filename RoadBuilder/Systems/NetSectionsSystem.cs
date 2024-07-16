@@ -1,9 +1,12 @@
-﻿using Game;
+﻿using Colossal.IO.AssetDatabase.Internal;
+
+using Game;
 using Game.Common;
 using Game.Prefabs;
 using Game.SceneFlow;
 
 using RoadBuilder.Domain.Components;
+using RoadBuilder.Domain.Enums;
 using RoadBuilder.Domain.Prefabs;
 using RoadBuilder.LaneGroups;
 
@@ -19,7 +22,7 @@ namespace RoadBuilder.Systems
 	{
 		private PrefabSystem prefabSystem;
 		private EntityQuery prefabQuery;
-		private bool customGroupsAdded;
+		private bool customSectionsSetUp;
 
 		public event Action SectionsAdded;
 
@@ -45,24 +48,53 @@ namespace RoadBuilder.Systems
 				if (prefabSystem.TryGetPrefab<NetSectionPrefab>(entities[i], out var prefab))
 				{
 					NetSections[prefab.name] = prefab;
-
-					if (_blacklist.Contains(prefab.name))
-					{
-						prefab.AddOrGetComponent<RoadBuilderHideComponent>();
-					}
 				}
 			}
 
-			if (!customGroupsAdded && NetSections.Count > 0)
+			if (!customSectionsSetUp && NetSections.Count > 0)
 			{
 				AddCustomGroups();
 
+				AddCustomPrefabComponents();
+
 				GameManager.instance.localizationManager.ReloadActiveLocale();
 
-				customGroupsAdded = true;
+				customSectionsSetUp = true;
 			}
 
 			SectionsAdded?.Invoke();
+		}
+
+		private void AddCustomPrefabComponents()
+		{
+			_blacklist.ForEach(x => NetSections[x].AddOrGetComponent<RoadBuilderHideComponent>());
+
+			SetUp("Tram Track Section 3", "coui://roadbuildericons/RB_TramFront.svg")
+				.WithExcluded(RoadCategory.Gravel | RoadCategory.Tiled | RoadCategory.Pathway | RoadCategory.Fence)
+				.WithFrontThumbnail("coui://roadbuildericons/RB_TramFront.svg")
+				.WithBackThumbnail("coui://roadbuildericons/RB_TramRear.svg");
+
+			SetUp("Gravel Drive Section 3", "").WithRequired(RoadCategory.Gravel);
+			SetUp("Pavement Path Section 3", "").WithRequired(RoadCategory.Pathway);
+			SetUp("Tiled Drive Section 3", "").WithRequired(RoadCategory.Tiled);
+			SetUp("Tiled Pedestrian Section 3", "").WithRequired(RoadCategory.Tiled);
+			SetUp("Tiled Section 3", "").WithRequired(RoadCategory.Tiled);
+			SetUp("Tiled Median Pedestrian 2", "").WithRequired(RoadCategory.Tiled);
+			SetUp("Tiled Median 2", "").WithRequired(RoadCategory.Tiled);
+			SetUp("Sound Barrier 1", "").WithExcluded(RoadCategory.RaisedSidewalk);
+			SetUp("Grass", "Media/Game/Icons/Grass.svg").WithExcluded(RoadCategory.NoRaisedSidewalkSupport);
+			SetUp("Trees", "Media/Game/Icons/Trees.svg").WithExcluded(RoadCategory.NoRaisedSidewalkSupport);
+			SetUp("Subway Median 8", "").WithRequired(RoadCategory.Subway | RoadCategory.Train | RoadCategory.Tram);
+			SetUp("Subway Median 8 - Plain", "").WithRequired(RoadCategory.Subway | RoadCategory.Train);
+		}
+
+		private RoadBuilderLaneInfoItem SetUp(string prefabName, string thumbnail)
+		{
+			var prefab = NetSections[prefabName];
+
+			prefab.AddOrGetComponent<UIObject>().m_Icon = thumbnail;
+
+			return prefab.AddOrGetComponent<RoadBuilderLaneInfoItem>();
 		}
 
 		private void AddCustomGroups()
@@ -86,6 +118,14 @@ namespace RoadBuilder.Systems
 		private readonly HashSet<string> _blacklist = new()
 		{
 			"Missing Net Section",
+			"Road Median 0",
+			"Highway Median 0",
+			"Alley Median 0",
+			"Tram Median 0",
+			"Train Median 0",
+			"Subway Median 0",
+			"Public Transport Median 0",
+			"Gravel Median 0",
 			"Alley Side 0",
 			"Road Side 0",
 			"Highway Side 0",
@@ -110,12 +150,12 @@ namespace RoadBuilder.Systems
 			"Low-voltage Marker Section - Small",
 			"Small Water Marker Section",
 			"Invisible Car Bay Section 3",
-			"Invisible Airplane Airspace",
-			"Invisible Helicopter Twoway Section",
+			"Invisible Airplane Airspace Section 75",
+			"Invisible Helicopter Twoway Section 12",
 			"Invisible Helicopter Edge Section 0",
-			"Invisible Airplane Twoway Section",
-			"Invisible Airplane Oneway Section",
-			"Invisible Airplane Runway Section",
+			"Invisible Airplane Twoway Section 60",
+			"Invisible Airplane Oneway Section 60",
+			"Invisible Airplane Runway Section 75",
 			"Invisible Airplane Edge Section 0",
 			"Waterway Median Section 0",
 			"Ship Drive Section 50",
@@ -126,7 +166,7 @@ namespace RoadBuilder.Systems
 			"Water Pipe Section 1",
 			"Stormwater Pipe Section 1.5",
 			"Pipeline Spacing Section 1",
-			"Pipeline Spacing Section 1",
+			"Pipeline Spacing Section 2",
 			"Sewage Pipe Section 4",
 			"Sewage Pipe Section 2",
 			"Sewage Pipe Section 1.5",
@@ -141,7 +181,7 @@ namespace RoadBuilder.Systems
 			"Traffic Lights",
 			"Wide Sidewalk",
 			"Wooden Covered Bridge Shoulder",
-			"2-Lane Wooden Covered Bridge",
+			"2-Lane Wooden Covered  Bridge",
 			"2-Lane Truss Arch Bridge",
 			"Highway Shoulder 2",
 			"2-Lane Suspension Bridge",
