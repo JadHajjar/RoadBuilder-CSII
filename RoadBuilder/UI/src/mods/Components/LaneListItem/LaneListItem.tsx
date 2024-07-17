@@ -1,4 +1,4 @@
-import { Number2, Tooltip } from "cs2/ui";
+import { Button, Number2, Tooltip } from "cs2/ui";
 import styles from "./LaneListItem.module.scss";
 import { NetSectionItem } from "domain/NetSectionItem";
 import { CSSProperties, MouseEventHandler, forwardRef, useContext, useEffect, useRef, useState } from "react";
@@ -6,6 +6,7 @@ import classNames from "classnames";
 import { DragContext } from "mods/Contexts/DragContext";
 import { MouseButtons } from "mods/util";
 import { NetSectionsStoreContext } from "mods/Contexts/NetSectionsStore";
+import { VanillaComponentResolver } from "vanillacomponentresolver";
 
 export const LaneListItem = ({ netSection }: { netSection: NetSectionItem }) => {
   // let [dragging, setDragging] = useState(false);
@@ -30,14 +31,30 @@ export const LaneListItem = ({ netSection }: { netSection: NetSectionItem }) => 
   };
 
   return (
-    <Tooltip tooltip={netSection.DisplayName}>
-      <div onMouseDown={onMouseDown} className={classNames(styles.container, containerStyles)}>
-        <div className={styles.item + " " + (dragging ? styles.moving : "")}>
-          <img className={styles.image} src={netSection.Thumbnail ?? "Media/Placeholder.svg"} />
-          <div className={styles.label}>{netSection.DisplayName}</div>
-        </div>
+    <Button
+      onMouseDown={onMouseDown}
+      className={classNames(VanillaComponentResolver.instance.assetGridTheme.item, styles.gridItem, dragging && styles.moving)}
+      variant="icon"
+      focusKey={VanillaComponentResolver.instance.FOCUS_DISABLED}
+    >
+      <img
+        src={netSection.Thumbnail ?? "Media/Placeholder.svg"}
+        className={classNames(VanillaComponentResolver.instance.assetGridTheme.thumbnail, styles.gridThumbnail)}
+      />
+
+      <div className={classNames(styles.gridItemText)}>
+        <p>{netSection.DisplayName}</p>
       </div>
-    </Tooltip>
+
+      {/* THIS IS FOR LATER IN CASE WE WANT CATEGORY ICONS NEXT TO THE LANES
+        <div className={styles.rightSideContainer}>
+          {props.showCategory && <img src={props.prefab.categoryThumbnail}></img>}
+
+          {props.prefab.dlcThumbnail && <img src={props.prefab.dlcThumbnail}></img>}
+
+          {props.prefab.random && <img src="coui://uil/Colored/Dice.svg"></img>}
+        </div>*/}
+    </Button>
   );
 };
 
@@ -66,14 +83,22 @@ export const LaneListItemDrag = forwardRef<HTMLDivElement>((props, ref) => {
 
   let offsetStyle: CSSProperties = {
     left: `calc( ${dragData.mousePosition.x}px - 40rem)`,
-    top: `calc( ${dragData.mousePosition.y}px - 30rem)`,
+    top: `calc( ${dragData.mousePosition.y}px - 40rem)`,
   };
-  let containerClasses = classNames(styles.item, styles.dragRepresentation, { [styles.bottomRow]: dragType == DragType.Order });
+  let containerClasses = classNames(
+    VanillaComponentResolver.instance.assetGridTheme.item,
+    styles.gridItem,
+    styles.dragged,
+    styles.dragRepresentation,
+    { [styles.bottomRow]: dragType == DragType.Order }
+  );
 
   return (
     <div style={offsetStyle} className={containerClasses} ref={ref}>
-      <img className={styles.image} src={netSection.Thumbnail} />
-      <div className={styles.label}>{netSection.DisplayName}</div>
+      <img
+        src={netSection.Thumbnail ?? "Media/Placeholder.svg"}
+        className={classNames(VanillaComponentResolver.instance.assetGridTheme.thumbnail, styles.gridThumbnail)}
+      />
     </div>
   );
 });

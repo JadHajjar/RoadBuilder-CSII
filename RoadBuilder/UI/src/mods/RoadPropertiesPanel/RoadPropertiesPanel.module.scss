@@ -4,7 +4,7 @@
   position: absolute;
   left: 10rem;
   bottom: 10rem + _base.$bottomBarOffset + _base.$bottomBarHeight;
-  width: 275rem;
+  width: 300rem;
   padding: 10rem 0;
   background-color: var(--panelColorNormal);
   backdrop-filter: var(--panelBlur);
@@ -26,4 +26,5 @@
 
 .textInput {
   @include _base.textInputBasic();
+  width: 175rem;
 }

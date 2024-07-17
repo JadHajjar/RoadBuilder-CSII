@@ -3,13 +3,13 @@ import styles from "./EditPropertiesPopup.module.scss";
 import { Button, Number2 } from "cs2/ui";
 import { CSSProperties, useContext } from "react";
 import { useRem } from "cs2/utils";
-import { RoadLane } from "domain/RoadProperties";
 import { OptionsPanelComponent } from "../OptionsPanel/OptionsPanel";
 import { LanePropertiesContext } from "mods/Contexts/LanePropertiesContext";
 import { NetSectionsStoreContext } from "mods/Contexts/NetSectionsStore";
 import { useValue } from "cs2/api";
 import { roadLanes$, setRoadLanes } from "mods/bindings";
 import { removeAt } from "mods/util";
+import { laneOptionClicked } from "mods/bindings";
 
 export const EditPropertiesPopup = () => {
   let rem = useRem();
@@ -41,7 +41,10 @@ export const EditPropertiesPopup = () => {
       <div className={styles.content}>
         <div className={styles.options}>
           {currentLane.Options && currentLane.Options.length !== 0 ? (
-            <OptionsPanelComponent Index={currentLane.Index} options={currentLane.Options}></OptionsPanelComponent>
+            <OptionsPanelComponent
+              OnChange={(x, y, z) => laneOptionClicked(currentLane.Index, x, y, z)}
+              options={currentLane.Options}
+            ></OptionsPanelComponent>
           ) : (
             <span> No Options Available</span>
           )}

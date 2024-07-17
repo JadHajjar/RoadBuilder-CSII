@@ -8,11 +8,14 @@
 
   background-color: var(--panelColorNormal);
   backdrop-filter: var(--panelBlur);
-  border-radius: var(--panelRadius);
+  border-bottom-left-radius: var(--panelRadius);
+  border-bottom-right-radius: var(--panelRadius);
+  border-top-left-radius: var(--panelRadius);
+  border-top-right-radius: var(--panelRadius);
 
   pointer-events: auto;
 
-  padding: 8rem 4rem;
+  padding: 6rem;
   overflow: hidden;
 
   animation: entry 0.2s;

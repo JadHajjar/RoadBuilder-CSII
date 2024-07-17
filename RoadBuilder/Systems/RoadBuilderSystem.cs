@@ -14,6 +14,7 @@ using RoadBuilder.Domain;
 using RoadBuilder.Domain.Components;
 using RoadBuilder.Domain.Configurations;
 using RoadBuilder.Domain.Prefabs;
+using RoadBuilder.Systems.UI;
 using RoadBuilder.Utilities;
 using RoadBuilder.Utilities.Searcher;
 
@@ -378,35 +379,22 @@ namespace RoadBuilder.Systems
 				}
 			}
 
-
-			var NetPieceDataq = SystemAPI.QueryBuilder().WithAll<NetPieceData>().Build();
+			var NetPieceDataq = SystemAPI.QueryBuilder().WithAll<NetLaneData>().Build();
 			var NetPieceDatae = NetPieceDataq.ToEntityArray(Allocator.Temp);
-
-			Mod.Log.Debug($"Processing: {RoadGenerationData.ZoneBlockPrefab.name}");
-			foreach (var item in RoadGenerationData.ZoneBlockPrefab.components)
-			{
-				Mod.Log.Debug($"\t> {item.GetType().Name} - {Regex.Replace(JSON.Dump(item), "[\n\r]", " ")}");
-			}
-
-			for (var i = 0; i < netSectionDataEntities.Length; i++)
-			{
-				if (prefabSystem.TryGetPrefab<NetSectionPrefab>(netSectionDataEntities[i], out var prefab))
-				{
-					Mod.Log.Debug($"Processing: {prefab.name}");
-					foreach (var item in prefab.components)
-					{
-						Mod.Log.Debug($"\t> {item.GetType().Name} - {Regex.Replace(JSON.Dump(item), "[\n\r]", " ")}");
-					}
-				}
-			}
+			//Game.Prefabs.TrackLane
+			//Game.Prefabs.CarLane
+			//Game.Prefabs.AuxiliaryLanes
+			//Game.Prefabs.PedestrianLane
+			//Game.Prefabs.ParkingLane
+			//Game.Prefabs.UtilityLane
 			for (var i = 0; i < NetPieceDatae.Length; i++)
 			{
-				if (prefabSystem.TryGetPrefab<NetPiecePrefab>(NetPieceDatae[i], out var prefab))
+				if (prefabSystem.TryGetPrefab<NetLanePrefab>(NetPieceDatae[i], out var prefab))
 				{
 					Mod.Log.Debug($"Processing: {prefab.name}");
 					foreach (var item in prefab.components)
 					{
-						Mod.Log.Debug($"\t> {item.GetType().Name} - {Regex.Replace(JSON.Dump(item), "[\n\r]", " ")}");
+						Mod.Log.Debug($"\t> {item.GetType().Name} ");
 					}
 				}
 			}

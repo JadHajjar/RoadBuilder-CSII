@@ -21,7 +21,7 @@ using Unity.Entities;
 
 namespace RoadBuilder.Systems.UI
 {
-    public partial class RoadBuilderUISystem : ExtendedUISystemBase
+	public partial class RoadBuilderUISystem : ExtendedUISystemBase
 	{
 		private Entity workingEntity;
 
@@ -34,8 +34,9 @@ namespace RoadBuilder.Systems.UI
 		private SimulationSystem simulationSystem;
 		private NetSectionsUISystem netSectionsUISystem;
 		private ValueBindingHelper<RoadBuilderToolMode> RoadBuilderMode;
-		private ValueBindingHelper<RoadPropertiesUIBinder> RoadProperties;
+		private ValueBindingHelper<string> RoadName;
 		private ValueBindingHelper<RoadLaneUIBinder[]> RoadLanes;
+		private ValueBindingHelper<OptionSectionUIEntry[]> RoadOptions;
 		private ValueBindingHelper<bool> IsPaused;
 
 		public RoadBuilderToolMode Mode { get => RoadBuilderMode; set => RoadBuilderMode.Value = value; }
@@ -57,12 +58,17 @@ namespace RoadBuilder.Systems.UI
 			toolSystem.EventToolChanged += OnToolChanged;
 
 			RoadBuilderMode = CreateBinding("RoadBuilderToolMode", RoadBuilderToolMode.None);
-			RoadProperties = CreateBinding("GetRoadProperties", new RoadPropertiesUIBinder());
+			RoadName = CreateBinding("GetRoadName", "SetRoadName", string.Empty, name =>
+			{
+				UpdateRoad(x => x.Name = name);
+				GameManager.instance.localizationManager.ReloadActiveLocale();
+			});
 			RoadLanes = CreateBinding("GetRoadLanes", new RoadLaneUIBinder[0]);
+			RoadOptions = CreateBinding("GetRoadOptions", new OptionSectionUIEntry[0]);
 			IsPaused = CreateBinding("IsPaused", simulationSystem.selectedSpeed == 0f);
 
-			CreateTrigger<RoadPropertiesUIBinder>("SetRoadProperties", x => UpdateRoad(c => UpdateProperties(c, x)));
 			CreateTrigger<RoadLaneUIBinder[]>("SetRoadLanes", x => UpdateRoad(c => UpdateLaneOrder(c, x)));
+			CreateTrigger<int, int, int>("RoadOptionClicked", (x, y, z) => UpdateRoad(c => RoadOptionClicked(c, x, y, z)));
 			CreateTrigger<int, int, int, int>("OptionClicked", (i, x, y, z) => UpdateRoad(c => LaneOptionClicked(c, i, x, y, z)));
 			CreateTrigger("ToggleTool", ToggleTool);
 			CreateTrigger("CreateNewPrefab", () => CreateNewPrefab(workingEntity));
@@ -133,7 +139,8 @@ namespace RoadBuilder.Systems.UI
 			}
 
 			netSectionsUISystem.RefreshEntries(config);
-			RoadProperties.Value = RoadPropertiesUIBinder.From(config);
+			RoadName.Value = config.Name;
+			RoadOptions.Value = RoadOptionsUtil.GetRoadOptions(config);
 			RoadLanes.Value = From(config, roadBuilderSystem.RoadGenerationData);
 		}
 
@@ -154,15 +161,9 @@ namespace RoadBuilder.Systems.UI
 			roadBuilderSystem.UpdateRoad(config, workingEntity, createNew);
 
 			RoadBuilderMode.Value = RoadBuilderToolMode.Editing;
-			RoadProperties.Value = RoadPropertiesUIBinder.From(config);
+			RoadName.Value = config.Name;
+			RoadOptions.Value = RoadOptionsUtil.GetRoadOptions(config);
 			RoadLanes.Value = From(config, roadBuilderSystem.RoadGenerationData);
-		}
-
-		private void UpdateProperties(INetworkConfig config, RoadPropertiesUIBinder roadProperties)
-		{
-			roadProperties.Fill(config);
-
-			GameManager.instance.localizationManager.ReloadActiveLocale();
 		}
 
 		private void UpdateLaneOrder(INetworkConfig config, RoadLaneUIBinder[] roadLanes)
@@ -184,6 +185,11 @@ namespace RoadBuilder.Systems.UI
 			}
 
 			config.Lanes = newLanes;
+		}
+
+		private void RoadOptionClicked(INetworkConfig config, int option, int id, int value)
+		{
+			RoadOptionsUtil.OptionClicked(config, option, id, value);
 		}
 
 		private void LaneOptionClicked(INetworkConfig config, int index, int option, int id, int value)
