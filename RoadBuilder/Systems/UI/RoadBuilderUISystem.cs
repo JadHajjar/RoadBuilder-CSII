@@ -6,7 +6,7 @@ using Game.UI;
 using Game.UI.InGame;
 
 using RoadBuilder.Domain;
-using RoadBuilder.Domain.Components;
+using RoadBuilder.Domain.Components.Prefabs;
 using RoadBuilder.Domain.Configurations;
 using RoadBuilder.Domain.Enums;
 using RoadBuilder.Domain.Prefabs;
@@ -21,7 +21,7 @@ using Unity.Entities;
 
 namespace RoadBuilder.Systems.UI
 {
-	public partial class RoadBuilderUISystem : ExtendedUISystemBase
+    public partial class RoadBuilderUISystem : ExtendedUISystemBase
 	{
 		private Entity workingEntity;
 
@@ -228,7 +228,7 @@ namespace RoadBuilder.Systems.UI
 
 		private static string GetThumbnail(NetSectionPrefab section, LaneGroupPrefab groupPrefab, bool invert)
 		{
-			if (section.TryGet<RoadBuilderLaneInfoItem>(out var sectionInfo))
+			if (section.TryGet<RoadBuilderLaneInfo>(out var sectionInfo))
 			{
 				if (!string.IsNullOrEmpty(invert ? sectionInfo.FrontThumbnail : sectionInfo.BackThumbnail))
 				{
@@ -241,7 +241,7 @@ namespace RoadBuilder.Systems.UI
 				return sectionIcon;
 			}
 
-			if (groupPrefab?.TryGet<RoadBuilderLaneInfoItem>(out var groupInfo) ?? false)
+			if (groupPrefab?.TryGet<RoadBuilderLaneInfo>(out var groupInfo) ?? false)
 			{
 				if (!string.IsNullOrEmpty(invert ? groupInfo.FrontThumbnail : groupInfo.BackThumbnail))
 				{

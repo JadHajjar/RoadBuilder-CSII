@@ -3,7 +3,7 @@ using Game.SceneFlow;
 using Game.UI.InGame;
 
 using RoadBuilder.Domain;
-using RoadBuilder.Domain.Components;
+using RoadBuilder.Domain.Components.Prefabs;
 using RoadBuilder.Domain.Configurations;
 using RoadBuilder.Domain.Enums;
 
@@ -12,7 +12,7 @@ using System.Linq;
 
 namespace RoadBuilder.Utilities
 {
-	public class NetworkConfigGenerationUtil
+    public class NetworkConfigGenerationUtil
 	{
 		private readonly RoadGenerationData _roadGenerationData;
 		private readonly PrefabUISystem _prefabUISystem;
@@ -105,7 +105,7 @@ namespace RoadBuilder.Utilities
 
 		private static LaneConfig GetLaneConfig(NetSectionInfo section)
 		{
-			if (section.m_Section.TryGet<RoadBuilderLaneGroupItem>(out var groupItem))
+			if (section.m_Section.TryGet<RoadBuilderLaneGroup>(out var groupItem))
 			{
 				return new LaneConfig
 				{

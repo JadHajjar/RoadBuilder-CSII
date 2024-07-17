@@ -3,7 +3,7 @@
 using Game.Prefabs;
 
 using RoadBuilder.Domain;
-using RoadBuilder.Domain.Components;
+using RoadBuilder.Domain.Components.Prefabs;
 using RoadBuilder.Domain.Configurations;
 using RoadBuilder.Domain.Enums;
 using RoadBuilder.Domain.Prefabs;
@@ -18,7 +18,7 @@ using UnityEngine;
 
 namespace RoadBuilder.Utilities
 {
-	public class NetworkPrefabGenerationUtil
+    public class NetworkPrefabGenerationUtil
 	{
 		private readonly RoadGenerationData _roadGenerationData;
 
@@ -292,7 +292,7 @@ namespace RoadBuilder.Utilities
 
 			foreach (var item in group.LinkedSections)
 			{
-				if (!item.TryGet<RoadBuilderLaneGroupItem>(out var groupItem) || !item.MatchCategories(config))
+				if (!item.TryGet<RoadBuilderLaneGroup>(out var groupItem) || !item.MatchCategories(config))
 				{
 					continue;
 				}

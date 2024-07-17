@@ -2,8 +2,7 @@
 using Game.SceneFlow;
 using Game.UI;
 using Game.UI.InGame;
-
-using RoadBuilder.Domain.Components;
+using RoadBuilder.Domain.Components.Prefabs;
 using RoadBuilder.Domain.Configurations;
 using RoadBuilder.Domain.UI;
 using RoadBuilder.Utilities;
@@ -14,7 +13,7 @@ using Unity.Entities;
 
 namespace RoadBuilder.Systems.UI
 {
-	public partial class NetSectionsUISystem : ExtendedUISystemBase
+    public partial class NetSectionsUISystem : ExtendedUISystemBase
 	{
 		private PrefabSystem prefabSystem;
 		private PrefabUISystem prefabUISystem;
@@ -48,7 +47,7 @@ namespace RoadBuilder.Systems.UI
 
 			foreach (var prefab in netSectionsSystem.NetSections.Values)
 			{
-				if (prefab.Has<RoadBuilderLaneGroupItem>() || prefab.Has<RoadBuilderHideComponent>())
+				if (prefab.Has<RoadBuilderLaneGroup>() || prefab.Has<RoadBuilderHide>())
 				{
 					continue;
 				}

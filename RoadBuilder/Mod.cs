@@ -53,6 +53,7 @@ namespace RoadBuilder
 			updateSystem.UpdateBefore<RoadBuilderSerializeSystem>(SystemUpdatePhase.Serialize);
 			updateSystem.UpdateAt<RoadBuilderSystem>(SystemUpdatePhase.Modification1);
 			updateSystem.UpdateAt<RoadBuilderApplyTagSystem>(SystemUpdatePhase.Modification1);
+			updateSystem.UpdateAt<RoadBuilderUpdateSystem>(SystemUpdatePhase.LateUpdate);
 			updateSystem.UpdateAt<RoadBuilderToolSystem>(SystemUpdatePhase.ToolUpdate);
 			updateSystem.UpdateAt<RoadBuilderUISystem>(SystemUpdatePhase.UIUpdate);
 			updateSystem.UpdateAt<NetSectionsUISystem>(SystemUpdatePhase.UIUpdate);

@@ -1,13 +1,12 @@
 ﻿using Game.Prefabs;
-
-using RoadBuilder.Domain.Components;
+using RoadBuilder.Domain.Components.Prefabs;
 using RoadBuilder.Domain.Configurations;
 
 using System.Linq;
 
 namespace RoadBuilder.Utilities
 {
-	public static class NetworkConfigExtensionsUtil
+    public static class NetworkConfigExtensionsUtil
 	{
 		public static bool IsOneWay(this INetworkConfig config)
 		{
@@ -28,7 +27,7 @@ namespace RoadBuilder.Utilities
 
 		public static bool MatchCategories(this PrefabBase prefab, INetworkConfig config)
 		{
-			if (config is null || !prefab.TryGet<RoadBuilderLaneInfoItem>(out var info))
+			if (config is null || !prefab.TryGet<RoadBuilderLaneInfo>(out var info))
 			{
 				return true;
 			}
@@ -39,7 +38,7 @@ namespace RoadBuilder.Utilities
 			return matchesRequired && !matchesExcluded;
 		}
 
-		public static bool MatchCategories(this RoadBuilderLaneInfoItem info, INetworkConfig config)
+		public static bool MatchCategories(this RoadBuilderLaneInfo info, INetworkConfig config)
 		{
 			if (config is null)
 			{

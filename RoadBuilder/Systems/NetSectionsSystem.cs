@@ -4,8 +4,7 @@ using Game;
 using Game.Common;
 using Game.Prefabs;
 using Game.SceneFlow;
-
-using RoadBuilder.Domain.Components;
+using RoadBuilder.Domain.Components.Prefabs;
 using RoadBuilder.Domain.Enums;
 using RoadBuilder.Domain.Prefabs;
 using RoadBuilder.LaneGroups;
@@ -18,7 +17,7 @@ using Unity.Entities;
 
 namespace RoadBuilder.Systems
 {
-	public partial class NetSectionsSystem : GameSystemBase
+    public partial class NetSectionsSystem : GameSystemBase
 	{
 		private PrefabSystem prefabSystem;
 		private EntityQuery prefabQuery;
@@ -67,7 +66,7 @@ namespace RoadBuilder.Systems
 
 		private void AddCustomPrefabComponents()
 		{
-			_blacklist.ForEach(x => NetSections[x].AddOrGetComponent<RoadBuilderHideComponent>());
+			_blacklist.ForEach(x => NetSections[x].AddOrGetComponent<RoadBuilderHide>());
 
 			SetUp("Tram Track Section 3", "coui://roadbuildericons/RB_TramFront.svg")
 				.WithExcluded(RoadCategory.Gravel | RoadCategory.Tiled | RoadCategory.Pathway | RoadCategory.Fence)
@@ -88,13 +87,13 @@ namespace RoadBuilder.Systems
 			SetUp("Subway Median 8 - Plain", "").WithRequired(RoadCategory.Subway | RoadCategory.Train);
 		}
 
-		private RoadBuilderLaneInfoItem SetUp(string prefabName, string thumbnail)
+		private RoadBuilderLaneInfo SetUp(string prefabName, string thumbnail)
 		{
 			var prefab = NetSections[prefabName];
 
 			prefab.AddOrGetComponent<UIObject>().m_Icon = thumbnail;
 
-			return prefab.AddOrGetComponent<RoadBuilderLaneInfoItem>();
+			return prefab.AddOrGetComponent<RoadBuilderLaneInfo>();
 		}
 
 		private void AddCustomGroups()

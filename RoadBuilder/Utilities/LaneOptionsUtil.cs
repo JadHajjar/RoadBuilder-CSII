@@ -1,6 +1,5 @@
 ﻿using Game.Prefabs;
-
-using RoadBuilder.Domain.Components;
+using RoadBuilder.Domain.Components.Prefabs;
 using RoadBuilder.Domain.Configurations;
 using RoadBuilder.Domain.Enums;
 using RoadBuilder.Domain.Prefabs;
@@ -14,7 +13,7 @@ using Unity.Entities;
 
 namespace RoadBuilder.Utilities
 {
-	public static class LaneOptionsUtil
+    public static class LaneOptionsUtil
 	{
 		private enum ActionType
 		{
@@ -109,9 +108,9 @@ namespace RoadBuilder.Utilities
 			}
 		}
 
-		private static bool MatchesOptionValue(NetSectionPrefab section, RoadBuilderLaneOptionInfo option, string currentValue)
+		private static bool MatchesOptionValue(NetSectionPrefab section, RoadBuilderLaneOption option, string currentValue)
 		{
-			var value = section.GetComponent<RoadBuilderLaneGroupItem>().Combination.FirstOrDefault(x => x.OptionName == option.Name)?.Value;
+			var value = section.GetComponent<RoadBuilderLaneGroup>().Combination.FirstOrDefault(x => x.OptionName == option.Name)?.Value;
 
 			if (option.IsDecoration)
 			{
@@ -255,14 +254,14 @@ namespace RoadBuilder.Utilities
 
 				if (!remainingSections.Any(x => MatchesOptionValue(x, option, value)))
 				{
-					lane.GroupOptions[option.Name] = value = remainingSections[0].GetComponent<RoadBuilderLaneGroupItem>().Combination.FirstOrDefault(x => x.OptionName == option.Name)?.Value;
+					lane.GroupOptions[option.Name] = value = remainingSections[0].GetComponent<RoadBuilderLaneGroup>().Combination.FirstOrDefault(x => x.OptionName == option.Name)?.Value;
 				}
 
 				remainingSections.RemoveAll(x => !MatchesOptionValue(x, option, value));
 			}
 		}
 
-		private static string GetSelectedOptionValue(INetworkConfig config, LaneConfig lane, RoadBuilderLaneOptionInfo option)
+		private static string GetSelectedOptionValue(INetworkConfig config, LaneConfig lane, RoadBuilderLaneOption option)
 		{
 			var value = lane.GroupOptions.TryGetValue(option.Name ?? string.Empty, out var val) ? val : option.DefaultValue;
 
