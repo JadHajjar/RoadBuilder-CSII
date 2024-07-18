@@ -19,7 +19,7 @@ namespace RoadBuilder.LaneGroups
 				new()
 				{
 					DefaultValue = "3m",
-					IsValue = true,
+					Type = LaneOptionType.ValueUpDown,
 					Name = OptionName,
 					Options = new RoadBuilderLaneOptionValue[]
 					{
@@ -34,7 +34,7 @@ namespace RoadBuilder.LaneGroups
 				.WithFrontThumbnail("coui://roadbuildericons/RB_BusFront.svg")
 				.WithBackThumbnail("coui://roadbuildericons/RB_BusRear.svg");
 
-			AddComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_BusFront.svg";
+			AddComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_Bus_Centered.svg";
 
 			SetUp(sections["Public Transport Lane Section 3 - Tram Option"], "3m");
 			SetUp(sections["Public Transport Lane Section 4 - Tram Option"], "4m");

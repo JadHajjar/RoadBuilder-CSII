@@ -100,9 +100,10 @@ namespace RoadBuilder.Utilities
 			}
 
 			var matchesRequired = (config.Category & info.RequiredCategories) == info.RequiredCategories;
+			var matchesAny = (config.Category & info.AnyCategories) != 0 || info.AnyCategories == 0;
 			var matchesExcluded = (config.Category & info.ExcludedCategories) != 0;
 
-			return matchesRequired && !matchesExcluded;
+			return matchesRequired && matchesAny && !matchesExcluded;
 		}
 
 		public static bool MatchCategories(this RoadBuilderLaneInfo info, INetworkConfig config)
@@ -113,9 +114,10 @@ namespace RoadBuilder.Utilities
 			}
 
 			var matchesRequired = (config.Category & info.RequiredCategories) == info.RequiredCategories;
+			var matchesAny = (config.Category & info.AnyCategories) != 0 || info.AnyCategories == 0;
 			var matchesExcluded = (config.Category & info.ExcludedCategories) != 0;
 
-			return matchesRequired && !matchesExcluded;
+			return matchesRequired && matchesAny && !matchesExcluded;
 		}
 	}
 }

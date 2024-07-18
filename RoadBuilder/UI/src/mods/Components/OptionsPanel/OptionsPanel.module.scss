@@ -45,3 +45,12 @@
   width: 32rem;
   height: 32rem;
 }
+
+.selected {
+  background-color: var(--accentColorNormal) !important;
+}
+
+.optionContent > .singleButton > img {
+  width: 26rem;
+  height: 26rem;
+}

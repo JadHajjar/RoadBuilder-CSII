@@ -2,14 +2,12 @@
 
 namespace RoadBuilder.Domain.Components.Prefabs
 {
-    [Serializable]
+	[Serializable]
     public class RoadBuilderLaneOption
     {
+        public LaneOptionType Type;
         public string Name;
-        public bool IsValue;
-        public bool IsDecoration;
-        public bool MultiSelection;
-        public string DefaultValue;
+		public string DefaultValue;
         public RoadBuilderLaneOptionValue[] Options;
-    }
+	}
 }

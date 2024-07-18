@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 26 26" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="matrix(-3.32337,4.06995e-16,-4.06995e-16,-3.32337,180.315,79.3638)">
+        <g id="b">
+            <g id="SmallRoadOneway1lane">
+                <g id="Path_1060" transform="matrix(0.40624,0,0,0.40624,28.0564,10.261)">
+                    <path d="M59.757,21.999L56.543,21.999L56.543,28.409L53.19,28.409L53.19,21.999L49.975,21.999L54.866,16.771L59.757,21.999Z" style="fill:white;fill-rule:nonzero;"/>
+                </g>
+                <g id="Path_10601" serif:id="Path_1060" transform="matrix(-0.40624,-4.97501e-17,4.97501e-17,-0.40624,72.6339,29.6767)">
+                    <path d="M59.757,21.999L56.543,21.999L56.543,28.409L53.19,28.409L53.19,21.999L49.975,21.999L54.866,16.771L59.757,21.999Z" style="fill:white;fill-rule:nonzero;"/>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

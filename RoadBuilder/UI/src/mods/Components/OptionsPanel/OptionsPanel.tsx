@@ -7,6 +7,7 @@ import { OptionSection } from "domain/Options";
 import { VanillaComponentResolver } from "vanillacomponentresolver";
 import { Tooltip } from "cs2/ui";
 import { useContext } from "react";
+import classNames from "classnames";
 
 type _Props = {
   options: OptionSection[];
@@ -16,12 +17,12 @@ type _Props = {
 export const OptionsPanelComponent = (props: _Props) => {
   return (
     <>
-      {props.options.map((section) => (
+      {props.options?.map((section) => (
         <div className={styles.optionRow}>
           <div className={styles.optionSection}>
             <div className={styles.optionLabel}>{section.name}</div>
             <div className={styles.optionContent}>
-              {section.options.map((option) =>
+              {section.options?.map((option) =>
                 option.isValue ? (
                   <>
                     <VanillaComponentResolver.instance.ToolButton
@@ -56,7 +57,11 @@ export const OptionsPanelComponent = (props: _Props) => {
                     onSelect={option.disabled ? undefined : () => props.OnChange(section.id, option.id, 0)}
                     src={option.icon}
                     focusKey={VanillaComponentResolver.instance.FOCUS_DISABLED}
-                    className={VanillaComponentResolver.instance.toolButtonTheme.button + " " + styles.singleButton}
+                    className={classNames(
+                      VanillaComponentResolver.instance.toolButtonTheme.button,
+                      styles.singleButton,
+                      option.selected && styles.selected
+                    )}
                   />
                 )
               )}

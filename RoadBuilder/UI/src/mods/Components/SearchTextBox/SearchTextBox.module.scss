@@ -3,32 +3,13 @@
 .container {
   display: flex;
   align-items: center;
-  margin-bottom: 8rem;
+  margin-bottom: 4rem;
 }
 
 .searchArea {
   flex: 1;
   position: relative;
   margin: 0 0.5em;
-}
-
-.searchIcon,
-.loadingIcon {
-  height: 1.4em;
-  width: 1.4em;
-}
-
-.loadingIcon {
-  animation: rotation 0.5s infinite linear;
-}
-
-@keyframes rotation {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(359deg);
-  }
 }
 
 .clearIcon {

@@ -18,39 +18,34 @@ namespace RoadBuilder.LaneGroups
 			{
 				new()
 				{
-					DefaultValue = "1",
 					Name = OptionName,
-					Options = new RoadBuilderLaneOptionValue[]
-					{
-						new() { Value = "1" },
-						new() { Value = "2" },
-					}
+					Type = LaneOptionType.TwoWay,
 				}
 			};
 
 			AddComponent<RoadBuilderLaneInfo>()
-				.WithExcluded(RoadCategory.Gravel | RoadCategory.Tiled | RoadCategory.Pathway | RoadCategory.Fence)
+				.WithAny(RoadCategory.Train | RoadCategory.Subway)
 				.WithFrontThumbnail("coui://roadbuildericons/RB_TrainFront.svg")
 				.WithBackThumbnail("coui://roadbuildericons/RB_TrainRear.svg");
 
 			AddComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_TrainFront.svg";
 
-			SetUp(sections["Train Track Section 4"], "1");
-			SetUp(sections["Train Track Twoway Section 4"], "2");
+			SetUp(sections["Train Track Section 4"], false);
+			SetUp(sections["Train Track Twoway Section 4"], true);
 		}
 
-		private void SetUp(NetSectionPrefab prefab, string value)
+		private void SetUp(NetSectionPrefab prefab, bool value)
 		{
 			var laneInfo = prefab.AddComponent<RoadBuilderLaneGroup>();
 			laneInfo.GroupPrefab = this;
-			laneInfo.Combination = new LaneOptionCombination[]
+			laneInfo.Combination = value ? new LaneOptionCombination[]
 			{
 				new()
 				{
 					OptionName = OptionName,
-					Value = value
+					Value = string.Empty
 				}
-			};
+			} :new LaneOptionCombination[0];
 
 			LinkedSections.Add(prefab);
 		}

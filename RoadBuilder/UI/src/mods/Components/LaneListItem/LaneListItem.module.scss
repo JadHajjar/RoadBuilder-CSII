@@ -18,6 +18,11 @@
     width: 80rem;
     height: 80rem;
     position: absolute;
+    border: 2rem solid rgba(255, 255, 255, 0.5);
+    border-bottom-left-radius: 8rem;
+    border-bottom-right-radius: 8rem;
+    border-top-left-radius: 8rem;
+    border-top-right-radius: 8rem;
 
     &.bottomRow {
       animation: none;

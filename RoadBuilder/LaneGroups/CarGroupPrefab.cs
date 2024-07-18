@@ -20,7 +20,7 @@ namespace RoadBuilder.LaneGroups
 				new()
 				{
 					DefaultValue = "3m",
-					IsValue = true,
+					Type = LaneOptionType.ValueUpDown,
 					Name = OptionName1,
 					Options = new RoadBuilderLaneOptionValue[]
 					{
@@ -58,15 +58,15 @@ namespace RoadBuilder.LaneGroups
 				.WithFrontThumbnail("coui://roadbuildericons/RB_CarFront.svg")
 				.WithBackThumbnail("coui://roadbuildericons/RB_CarRear.svg");
 
-			AddComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_CarFront.svg";
+			AddComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_Car_Centered.svg";
 
 			SetUp(sections["Car Drive Section 3"], "3m", "").AddOrGetComponent<RoadBuilderLaneInfo>().WithRequired(RoadCategory.RaisedSidewalk);
 			SetUp(sections["Alley Drive Section 3"], "3m", "").AddOrGetComponent<RoadBuilderLaneInfo>().WithExcluded(RoadCategory.RaisedSidewalk);
-			SetUp(sections["Car Drive Section 3 - Transport Option"], "3m", "Transport");
-			SetUp(sections["Car Drive Section 3 - Transport Tram Option"], "3m", "Tram");
+			SetUp(sections["Car Drive Section 3 - Transport Option"], "3m", "Transport").AddOrGetComponent<RoadBuilderLaneInfo>().WithFrontThumbnail("coui://roadbuildericons/RB_CarBusFront.svg").WithBackThumbnail("coui://roadbuildericons/RB_CarBusRear.svg");
+			SetUp(sections["Car Drive Section 3 - Transport Tram Option"], "3m", "Tram").AddOrGetComponent<RoadBuilderLaneInfo>().WithFrontThumbnail("coui://roadbuildericons/RB_CarTramFront.svg").WithBackThumbnail("coui://roadbuildericons/RB_CarTramRear.svg");
 			SetUp(sections["Highway Drive Section 4"], "4m", "");
-			SetUp(sections["Highway Drive Section 4 - Transport Option"], "4m", "Transport");
-			SetUp(sections["Car Drive Section 4 - Transport Tram Option"], "4m", "Tram");
+			SetUp(sections["Highway Drive Section 4 - Transport Option"], "4m", "Transport").AddOrGetComponent<RoadBuilderLaneInfo>().WithFrontThumbnail("coui://roadbuildericons/RB_CarBusFront.svg").WithBackThumbnail("coui://roadbuildericons/RB_CarBusRear.svg");
+			SetUp(sections["Car Drive Section 4 - Transport Tram Option"], "4m", "Tram").AddOrGetComponent<RoadBuilderLaneInfo>().WithFrontThumbnail("coui://roadbuildericons/RB_CarTramFront.svg").WithBackThumbnail("coui://roadbuildericons/RB_CarTramRear.svg");
 		}
 
 		private NetSectionPrefab SetUp(NetSectionPrefab prefab, string value1, string value2)

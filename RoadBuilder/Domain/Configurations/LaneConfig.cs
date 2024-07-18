@@ -6,6 +6,8 @@ namespace RoadBuilder.Domain.Configurations
 {
 	public class LaneConfig : ISerializable
 	{
+		private const string NULL = "<NULL>";
+
 		public uint Version { get; set; }
 		public string SectionPrefabName { get; set; }
 		public string GroupPrefabName { get; set; }
@@ -31,7 +33,7 @@ namespace RoadBuilder.Domain.Configurations
 				reader.Read(out string key);
 				reader.Read(out string value);
 
-				GroupOptions[key] = value;
+				GroupOptions[key] = value == NULL ? null : value;
 			}
 		}
 
@@ -46,7 +48,7 @@ namespace RoadBuilder.Domain.Configurations
 			foreach (var item in GroupOptions ?? new())
 			{
 				writer.Write(item.Key);
-				writer.Write(item.Value);
+				writer.Write(item.Value ?? NULL);
 			}
 		}
 	}

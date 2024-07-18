@@ -27,7 +27,6 @@ export const SearchTextBox = (props: { onChange?: (val: string) => void }) => {
 
   return (
     <div className={styles.container}>
-      <img src="coui://uil/Standard/MagnifierThin.svg" className={styles.searchIcon}></img>
       <div className={styles.searchArea}>
         <TextInput
           ref={searchRef}
@@ -41,7 +40,7 @@ export const SearchTextBox = (props: { onChange?: (val: string) => void }) => {
           placeholder={translate("Editor.SEARCH_PLACEHOLDER", "Search...")!}
         ></TextInput>
 
-        {searchQuery.trim() !== "" && (
+        {searchQuery.trim() !== "" ? (
           <Button
             className={classNames(VanillaComponentResolver.instance.assetGridTheme.item, styles.clearIcon)}
             variant="icon"
@@ -50,6 +49,10 @@ export const SearchTextBox = (props: { onChange?: (val: string) => void }) => {
           >
             <img src="coui://uil/Standard/ArrowLeftClear.svg"></img>
           </Button>
+        ) : (
+          <div className={classNames(VanillaComponentResolver.instance.assetGridTheme.item, styles.clearIcon)}>
+            <img src="coui://uil/Standard/MagnifierThin.svg"></img>
+          </div>
         )}
       </div>
     </div>

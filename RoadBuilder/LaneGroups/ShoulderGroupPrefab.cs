@@ -19,7 +19,7 @@ namespace RoadBuilder.LaneGroups
 				new()
 				{
 					DefaultValue = "1m",
-					IsValue = true,
+					Type = LaneOptionType.ValueUpDown,
 					Name = OptionName1,
 					Options = new RoadBuilderLaneOptionValue[]
 					{
@@ -29,7 +29,7 @@ namespace RoadBuilder.LaneGroups
 				},
 			};
 
-			AddComponent<RoadBuilderLaneInfo>().WithExcluded(RoadCategory.RaisedSidewalk);
+			//AddComponent<RoadBuilderLaneInfo>().WithExcluded(RoadCategory.RaisedSidewalk);
 
 			AddComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_Empty.svg";
 

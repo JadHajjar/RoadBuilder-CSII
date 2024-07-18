@@ -74,7 +74,7 @@ namespace RoadBuilder.Systems.UI
 			CreateTrigger("CreateNewPrefab", () => CreateNewPrefab(workingEntity));
 			CreateTrigger("ClearTool", ClearTool);
 		}
-
+		
 		protected override void OnUpdate()
 		{
 			IsPaused.Value = simulationSystem.selectedSpeed == 0f;
@@ -161,6 +161,8 @@ namespace RoadBuilder.Systems.UI
 			roadBuilderSystem.UpdateRoad(config, workingEntity, createNew);
 
 			RoadBuilderMode.Value = RoadBuilderToolMode.Editing;
+
+			netSectionsUISystem.RefreshEntries(config);
 			RoadName.Value = config.Name;
 			RoadOptions.Value = RoadOptionsUtil.GetRoadOptions(config);
 			RoadLanes.Value = From(config, roadBuilderSystem.RoadGenerationData);
@@ -198,7 +200,7 @@ namespace RoadBuilder.Systems.UI
 
 			if (existingLane != null)
 			{
-				LaneOptionsUtil.OptionClicked(config, existingLane, option, id, value);
+				LaneOptionsUtil.OptionClicked(roadBuilderSystem.RoadGenerationData, config, existingLane, option, id, value);
 			}
 		}
 
@@ -217,7 +219,7 @@ namespace RoadBuilder.Systems.UI
 					Invert = lane.Invert,
 					SectionPrefabName = string.IsNullOrEmpty(lane.GroupPrefabName) ? lane.SectionPrefabName : lane.GroupPrefabName,
 					IsGroup = !string.IsNullOrEmpty(lane.GroupPrefabName),
-					Options = LaneOptionsUtil.GenerateOptions(config, lane),
+					Options = LaneOptionsUtil.GenerateOptions(roadGenerationData, config, lane),
 					NetSection = !validSection ? new() : new()
 					{
 						PrefabName = section.name,

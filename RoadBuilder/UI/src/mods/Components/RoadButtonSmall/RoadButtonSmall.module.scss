@@ -21,10 +21,9 @@
   justify-content: center;
   align-items: center;
 
-  /*img {
-    width: 80%;
-    height: 80%;
-  }*/
+  img {
+    transition: width 0.25s, height 0.25s;
+  }
 
   .inverted {
     transform: scale(-1, 1);
@@ -41,9 +40,10 @@
   }
 
   &.dragging {
-    background: rgba(0, 0, 0, 0.3);
     img {
-      visibility: hidden;
+      opacity: 0.75;
+      width: 65%;
+      height: 65%;
     }
   }
 }

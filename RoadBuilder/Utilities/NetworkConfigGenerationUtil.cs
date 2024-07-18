@@ -62,7 +62,7 @@ namespace RoadBuilder.Utilities
 				config.Addons |= RoadAddons.HasUndergroundWaterPipes;
 			}
 
-			if (NetworkPrefab.Has<ElectricityConnection>())
+			//if (NetworkPrefab.Has<ElectricityConnection>())
 			{
 				config.Addons |= RoadAddons.HasUndergroundElectricityCable;
 			}

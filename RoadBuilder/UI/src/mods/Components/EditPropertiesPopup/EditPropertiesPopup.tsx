@@ -10,6 +10,7 @@ import { useValue } from "cs2/api";
 import { roadLanes$, setRoadLanes } from "mods/bindings";
 import { removeAt } from "mods/util";
 import { laneOptionClicked } from "mods/bindings";
+import { OptionsSection } from "../OptionsPanel/OptionsSection";
 
 export const EditPropertiesPopup = () => {
   let rem = useRem();
@@ -32,6 +33,8 @@ export const EditPropertiesPopup = () => {
 
   let currentLane = roadLanes[laneCtx.index];
 
+  if (!currentLane) return <></>;
+
   return (
     <div className={styles.view} style={inlineStyle} onMouseLeave={laneCtx.close}>
       <div className={styles.topBar}>
@@ -40,10 +43,10 @@ export const EditPropertiesPopup = () => {
       </div>
       <div className={styles.content}>
         <div className={styles.options}>
-          {currentLane.Options && currentLane.Options.length !== 0 ? (
+          {currentLane?.Options != undefined && currentLane?.Options?.length !== 0 ? (
             <OptionsPanelComponent
               OnChange={(x, y, z) => laneOptionClicked(currentLane.Index, x, y, z)}
-              options={currentLane.Options}
+              options={currentLane?.Options ?? new Array()}
             ></OptionsPanelComponent>
           ) : (
             <span> No Options Available</span>

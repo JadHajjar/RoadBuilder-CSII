@@ -18,12 +18,12 @@ namespace RoadBuilder.LaneGroups
 				new()
 				{
 					Name = "Decoration",
-					IsDecoration = true,
+					Type = LaneOptionType.Decoration,
 				},
 				new()
 				{
 					DefaultValue = "2m",
-					IsValue = true,
+					Type = LaneOptionType.ValueUpDown,
 					Name = OptionName,
 					Options = new RoadBuilderLaneOptionValue[]
 					{
@@ -34,10 +34,11 @@ namespace RoadBuilder.LaneGroups
 				}
 			};
 
-			AddComponent<RoadBuilderLaneInfo>().WithExcluded(RoadCategory.NoRaisedSidewalkSupport);
+			AddOrGetComponent<RoadBuilderLaneInfo>()
+				.WithExcluded(RoadCategory.NoRaisedSidewalkSupport)
+				.WithThumbnail("coui://roadbuildericons/RB_Median.svg");
 
-			var uiObj = AddComponent<UIObject>();
-			uiObj.m_Icon = "coui://roadbuildericons/RB_Median.svg";
+			AddOrGetComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_Median_Centered.svg";
 
 			SetUp(sections["Road Median 1"], "1m");
 			SetUp(sections["Road Median 2"], "2m");

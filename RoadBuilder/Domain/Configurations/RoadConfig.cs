@@ -31,9 +31,6 @@ namespace RoadBuilder.Domain.Configurations
 			reader.Read(out float maxSlopeSteepness);
 			reader.Read(out bool generatesTrafficLights);
 			reader.Read(out bool generatesZoningBlocks);
-			reader.Read(out bool hasUndergroundWaterPipes);
-			reader.Read(out bool hasUndergroundElectricityCable);
-			reader.Read(out bool requiresUpgradeForElectricity);
 			reader.Read(out ulong category);
 			reader.Read(out ulong addons);
 
