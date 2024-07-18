@@ -3,7 +3,7 @@
 namespace RoadBuilder.Domain.Enums
 {
 	[Flags]
-	public enum RoadCategory : uint
+	public enum RoadCategory : ulong
 	{
 		Road = 0,
 		Highway = 1,

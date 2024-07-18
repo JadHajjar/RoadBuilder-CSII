@@ -127,13 +127,21 @@ namespace RoadBuilder.Utilities
 			var config = new RoadConfig
 			{
 				SpeedLimit = roadPrefab.m_SpeedLimit,
-				GeneratesTrafficLights = roadPrefab.m_TrafficLights,
-				GeneratesZoningBlocks = roadPrefab.m_ZoneBlock is not null
 			};
 
 			if (roadPrefab.m_HighwayRules)
 			{
 				config.Category |= RoadCategory.Highway;
+			}
+
+			if (roadPrefab.m_TrafficLights)
+			{
+				config.Addons |= RoadAddons.GeneratesTrafficLights;
+			}
+
+			if (roadPrefab.m_ZoneBlock)
+			{
+				config.Addons |= RoadAddons.GeneratesZoningBlocks;
 			}
 
 			switch (roadPrefab.m_RoadType)

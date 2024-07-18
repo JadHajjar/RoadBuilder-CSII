@@ -87,9 +87,9 @@ namespace RoadBuilder.Utilities
 				var roadPrefab = NetworkPrefab as RoadPrefab;
 				roadPrefab.m_SpeedLimit = roadConfig.SpeedLimit;
 				roadPrefab.m_RoadType = roadConfig.Category.HasFlag(RoadCategory.PublicTransport) ? RoadType.PublicTransport : RoadType.Normal;
-				roadPrefab.m_TrafficLights = roadConfig.GeneratesTrafficLights;
+				roadPrefab.m_TrafficLights = roadConfig.Addons.HasFlag(RoadAddons.GeneratesTrafficLights);
 				roadPrefab.m_HighwayRules = roadConfig.Category.HasFlag(RoadCategory.Highway);
-				roadPrefab.m_ZoneBlock = roadConfig.GeneratesZoningBlocks ? _roadGenerationData.ZoneBlockPrefab : null;
+				roadPrefab.m_ZoneBlock = roadConfig.Addons.HasFlag(RoadAddons.GeneratesZoningBlocks) ? _roadGenerationData.ZoneBlockPrefab : null;
 			}
 
 			prefab.components.ForEach(UnityEngine.Object.Destroy);
