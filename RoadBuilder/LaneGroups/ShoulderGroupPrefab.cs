@@ -1,6 +1,6 @@
 ﻿using Game.Prefabs;
 
-using RoadBuilder.Domain.Components;
+using RoadBuilder.Domain.Components.Prefabs;
 using RoadBuilder.Domain.Enums;
 
 using System.Collections.Generic;
@@ -14,14 +14,14 @@ namespace RoadBuilder.LaneGroups
 		public ShoulderGroupPrefab(Dictionary<string, NetSectionPrefab> sections) : base(sections)
 		{
 			DisplayName = "Shoulder";
-			Options = new RoadBuilderLaneOptionInfo[]
+			Options = new RoadBuilderLaneOption[]
 			{
 				new()
 				{
 					DefaultValue = "1m",
-					IsValue = true,
+					Type = LaneOptionType.ValueUpDown,
 					Name = OptionName1,
-					Options = new RoadBuilderLaneOptionItemInfo[]
+					Options = new RoadBuilderLaneOptionValue[]
 					{
 						new() { Value = "1m" },
 						new() { Value = "2m" },
@@ -29,10 +29,9 @@ namespace RoadBuilder.LaneGroups
 				},
 			};
 
-			AddComponent<RoadBuilderLaneInfoItem>().WithExcluded(RoadCategory.RaisedSidewalk);
+			//AddComponent<RoadBuilderLaneInfo>().WithExcluded(RoadCategory.RaisedSidewalk);
 
-			var uiObj = AddComponent<UIObject>();
-			uiObj.m_Icon = "coui://roadbuildericons/RB_Empty.svg";
+			AddComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_Empty.svg";
 
 			SetUp(sections["Alley Shoulder 1"], "1m").WithExcluded(RoadCategory.Train | RoadCategory.Tram | RoadCategory.Subway | RoadCategory.Tiled | RoadCategory.Gravel);
 			SetUp(sections["Highway Shoulder 2"], "2m").WithExcluded(RoadCategory.Train | RoadCategory.Tram | RoadCategory.Subway | RoadCategory.PublicTransport | RoadCategory.Tiled | RoadCategory.Gravel);
@@ -44,9 +43,9 @@ namespace RoadBuilder.LaneGroups
 			SetUp(sections["Tram Shoulder 1"], "1m").WithRequired(RoadCategory.Tram);
 		}
 
-		private RoadBuilderLaneInfoItem SetUp(NetSectionPrefab prefab, string value1)
+		private RoadBuilderLaneInfo SetUp(NetSectionPrefab prefab, string value1)
 		{
-			var laneInfo = prefab.AddComponent<RoadBuilderLaneGroupItem>();
+			var laneInfo = prefab.AddComponent<RoadBuilderLaneGroup>();
 			laneInfo.GroupPrefab = this;
 			laneInfo.Combination = new LaneOptionCombination[]
 			{
@@ -59,7 +58,7 @@ namespace RoadBuilder.LaneGroups
 
 			LinkedSections.Add(prefab);
 
-			return prefab.AddOrGetComponent<RoadBuilderLaneInfoItem>();
+			return prefab.AddOrGetComponent<RoadBuilderLaneInfo>();
 		}
 	}
 }

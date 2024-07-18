@@ -1,32 +1,31 @@
 ﻿using Game.Prefabs;
-
-using RoadBuilder.Domain.Components;
+using RoadBuilder.Domain.Components.Prefabs;
 using RoadBuilder.Domain.Enums;
 
 using System.Collections.Generic;
 
 namespace RoadBuilder.LaneGroups
 {
-	public class MedianGroupPrefab : BaseLaneGroupPrefab
+    public class MedianGroupPrefab : BaseLaneGroupPrefab
 	{
 		private const string OptionName = "Median Width";
 
 		public MedianGroupPrefab(Dictionary<string, NetSectionPrefab> sections) : base(sections)
 		{
 			DisplayName = "Median";
-			Options = new RoadBuilderLaneOptionInfo[]
+			Options = new RoadBuilderLaneOption[]
 			{
 				new()
 				{
 					Name = "Decoration",
-					IsDecoration = true,
+					Type = LaneOptionType.Decoration,
 				},
 				new()
 				{
 					DefaultValue = "2m",
-					IsValue = true,
+					Type = LaneOptionType.ValueUpDown,
 					Name = OptionName,
-					Options = new RoadBuilderLaneOptionItemInfo[]
+					Options = new RoadBuilderLaneOptionValue[]
 					{
 						new() { Value = "1m" },
 						new() { Value = "2m" },
@@ -35,10 +34,11 @@ namespace RoadBuilder.LaneGroups
 				}
 			};
 
-			AddComponent<RoadBuilderLaneInfoItem>().WithExcluded(RoadCategory.NoRaisedSidewalkSupport);
+			AddOrGetComponent<RoadBuilderLaneInfo>()
+				.WithExcluded(RoadCategory.NoRaisedSidewalkSupport)
+				.WithThumbnail("coui://roadbuildericons/RB_Median.svg");
 
-			var uiObj = AddComponent<UIObject>();
-			uiObj.m_Icon = "coui://roadbuildericons/RB_Median.svg";
+			AddOrGetComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_Median_Centered.svg";
 
 			SetUp(sections["Road Median 1"], "1m");
 			SetUp(sections["Road Median 2"], "2m");
@@ -47,7 +47,7 @@ namespace RoadBuilder.LaneGroups
 
 		private void SetUp(NetSectionPrefab prefab, string value, bool hasGrass = false)
 		{
-			var laneInfo = prefab.AddComponent<RoadBuilderLaneGroupItem>();
+			var laneInfo = prefab.AddComponent<RoadBuilderLaneGroup>();
 			laneInfo.GroupPrefab = this;
 			laneInfo.Combination = hasGrass
 			? new LaneOptionCombination[]

@@ -3,7 +3,7 @@ using Game.SceneFlow;
 using Game.UI.InGame;
 
 using RoadBuilder.Domain;
-using RoadBuilder.Domain.Components;
+using RoadBuilder.Domain.Components.Prefabs;
 using RoadBuilder.Domain.Configurations;
 using RoadBuilder.Domain.Enums;
 
@@ -12,7 +12,7 @@ using System.Linq;
 
 namespace RoadBuilder.Utilities
 {
-	public class NetworkConfigGenerationUtil
+    public class NetworkConfigGenerationUtil
 	{
 		private readonly RoadGenerationData _roadGenerationData;
 		private readonly PrefabUISystem _prefabUISystem;
@@ -62,7 +62,7 @@ namespace RoadBuilder.Utilities
 				config.Addons |= RoadAddons.HasUndergroundWaterPipes;
 			}
 
-			if (NetworkPrefab.Has<ElectricityConnection>())
+			//if (NetworkPrefab.Has<ElectricityConnection>())
 			{
 				config.Addons |= RoadAddons.HasUndergroundElectricityCable;
 			}
@@ -105,7 +105,7 @@ namespace RoadBuilder.Utilities
 
 		private static LaneConfig GetLaneConfig(NetSectionInfo section)
 		{
-			if (section.m_Section.TryGet<RoadBuilderLaneGroupItem>(out var groupItem))
+			if (section.m_Section.TryGet<RoadBuilderLaneGroup>(out var groupItem))
 			{
 				return new LaneConfig
 				{
@@ -127,13 +127,21 @@ namespace RoadBuilder.Utilities
 			var config = new RoadConfig
 			{
 				SpeedLimit = roadPrefab.m_SpeedLimit,
-				GeneratesTrafficLights = roadPrefab.m_TrafficLights,
-				GeneratesZoningBlocks = roadPrefab.m_ZoneBlock is not null
 			};
 
 			if (roadPrefab.m_HighwayRules)
 			{
 				config.Category |= RoadCategory.Highway;
+			}
+
+			if (roadPrefab.m_TrafficLights)
+			{
+				config.Addons |= RoadAddons.GeneratesTrafficLights;
+			}
+
+			if (roadPrefab.m_ZoneBlock)
+			{
+				config.Addons |= RoadAddons.GeneratesZoningBlocks;
 			}
 
 			switch (roadPrefab.m_RoadType)

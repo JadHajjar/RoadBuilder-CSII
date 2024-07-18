@@ -6,7 +6,7 @@ using Game.UI;
 using Game.UI.InGame;
 
 using RoadBuilder.Domain;
-using RoadBuilder.Domain.Components;
+using RoadBuilder.Domain.Components.Prefabs;
 using RoadBuilder.Domain.Configurations;
 using RoadBuilder.Domain.Enums;
 using RoadBuilder.Domain.Prefabs;
@@ -34,8 +34,9 @@ namespace RoadBuilder.Systems.UI
 		private SimulationSystem simulationSystem;
 		private NetSectionsUISystem netSectionsUISystem;
 		private ValueBindingHelper<RoadBuilderToolMode> RoadBuilderMode;
-		private ValueBindingHelper<RoadPropertiesUIBinder> RoadProperties;
+		private ValueBindingHelper<string> RoadName;
 		private ValueBindingHelper<RoadLaneUIBinder[]> RoadLanes;
+		private ValueBindingHelper<OptionSectionUIEntry[]> RoadOptions;
 		private ValueBindingHelper<bool> IsPaused;
 
 		public RoadBuilderToolMode Mode { get => RoadBuilderMode; set => RoadBuilderMode.Value = value; }
@@ -57,18 +58,23 @@ namespace RoadBuilder.Systems.UI
 			toolSystem.EventToolChanged += OnToolChanged;
 
 			RoadBuilderMode = CreateBinding("RoadBuilderToolMode", RoadBuilderToolMode.None);
-			RoadProperties = CreateBinding("GetRoadProperties", new RoadPropertiesUIBinder());
+			RoadName = CreateBinding("GetRoadName", "SetRoadName", string.Empty, name =>
+			{
+				UpdateRoad(x => x.Name = name);
+				GameManager.instance.localizationManager.ReloadActiveLocale();
+			});
 			RoadLanes = CreateBinding("GetRoadLanes", new RoadLaneUIBinder[0]);
+			RoadOptions = CreateBinding("GetRoadOptions", new OptionSectionUIEntry[0]);
 			IsPaused = CreateBinding("IsPaused", simulationSystem.selectedSpeed == 0f);
 
-			CreateTrigger<RoadPropertiesUIBinder>("SetRoadProperties", x => UpdateRoad(c => UpdateProperties(c, x)));
 			CreateTrigger<RoadLaneUIBinder[]>("SetRoadLanes", x => UpdateRoad(c => UpdateLaneOrder(c, x)));
+			CreateTrigger<int, int, int>("RoadOptionClicked", (x, y, z) => UpdateRoad(c => RoadOptionClicked(c, x, y, z)));
 			CreateTrigger<int, int, int, int>("OptionClicked", (i, x, y, z) => UpdateRoad(c => LaneOptionClicked(c, i, x, y, z)));
 			CreateTrigger("ToggleTool", ToggleTool);
 			CreateTrigger("CreateNewPrefab", () => CreateNewPrefab(workingEntity));
 			CreateTrigger("ClearTool", ClearTool);
 		}
-
+		
 		protected override void OnUpdate()
 		{
 			IsPaused.Value = simulationSystem.selectedSpeed == 0f;
@@ -133,7 +139,8 @@ namespace RoadBuilder.Systems.UI
 			}
 
 			netSectionsUISystem.RefreshEntries(config);
-			RoadProperties.Value = RoadPropertiesUIBinder.From(config);
+			RoadName.Value = config.Name;
+			RoadOptions.Value = RoadOptionsUtil.GetRoadOptions(config);
 			RoadLanes.Value = From(config, roadBuilderSystem.RoadGenerationData);
 		}
 
@@ -154,15 +161,11 @@ namespace RoadBuilder.Systems.UI
 			roadBuilderSystem.UpdateRoad(config, workingEntity, createNew);
 
 			RoadBuilderMode.Value = RoadBuilderToolMode.Editing;
-			RoadProperties.Value = RoadPropertiesUIBinder.From(config);
+
+			netSectionsUISystem.RefreshEntries(config);
+			RoadName.Value = config.Name;
+			RoadOptions.Value = RoadOptionsUtil.GetRoadOptions(config);
 			RoadLanes.Value = From(config, roadBuilderSystem.RoadGenerationData);
-		}
-
-		private void UpdateProperties(INetworkConfig config, RoadPropertiesUIBinder roadProperties)
-		{
-			roadProperties.Fill(config);
-
-			GameManager.instance.localizationManager.ReloadActiveLocale();
 		}
 
 		private void UpdateLaneOrder(INetworkConfig config, RoadLaneUIBinder[] roadLanes)
@@ -186,13 +189,18 @@ namespace RoadBuilder.Systems.UI
 			config.Lanes = newLanes;
 		}
 
+		private void RoadOptionClicked(INetworkConfig config, int option, int id, int value)
+		{
+			RoadOptionsUtil.OptionClicked(config, option, id, value);
+		}
+
 		private void LaneOptionClicked(INetworkConfig config, int index, int option, int id, int value)
 		{
 			var existingLane = config.Lanes.ElementAtOrDefault(index);
 
 			if (existingLane != null)
 			{
-				LaneOptionsUtil.OptionClicked(config, existingLane, option, id, value);
+				LaneOptionsUtil.OptionClicked(roadBuilderSystem.RoadGenerationData, config, existingLane, option, id, value);
 			}
 		}
 
@@ -211,7 +219,7 @@ namespace RoadBuilder.Systems.UI
 					Invert = lane.Invert,
 					SectionPrefabName = string.IsNullOrEmpty(lane.GroupPrefabName) ? lane.SectionPrefabName : lane.GroupPrefabName,
 					IsGroup = !string.IsNullOrEmpty(lane.GroupPrefabName),
-					Options = LaneOptionsUtil.GenerateOptions(config, lane),
+					Options = LaneOptionsUtil.GenerateOptions(roadGenerationData, config, lane),
 					NetSection = !validSection ? new() : new()
 					{
 						PrefabName = section.name,
@@ -228,7 +236,7 @@ namespace RoadBuilder.Systems.UI
 
 		private static string GetThumbnail(NetSectionPrefab section, LaneGroupPrefab groupPrefab, bool invert)
 		{
-			if (section.TryGet<RoadBuilderLaneInfoItem>(out var sectionInfo))
+			if (section.TryGet<RoadBuilderLaneInfo>(out var sectionInfo))
 			{
 				if (!string.IsNullOrEmpty(invert ? sectionInfo.FrontThumbnail : sectionInfo.BackThumbnail))
 				{
@@ -241,7 +249,7 @@ namespace RoadBuilder.Systems.UI
 				return sectionIcon;
 			}
 
-			if (groupPrefab?.TryGet<RoadBuilderLaneInfoItem>(out var groupInfo) ?? false)
+			if (groupPrefab?.TryGet<RoadBuilderLaneInfo>(out var groupInfo) ?? false)
 			{
 				if (!string.IsNullOrEmpty(invert ? groupInfo.FrontThumbnail : groupInfo.BackThumbnail))
 				{

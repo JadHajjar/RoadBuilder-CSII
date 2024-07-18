@@ -22,7 +22,10 @@ export const LaneListPanel = () => {
 
   return (
     <div className={styles.panel}>
-      <SearchTextBox onChange={setSearchQuery} />
+      <div className={styles.header}>
+        <div className={styles.title}>Available Lanes</div>
+        <SearchTextBox onChange={setSearchQuery} />
+      </div>
       <Scrollable className={styles.list} vertical smooth trackVisibility="scrollable">
         {items}
       </Scrollable>

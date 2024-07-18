@@ -3,7 +3,7 @@
 using Game.Prefabs;
 
 using RoadBuilder.Domain;
-using RoadBuilder.Domain.Components;
+using RoadBuilder.Domain.Components.Prefabs;
 using RoadBuilder.Domain.Configurations;
 using RoadBuilder.Domain.Enums;
 using RoadBuilder.Domain.Prefabs;
@@ -87,9 +87,9 @@ namespace RoadBuilder.Utilities
 				var roadPrefab = NetworkPrefab as RoadPrefab;
 				roadPrefab.m_SpeedLimit = roadConfig.SpeedLimit;
 				roadPrefab.m_RoadType = roadConfig.Category.HasFlag(RoadCategory.PublicTransport) ? RoadType.PublicTransport : RoadType.Normal;
-				roadPrefab.m_TrafficLights = roadConfig.GeneratesTrafficLights;
+				roadPrefab.m_TrafficLights = roadConfig.Addons.HasFlag(RoadAddons.GeneratesTrafficLights);
 				roadPrefab.m_HighwayRules = roadConfig.Category.HasFlag(RoadCategory.Highway);
-				roadPrefab.m_ZoneBlock = roadConfig.GeneratesZoningBlocks ? _roadGenerationData.ZoneBlockPrefab : null;
+				roadPrefab.m_ZoneBlock = roadConfig.Addons.HasFlag(RoadAddons.GeneratesZoningBlocks) ? _roadGenerationData.ZoneBlockPrefab : null;
 			}
 
 			prefab.components.ForEach(UnityEngine.Object.Destroy);
@@ -214,6 +214,11 @@ namespace RoadBuilder.Utilities
 				states.Add(NetPieceRequirements.MiddleTrees);
 			}
 
+			if ((NetworkPrefab.Config.Addons & (RoadAddons.HasUndergroundElectricityCable | RoadAddons.RequiresUpgradeForElectricity)) == RoadAddons.HasUndergroundElectricityCable)
+			{
+				states.Add(NetPieceRequirements.Lighting);
+			}
+
 			if (states.Count != 0)
 			{
 				yield return new NetEdgeStateInfo
@@ -292,21 +297,34 @@ namespace RoadBuilder.Utilities
 
 			foreach (var item in group.LinkedSections)
 			{
-				if (!item.TryGet<RoadBuilderLaneGroupItem>(out var groupItem) || !item.MatchCategories(config))
+				if (!item.TryGet<RoadBuilderLaneGroup>(out var groupItem) || !item.MatchCategories(config))
 				{
 					continue;
 				}
 
 				var matched = true;
 
-				foreach (var combination in groupItem.Combination)
+				foreach (var option in group.Options)
 				{
-					if (group.Options.FirstOrDefault(x => x.Name == combination.OptionName)?.IsDecoration ?? false)
+					if (option.Type is LaneOptionType.Decoration)
 					{
 						continue;
 					}
 
-					if (!combination.Value.Equals(lane.GroupOptions.TryGetValue(combination.OptionName ?? string.Empty, out var optionValue) ? optionValue : defaults[combination.OptionName], StringComparison.InvariantCultureIgnoreCase))
+					var selectedValue = LaneOptionsUtil.GetSelectedOptionValue(config, lane, option);
+					var combination = groupItem.Combination.FirstOrDefault(x => x.OptionName.Equals(option.Name, StringComparison.InvariantCultureIgnoreCase))?.Value;
+
+					if (option.Type is LaneOptionType.TwoWay)
+					{
+						if (combination != null != (selectedValue == "1"))
+						{
+							matched = false;
+						}
+
+						continue;
+					}
+
+					if ((combination is not null || selectedValue is not null) && !(combination?.Equals(selectedValue, StringComparison.InvariantCultureIgnoreCase) ?? false))
 					{
 						matched = false;
 					}

@@ -1,21 +1,29 @@
+@use "../base.scss" as _base;
+
 .panel {
   position: absolute;
   width: 320rem;
-  top: 80rem;
-  bottom: 300rem;
-  right: 65rem;
+  top: 150rem;
+  bottom: 10rem + _base.$bottomBarOffset + _base.$bottomBarHeight;
+  right: 10rem;
   z-index: 0;
 
   background-color: var(--panelColorNormal);
   backdrop-filter: var(--panelBlur);
-  border-radius: var(--panelRadius);
+  border-bottom-left-radius: var(--panelRadius);
+  border-bottom-right-radius: var(--panelRadius);
+  border-top-left-radius: var(--panelRadius);
+  border-top-right-radius: var(--panelRadius);
 
   pointer-events: auto;
 
-  padding: 8rem 4rem;
   overflow: hidden;
 
   animation: entry 0.2s;
+
+  .list {
+    margin: 6rem;
+  }
 
   .list > :first-child {
     display: flex;
@@ -24,6 +32,19 @@
     justify-content: left;
     align-items: center;
   }
+}
+
+.header {
+  background-color: var(--panelColorDark);
+  padding: 6rem;
+}
+
+.title {
+  color: var(--accentColorDark);
+  text-transform: uppercase;
+  text-align: center;
+  font-size: 12rem;
+  margin-bottom: 6rem;
 }
 
 @keyframes entry {

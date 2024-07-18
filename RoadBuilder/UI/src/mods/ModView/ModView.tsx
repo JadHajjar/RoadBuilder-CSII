@@ -14,7 +14,7 @@ import { allNetSections$, roadBuilderToolMode$, toggleTool } from "mods/bindings
 import ActionPopup from "mods/Components/ActionPopup/ActionPopup";
 import { useRem } from "cs2/utils";
 import { tool } from "cs2/bindings";
-import { RoadLane } from "domain/RoadProperties";
+import { RoadLane } from "domain/RoadLane";
 import { NetSectionsStore, NetSectionsStoreContext } from "mods/Contexts/NetSectionsStore";
 import { RoadPropertiesPanel } from "mods/RoadPropertiesPanel/RoadPropertiesPanel";
 import { LanePropertiesContext, LanePropertiesContextData } from "mods/Contexts/LanePropertiesContext";
@@ -34,24 +34,27 @@ export const ModView = () => {
   let defaultLanePropCtx = useContext(LanePropertiesContext);
   let [lanePropState, setLanePropState] = useState<LanePropertiesContextData>(defaultLanePropCtx);
 
-  let lanePropCtx = useMemo(() => ({
-    ...lanePropState,
-    open(roadLane: RoadLane, index: number, position: Number2) {
-      setLanePropState({
-        ...lanePropState,
-        position,      
-        index,
-        laneData: roadLane,
-        showPopup: true
-      });
-    },
-    close() {
+  let lanePropCtx = useMemo(
+    () => ({
+      ...lanePropState,
+      open(roadLane: RoadLane, index: number, position: Number2) {
         setLanePropState({
           ...lanePropState,
-          showPopup: false
+          position,
+          index,
+          laneData: roadLane,
+          showPopup: true,
         });
-    },
-  }), [lanePropState, setLanePropState]);
+      },
+      close() {
+        setLanePropState({
+          ...lanePropState,
+          showPopup: false,
+        });
+      },
+    }),
+    [lanePropState, setLanePropState]
+  );
 
   let nStore = useMemo(() => {
     let nStore = allNetSections.reduce<Record<string, NetSectionItem>>((record: Record<string, NetSectionItem>, cVal: NetSectionItem, cIdx) => {
@@ -98,16 +101,19 @@ export const ModView = () => {
     setMouseReleased(false);
   };
 
-  let dragData: DragContextData = useMemo(() => ({
-    onNetSectionItemChange: onNetSectionItemChange,
-    mousePosition: mousePosition,
-    netSectionItem: draggingItem,
-    roadLane: draggingLane,
-    setRoadLane: setDragRoadLane,
-    mouseReleased: mouseReleased,
-    dragElement: dragItemRef.current,
-    oldIndex: fromDragIndex,
-  }), [mousePosition, draggingItem, draggingLane, mouseReleased, dragItemRef.current, fromDragIndex]);
+  let dragData: DragContextData = useMemo(
+    () => ({
+      onNetSectionItemChange: onNetSectionItemChange,
+      mousePosition: mousePosition,
+      netSectionItem: draggingItem,
+      roadLane: draggingLane,
+      setRoadLane: setDragRoadLane,
+      mouseReleased: mouseReleased,
+      dragElement: dragItemRef.current,
+      oldIndex: fromDragIndex,
+    }),
+    [mousePosition, draggingItem, draggingLane, mouseReleased, dragItemRef.current, fromDragIndex]
+  );
 
   useEffect(() => {
     document.addEventListener("mousemove", onMouseMove);
@@ -136,7 +142,7 @@ export const ModView = () => {
           <BottomView />
           <RoadPropertiesPanel />
           <LaneListItemDrag ref={dragItemRef} />
-          <EditPropertiesPopup/>
+          <EditPropertiesPopup />
         </>
       );
       break;
@@ -148,7 +154,7 @@ export const ModView = () => {
       <NetSectionsStoreContext.Provider value={nStore}>
         <LanePropertiesContext.Provider value={lanePropCtx}>
           <div className={styles.view}>{content}</div>
-        </LanePropertiesContext.Provider>        
+        </LanePropertiesContext.Provider>
       </NetSectionsStoreContext.Provider>
     </DragContext.Provider>
   );

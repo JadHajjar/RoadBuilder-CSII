@@ -1,21 +1,33 @@
-.searchContainer {
-    position: relative;    
-    .searchTextBox {  
-        display: initial;                  
-    }
+@use "../../base.scss" as _base;
 
-    .searchClearButton {
-        position: absolute;
-        right: 8rem;
-        top: 0.2em;
-        height: calc( var(--fontSizeXL)  + 1rem);
-        width: calc( var(--fontSizeXL)  + 1rem);
-        padding: 1rem;
-        background: none;
-        opacity: 0.7;
+.container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 4rem;
+}
 
-        &:hover {
-            opacity: 1;
-        }
-    }
+.searchArea {
+  flex: 1;
+  position: relative;
+  margin: 0 0.5em;
+}
+
+.clearIcon {
+  height: 1.9em;
+  width: 1.9em;
+  padding: 0.5rem;
+  background: none;
+  position: absolute;
+  top: 50%;
+  right: 0.2em;
+  transform: translate(0, -50%);
+}
+
+.clearIcon img {
+  height: 1.5em;
+  width: 1.5em;
+}
+
+.textBox {
+  @include _base.textInputBasic();
 }

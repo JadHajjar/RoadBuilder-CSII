@@ -1,6 +1,6 @@
 ﻿using Game.Prefabs;
 
-using RoadBuilder.Domain.Components;
+using RoadBuilder.Domain.Components.Prefabs;
 using RoadBuilder.Domain.Enums;
 
 using System.Collections.Generic;
@@ -15,14 +15,14 @@ namespace RoadBuilder.LaneGroups
 		public CarGroupPrefab(Dictionary<string, NetSectionPrefab> sections) : base(sections)
 		{
 			DisplayName = "Car";
-			Options = new RoadBuilderLaneOptionInfo[]
+			Options = new RoadBuilderLaneOption[]
 			{
 				new()
 				{
 					DefaultValue = "3m",
-					IsValue = true,
+					Type = LaneOptionType.ValueUpDown,
 					Name = OptionName1,
-					Options = new RoadBuilderLaneOptionItemInfo[]
+					Options = new RoadBuilderLaneOptionValue[]
 					{
 						new() { Value = "3m" },
 						new() { Value = "4m" },
@@ -32,7 +32,7 @@ namespace RoadBuilder.LaneGroups
 				{
 					DefaultValue = "",
 					Name = OptionName2,
-					Options = new RoadBuilderLaneOptionItemInfo[]
+					Options = new RoadBuilderLaneOptionValue[]
 					{
 						new()
 						{
@@ -53,26 +53,25 @@ namespace RoadBuilder.LaneGroups
 				}
 			};
 
-			AddComponent<RoadBuilderLaneInfoItem>()
+			AddComponent<RoadBuilderLaneInfo>()
 				.WithExcluded(RoadCategory.NonAsphalt)
 				.WithFrontThumbnail("coui://roadbuildericons/RB_CarFront.svg")
 				.WithBackThumbnail("coui://roadbuildericons/RB_CarRear.svg");
 
-			var uiObj = AddComponent<UIObject>();
-			uiObj.m_Icon = "coui://roadbuildericons/RB_CarFront.svg";
+			AddComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_Car_Centered.svg";
 
-			SetUp(sections["Car Drive Section 3"], "3m", "").AddOrGetComponent<RoadBuilderLaneInfoItem>().WithRequired(RoadCategory.RaisedSidewalk);
-			SetUp(sections["Alley Drive Section 3"], "3m", "").AddOrGetComponent<RoadBuilderLaneInfoItem>().WithExcluded(RoadCategory.RaisedSidewalk);
-			SetUp(sections["Car Drive Section 3 - Transport Option"], "3m", "Transport");
-			SetUp(sections["Car Drive Section 3 - Transport Tram Option"], "3m", "Tram");
+			SetUp(sections["Car Drive Section 3"], "3m", "").AddOrGetComponent<RoadBuilderLaneInfo>().WithRequired(RoadCategory.RaisedSidewalk);
+			SetUp(sections["Alley Drive Section 3"], "3m", "").AddOrGetComponent<RoadBuilderLaneInfo>().WithExcluded(RoadCategory.RaisedSidewalk);
+			SetUp(sections["Car Drive Section 3 - Transport Option"], "3m", "Transport").AddOrGetComponent<RoadBuilderLaneInfo>().WithFrontThumbnail("coui://roadbuildericons/RB_CarBusFront.svg").WithBackThumbnail("coui://roadbuildericons/RB_CarBusRear.svg");
+			SetUp(sections["Car Drive Section 3 - Transport Tram Option"], "3m", "Tram").AddOrGetComponent<RoadBuilderLaneInfo>().WithFrontThumbnail("coui://roadbuildericons/RB_CarTramFront.svg").WithBackThumbnail("coui://roadbuildericons/RB_CarTramRear.svg");
 			SetUp(sections["Highway Drive Section 4"], "4m", "");
-			SetUp(sections["Highway Drive Section 4 - Transport Option"], "4m", "Transport");
-			SetUp(sections["Car Drive Section 4 - Transport Tram Option"], "4m", "Tram");
+			SetUp(sections["Highway Drive Section 4 - Transport Option"], "4m", "Transport").AddOrGetComponent<RoadBuilderLaneInfo>().WithFrontThumbnail("coui://roadbuildericons/RB_CarBusFront.svg").WithBackThumbnail("coui://roadbuildericons/RB_CarBusRear.svg");
+			SetUp(sections["Car Drive Section 4 - Transport Tram Option"], "4m", "Tram").AddOrGetComponent<RoadBuilderLaneInfo>().WithFrontThumbnail("coui://roadbuildericons/RB_CarTramFront.svg").WithBackThumbnail("coui://roadbuildericons/RB_CarTramRear.svg");
 		}
 
 		private NetSectionPrefab SetUp(NetSectionPrefab prefab, string value1, string value2)
 		{
-			var laneInfo = prefab.AddComponent<RoadBuilderLaneGroupItem>();
+			var laneInfo = prefab.AddComponent<RoadBuilderLaneGroup>();
 			laneInfo.GroupPrefab = this;
 			laneInfo.Combination = new LaneOptionCombination[]
 			{

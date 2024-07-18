@@ -8,12 +8,13 @@ using System.Collections.Generic;
 
 using Unity.Entities;
 
-namespace RoadBuilder.Domain.Components
+namespace RoadBuilder.Domain.Components.Prefabs
 {
 	[ComponentMenu("RoadBuilder/", new Type[] { typeof(NetSectionPrefab), typeof(LaneGroupPrefab) })]
-	public class RoadBuilderLaneInfoItem : ComponentBase
+	public class RoadBuilderLaneInfo : ComponentBase
 	{
 		public RoadCategory RequiredCategories;
+		public RoadCategory AnyCategories;
 		public RoadCategory ExcludedCategories;
 		public string BackThumbnail;
 		public string FrontThumbnail;
@@ -24,27 +25,39 @@ namespace RoadBuilder.Domain.Components
 		public override void GetPrefabComponents(HashSet<ComponentType> components)
 		{ }
 
-		public RoadBuilderLaneInfoItem WithRequired(RoadCategory roadCategory)
+		public RoadBuilderLaneInfo WithRequired(RoadCategory roadCategory)
 		{
 			RequiredCategories = roadCategory;
 			return this;
 		}
 
-		public RoadBuilderLaneInfoItem WithExcluded(RoadCategory roadCategory)
+		public RoadBuilderLaneInfo WithAny(RoadCategory roadCategory)
+		{
+			AnyCategories = roadCategory;
+			return this;
+		}
+
+		public RoadBuilderLaneInfo WithExcluded(RoadCategory roadCategory)
 		{
 			ExcludedCategories = roadCategory;
 			return this;
 		}
 
-		public RoadBuilderLaneInfoItem WithFrontThumbnail(string thumbnail)
+		public RoadBuilderLaneInfo WithFrontThumbnail(string thumbnail)
 		{
 			FrontThumbnail = thumbnail;
 			return this;
 		}
 
-		public RoadBuilderLaneInfoItem WithBackThumbnail(string thumbnail)
+		public RoadBuilderLaneInfo WithBackThumbnail(string thumbnail)
 		{
 			BackThumbnail = thumbnail;
+			return this;
+		}
+
+		public RoadBuilderLaneInfo WithThumbnail(string thumbnail)
+		{
+			FrontThumbnail = BackThumbnail = thumbnail;
 			return this;
 		}
 	}

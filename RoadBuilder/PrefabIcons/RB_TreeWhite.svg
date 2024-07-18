@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 26 26" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="matrix(1.01486,0,0,1.01486,-28.7477,32.7289)">
+        <g id="b">
+            <g id="Tree-Option-2" serif:id="Tree Option 2">
+                <g transform="matrix(0.87219,0,0,0.87219,5.2402,-4.52775)">
+                    <g id="Ellipse_887" transform="matrix(1,0,0,1,30.456,-26.097)">
+                        <ellipse cx="5" cy="4.5" rx="5" ry="4.5" style="fill:white;"/>
+                    </g>
+                    <g id="Path_3565" transform="matrix(0.926051,0,0,0.926051,28.9613,-30.0761)">
+                        <path d="M16.901,14.637C15.852,15.39 14.481,15.828 12.979,15.828C9.685,15.828 7.013,13.404 7.013,10.476C7.013,7.547 9.685,5.173 12.979,5.173C14.934,5.173 16.67,6.009 17.758,7.301C15.964,7.53 14.575,9.064 14.575,10.92C14.575,12.467 15.54,14.107 16.901,14.637Z" style="fill:white;fill-rule:nonzero;"/>
+                    </g>
+                    <g id="Ellipse_885" transform="matrix(1.17035,0,0,1.27366,26.5389,-34.1541)">
+                        <path d="M20.142,12.09C20.251,16.058 16.576,18.335 13,18.335C10.749,18.335 8.618,17.505 7.456,15.906C5.2,15.909 3.805,14.454 3.747,12.09C4.235,13.809 6.886,14.139 8.068,14.198C9.217,15.318 11.072,15.766 12.979,15.766C14.798,15.766 16.436,15.154 17.579,14.127C16.775,13.93 16.08,13.451 15.608,12.801C16.11,12.611 16.326,12.574 16.759,12.285C16.86,12.292 17.752,12.66 18.309,12.607C19.119,12.531 19.618,12.413 20.142,12.09Z" style="fill:white;"/>
+                    </g>
+                    <g id="Ellipse_888" transform="matrix(1,0,0,1,35,-29.097)">
+                        <ellipse cx="6" cy="5.5" rx="6" ry="5.5" style="fill:white;"/>
+                    </g>
+                    <g id="Ellipse_889" transform="matrix(1,0,0,1,44.9673,-24.097)">
+                        <ellipse cx="3" cy="2.5" rx="3" ry="2.5" style="fill:white;"/>
+                    </g>
+                </g>
+                <g id="Path_3564" transform="matrix(0.807692,0,0,0.807692,30.5,-28.3909)">
+                    <path d="M11.341,18.65C11.872,19.134 13.771,19.144 14.141,18.752L14.829,24.649C14.246,25.039 11.52,25.042 10.951,24.649L11.341,18.65Z" style="fill:white;fill-rule:nonzero;"/>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -16,9 +16,6 @@ namespace RoadBuilder.Domain.Configurations
 		public string AggregateType { get; set; }
 		public string PillarPrefabName { get; set; }
 		public float MaxSlopeSteepness { get; set; }
-		public bool HasUndergroundWaterPipes { get; set; }
-		public bool HasUndergroundElectricityCable { get; set; }
-		public bool RequiresUpgradeForElectricity { get; set; }
 		public RoadCategory Category { get; set; }
 		public RoadAddons Addons { get; set; }
 		public List<LaneConfig> Lanes { get; set; } = new();
@@ -30,20 +27,14 @@ namespace RoadBuilder.Domain.Configurations
 			reader.Read(out string aggregateType);
 			reader.Read(out string pillarPrefabName);
 			reader.Read(out float maxSlopeSteepness);
-			reader.Read(out bool hasUndergroundWaterPipes);
-			reader.Read(out bool hasUndergroundElectricityCable);
-			reader.Read(out bool requiresUpgradeForElectricity);
-			reader.Read(out int category);
-			reader.Read(out int addons);
+			reader.Read(out ulong category);
+			reader.Read(out ulong addons);
 
 			ID = iD;
 			Name = name;
 			AggregateType = aggregateType;
 			PillarPrefabName = pillarPrefabName;
 			MaxSlopeSteepness = maxSlopeSteepness;
-			HasUndergroundWaterPipes = hasUndergroundWaterPipes;
-			HasUndergroundElectricityCable = hasUndergroundElectricityCable;
-			RequiresUpgradeForElectricity = requiresUpgradeForElectricity;
 			Category = (RoadCategory)category;
 			Addons = (RoadAddons)addons;
 
@@ -68,11 +59,8 @@ namespace RoadBuilder.Domain.Configurations
 			writer.Write(AggregateType ?? string.Empty);
 			writer.Write(PillarPrefabName ?? string.Empty);
 			writer.Write(MaxSlopeSteepness);
-			writer.Write(HasUndergroundWaterPipes);
-			writer.Write(HasUndergroundElectricityCable);
-			writer.Write(RequiresUpgradeForElectricity);
-			writer.Write((int)Category);
-			writer.Write((int)Addons);
+			writer.Write((ulong)Category);
+			writer.Write((ulong)Addons);
 
 			writer.Write(Lanes.Count);
 

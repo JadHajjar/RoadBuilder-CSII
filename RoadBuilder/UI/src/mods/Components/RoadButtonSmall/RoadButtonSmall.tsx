@@ -5,7 +5,7 @@ import { EditPropertiesPopup } from "../EditPropertiesPopup/EditPropertiesPopup"
 import { MouseEvent, MouseEventHandler, forwardRef, useCallback, useContext, useRef, useState } from "react";
 import { DragContext } from "mods/Contexts/DragContext";
 import classNames from "classnames";
-import { RoadLane } from "domain/RoadProperties";
+import { RoadLane } from "domain/RoadLane";
 import { NetSectionsStoreContext } from "mods/Contexts/NetSectionsStore";
 import { MouseButtons } from "mods/util";
 import { LanePropertiesContext } from "mods/Contexts/LanePropertiesContext";

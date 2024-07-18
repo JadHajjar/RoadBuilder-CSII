@@ -1,4 +1,5 @@
 ﻿using Colossal.Entities;
+using Colossal.Json;
 using Colossal.Serialization.Entities;
 
 using Game;
@@ -13,11 +14,13 @@ using RoadBuilder.Domain;
 using RoadBuilder.Domain.Components;
 using RoadBuilder.Domain.Configurations;
 using RoadBuilder.Domain.Prefabs;
+using RoadBuilder.Systems.UI;
 using RoadBuilder.Utilities;
 using RoadBuilder.Utilities.Searcher;
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 using Unity.Collections;
 using Unity.Entities;
@@ -376,28 +379,41 @@ namespace RoadBuilder.Systems
 				}
 			}
 
+			var NetPieceDataq = SystemAPI.QueryBuilder().WithAll<NetLaneData>().Build();
+			var NetPieceDatae = NetPieceDataq.ToEntityArray(Allocator.Temp);
+			//Game.Prefabs.TrackLane
+			//Game.Prefabs.CarLane
+			//Game.Prefabs.AuxiliaryLanes
+			//Game.Prefabs.PedestrianLane
+			//Game.Prefabs.ParkingLane
+			//Game.Prefabs.UtilityLane
+			for (var i = 0; i < NetPieceDatae.Length; i++)
+			{
+				if (prefabSystem.TryGetPrefab<NetLanePrefab>(NetPieceDatae[i], out var prefab))
+				{
+					Mod.Log.Debug($"Processing: {prefab.name}");
+					foreach (var item in prefab.components)
+					{
+						Mod.Log.Debug($"\t> {item.GetType().Name} ");
+					}
+				}
+			}
+
 			RoadGenerationData.LaneGroupPrefabs = netSectionsSystem.LaneGroups;
 		}
 
 		private void RunUpdateSegments(Entity entity)
 		{
-			var qq = SystemAPI.QueryBuilder().WithAny<Edge, Game.Net.SubLane, Lane, NetCompositionData, EdgeGeometry, NodeGeometry, Node>().WithNone<Updated, BatchesUpdated, Temp>().Build();
+			var entities = prefabRefQuery.ToEntityArray(Allocator.Temp);
 
-			EntityManager.AddComponent<Updated>(qq);
-			EntityManager.AddComponent<BatchesUpdated>(qq);
-
-			return;
-			var ents = prefabRefQuery.ToEntityArray(Allocator.Temp);
-
-			new Update2(EntityManager).Update(ref ents);
-
-
-			for (var i = 0; i < ents.Length; i++)
+			for (var i = 0; i < entities.Length; i++)
 			{
-				if (EntityManager.TryGetComponent<PrefabRef>(entity, out var prefabRef) && prefabRef.m_Prefab == entity)
+				if (!EntityManager.TryGetComponent<PrefabRef>(entity, out var prefabRef) || prefabRef.m_Prefab != entity)
 				{
-					EntityManager.AddComponent<Updated>(entity);
+					continue;
 				}
+
+				EntityManager.TryAddComponent<RoadBuilderUpdateFlagComponent>(entity);
 
 				if (EntityManager.TryGetBuffer<ConnectedEdge>(entity, true, out var edges))
 				{
@@ -405,9 +421,9 @@ namespace RoadBuilder.Systems
 					{
 						if (EntityManager.TryGetComponent<Edge>(edges[j].m_Edge, out var edge))
 						{
-							EntityManager.AddComponent<Updated>(edges[j].m_Edge);
-							EntityManager.AddComponent<Updated>(edge.m_Start);
-							EntityManager.AddComponent<Updated>(edge.m_End);
+							EntityManager.TryAddComponent<RoadBuilderUpdateFlagComponent>(edges[j].m_Edge);
+							EntityManager.TryAddComponent<RoadBuilderUpdateFlagComponent>(edge.m_Start);
+							EntityManager.TryAddComponent<RoadBuilderUpdateFlagComponent>(edge.m_End);
 						}
 					}
 				}
@@ -416,7 +432,7 @@ namespace RoadBuilder.Systems
 				{
 					for (var j = 0; j < edges.Length; j++)
 					{
-						EntityManager.AddComponent<Updated>(subLanes[i].m_SubLane);
+						EntityManager.TryAddComponent<RoadBuilderUpdateFlagComponent>(subLanes[i].m_SubLane);
 					}
 				}
 			}

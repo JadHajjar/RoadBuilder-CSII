@@ -1,6 +1,6 @@
 ﻿using Game.Prefabs;
 
-using RoadBuilder.Domain.Components;
+using RoadBuilder.Domain.Components.Prefabs;
 using RoadBuilder.Domain.Enums;
 
 using System.Collections.Generic;
@@ -15,37 +15,37 @@ namespace RoadBuilder.LaneGroups
 		public SidewalkGroupPrefab(Dictionary<string, NetSectionPrefab> sections) : base(sections)
 		{
 			DisplayName = "Sidewalk";
-			Options = new RoadBuilderLaneOptionInfo[]
+			Options = new RoadBuilderLaneOption[]
 			{
 				new()
 				{
 					DefaultValue = "",
 					Name = OptionName1,
-					Options = new RoadBuilderLaneOptionItemInfo[]
+					Options = new RoadBuilderLaneOptionValue[]
 					{
 						new()
 						{
 							Value = "",
-							ThumbnailUrl = "coui://roadbuildericons/RB_WideSidewalkRight.svg"
+							ThumbnailUrl = "coui://roadbuildericons/RB_NoParking.svg"
 						},
 						new()
 						{
 							Value = "P" ,
-							ThumbnailUrl = "coui://roadbuildericons/RB_SidewalkRightwParking.svg"
+							ThumbnailUrl = "coui://roadbuildericons/RB_YesParking.svg"
 						},
 					}
 				},
 				new()
 				{
 					Name = "Decoration",
-					IsDecoration = true,
+					Type = LaneOptionType.Decoration,
 				},
 				new()
 				{
 					DefaultValue = "3.5m",
-					IsValue = true,
+					Type = LaneOptionType.ValueUpDown,
 					Name = OptionName2,
-					Options = new RoadBuilderLaneOptionItemInfo[]
+					Options = new RoadBuilderLaneOptionValue[]
 					{
 						new() { Value = "3.5m" },
 						new() { Value = "4.5m" },
@@ -57,10 +57,9 @@ namespace RoadBuilder.LaneGroups
 				}
 			};
 
-			AddComponent<RoadBuilderLaneInfoItem>().WithRequired(RoadCategory.RaisedSidewalk);
+			AddComponent<RoadBuilderLaneInfo>().WithRequired(RoadCategory.RaisedSidewalk);
 
-			var uiObj = AddComponent<UIObject>();
-			uiObj.m_Icon = "coui://roadbuildericons/RB_WideSidewalkRight.svg";
+			AddComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_WideSidewalkRight.svg";
 
 			SetUp(sections["Sidewalk With Parking 5"], "P", "5m");
 			SetUp(sections["Sidewalk 3.5"], "", "3.5m");
@@ -74,11 +73,12 @@ namespace RoadBuilder.LaneGroups
 			SetUp(sections["Sidewalk 5.5"], "", "5.5m");
 		}
 
-		private void SetUp(NetSectionPrefab prefab, string value1, string value2)
+		private void SetUp(NetSectionPrefab prefab, string value1, string value2, bool deco = true)
 		{
-			var laneInfo = prefab.AddComponent<RoadBuilderLaneGroupItem>();
+			var laneInfo = prefab.AddComponent<RoadBuilderLaneGroup>();
 			laneInfo.GroupPrefab = this;
-			laneInfo.Combination = new LaneOptionCombination[]
+			laneInfo.Combination = deco
+				? new LaneOptionCombination[]
 			{
 				new()
 				{
@@ -95,10 +95,30 @@ namespace RoadBuilder.LaneGroups
 					OptionName = OptionName2,
 					Value = value2
 				}
+			}
+				: new LaneOptionCombination[]
+			{
+				new()
+				{
+					OptionName = OptionName1,
+					Value = value1
+				},
+				new()
+				{
+					OptionName = OptionName2,
+					Value = value2
+				}
 			};
 
 			var uiObj = prefab.AddOrGetComponent<UIObject>();
 			uiObj.m_Icon = value1 == "" ? "coui://roadbuildericons/RB_WideSidewalkRight.svg" : "coui://roadbuildericons/RB_SidewalkRightwParking.svg";
+
+			if (value1 != "")
+			{
+				prefab.AddComponent<RoadBuilderLaneInfo>()
+					.WithFrontThumbnail("coui://roadbuildericons/RB_SidewalkwParkingFront.svg")
+					.WithBackThumbnail("coui://roadbuildericons/RB_SidewalkwParkingRear.svg");
+			}
 
 			LinkedSections.Add(prefab);
 		}

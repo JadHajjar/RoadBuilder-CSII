@@ -4,8 +4,7 @@ using Game;
 using Game.Common;
 using Game.Prefabs;
 using Game.SceneFlow;
-
-using RoadBuilder.Domain.Components;
+using RoadBuilder.Domain.Components.Prefabs;
 using RoadBuilder.Domain.Enums;
 using RoadBuilder.Domain.Prefabs;
 using RoadBuilder.LaneGroups;
@@ -18,7 +17,7 @@ using Unity.Entities;
 
 namespace RoadBuilder.Systems
 {
-	public partial class NetSectionsSystem : GameSystemBase
+    public partial class NetSectionsSystem : GameSystemBase
 	{
 		private PrefabSystem prefabSystem;
 		private EntityQuery prefabQuery;
@@ -67,34 +66,27 @@ namespace RoadBuilder.Systems
 
 		private void AddCustomPrefabComponents()
 		{
-			_blacklist.ForEach(x => NetSections[x].AddOrGetComponent<RoadBuilderHideComponent>());
+			_blacklist.ForEach(x => NetSections[x].AddOrGetComponent<RoadBuilderHide>());
 
-			SetUp("Tram Track Section 3", "coui://roadbuildericons/RB_TramFront.svg")
-				.WithExcluded(RoadCategory.Gravel | RoadCategory.Tiled | RoadCategory.Pathway | RoadCategory.Fence)
-				.WithFrontThumbnail("coui://roadbuildericons/RB_TramFront.svg")
-				.WithBackThumbnail("coui://roadbuildericons/RB_TramRear.svg");
-
-			SetUp("Gravel Drive Section 3", "").WithRequired(RoadCategory.Gravel);
-			SetUp("Pavement Path Section 3", "").WithRequired(RoadCategory.Pathway);
-			SetUp("Tiled Drive Section 3", "").WithRequired(RoadCategory.Tiled);
-			SetUp("Tiled Pedestrian Section 3", "").WithRequired(RoadCategory.Tiled);
-			SetUp("Tiled Section 3", "").WithRequired(RoadCategory.Tiled);
-			SetUp("Tiled Median Pedestrian 2", "").WithRequired(RoadCategory.Tiled);
-			SetUp("Tiled Median 2", "").WithRequired(RoadCategory.Tiled);
-			SetUp("Sound Barrier 1", "").WithExcluded(RoadCategory.RaisedSidewalk);
-			SetUp("Grass", "Media/Game/Icons/Grass.svg").WithExcluded(RoadCategory.NoRaisedSidewalkSupport);
-			SetUp("Trees", "Media/Game/Icons/Trees.svg").WithExcluded(RoadCategory.NoRaisedSidewalkSupport);
-			SetUp("Subway Median 8", "").WithRequired(RoadCategory.Subway | RoadCategory.Train | RoadCategory.Tram);
-			SetUp("Subway Median 8 - Plain", "").WithRequired(RoadCategory.Subway | RoadCategory.Train);
+			SetUp("Gravel Drive Section 3", "coui://roadbuildericons/RB_Car_Centered.svg").WithRequired(RoadCategory.Gravel).WithFrontThumbnail("coui://roadbuildericons/RB_CarFront.svg").WithBackThumbnail("coui://roadbuildericons/RB_CarRear.svg");
+			SetUp("Pavement Path Section 3", "coui://roadbuildericons/RB_PedestrianLane.svg").WithRequired(RoadCategory.Pathway);
+			SetUp("Tiled Drive Section 3", "coui://roadbuildericons/RB_GrassMedian_Centered.svg").WithRequired(RoadCategory.Tiled);
+			SetUp("Tiled Pedestrian Section 3", "coui://roadbuildericons/RB_GrassMedian_Centered.svg").WithRequired(RoadCategory.Tiled);
+			SetUp("Tiled Section 3", "coui://roadbuildericons/RB_GrassMedian_Centered.svg").WithRequired(RoadCategory.Tiled);
+			SetUp("Tiled Median Pedestrian 2", "coui://roadbuildericons/RB_GrassMedian_Centered.svg").WithRequired(RoadCategory.Tiled);
+			SetUp("Tiled Median 2", "coui://roadbuildericons/RB_TiledMedian_Centered.svg").WithRequired(RoadCategory.Tiled).WithThumbnail("coui://roadbuildericons/RB_TiledMedian.svg");
+			SetUp("Sound Barrier 1", "coui://roadbuildericons/RB_SoundBarrier.svg").WithExcluded(RoadCategory.RaisedSidewalk);
+			SetUp("Subway Median 8", "coui://roadbuildericons/RB_GrassMedian_Centered.svg").WithRequired(RoadCategory.Subway | RoadCategory.Train | RoadCategory.Tram);
+			SetUp("Subway Median 8 - Plain", "coui://roadbuildericons/RB_GrassMedian_Centered.svg").WithRequired(RoadCategory.Subway | RoadCategory.Train);
 		}
 
-		private RoadBuilderLaneInfoItem SetUp(string prefabName, string thumbnail)
+		private RoadBuilderLaneInfo SetUp(string prefabName, string thumbnail)
 		{
 			var prefab = NetSections[prefabName];
 
 			prefab.AddOrGetComponent<UIObject>().m_Icon = thumbnail;
 
-			return prefab.AddOrGetComponent<RoadBuilderLaneInfoItem>();
+			return prefab.AddOrGetComponent<RoadBuilderLaneInfo>();
 		}
 
 		private void AddCustomGroups()
@@ -134,6 +126,8 @@ namespace RoadBuilder.Systems
 			"Subway Side 0",
 			"Train Side 0",
 			"Pavement Path Side Section 0",
+			"Grass",
+			"Trees",
 			"Golden Gate Sidewalk",
 			"Golden Gate Drive",
 			"Golden Gate Bridge",

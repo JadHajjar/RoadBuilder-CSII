@@ -1,65 +1,28 @@
-.container {
-  margin: 0 4rem 8rem 4rem;
-  width: 89rem;
-  height: 110rem;
-
-  &.moving {
-    background-color: rgba($color: #000000, $alpha: 0.3);
-    border-radius: 4rem;
-  }
-}
-
-@keyframes startDrag-item {
-  0% {
-    height: 160rem;
-  }
-  100% {
-    height: 100rem;
-  }
-}
-@keyframes startDrag-label {
-  0% {
-    transform: scale(1);
-  }
-  100% {
-    transform: scale(1, 0);
-    opacity: 0;
-  }
-}
-
-.item {
-  padding: 4rem;
-  background-color: rgba($color: #ffffff, $alpha: 0.15);
-  width: auto;
-  height: 110rem;
-  border-radius: 4rem;
-  flex-grow: 0;
+.gridItem {
+  margin: 4rem !important;
+  width: 94rem;
+  height: 94rem;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
+  position: relative;
   overflow: hidden;
-  transform: scale(1);
-
-  transition: width 0.25s, height 0.25s, box-shadow 0.25s, transform 0.25s;
-
-  &:hover {
-    transform: scale(1.1);
-    box-shadow: 0px 4rem 5rem 2rem rgba($color: #000000, $alpha: 0.3);
-  }
 
   &.moving {
-    display: none;
+    background: rgba(0, 0, 0, 0.25);
   }
 
-  &.dragRepresentation {
-    position: absolute;
-    height: auto;
+  &.dragged {
     background: none;
-    .label {
-      transform: scale(1, 0);
-      animation: startDrag-label 0.2s;
-    }
-    animation: startDrag-item 0.2s;
+    width: 80rem;
+    height: 80rem;
+    position: absolute;
+    border: 2rem solid rgba(255, 255, 255, 0.5);
+    border-bottom-left-radius: 8rem;
+    border-bottom-right-radius: 8rem;
+    border-top-left-radius: 8rem;
+    border-top-right-radius: 8rem;
 
     &.bottomRow {
       animation: none;
@@ -71,28 +34,68 @@
   }
 }
 
-.image {
-  width: 50rem;
-  height: 50rem;
-  padding: 4rem;
-  border-radius: 4rem;
+.gridThumbnail {
+  width: 75% !important;
+  height: 75% !important;
+  transition: width 0.25s, height 0.25s;
 }
 
-.label {
-  color: var(--normalTextColor);
-  margin-top: 4rem;
-  width: 80rem;
-  font-size: 12rem;
-  height: 2lh;
-  text-align: center;
-  text-overflow: ellipsis;
+.gridItem:hover .gridThumbnail,
+.gridItem.dragged .gridThumbnail {
+  width: 95% !important;
+  height: 95% !important;
+}
+
+.gridItem.moving .gridThumbnail {
+  width: 65% !important;
+  height: 65% !important;
+}
+
+.jpgThumb {
+  border-radius: 5rem;
+  margin-bottom: 5rem;
+}
+
+.gridItemText {
+  width: 95%;
+  transition-property: opacity;
+  transition-duration: 0.15s;
+  transition-timing-function: ease-in-out;
+  position: absolute;
+  bottom: 2.5rem;
+  font-size: 13rem;
+  padding: 3rem;
+  white-space: normal;
   overflow: hidden;
+  background-color: rgba(50, 50, 50, 0.6);
+  backdrop-filter: var(--panelBlur);
+  color: var(--textColorDim);
+  border-bottom-left-radius: var(--panelRadius);
+  border-bottom-right-radius: var(--panelRadius);
+  border-top-left-radius: var(--panelRadius);
+  border-top-right-radius: var(--panelRadius);
+}
 
-  transform-origin: top center;
+.gridItem:hover .gridItemText,
+.gridItem.moving .gridItemText {
+  opacity: 0;
+}
 
-  transition: transform 0.25s;
+.rightSideContainer {
+  position: absolute;
+  top: 0.15em;
+  right: 0.15em;
+  display: flex;
+  flex-direction: column;
+}
 
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
+.rightSideContainer > img {
+  width: 1.15em;
+  height: 1.15em;
+  margin-bottom: 0.375em;
+  filter: drop-shadow(0px 0px 1rem rgba(0, 0, 0, 0.5));
+}
+
+.gridItemText p {
+  text-align: center;
 }

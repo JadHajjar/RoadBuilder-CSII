@@ -8,7 +8,7 @@ import { DragContext } from "mods/Contexts/DragContext";
 import { useValue } from "cs2/api";
 import { clearTool, createNewPrefab, setRoadLanes, roadBuilderToolMode$, roadLanes$, isPaused$, toggleTool } from "mods/bindings";
 import { RoadBuilderToolModeEnum } from "domain/RoadBuilderToolMode";
-import { RoadLane } from "domain/RoadProperties";
+import { RoadLane } from "domain/RoadLane";
 import { VanillaComponentResolver } from "vanillacomponentresolver";
 import { DragAndDropScrollable } from "mods/Components/DragAndDropScrollable/DragAndDropScrollable";
 import { DeleteAreaDnD } from "mods/Components/DeleteAreaDnD/DeleteAreaDnD";

@@ -3,30 +3,30 @@ import { Theme } from "cs2/bindings";
 import mod from "mod.json";
 import { getModule } from "cs2/modding";
 import styles from "./OptionsPanel.module.scss";
-import { OptionSection } from "domain/RoadProperties";
+import { OptionSection } from "domain/Options";
 import { VanillaComponentResolver } from "vanillacomponentresolver";
 import { Tooltip } from "cs2/ui";
-import { laneOptionClicked } from "mods/bindings";
 import { useContext } from "react";
+import classNames from "classnames";
 
 type _Props = {
   options: OptionSection[];
-  Index: number;
+  OnChange: (x: number, y: number, z: number) => void;
 };
 
 export const OptionsPanelComponent = (props: _Props) => {
   return (
     <>
-      {props.options.map((section) => (
+      {props.options?.map((section) => (
         <div className={styles.optionRow}>
           <div className={styles.optionSection}>
             <div className={styles.optionLabel}>{section.name}</div>
             <div className={styles.optionContent}>
-              {section.options.map((option) =>
+              {section.options?.map((option) =>
                 option.isValue ? (
                   <>
                     <VanillaComponentResolver.instance.ToolButton
-                      onSelect={() => laneOptionClicked(props.Index, section.id, option.id, -1)}
+                      onSelect={() => props.OnChange(section.id, option.id, -1)}
                       src="Media/Glyphs/ThickStrokeArrowDown.svg"
                       focusKey={VanillaComponentResolver.instance.FOCUS_DISABLED}
                       className={
@@ -39,7 +39,7 @@ export const OptionsPanelComponent = (props: _Props) => {
                     <div className={VanillaComponentResolver.instance.mouseToolOptionsTheme.numberField}>{option.value}</div>
 
                     <VanillaComponentResolver.instance.ToolButton
-                      onSelect={() => laneOptionClicked(props.Index, section.id, option.id, 1)}
+                      onSelect={() => props.OnChange(section.id, option.id, 1)}
                       src="Media/Glyphs/ThickStrokeArrowUp.svg"
                       focusKey={VanillaComponentResolver.instance.FOCUS_DISABLED}
                       className={
@@ -54,10 +54,14 @@ export const OptionsPanelComponent = (props: _Props) => {
                     selected={option.selected}
                     tooltip={option.name}
                     disabled={option.disabled}
-                    onSelect={option.disabled ? undefined : () => laneOptionClicked(props.Index, section.id, option.id, 0)}
+                    onSelect={option.disabled ? undefined : () => props.OnChange(section.id, option.id, 0)}
                     src={option.icon}
                     focusKey={VanillaComponentResolver.instance.FOCUS_DISABLED}
-                    className={VanillaComponentResolver.instance.toolButtonTheme.button + " " + styles.singleButton}
+                    className={classNames(
+                      VanillaComponentResolver.instance.toolButtonTheme.button,
+                      styles.singleButton,
+                      option.selected && styles.selected
+                    )}
                   />
                 )
               )}

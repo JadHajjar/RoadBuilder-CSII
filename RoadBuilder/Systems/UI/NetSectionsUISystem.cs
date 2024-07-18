@@ -3,12 +3,13 @@ using Game.SceneFlow;
 using Game.UI;
 using Game.UI.InGame;
 
-using RoadBuilder.Domain.Components;
+using RoadBuilder.Domain.Components.Prefabs;
 using RoadBuilder.Domain.Configurations;
 using RoadBuilder.Domain.UI;
 using RoadBuilder.Utilities;
 
 using System.Collections.Generic;
+using System.Linq;
 
 using Unity.Entities;
 
@@ -35,7 +36,7 @@ namespace RoadBuilder.Systems.UI
 			netSectionsSystem.SectionsAdded += () => _NetSections.Value = GetSections();
 		}
 
-		internal void RefreshEntries(INetworkConfig config)
+		public void RefreshEntries(INetworkConfig config)
 		{
 			activeConfig = config;
 
@@ -48,7 +49,7 @@ namespace RoadBuilder.Systems.UI
 
 			foreach (var prefab in netSectionsSystem.NetSections.Values)
 			{
-				if (prefab.Has<RoadBuilderLaneGroupItem>() || prefab.Has<RoadBuilderHideComponent>())
+				if (prefab.Has<RoadBuilderLaneGroup>() || prefab.Has<RoadBuilderHide>())
 				{
 					continue;
 				}
@@ -58,10 +59,15 @@ namespace RoadBuilder.Systems.UI
 					continue;
 				}
 
+				if (IsInvalidLane(prefab))
+				{
+					continue;
+				}
+
 				sections.Add(new NetSectionItem
 				{
 					PrefabName = prefab.name,
-					DisplayName = prefab.name,//GetAssetName(prefab),
+					DisplayName = GetAssetName(prefab),
 					Thumbnail = ImageSystem.GetIcon(prefab),
 					Width = prefab.CalculateWidth()
 				});
@@ -84,6 +90,23 @@ namespace RoadBuilder.Systems.UI
 			}
 
 			return sections.ToArray();
+		}
+
+		private bool IsInvalidLane(NetSectionPrefab prefab)
+		{
+			var carLanes = prefab.FindLanes<CarLane>();
+
+			if (carLanes.Any(x => x.m_RoadType > Game.Net.RoadTypes.Car))
+			{
+				return true;
+			}
+
+			if (prefab.FindLanes<UtilityLane>().Any(x => x.m_UtilityType is not Game.Net.UtilityTypes.Fence))
+			{
+				return true;
+			}
+
+			return false;
 		}
 
 		private string GetAssetName(PrefabBase prefab)

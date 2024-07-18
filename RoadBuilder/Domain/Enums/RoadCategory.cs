@@ -3,7 +3,7 @@
 namespace RoadBuilder.Domain.Enums
 {
 	[Flags]
-	public enum RoadCategory : uint
+	public enum RoadCategory : ulong
 	{
 		Road = 0,
 		Highway = 1,
@@ -16,7 +16,7 @@ namespace RoadBuilder.Domain.Enums
 		RaisedSidewalk = 128,
 		Fence = 256,
 		Pathway = 512,
-		NonAsphalt = Train | Tram | Subway | Gravel | Tiled | Fence | Pathway,
+		NonAsphalt = Train | Subway | Gravel | Tiled | Fence | Pathway,
 		NonRoad = Highway | PublicTransport | Train | Tram | Subway | Gravel | Tiled | Fence | Pathway,
 		NoRaisedSidewalkSupport = Train | Subway | Gravel | Fence | Pathway,
 	}
