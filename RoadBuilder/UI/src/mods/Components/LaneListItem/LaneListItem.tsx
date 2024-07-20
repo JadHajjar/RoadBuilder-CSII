@@ -1,11 +1,10 @@
-import { Button, Number2, Tooltip } from "cs2/ui";
+import { Button } from "cs2/ui";
 import styles from "./LaneListItem.module.scss";
 import { NetSectionItem } from "domain/NetSectionItem";
-import { CSSProperties, MouseEventHandler, forwardRef, useContext, useEffect, useRef, useState } from "react";
+import { CSSProperties, MouseEventHandler, forwardRef, useContext } from "react";
 import classNames from "classnames";
 import { DragContext } from "mods/Contexts/DragContext";
 import { MouseButtons } from "mods/util";
-import { NetSectionsStoreContext } from "mods/Contexts/NetSectionsStore";
 import { VanillaComponentResolver } from "vanillacomponentresolver";
 
 export const LaneListItem = ({ netSection }: { netSection: NetSectionItem }) => {
@@ -66,8 +65,6 @@ enum DragType {
 
 export const LaneListItemDrag = forwardRef<HTMLDivElement>((props, ref) => {
   let dragData = useContext(DragContext);
-  let sectionsStore = useContext(NetSectionsStoreContext);
-  let [position, setPosition] = useState<Number2>({ x: 0, y: 0 });
 
   let dragType = DragType.None;
   if (dragData.netSectionItem) {
