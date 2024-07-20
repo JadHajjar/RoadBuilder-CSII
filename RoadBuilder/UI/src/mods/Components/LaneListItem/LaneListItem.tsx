@@ -79,7 +79,7 @@ export const LaneListItemDrag = forwardRef<HTMLDivElement>((props, ref) => {
   if (dragType == DragType.None) {
     return <></>;
   }
-  let netSection = dragType == DragType.Add ? dragData.netSectionItem! : sectionsStore[dragData.roadLane!.SectionPrefabName];
+  let netSection = dragType == DragType.Add ? dragData.netSectionItem! : dragData.roadLane?.NetSection!;
 
   let offsetStyle: CSSProperties = {
     left: `calc( ${dragData.mousePosition.x}px - 40rem)`,
