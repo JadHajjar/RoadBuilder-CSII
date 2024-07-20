@@ -33,6 +33,7 @@ namespace RoadBuilder.Systems.UI
 		private DefaultToolSystem defaultToolSystem;
 		private SimulationSystem simulationSystem;
 		private NetSectionsUISystem netSectionsUISystem;
+		private NetSectionsSystem netSectionsSystem;
 		private ValueBindingHelper<RoadBuilderToolMode> RoadBuilderMode;
 		private ValueBindingHelper<string> RoadName;
 		private ValueBindingHelper<RoadLaneUIBinder[]> RoadLanes;
@@ -54,6 +55,7 @@ namespace RoadBuilder.Systems.UI
 			defaultToolSystem = World.GetOrCreateSystemManaged<DefaultToolSystem>();
 			simulationSystem = World.GetOrCreateSystemManaged<SimulationSystem>();
 			netSectionsUISystem = World.GetOrCreateSystemManaged<NetSectionsUISystem>();
+			netSectionsSystem = World.GetOrCreateSystemManaged<NetSectionsSystem>();
 
 			toolSystem.EventToolChanged += OnToolChanged;
 
@@ -74,7 +76,7 @@ namespace RoadBuilder.Systems.UI
 			CreateTrigger("CreateNewPrefab", () => CreateNewPrefab(workingEntity));
 			CreateTrigger("ClearTool", ClearTool);
 		}
-		
+
 		protected override void OnUpdate()
 		{
 			IsPaused.Value = simulationSystem.selectedSpeed == 0f;
@@ -182,7 +184,14 @@ namespace RoadBuilder.Systems.UI
 				}
 				else
 				{
-					newLanes.Add(item.ToLaneConfig());
+					var lane = item.ToLaneConfig();
+
+					if (lane.GroupPrefabName is not null && netSectionsSystem.LaneGroups.TryGetValue(lane.GroupPrefabName, out var group))
+					{
+						LaneOptionsUtil.FixGroupOptions(config, lane, group);
+					}
+
+					newLanes.Add(lane);
 				}
 			}
 
@@ -192,6 +201,13 @@ namespace RoadBuilder.Systems.UI
 		private void RoadOptionClicked(INetworkConfig config, int option, int id, int value)
 		{
 			RoadOptionsUtil.OptionClicked(config, option, id, value);
+
+			config.Lanes.RemoveAll(x =>
+			{
+				NetworkPrefabGenerationUtil.GetNetSection(roadBuilderSystem.RoadGenerationData, config, x, out var section, out var group);
+
+				return !(section?.MatchCategories(config) ?? true) || !(group?.MatchCategories(config) ?? true);
+			});
 		}
 
 		private void LaneOptionClicked(INetworkConfig config, int index, int option, int id, int value)
@@ -217,6 +233,7 @@ namespace RoadBuilder.Systems.UI
 				{
 					Index = i,
 					Invert = lane.Invert,
+					TwoWay = validSection && section.SupportsTwoWay(),
 					SectionPrefabName = string.IsNullOrEmpty(lane.GroupPrefabName) ? lane.SectionPrefabName : lane.GroupPrefabName,
 					IsGroup = !string.IsNullOrEmpty(lane.GroupPrefabName),
 					Options = LaneOptionsUtil.GenerateOptions(roadGenerationData, config, lane),
@@ -225,7 +242,7 @@ namespace RoadBuilder.Systems.UI
 						PrefabName = section.name,
 						IsGroup = !string.IsNullOrEmpty(lane.GroupPrefabName),
 						DisplayName = GetAssetName((PrefabBase)groupPrefab ?? section),
-						Thumbnail = GetThumbnail(section, groupPrefab, lane.Invert),
+						Thumbnail = GetThumbnail(config, lane, section, groupPrefab, lane.Invert),
 						Width = validSection ? section.CalculateWidth() : 1F,
 					}
 				};
@@ -234,8 +251,36 @@ namespace RoadBuilder.Systems.UI
 			return binders;
 		}
 
-		private static string GetThumbnail(NetSectionPrefab section, LaneGroupPrefab groupPrefab, bool invert)
+		private static string GetThumbnail(INetworkConfig config, LaneConfig lane, NetSectionPrefab section, LaneGroupPrefab groupPrefab, bool invert)
 		{
+			if (section.TryGet<RoadBuilderLaneDecorationInfo>(out var decorationInfo) && groupPrefab?.Options.FirstOrDefault(x => x.Type is LaneOptionType.Decoration) is RoadBuilderLaneOption decorationOption)
+			{
+				switch (LaneOptionsUtil.GetSelectedOptionValue(config, lane, decorationOption))
+				{
+					case "G":
+						if (decorationInfo.GrassThumbnail is not null or "")
+						{
+							return decorationInfo.GrassThumbnail;
+						}
+
+						break;
+					case "T":
+						if (decorationInfo.TreeThumbnail is not null or "")
+						{
+							return decorationInfo.TreeThumbnail;
+						}
+
+						break;
+					case "GT":
+						if (decorationInfo.GrassAndTreeThumbnail is not null or "")
+						{
+							return decorationInfo.GrassAndTreeThumbnail;
+						}
+
+						break;
+				}
+			}
+
 			if (section.TryGet<RoadBuilderLaneInfo>(out var sectionInfo))
 			{
 				if (!string.IsNullOrEmpty(invert ? sectionInfo.FrontThumbnail : sectionInfo.BackThumbnail))

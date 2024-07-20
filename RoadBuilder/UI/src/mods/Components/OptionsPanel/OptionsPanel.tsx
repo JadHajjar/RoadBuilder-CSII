@@ -51,7 +51,7 @@ export const OptionsPanelComponent = (props: _Props) => {
                   </>
                 ) : (
                   <VanillaComponentResolver.instance.ToolButton
-                    selected={option.selected}
+                    selected={option.selected && !option.disabled}
                     tooltip={option.name}
                     disabled={option.disabled}
                     onSelect={option.disabled ? undefined : () => props.OnChange(section.id, option.id, 0)}
@@ -60,7 +60,8 @@ export const OptionsPanelComponent = (props: _Props) => {
                     className={classNames(
                       VanillaComponentResolver.instance.toolButtonTheme.button,
                       styles.singleButton,
-                      option.selected && styles.selected
+                      option.selected && !option.disabled && styles.selected,
+                      option.disabled && styles.disabled
                     )}
                   />
                 )

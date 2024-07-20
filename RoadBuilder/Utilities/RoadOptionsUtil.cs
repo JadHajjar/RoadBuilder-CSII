@@ -180,7 +180,7 @@ namespace RoadBuilder.Utilities
 						Id = (int)RoadAddons.RequiresUpgradeForElectricity,
 						Name = RoadAddons.RequiresUpgradeForElectricity.ToString().FormatWords(),
 						Icon = "coui://roadbuildericons/RB_UndergroundElectricityWhite.svg",
-						Selected = config.Addons.HasFlag(RoadAddons.RequiresUpgradeForElectricity)
+						Selected = !config.Addons.HasFlag(RoadAddons.RequiresUpgradeForElectricity)
 					}
 				}
 			});

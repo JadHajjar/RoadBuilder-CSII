@@ -30,7 +30,10 @@ namespace RoadBuilder.Utilities
 
 			if (NetworkPrefabGenerationUtil.GetNetSection(roadGenerationData, config, lane, out var section, out var group)) // if lane supports invert
 			{
-				options.Add(GetInvertOption(config, lane, group?.Options?.FirstOrDefault(x => x.Type is LaneOptionType.TwoWay)));
+				if (group is not null || !(section?.SupportsTwoWay() ?? false))
+				{
+					options.Add(GetInvertOption(config, lane, group?.Options?.FirstOrDefault(x => x.Type is LaneOptionType.TwoWay)));
+				}
 			}
 
 			if (!string.IsNullOrEmpty(lane.GroupPrefabName))
@@ -68,21 +71,31 @@ namespace RoadBuilder.Utilities
 
 				if (option.Type is LaneOptionType.Decoration)
 				{
+					var available = remainingSections.Any(x => x.GetComponent<RoadBuilderLaneGroup>().Combination.Any(x => x.OptionName == option.Name && x.Value is not null));
+
 					entries[0] = new()
 					{
 						Id = 1,
 						Icon = "coui://roadbuildericons/RB_GrassWhite.svg",
 						Selected = value is "GT" or "G",
+						Disabled = !available,
 					};
 					entries[1] = new()
 					{
 						Id = 2,
 						Icon = "coui://roadbuildericons/RB_TreeWhite.svg",
 						Selected = value is "GT" or "T",
+						Disabled = !available,
 					};
 				}
 				else if (option.Type is LaneOptionType.ValueUpDown)
 				{
+					if (remainingSections.Count <= 1)
+					{
+						remainingSections.RemoveAll(x => !MatchesOptionValue(x, option, value));
+						continue;
+					}
+
 					entries[0] = new()
 					{
 						IsValue = option.Type is LaneOptionType.ValueUpDown,
@@ -99,7 +112,7 @@ namespace RoadBuilder.Utilities
 							Name = option.Options[i].Value,
 							Icon = option.Options[i].ThumbnailUrl,
 							Selected = option.Options[i].Value == value,
-							Disabled = !remainingSections.Any(x => MatchesOptionValue(x, option, value))
+							Disabled = !remainingSections.Any(x => x.GetComponent<RoadBuilderLaneGroup>().Combination.Any(x => x.OptionName == option.Name && x.Value == option.Options[i].Value))
 						};
 					}
 				}
@@ -130,6 +143,7 @@ namespace RoadBuilder.Utilities
 		private static OptionSectionUIEntry GetInvertOption(INetworkConfig config, LaneConfig lane, RoadBuilderLaneOption twoWayOption)
 		{
 			var isTwoWaySelected = twoWayOption is not null && GetSelectedOptionValue(config, lane, twoWayOption) == "1";
+
 			return new OptionSectionUIEntry
 			{
 				Id = (int)ActionType.Invert,
@@ -234,7 +248,7 @@ namespace RoadBuilder.Utilities
 					return;
 				}
 
-				var remainingSections = group.LinkedSections.ToList();
+				var remainingSections = group.LinkedSections.Where(x => x.MatchCategories(config)).ToList();
 
 				foreach (var item in group.Options)
 				{
@@ -272,9 +286,9 @@ namespace RoadBuilder.Utilities
 			}
 		}
 
-		private static void FixGroupOptions(INetworkConfig config, LaneConfig lane, LaneGroupPrefab group)
+		public static void FixGroupOptions(INetworkConfig config, LaneConfig lane, LaneGroupPrefab group)
 		{
-			var remainingSections = group.LinkedSections.ToList();
+			var remainingSections = group.LinkedSections.Where(x => x.MatchCategories(config)).ToList();
 
 			foreach (var option in group.Options)
 			{

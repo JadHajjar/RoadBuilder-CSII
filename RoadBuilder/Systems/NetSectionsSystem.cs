@@ -68,9 +68,7 @@ namespace RoadBuilder.Systems
 		{
 			_blacklist.ForEach(x => NetSections[x].AddOrGetComponent<RoadBuilderHide>());
 
-			SetUp("Gravel Drive Section 3", "coui://roadbuildericons/RB_Car_Centered.svg").WithRequired(RoadCategory.Gravel).WithFrontThumbnail("coui://roadbuildericons/RB_CarFront.svg").WithBackThumbnail("coui://roadbuildericons/RB_CarRear.svg");
 			SetUp("Pavement Path Section 3", "coui://roadbuildericons/RB_PedestrianLane.svg").WithRequired(RoadCategory.Pathway);
-			SetUp("Tiled Drive Section 3", "coui://roadbuildericons/RB_GrassMedian_Centered.svg").WithRequired(RoadCategory.Tiled);
 			SetUp("Tiled Pedestrian Section 3", "coui://roadbuildericons/RB_GrassMedian_Centered.svg").WithRequired(RoadCategory.Tiled);
 			SetUp("Tiled Section 3", "coui://roadbuildericons/RB_GrassMedian_Centered.svg").WithRequired(RoadCategory.Tiled);
 			SetUp("Tiled Median Pedestrian 2", "coui://roadbuildericons/RB_GrassMedian_Centered.svg").WithRequired(RoadCategory.Tiled);

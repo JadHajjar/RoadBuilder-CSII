@@ -115,15 +115,18 @@
       width: 20rem;
       mask-size: 100%;
       background-color: #fff;
-      mask-image: url(coui://roadbuildericons/RB_Arrow.svg);
       margin-top: 6rem;
 
-      //&.up {
-      //transform: rotate(-90deg);
-      //}
+      &.up {
+        mask-image: url(coui://roadbuildericons/RB_Arrow.svg);
+      }
 
       &.down {
-        transform: rotate(180deg);
+        mask-image: url(coui://roadbuildericons/RB_ArrowDown.svg);
+      }
+
+      &.twoway {
+        mask-image: url(coui://roadbuildericons/RB_ArrowBoth.svg);
       }
     }
   }
