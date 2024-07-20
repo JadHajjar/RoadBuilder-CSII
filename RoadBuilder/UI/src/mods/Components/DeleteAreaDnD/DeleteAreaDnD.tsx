@@ -22,7 +22,7 @@ export const DeleteAreaDnD = (props: {onRemove: (index: number) => void}) => {
     return (
         <div className={classes}>
             <Tooltip tooltip={tooltip} disabled={!isDragging}>
-                <div className={styles.target} onMouseEnter={setHovered.bind(null, true)} onMouseLeave={setHovered.bind(null, true)}>
+                <div className={styles.target} onMouseEnter={setHovered.bind(null, true)} onMouseLeave={setHovered.bind(null, false)}>
                     <img src='coui://gameui/Media/Glyphs/Trash.svg'></img>
                 </div>            
             </Tooltip>            
