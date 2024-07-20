@@ -3,7 +3,7 @@
 .panel {
   position: absolute;
   width: 320rem;
-  top: 150rem;
+  top: 100rem;
   bottom: 10rem + _base.$bottomBarOffset + _base.$bottomBarHeight;
   right: 10rem;
   z-index: 0;
@@ -40,7 +40,7 @@
 }
 
 .title {
-  color: var(--accentColorDark);
+  color: var(--accentColorNormal);
   text-transform: uppercase;
   text-align: center;
   font-size: 12rem;

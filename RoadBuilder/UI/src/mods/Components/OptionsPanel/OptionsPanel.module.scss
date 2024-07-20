@@ -50,6 +50,10 @@
   background-color: var(--accentColorNormal) !important;
 }
 
+.disabled {
+  opacity: 0.35;
+}
+
 .optionContent > .singleButton > img {
   width: 26rem;
   height: 26rem;

@@ -110,10 +110,12 @@ export const BottomView = () => {
                 </Button>
               </Tooltip>
               <Button style={copyButtonStyle} className={styles.copyButton} variant="flat" onSelect={createNewPrefab}>
-                Copy to New Prefab
+                Copy to a new road
               </Button>
             </div>
-            <Button className={styles.closeButton} src="Media/Glyphs/Close.svg" variant="icon" onSelect={clearTool} />
+            <Button className={styles.closeButton} variant="flat" onSelect={clearTool}>
+              <img src="Media/Glyphs/Close.svg" />
+            </Button>
           </>
         )}
       </div>

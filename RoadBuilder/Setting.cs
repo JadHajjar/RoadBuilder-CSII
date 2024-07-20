@@ -34,6 +34,9 @@ namespace RoadBuilder
 		[SettingsUISection(kSection, kToggleGroup)]
 		public bool SaveUsedRoadsOnly { get; set; }
 
+		[SettingsUISection(kSection, kToggleGroup)]
+		public bool AdvancedUserMode { get; set; }
+
 		//[SettingsUISection(kSection, kButtonGroup)]
 		//public bool Button { set => Mod.Log.Info("Button clicked"); }
 

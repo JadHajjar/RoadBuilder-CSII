@@ -58,7 +58,7 @@ export const RoadButtonSmall = (props: _Props) => {
       </div>
       <div className={styles.informationBar}>
         <div className={styles.laneDesign}>
-          <img className={classNames(styles.arrow, props.roadLane.Invert ? styles.down : styles.up)} />
+          <img className={classNames(styles.arrow, props.roadLane.TwoWay ? styles.twoway : props.roadLane.Invert ? styles.down : styles.up)} />
         </div>
         <div className={styles.laneName}>{props.roadLane.NetSection!.Width! > 0 && props.roadLane.NetSection?.Width + " m"}</div>
       </div>

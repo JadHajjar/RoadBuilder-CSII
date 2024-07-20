@@ -147,7 +147,7 @@ namespace RoadBuilder.Utilities
 					m_RequireAll = new NetPieceRequirements[0],
 					m_RequireAny = new NetPieceRequirements[0],
 					m_RequireNone = new NetPieceRequirements[0],
-					m_SetState = ((NetworkPrefab.Config.Category & (RoadCategory.NonRoad)) == 0)
+					m_SetState = NetworkPrefab.Config.Category.HasFlag(RoadCategory.RaisedSidewalk)
 					? new[]
 					{
 						NetPieceRequirements.Sidewalk,

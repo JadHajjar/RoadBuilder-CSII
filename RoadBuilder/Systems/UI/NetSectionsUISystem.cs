@@ -89,7 +89,7 @@ namespace RoadBuilder.Systems.UI
 				});
 			}
 
-			return sections.ToArray();
+			return sections.OrderBy(x => x.DisplayName).ToArray();
 		}
 
 		private bool IsInvalidLane(NetSectionPrefab prefab)

@@ -34,7 +34,7 @@ namespace RoadBuilder.Utilities
 						new OptionItemUIEntry
 						{
 							IsValue = true,
-							Value = $"{(int)(roadConfig.SpeedLimit / (!IsMetric() ? 3.218688f: 2f) / 10) * 10}{(IsMetric() ? "km/h" : "mph")}"
+							Value = $"{(int)(roadConfig.SpeedLimit / (!IsMetric() ? 3.218688f: 2f) / 10) * 10} {(IsMetric() ? "km/h" : "mph")}"
 						}
 					}
 				});
@@ -48,28 +48,28 @@ namespace RoadBuilder.Utilities
 						new OptionItemUIEntry
 						{
 							Id = (int)RoadCategory.Highway,
-							Name = RoadCategory.Highway.ToString(),
+							Name = RoadCategory.Highway.ToString().FormatWords(),
 							Icon = "coui://roadbuildericons/RB_HighwayWhite.svg",
 							Selected = config.Category.HasFlag(RoadCategory.Highway)
 						},
 						new OptionItemUIEntry
 						{
 							Id = (int)RoadCategory.PublicTransport,
-							Name = RoadCategory.PublicTransport.ToString(),
+							Name = RoadCategory.PublicTransport.ToString().FormatWords(),
 							Icon = "coui://roadbuildericons/RB_BusWhite.svg",
 							Selected = config.Category.HasFlag(RoadCategory.PublicTransport)
 						},
 						new OptionItemUIEntry
 						{
 							Id = (int)RoadCategory.Gravel,
-							Name = RoadCategory.Gravel.ToString(),
+							Name = RoadCategory.Gravel.ToString().FormatWords(),
 							Icon = "coui://roadbuildericons/RB_GravelWhite.svg",
 							Selected = config.Category.HasFlag(RoadCategory.Gravel)
 						},
 						new OptionItemUIEntry
 						{
 							Id = (int)RoadCategory.Tiled,
-							Name = RoadCategory.Tiled.ToString(),
+							Name = RoadCategory.Tiled.ToString().FormatWords(),
 							Icon = "coui://roadbuildericons/RB_TiledWhite.svg",
 							Selected = config.Category.HasFlag(RoadCategory.Tiled)
 						},
@@ -88,7 +88,7 @@ namespace RoadBuilder.Utilities
 						new OptionItemUIEntry
 						{
 							IsValue = true,
-							Value =  $"{(int)(trackConfig.SpeedLimit / (!IsMetric() ? 3.218688f: 2f) / 10) * 10}{(IsMetric() ? "km/h" : "mph")}"
+							Value =  $"{(int)(trackConfig.SpeedLimit / (!IsMetric() ? 3.218688f: 2f) / 10) * 10} {(IsMetric() ? "km/h" : "mph")}"
 						}
 					}
 				});
@@ -102,28 +102,28 @@ namespace RoadBuilder.Utilities
 						new OptionItemUIEntry
 						{
 							Id = (int)RoadCategory.Train,
-							Name = RoadCategory.Train.ToString(),
+							Name = RoadCategory.Train.ToString().FormatWords(),
 							Icon = "coui://roadbuildericons/RB_TrainWhite.svg",
 							Selected = config.Category.HasFlag(RoadCategory.Train)
 						},
 						new OptionItemUIEntry
 						{
 							Id = (int)RoadCategory.Subway,
-							Name = RoadCategory.Subway.ToString(),
+							Name = RoadCategory.Subway.ToString().FormatWords(),
 							Icon = "coui://roadbuildericons/RB_SubwayWhite.svg",
 							Selected = config.Category.HasFlag(RoadCategory.Subway)
 						},
 						new OptionItemUIEntry
 						{
 							Id = (int)RoadCategory.Gravel,
-							Name = RoadCategory.Gravel.ToString(),
+							Name = RoadCategory.Gravel.ToString().FormatWords(),
 							Icon = "coui://roadbuildericons/RB_GravelWhite.svg",
 							Selected = config.Category.HasFlag(RoadCategory.Gravel)
 						},
 						new OptionItemUIEntry
 						{
 							Id = (int)RoadCategory.Tiled,
-							Name = RoadCategory.Tiled.ToString(),
+							Name = RoadCategory.Tiled.ToString().FormatWords(),
 							Icon = "coui://roadbuildericons/RB_TiledWhite.svg",
 							Selected = config.Category.HasFlag(RoadCategory.Tiled)
 						},
@@ -140,7 +140,7 @@ namespace RoadBuilder.Utilities
 					new OptionItemUIEntry
 					{
 						Id = -(int)RoadCategory.RaisedSidewalk,
-						Name = RoadCategory.RaisedSidewalk.ToString(),
+						Name = RoadCategory.RaisedSidewalk.ToString().FormatWords(),
 						Icon = "coui://roadbuildericons/RB_RaisedSidewalks.svg",
 						Selected = config.Category.HasFlag(RoadCategory.RaisedSidewalk),
 						Hidden = (config.Category & RoadCategory.NoRaisedSidewalkSupport) != 0
@@ -148,7 +148,7 @@ namespace RoadBuilder.Utilities
 					new OptionItemUIEntry
 					{
 						Id = (int)RoadAddons.GeneratesTrafficLights,
-						Name = RoadAddons.GeneratesTrafficLights.ToString(),
+						Name = RoadAddons.GeneratesTrafficLights.ToString().FormatWords(),
 						Icon = "coui://roadbuildericons/RB_TrafficLightsWhite.svg",
 						Selected = config.Addons.HasFlag(RoadAddons.GeneratesTrafficLights),
 						Hidden = config is not RoadConfig
@@ -156,7 +156,7 @@ namespace RoadBuilder.Utilities
 					new OptionItemUIEntry
 					{
 						Id = (int)RoadAddons.GeneratesZoningBlocks,
-						Name = RoadAddons.GeneratesZoningBlocks.ToString(),
+						Name = RoadAddons.GeneratesZoningBlocks.ToString().FormatWords(),
 						Icon = "coui://roadbuildericons/RB_ZoneBlocks.svg",
 						Selected = config.Addons.HasFlag(RoadAddons.GeneratesZoningBlocks),
 						Hidden = config is not RoadConfig
@@ -164,23 +164,23 @@ namespace RoadBuilder.Utilities
 					new OptionItemUIEntry
 					{
 						Id = (int)RoadAddons.HasUndergroundWaterPipes,
-						Name = RoadAddons.HasUndergroundWaterPipes.ToString(),
+						Name = RoadAddons.HasUndergroundWaterPipes.ToString().FormatWords(),
 						Icon = "coui://roadbuildericons/RB_PipesWhite.svg",
 						Selected = config.Addons.HasFlag(RoadAddons.HasUndergroundWaterPipes)
 					},
 					//new OptionItemUIEntry
 					//{
 					//	Id = (int)RoadAddons.HasUndergroundElectricityCable,
-					//	Name = RoadAddons.HasUndergroundElectricityCable.ToString(),
+					//	Name = RoadAddons.HasUndergroundElectricityCable.ToString().FormatWords(),
 					//	Icon = "coui://roadbuildericons/RB_UndergroundElectricityWhite.svg",
 					//	Selected = config.Addons.HasFlag(RoadAddons.HasUndergroundElectricityCable)
 					//},
 					new OptionItemUIEntry
 					{
 						Id = (int)RoadAddons.RequiresUpgradeForElectricity,
-						Name = RoadAddons.RequiresUpgradeForElectricity.ToString(),
+						Name = RoadAddons.RequiresUpgradeForElectricity.ToString().FormatWords(),
 						Icon = "coui://roadbuildericons/RB_UndergroundElectricityWhite.svg",
-						Selected = config.Addons.HasFlag(RoadAddons.RequiresUpgradeForElectricity)
+						Selected = !config.Addons.HasFlag(RoadAddons.RequiresUpgradeForElectricity)
 					}
 				}
 			});
