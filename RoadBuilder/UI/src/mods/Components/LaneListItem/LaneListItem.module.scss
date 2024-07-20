@@ -1,5 +1,33 @@
+$dragReprDim: 95%;
+
+.gridThumbnail {
+  width: 75%;
+  height: 75%;
+  transition: width 0.25s, height 0.25s;
+}
+
+.gridItemText {
+  width: 95%;
+  transition: opacity 0.25s;
+  position: absolute;
+  bottom: 2.5rem;
+  font-size: 13rem;
+  padding: 3rem;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  background-color: rgba(50, 50, 50, 0.6);
+  backdrop-filter: var(--panelBlur);
+  color: var(--textColorDim);
+  border-bottom-left-radius: var(--panelRadius);
+  border-bottom-right-radius: var(--panelRadius);
+  border-top-left-radius: var(--panelRadius);
+  border-top-right-radius: var(--panelRadius);
+
+}
+
 .gridItem {
-  margin: 4rem !important;
+  margin: 4rem;
   width: 94rem;
   height: 94rem;
   display: flex;
@@ -11,18 +39,31 @@
 
   &.moving {
     background: rgba(0, 0, 0, 0.25);
+
+    .gridThumbnail {
+      width: $dragReprDim;
+      height: $dragReprDim;
+      filter: sepia(1);
+      opacity: 0.1;
+    }
+
+    .gridItemText {
+      opacity: 0;
+    }
   }
 
-  &.dragged {
+  &.dragRepresentation {
     background: none;
     width: 80rem;
     height: 80rem;
-    position: absolute;
-    border: 2rem solid rgba(255, 255, 255, 0.5);
+    position: absolute; 
+    backdrop-filter: blur(2px);
+
+    border: 2rem solid rgba(255, 255, 255, 0.2);    
     border-bottom-left-radius: 8rem;
     border-bottom-right-radius: 8rem;
     border-top-left-radius: 8rem;
-    border-top-right-radius: 8rem;
+    border-top-right-radius: 8rem;    
 
     &.bottomRow {
       animation: none;
@@ -31,54 +72,27 @@
         transform: scale(1, 0);
       }
     }
+
+    .gridThumbnail {
+      width: $dragReprDim;
+      height: $dragReprDim;
+    }
   }
-}
 
-.gridThumbnail {
-  width: 75% !important;
-  height: 75% !important;
-  transition: width 0.25s, height 0.25s;
-}
-
-.gridItem:hover .gridThumbnail,
-.gridItem.dragged .gridThumbnail {
-  width: 95% !important;
-  height: 95% !important;
-}
-
-.gridItem.moving .gridThumbnail {
-  width: 65% !important;
-  height: 65% !important;
+  &:hover {
+    .gridThumbnail {
+      width: $dragReprDim;
+      height: $dragReprDim;
+    }
+    .gridItemText {
+      opacity: 0;
+    }
+  }
 }
 
 .jpgThumb {
   border-radius: 5rem;
   margin-bottom: 5rem;
-}
-
-.gridItemText {
-  width: 95%;
-  transition-property: opacity;
-  transition-duration: 0.15s;
-  transition-timing-function: ease-in-out;
-  position: absolute;
-  bottom: 2.5rem;
-  font-size: 13rem;
-  padding: 3rem;
-  white-space: normal;
-  overflow: hidden;
-  background-color: rgba(50, 50, 50, 0.6);
-  backdrop-filter: var(--panelBlur);
-  color: var(--textColorDim);
-  border-bottom-left-radius: var(--panelRadius);
-  border-bottom-right-radius: var(--panelRadius);
-  border-top-left-radius: var(--panelRadius);
-  border-top-right-radius: var(--panelRadius);
-}
-
-.gridItem:hover .gridItemText,
-.gridItem.moving .gridItemText {
-  opacity: 0;
 }
 
 .rightSideContainer {
@@ -88,14 +102,9 @@
   display: flex;
   flex-direction: column;
 }
-
 .rightSideContainer > img {
   width: 1.15em;
   height: 1.15em;
   margin-bottom: 0.375em;
   filter: drop-shadow(0px 0px 1rem rgba(0, 0, 0, 0.5));
-}
-
-.gridItemText p {
-  text-align: center;
 }

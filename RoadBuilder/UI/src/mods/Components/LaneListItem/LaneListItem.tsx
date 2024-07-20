@@ -30,15 +30,13 @@ export const LaneListItem = ({ netSection }: { netSection: NetSectionItem }) => 
   };
 
   return (
-    <Button
+    <div
       onMouseDown={onMouseDown}
       className={classNames(VanillaComponentResolver.instance.assetGridTheme.item, styles.gridItem, dragging && styles.moving)}
-      variant="icon"
-      focusKey={VanillaComponentResolver.instance.FOCUS_DISABLED}
     >
       <img
         src={netSection.Thumbnail ?? "Media/Placeholder.svg"}
-        className={classNames(VanillaComponentResolver.instance.assetGridTheme.thumbnail, styles.gridThumbnail)}
+        className={classNames(styles.gridThumbnail)}
       />
 
       <div className={classNames(styles.gridItemText)}>
@@ -53,7 +51,7 @@ export const LaneListItem = ({ netSection }: { netSection: NetSectionItem }) => 
 
           {props.prefab.random && <img src="coui://uil/Colored/Dice.svg"></img>}
         </div>*/}
-    </Button>
+    </div>
   );
 };
 
@@ -85,7 +83,6 @@ export const LaneListItemDrag = forwardRef<HTMLDivElement>((props, ref) => {
   let containerClasses = classNames(
     VanillaComponentResolver.instance.assetGridTheme.item,
     styles.gridItem,
-    styles.dragged,
     styles.dragRepresentation,
     { [styles.bottomRow]: dragType == DragType.Order }
   );
