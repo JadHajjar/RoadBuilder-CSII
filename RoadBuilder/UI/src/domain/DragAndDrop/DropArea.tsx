@@ -11,10 +11,11 @@ export type DropAreaOptions = {
 
 
     /**
-     * Called when the DnD item is over the element.
+     * Called when the DnD item enters and exits the component
+     * @param hoverStart true on the frame the hovering starts, false on the frame it ends
      * @param data the payload of the drag-and-drop operation     
      */
-    onHover: (data: any) => void;
+    onHover: (hoverStart: boolean, data: any) => void;    
 
     /**
      * Filters out irrelevant drag-and-drop operations.
@@ -48,9 +49,11 @@ export const useDropArea = <T extends DroppableAreaElement>(options?: Partial<Dr
     
     let onMouseEnter = () => {
         setHovered(true);
+        config.onHover(true, {});
     }
     let onMouseExit = () => {
         setHovered(false);
+        config.onHover(false, {});
     }
 
     // Setup the callbacks when the element reference is set
