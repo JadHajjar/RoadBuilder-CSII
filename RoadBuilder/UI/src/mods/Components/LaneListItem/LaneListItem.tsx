@@ -1,11 +1,10 @@
-import { Button, Number2, Tooltip } from "cs2/ui";
+import { Button } from "cs2/ui";
 import styles from "./LaneListItem.module.scss";
 import { NetSectionItem } from "domain/NetSectionItem";
-import { CSSProperties, MouseEventHandler, forwardRef, useContext, useEffect, useRef, useState } from "react";
+import { CSSProperties, MouseEventHandler, forwardRef, useContext } from "react";
 import classNames from "classnames";
 import { DragContext } from "mods/Contexts/DragContext";
 import { MouseButtons } from "mods/util";
-import { NetSectionsStoreContext } from "mods/Contexts/NetSectionsStore";
 import { VanillaComponentResolver } from "vanillacomponentresolver";
 
 export const LaneListItem = ({ netSection }: { netSection: NetSectionItem }) => {
@@ -31,15 +30,13 @@ export const LaneListItem = ({ netSection }: { netSection: NetSectionItem }) => 
   };
 
   return (
-    <Button
+    <div
       onMouseDown={onMouseDown}
       className={classNames(VanillaComponentResolver.instance.assetGridTheme.item, styles.gridItem, dragging && styles.moving)}
-      variant="icon"
-      focusKey={VanillaComponentResolver.instance.FOCUS_DISABLED}
     >
       <img
         src={netSection.Thumbnail ?? "Media/Placeholder.svg"}
-        className={classNames(VanillaComponentResolver.instance.assetGridTheme.thumbnail, styles.gridThumbnail)}
+        className={classNames(styles.gridThumbnail)}
       />
 
       <div className={classNames(styles.gridItemText)}>
@@ -54,7 +51,7 @@ export const LaneListItem = ({ netSection }: { netSection: NetSectionItem }) => 
 
           {props.prefab.random && <img src="coui://uil/Colored/Dice.svg"></img>}
         </div>*/}
-    </Button>
+    </div>
   );
 };
 
@@ -66,8 +63,6 @@ enum DragType {
 
 export const LaneListItemDrag = forwardRef<HTMLDivElement>((props, ref) => {
   let dragData = useContext(DragContext);
-  let sectionsStore = useContext(NetSectionsStoreContext);
-  let [position, setPosition] = useState<Number2>({ x: 0, y: 0 });
 
   let dragType = DragType.None;
   if (dragData.netSectionItem) {
@@ -79,7 +74,7 @@ export const LaneListItemDrag = forwardRef<HTMLDivElement>((props, ref) => {
   if (dragType == DragType.None) {
     return <></>;
   }
-  let netSection = dragType == DragType.Add ? dragData.netSectionItem! : sectionsStore[dragData.roadLane!.SectionPrefabName];
+  let netSection = dragType == DragType.Add ? dragData.netSectionItem! : dragData.roadLane?.NetSection!;
 
   let offsetStyle: CSSProperties = {
     left: `calc( ${dragData.mousePosition.x}px - 40rem)`,
@@ -88,7 +83,6 @@ export const LaneListItemDrag = forwardRef<HTMLDivElement>((props, ref) => {
   let containerClasses = classNames(
     VanillaComponentResolver.instance.assetGridTheme.item,
     styles.gridItem,
-    styles.dragged,
     styles.dragRepresentation,
     { [styles.bottomRow]: dragType == DragType.Order }
   );
