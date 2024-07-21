@@ -1,19 +1,18 @@
-import { NetSectionItem } from "domain/NetSectionItem";
 import styles from "./EditPropertiesPopup.module.scss";
-import { Button, Number2 } from "cs2/ui";
+import { Button } from "cs2/ui";
 import { CSSProperties, useContext } from "react";
 import { useRem } from "cs2/utils";
 import { OptionsPanelComponent } from "../OptionsPanel/OptionsPanel";
 import { LanePropertiesContext } from "mods/Contexts/LanePropertiesContext";
-import { NetSectionsStoreContext } from "mods/Contexts/NetSectionsStore";
 import { useValue } from "cs2/api";
 import { roadLanes$, setRoadLanes } from "mods/bindings";
 import { removeAt } from "mods/util";
 import { laneOptionClicked } from "mods/bindings";
-import { OptionsSection } from "../OptionsPanel/OptionsSection";
+import { DragContext } from "mods/Contexts/DragContext";
 
 export const EditPropertiesPopup = () => {
   let rem = useRem();
+  let dragCtx = useContext(DragContext);
   let laneCtx = useContext(LanePropertiesContext);
   let roadLanes = useValue(roadLanes$);
 
@@ -32,8 +31,9 @@ export const EditPropertiesPopup = () => {
   };
 
   let currentLane = roadLanes[laneCtx.index];
+  let isDragging = dragCtx.roadLane != null || dragCtx.netSectionItem != null;
 
-  if (!currentLane) return <></>;
+  if (!currentLane || isDragging) return <></>;
 
   return (
     <div className={styles.view} style={inlineStyle} onMouseLeave={laneCtx.close}>
