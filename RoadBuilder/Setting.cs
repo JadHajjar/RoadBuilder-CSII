@@ -7,18 +7,15 @@ using Game.Settings;
 namespace RoadBuilder
 {
 	[FileLocation("ModsSettings/" + nameof(RoadBuilder) + "/" + nameof(RoadBuilder))]
-	[SettingsUIGroupOrder(kButtonGroup, kToggleGroup, kSliderGroup, kDropdownGroup)]
-	[SettingsUIShowGroupName(kButtonGroup, kToggleGroup, kSliderGroup, kDropdownGroup)]
+	[SettingsUIGroupOrder(MAIN_GROUP)]
+	[SettingsUIShowGroupName(MAIN_GROUP)]
 	[SettingsUIMouseAction(nameof(RoadBuilder) + "Apply", "CustomUsage")]
 	[SettingsUIMouseAction(nameof(RoadBuilder) + "Cancel", "CustomUsage")]
 	public class Setting : ModSetting
 	{
-		public const string kSection = "Main";
+		public const string MAIN_SECTION = "Main";
 
-		public const string kButtonGroup = "Button";
-		public const string kToggleGroup = "Toggle";
-		public const string kSliderGroup = "Slider";
-		public const string kDropdownGroup = "Dropdown";
+		public const string MAIN_GROUP = "Main";
 
 		public Setting(IMod mod) : base(mod)
 		{
@@ -31,10 +28,10 @@ namespace RoadBuilder
 		[SettingsUIMouseBinding(nameof(RoadBuilder) + "Cancel"), SettingsUIHidden]
 		public ProxyBinding CancelMimic { get; set; }
 
-		[SettingsUISection(kSection, kToggleGroup)]
+		[SettingsUISection(MAIN_SECTION, MAIN_GROUP)]
 		public bool SaveUsedRoadsOnly { get; set; }
 
-		[SettingsUISection(kSection, kToggleGroup)]
+		[SettingsUISection(MAIN_SECTION, MAIN_GROUP)]
 		public bool AdvancedUserMode { get; set; }
 
 		//[SettingsUISection(kSection, kButtonGroup)]

@@ -1,7 +1,9 @@
 ﻿using Colossal.Serialization.Entities;
 
 using RoadBuilder.Domain.Enums;
+using RoadBuilder.Domain.Prefabs;
 
+using System;
 using System.Collections.Generic;
 
 namespace RoadBuilder.Domain.Configurations
@@ -29,8 +31,6 @@ namespace RoadBuilder.Domain.Configurations
 			reader.Read(out string pillarPrefabName);
 			reader.Read(out float speedLimit);
 			reader.Read(out float maxSlopeSteepness);
-			reader.Read(out bool generatesTrafficLights);
-			reader.Read(out bool generatesZoningBlocks);
 			reader.Read(out ulong category);
 			reader.Read(out ulong addons);
 
@@ -79,6 +79,11 @@ namespace RoadBuilder.Domain.Configurations
 		public void ApplyVersionChanges()
 		{
 
+		}
+
+		public Type GetPrefabType()
+		{
+			return typeof(RoadBuilderPrefab);
 		}
 	}
 }

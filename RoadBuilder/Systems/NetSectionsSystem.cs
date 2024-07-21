@@ -4,6 +4,7 @@ using Game;
 using Game.Common;
 using Game.Prefabs;
 using Game.SceneFlow;
+
 using RoadBuilder.Domain.Components.Prefabs;
 using RoadBuilder.Domain.Enums;
 using RoadBuilder.Domain.Prefabs;
@@ -17,7 +18,7 @@ using Unity.Entities;
 
 namespace RoadBuilder.Systems
 {
-    public partial class NetSectionsSystem : GameSystemBase
+	public partial class NetSectionsSystem : GameSystemBase
 	{
 		private PrefabSystem prefabSystem;
 		private EntityQuery prefabQuery;
@@ -26,6 +27,8 @@ namespace RoadBuilder.Systems
 		public event Action SectionsAdded;
 
 		public Dictionary<string, NetSectionPrefab> NetSections { get; } = new();
+		public Dictionary<string, NetPiecePrefab> NetPieces { get; } = new();
+		public Dictionary<string, NetLanePrefab> NetLanes { get; } = new();
 		public Dictionary<string, LaneGroupPrefab> LaneGroups { get; } = new();
 
 		protected override void OnCreate()
@@ -33,7 +36,7 @@ namespace RoadBuilder.Systems
 			base.OnCreate();
 
 			prefabSystem = World.GetOrCreateSystemManaged<PrefabSystem>();
-			prefabQuery = SystemAPI.QueryBuilder().WithAll<Created, PrefabData, NetSectionData>().Build();
+			prefabQuery = SystemAPI.QueryBuilder().WithAll<Created, PrefabData>().WithAny<NetSectionData, NetPieceData, NetLaneData>().Build();
 
 			RequireForUpdate(prefabQuery);
 		}
@@ -44,14 +47,29 @@ namespace RoadBuilder.Systems
 
 			for (var i = 0; i < entities.Length; i++)
 			{
-				if (prefabSystem.TryGetPrefab<NetSectionPrefab>(entities[i], out var prefab))
+				if (!prefabSystem.TryGetPrefab<PrefabBase>(entities[i], out var prefab))
 				{
-					NetSections[prefab.name] = prefab;
+					continue;
+				}
+
+				if (prefab is NetSectionPrefab netSectionPrefab)
+				{
+					NetSections[netSectionPrefab.name] = netSectionPrefab;
+				}
+				else if (prefab is NetPiecePrefab netPiecePrefab)
+				{
+					NetPieces[netPiecePrefab.name] = netPiecePrefab;
+				}
+				else if (prefab is NetLanePrefab netLanePrefab)
+				{
+					NetLanes[netLanePrefab.name] = netLanePrefab;
 				}
 			}
 
 			if (!customSectionsSetUp && NetSections.Count > 0)
 			{
+				//AddCustomSections();
+
 				AddCustomGroups();
 
 				AddCustomPrefabComponents();
@@ -62,6 +80,45 @@ namespace RoadBuilder.Systems
 			}
 
 			SectionsAdded?.Invoke();
+		}
+
+		private void AddCustomSections()
+		{
+			var twoWaySection = NetSections["Car Drive Section 3"].Clone("Car Drive Twoway Section 3") as NetSectionPrefab;
+			var twoWayPiece = NetPieces["Car Drive Piece 3"].Clone("Car Drive Twoway Piece 3") as NetPiecePrefab;
+			var twoWayPieceFlat = NetPieces["Car Drive Piece 3 - Flat"].Clone("Car Drive Twoway Piece 3 - Flat") as NetPiecePrefab;
+			var twoWayLane = NetLanes["Car Drive Lane 3"].Clone("Car Drive Twoway Lane 3") as NetLanePrefab;
+
+			var lanes = twoWayPiece.AddOrGetComponent<NetPieceLanes>();
+			var lanesFlat = twoWayPieceFlat.AddOrGetComponent<NetPieceLanes>();
+
+			lanes.m_Lanes[0].m_Lane = twoWayLane;
+			lanesFlat.m_Lanes[0].m_Lane = twoWayLane;
+
+			foreach (var item in twoWaySection.m_Pieces)
+			{
+				if (item.m_Piece.name is "Car Drive Piece 3")
+				{
+					item.m_Piece = twoWayPiece;
+				}
+
+				if (item.m_Piece.name is "Car Drive Piece 3 - Flat")
+				{
+					item.m_Piece = twoWayPieceFlat;
+				}
+			}
+
+			twoWayLane.Remove<ObsoleteIdentifiers>();
+			twoWayPieceFlat.Remove<ObsoleteIdentifiers>();
+			twoWayPiece.Remove<ObsoleteIdentifiers>();
+			twoWaySection.Remove<ObsoleteIdentifiers>();
+
+			prefabSystem.AddPrefab(twoWayLane);
+			prefabSystem.AddPrefab(twoWayPieceFlat);
+			prefabSystem.AddPrefab(twoWayPiece);
+			prefabSystem.AddPrefab(twoWaySection);
+
+			NetSections[twoWaySection.name] = twoWaySection;
 		}
 
 		private void AddCustomPrefabComponents()

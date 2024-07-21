@@ -1,7 +1,9 @@
 ﻿using Colossal.Serialization.Entities;
 
 using RoadBuilder.Domain.Enums;
+using RoadBuilder.Domain.Prefabs;
 
+using System;
 using System.Collections.Generic;
 
 namespace RoadBuilder.Domain.Configurations
@@ -73,6 +75,11 @@ namespace RoadBuilder.Domain.Configurations
 		public void ApplyVersionChanges()
 		{
 
+		}
+
+		public Type GetPrefabType()
+		{
+			return typeof(FenceBuilderPrefab);
 		}
 	}
 }

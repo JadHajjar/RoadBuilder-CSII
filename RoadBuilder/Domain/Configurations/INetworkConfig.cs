@@ -2,6 +2,7 @@
 
 using RoadBuilder.Domain.Enums;
 
+using System;
 using System.Collections.Generic;
 
 namespace RoadBuilder.Domain.Configurations
@@ -21,5 +22,6 @@ namespace RoadBuilder.Domain.Configurations
 		string PillarPrefabName { get; set; }
 
 		void ApplyVersionChanges();
+		Type GetPrefabType();
 	}
 }
