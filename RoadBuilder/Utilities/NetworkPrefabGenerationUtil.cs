@@ -33,27 +33,14 @@ namespace RoadBuilder.Utilities
 
 		public static INetworkBuilderPrefab CreatePrefab(INetworkConfig config)
 		{
-			if (config is RoadConfig roadConfig)
-			{
-				return new RoadBuilderPrefab(roadConfig);
-			}
+			var prefab = (config is null ? null : ScriptableObject.CreateInstance(config.GetPrefabType()) as INetworkBuilderPrefab)
+				?? throw new Exception("Unknown config type " + (config?.GetType().Name ?? "NULL"));
 
-			if (config is TrackConfig trackConfig)
-			{
-				return new TrackBuilderPrefab(trackConfig);
-			}
+			prefab.Config = config;
+			prefab.Prefab.name = config.ID;
+			prefab.Prefab.m_Sections = new NetSectionInfo[0];
 
-			if (config is FenceConfig fenceConfig)
-			{
-				return new FenceBuilderPrefab(fenceConfig);
-			}
-
-			if (config is PathConfig pathConfig)
-			{
-				return new PathBuilderPrefab(pathConfig);
-			}
-
-			throw new Exception("Unknown config type " + (config?.GetType().Name ?? "NULL"));
+			return prefab;
 		}
 
 		public void GenerateRoad(bool generateId = true)

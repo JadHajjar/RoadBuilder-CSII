@@ -7,8 +7,8 @@ using Game.Settings;
 namespace RoadBuilder
 {
 	[FileLocation("ModsSettings/" + nameof(RoadBuilder) + "/" + nameof(RoadBuilder))]
-	[SettingsUIGroupOrder(kButtonGroup, MAIN_GROUP, kSliderGroup, kDropdownGroup)]
-	[SettingsUIShowGroupName(kButtonGroup, MAIN_GROUP, kSliderGroup, kDropdownGroup)]
+	[SettingsUIGroupOrder(MAIN_GROUP)]
+	[SettingsUIShowGroupName(MAIN_GROUP)]
 	[SettingsUIMouseAction(nameof(RoadBuilder) + "Apply", "CustomUsage")]
 	[SettingsUIMouseAction(nameof(RoadBuilder) + "Cancel", "CustomUsage")]
 	public class Setting : ModSetting

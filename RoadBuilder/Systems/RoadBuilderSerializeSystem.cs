@@ -5,7 +5,9 @@ using Game.Tools;
 using RoadBuilder.Domain.Components;
 using RoadBuilder.Domain.Configurations;
 using RoadBuilder.Domain.Prefabs;
+using RoadBuilder.Utilities;
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -34,33 +36,31 @@ namespace RoadBuilder.Systems
 
 		public static void RegisterRoadID(string type, string id)
 		{
-			PrefabBase prefab;
-
 			Mod.Log.Debug($"Try Register: {type} - {id}");
 
-			switch (type)
+			INetworkConfig config = type switch
 			{
-				case nameof(RoadConfig):
-					prefab = new RoadBuilderPrefab(new RoadConfig { ID = id });
-					break;
-				case nameof(TrackConfig):
-					prefab = new TrackBuilderPrefab(new TrackConfig { ID = id });
-					break;
-				case nameof(FenceConfig):
-					prefab = new FenceBuilderPrefab(new FenceConfig { ID = id });
-					break;
-				case nameof(PathConfig):
-					prefab = new PathBuilderPrefab(new PathConfig { ID = id });
-					break;
-				default:
-					return;
+				nameof(RoadConfig) => new RoadConfig { ID = id },
+				nameof(TrackConfig) => new TrackConfig { ID = id },
+				nameof(FenceConfig) => new FenceConfig { ID = id },
+				nameof(PathConfig) => new PathConfig { ID = id },
+				_ => null
+			};
+
+			try
+			{
+				var prefab = NetworkPrefabGenerationUtil.CreatePrefab(config);
+
+				if (!prefabSystem.TryGetPrefab(prefab.Prefab.GetPrefabID(), out _))
+				{
+					Mod.Log.Debug($"Added: {type} - {id}");
+
+					prefabSystem.AddPrefab(prefab.Prefab);
+				}
 			}
-
-			if (!prefabSystem.TryGetPrefab(prefab.GetPrefabID(), out _))
+			catch (Exception ex)
 			{
-				Mod.Log.Debug($"Added: {type} - {id}");
-
-				prefabSystem.AddPrefab(prefab);
+				Mod.Log.Error(ex);
 			}
 		}
 

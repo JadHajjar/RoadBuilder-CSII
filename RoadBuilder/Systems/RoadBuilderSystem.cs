@@ -1,5 +1,4 @@
 ﻿using Colossal.Entities;
-using Colossal.Json;
 using Colossal.Serialization.Entities;
 
 using Game;
@@ -14,13 +13,11 @@ using RoadBuilder.Domain;
 using RoadBuilder.Domain.Components;
 using RoadBuilder.Domain.Configurations;
 using RoadBuilder.Domain.Prefabs;
-using RoadBuilder.Systems.UI;
 using RoadBuilder.Utilities;
-using RoadBuilder.Utilities.Searcher;
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 using Unity.Collections;
 using Unity.Entities;
@@ -228,61 +225,75 @@ namespace RoadBuilder.Systems
 		{
 			foreach (var config in configs)
 			{
-				config.ApplyVersionChanges();
-
-				var roadPrefab = NetworkPrefabGenerationUtil.CreatePrefab(config);
-
-				if (prefabSystem.TryGetPrefab(roadPrefab.Prefab.GetPrefabID(), out var prefabBase))
+				try
 				{
-					roadPrefab = prefabBase as INetworkBuilderPrefab;
+					config.ApplyVersionChanges();
 
-					roadPrefab.Config = config;
+					var roadPrefab = NetworkPrefabGenerationUtil.CreatePrefab(config);
+
+					if (prefabSystem.TryGetPrefab(roadPrefab.Prefab.GetPrefabID(), out var prefabBase))
+					{
+						roadPrefab = prefabBase as INetworkBuilderPrefab;
+
+						roadPrefab.Config = config;
+					}
+					else
+					{
+						prefabSystem.AddPrefab(roadPrefab.Prefab);
+					}
+
+					var roadPrefabGeneration = new NetworkPrefabGenerationUtil(roadPrefab, RoadGenerationData ?? new());
+
+					roadPrefabGeneration.GenerateRoad(false);
+
+					roadPrefab.Prefab.name = roadPrefab.Config.ID;
+
+					Configurations.Add(roadPrefab);
+
+					prefabSystem.UpdatePrefab(roadPrefab.Prefab, prefabSystem.GetEntity(roadPrefab.Prefab));
 				}
-				else
+				catch (Exception ex)
 				{
-					prefabSystem.AddPrefab(roadPrefab.Prefab);
+					Mod.Log.Error(ex);
 				}
-
-				var roadPrefabGeneration = new NetworkPrefabGenerationUtil(roadPrefab, RoadGenerationData ?? new());
-
-				roadPrefabGeneration.GenerateRoad(false);
-
-				roadPrefab.Prefab.name = roadPrefab.Config.ID;
-
-				Configurations.Add(roadPrefab);
-
-				prefabSystem.UpdatePrefab(roadPrefab.Prefab, prefabSystem.GetEntity(roadPrefab.Prefab));
 			}
 		}
 
 		private void CreateNewRoadPrefab(INetworkConfig config, Entity entity)
 		{
-			var roadPrefab = NetworkPrefabGenerationUtil.CreatePrefab(config);
-			var roadPrefabGeneration = new NetworkPrefabGenerationUtil(roadPrefab, RoadGenerationData ?? new());
-
-			roadPrefabGeneration.GenerateRoad();
-
-			roadPrefab.Prefab.name = roadPrefab.Config.ID;
-
-			prefabSystem.AddPrefab(roadPrefab.Prefab);
-
-			Configurations.Add(roadPrefab);
-
-			var prefabEntity = prefabSystem.GetEntity(roadPrefab.Prefab);
-			var prefabRef = new PrefabRef { m_Prefab = prefabEntity };
-
-			EntityManager.SetComponentData(entity, prefabRef);
-			EntityManager.TryAddComponent<RoadBuilderNetwork>(entity);
-
-			if (EntityManager.TryGetComponent<Edge>(entity, out var edge))
+			try
 			{
-				EntityManager.SetComponentData(edge.m_Start, prefabRef);
-				EntityManager.SetComponentData(edge.m_End, prefabRef);
-				EntityManager.TryAddComponent<RoadBuilderNetwork>(edge.m_Start);
-				EntityManager.TryAddComponent<RoadBuilderNetwork>(edge.m_End);
-			}
+				var roadPrefab = NetworkPrefabGenerationUtil.CreatePrefab(config);
+				var roadPrefabGeneration = new NetworkPrefabGenerationUtil(roadPrefab, RoadGenerationData ?? new());
 
-			_updatedRoadPrefabsQueue.Enqueue(roadPrefab);
+				roadPrefabGeneration.GenerateRoad();
+
+				roadPrefab.Prefab.name = roadPrefab.Config.ID;
+
+				prefabSystem.AddPrefab(roadPrefab.Prefab);
+
+				Configurations.Add(roadPrefab);
+
+				var prefabEntity = prefabSystem.GetEntity(roadPrefab.Prefab);
+				var prefabRef = new PrefabRef { m_Prefab = prefabEntity };
+
+				EntityManager.SetComponentData(entity, prefabRef);
+				EntityManager.TryAddComponent<RoadBuilderNetwork>(entity);
+
+				if (EntityManager.TryGetComponent<Edge>(entity, out var edge))
+				{
+					EntityManager.SetComponentData(edge.m_Start, prefabRef);
+					EntityManager.SetComponentData(edge.m_End, prefabRef);
+					EntityManager.TryAddComponent<RoadBuilderNetwork>(edge.m_Start);
+					EntityManager.TryAddComponent<RoadBuilderNetwork>(edge.m_End);
+				}
+
+				_updatedRoadPrefabsQueue.Enqueue(roadPrefab);
+			}
+			catch (Exception ex)
+			{
+				Mod.Log.Error(ex);
+			}
 		}
 
 		private void FillRoadGenerationData()
@@ -384,6 +395,7 @@ namespace RoadBuilder.Systems
 
 		private void RunUpdateSegments(Entity entity)
 		{
+			return;
 			var entities = prefabRefQuery.ToEntityArray(Allocator.Temp);
 
 			for (var i = 0; i < entities.Length; i++)
