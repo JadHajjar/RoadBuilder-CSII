@@ -29,8 +29,6 @@ namespace RoadBuilder.Domain.Configurations
 			reader.Read(out string pillarPrefabName);
 			reader.Read(out float speedLimit);
 			reader.Read(out float maxSlopeSteepness);
-			reader.Read(out bool generatesTrafficLights);
-			reader.Read(out bool generatesZoningBlocks);
 			reader.Read(out ulong category);
 			reader.Read(out ulong addons);
 

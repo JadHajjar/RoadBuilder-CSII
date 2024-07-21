@@ -1,4 +1,6 @@
-﻿using Game.Prefabs;
+﻿using Colossal.Json;
+
+using Game.Prefabs;
 using Game.SceneFlow;
 using Game.UI.InGame;
 
@@ -6,13 +8,15 @@ using RoadBuilder.Domain;
 using RoadBuilder.Domain.Components.Prefabs;
 using RoadBuilder.Domain.Configurations;
 using RoadBuilder.Domain.Enums;
+using RoadBuilder.Domain.Prefabs;
+using RoadBuilder.Systems;
 
 using System;
 using System.Linq;
 
 namespace RoadBuilder.Utilities
 {
-    public class NetworkConfigGenerationUtil
+	public class NetworkConfigGenerationUtil
 	{
 		private readonly RoadGenerationData _roadGenerationData;
 		private readonly PrefabUISystem _prefabUISystem;
@@ -29,6 +33,11 @@ namespace RoadBuilder.Utilities
 
 		public INetworkConfig GenerateConfiguration()
 		{
+			if (NetworkPrefab is INetworkBuilderPrefab customPrefab)
+			{
+				return JsonClone(customPrefab.Config);
+			}
+
 			INetworkConfig config;
 
 			if (NetworkPrefab is RoadPrefab roadPrefab)
@@ -101,6 +110,15 @@ namespace RoadBuilder.Utilities
 			}
 
 			return config;
+		}
+
+		private INetworkConfig JsonClone(INetworkConfig config)
+		{
+			config.Version = RoadBuilderSystem.CURRENT_VERSION;
+			config.OriginalID = null;
+			config.Type = config.GetType().Name;
+
+			return LocalSaveUtil.LoadFromJson(JSON.Dump(config));
 		}
 
 		private static LaneConfig GetLaneConfig(NetSectionInfo section)

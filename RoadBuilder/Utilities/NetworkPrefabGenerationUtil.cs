@@ -80,7 +80,7 @@ namespace RoadBuilder.Utilities
 			prefab.m_AggregateType = _roadGenerationData.AggregateNetPrefabs.TryGetValue(cfg.AggregateType ?? string.Empty, out var aggregate) ? aggregate : null;
 			prefab.m_NodeStates = GenerateNodeStates().ToArray();
 			prefab.m_EdgeStates = GenerateEdgeStates().ToArray();
-			prefab.m_Sections = GenerateSections().ToArray();
+			prefab.m_Sections = Fix(GenerateSections()).ToArray();
 
 			if (cfg is RoadConfig roadConfig)
 			{

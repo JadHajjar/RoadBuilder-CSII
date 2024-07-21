@@ -82,8 +82,16 @@ namespace RoadBuilder.Systems
 			{
 				if (roadBuilderUISystem.Mode is RoadBuilderToolMode.Picker)
 				{
+					applyAction.shouldBeEnabled = false;
+
 					roadBuilderUISystem.ClearTool();
 				}
+				else
+				{
+					roadBuilderUISystem.Mode = RoadBuilderToolMode.Picker;
+				}
+
+				return base.OnUpdate(inputDeps);
 			}
 
 			applyAction.shouldBeEnabled = roadBuilderUISystem.Mode is RoadBuilderToolMode.Picker;
@@ -161,6 +169,11 @@ namespace RoadBuilder.Systems
 			}
 
 			if (prefab is not (RoadPrefab or TrackPrefab or FencePrefab or PathwayPrefab))
+			{
+				return false;
+			}
+
+			if (prefab is RoadPrefab && !EntityManager.HasComponent<Road>(entity))
 			{
 				return false;
 			}

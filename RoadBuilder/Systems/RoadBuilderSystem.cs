@@ -272,14 +272,14 @@ namespace RoadBuilder.Systems
 			var prefabRef = new PrefabRef { m_Prefab = prefabEntity };
 
 			EntityManager.SetComponentData(entity, prefabRef);
-			EntityManager.AddComponent<RoadBuilderNetwork>(entity);
+			EntityManager.TryAddComponent<RoadBuilderNetwork>(entity);
 
 			if (EntityManager.TryGetComponent<Edge>(entity, out var edge))
 			{
 				EntityManager.SetComponentData(edge.m_Start, prefabRef);
 				EntityManager.SetComponentData(edge.m_End, prefabRef);
-				EntityManager.AddComponent<RoadBuilderNetwork>(edge.m_Start);
-				EntityManager.AddComponent<RoadBuilderNetwork>(edge.m_End);
+				EntityManager.TryAddComponent<RoadBuilderNetwork>(edge.m_Start);
+				EntityManager.TryAddComponent<RoadBuilderNetwork>(edge.m_End);
 			}
 
 			_updatedRoadPrefabsQueue.Enqueue(roadPrefab);
@@ -376,26 +376,6 @@ namespace RoadBuilder.Systems
 				if (prefabSystem.TryGetPrefab<UIGroupPrefab>(uIGroupElementEntities[i], out var prefab))
 				{
 					RoadGenerationData.UIGroupPrefabs[prefab.name] = prefab;
-				}
-			}
-
-			var NetPieceDataq = SystemAPI.QueryBuilder().WithAll<NetLaneData>().Build();
-			var NetPieceDatae = NetPieceDataq.ToEntityArray(Allocator.Temp);
-			//Game.Prefabs.TrackLane
-			//Game.Prefabs.CarLane
-			//Game.Prefabs.AuxiliaryLanes
-			//Game.Prefabs.PedestrianLane
-			//Game.Prefabs.ParkingLane
-			//Game.Prefabs.UtilityLane
-			for (var i = 0; i < NetPieceDatae.Length; i++)
-			{
-				if (prefabSystem.TryGetPrefab<NetLanePrefab>(NetPieceDatae[i], out var prefab))
-				{
-					Mod.Log.Debug($"Processing: {prefab.name}");
-					foreach (var item in prefab.components)
-					{
-						Mod.Log.Debug($"\t> {item.GetType().Name} ");
-					}
 				}
 			}
 

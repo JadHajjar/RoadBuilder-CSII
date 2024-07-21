@@ -45,25 +45,7 @@ namespace RoadBuilder.Utilities
 			{
 				try
 				{
-					var json = JSON.Load(File.ReadAllText(item));
-
-					switch (json["Type"].ToString())
-					{
-						case nameof(RoadConfig):
-							list.Add(JSON.MakeInto<RoadConfig>(json));
-							break;
-						case nameof(TrackConfig):
-							list.Add(JSON.MakeInto<TrackConfig>(json));
-							break;
-						case nameof(FenceConfig):
-							list.Add(JSON.MakeInto<FenceConfig>(json));
-							break;
-						case nameof(PathConfig):
-							list.Add(JSON.MakeInto<PathConfig>(json));
-							break;
-						default:
-							break;
-					}
+					LoadFromJson(File.ReadAllText(item));
 				}
 				catch (Exception ex)
 				{
@@ -74,6 +56,26 @@ namespace RoadBuilder.Utilities
 			}
 
 			return list;
+		}
+
+		public static INetworkConfig LoadFromJson(string data)
+		{
+			var json = JSON.Load(data);
+
+			switch (json["Type"]?.ToString())
+			{
+				case nameof(RoadConfig):
+					return JSON.MakeInto<RoadConfig>(json);
+				case nameof(TrackConfig):
+					return JSON.MakeInto<TrackConfig>(json);
+				case nameof(FenceConfig):
+					return JSON.MakeInto<FenceConfig>(json);
+				case nameof(PathConfig):
+					return JSON.MakeInto<PathConfig>(json);
+				default:
+					Mod.Log.Warn("Unsupported configuration type: " + json["Type"]?.ToString());
+					return null;
+			}
 		}
 	}
 }

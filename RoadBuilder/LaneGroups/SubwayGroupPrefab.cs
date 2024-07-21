@@ -24,7 +24,7 @@ namespace RoadBuilder.LaneGroups
 			};
 
 			AddComponent<RoadBuilderLaneInfo>()
-				.WithAny(RoadCategory.Train | RoadCategory.Subway)
+				.WithExcluded(RoadCategory.Gravel | RoadCategory.Tiled | RoadCategory.Fence | RoadCategory.Pathway)
 				.WithFrontThumbnail("coui://roadbuildericons/RB_SubwayFront.svg")
 				.WithBackThumbnail("coui://roadbuildericons/RB_SubwayRear.svg");
 

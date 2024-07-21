@@ -1,4 +1,10 @@
 {
+  "Options.SECTION[RoadBuilder.RoadBuilder.Mod]": "Road Builder",
+  "Options.TAB[RoadBuilder.RoadBuilder.Mod.Main]": "General Settings",
+  "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.SaveUsedRoadsOnly]": "Save used roads only",
+  "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.SaveUsedRoadsOnly]": "Only saves roads that were used inside the save-game to your computer's local folder.",
+  "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.AdvancedUserMode]": "Advanced User Mode",
+  "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.AdvancedUserMode]": "Ignores safety restrictions on lanes.",
   "Assets.NAME[Gravel Drive Section 3]": "Gravel Car",
   "Assets.NAME[Sound Barrier 1]": "Sound Barrier",
   "Assets.NAME[Pavement Path Section 3]": "Pavement Pedestrian"
