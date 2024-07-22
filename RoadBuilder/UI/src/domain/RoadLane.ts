@@ -7,6 +7,8 @@ export interface RoadLane {
   Invert?: boolean;
   TwoWay?: boolean;
   IsGroup: boolean;
+  Color?: string;
+  Texture?: string;
   NetSection?: NetSectionItem;
   Options?: OptionSection[];
 }

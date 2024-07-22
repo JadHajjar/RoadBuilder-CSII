@@ -1,4 +1,6 @@
-﻿namespace RoadBuilder.Domain.UI
+﻿using UnityEngine;
+
+namespace RoadBuilder.Domain.UI
 {
 	public class NetSectionItem
 	{
