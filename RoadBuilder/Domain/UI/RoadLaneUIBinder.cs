@@ -13,6 +13,8 @@ namespace RoadBuilder.Domain.UI
 		public int Index;
 		public bool Invert;
 		public bool TwoWay;
+		public string Color;
+		public string Texture;
 		public NetSectionItem NetSection;
 		public List<OptionSectionUIEntry> Options;
 

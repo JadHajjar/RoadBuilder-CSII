@@ -19,6 +19,8 @@ using System.Linq;
 
 using Unity.Entities;
 
+using UnityEngine;
+
 namespace RoadBuilder.Systems.UI
 {
 	public partial class RoadBuilderUISystem : ExtendedUISystemBase
@@ -229,6 +231,8 @@ namespace RoadBuilder.Systems.UI
 				var lane = config.Lanes[i];
 				var validSection = NetworkPrefabGenerationUtil.GetNetSection(roadGenerationData, config, lane, out var section, out var groupPrefab);
 
+				GetThumbnailAndColor(config, lane, section, groupPrefab, lane.Invert, out var thumbnail, out var color, out var texture);
+
 				binders[i] = new RoadLaneUIBinder
 				{
 					Index = i,
@@ -237,13 +241,15 @@ namespace RoadBuilder.Systems.UI
 					SectionPrefabName = string.IsNullOrEmpty(lane.GroupPrefabName) ? lane.SectionPrefabName : lane.GroupPrefabName,
 					IsGroup = !string.IsNullOrEmpty(lane.GroupPrefabName),
 					Options = LaneOptionsUtil.GenerateOptions(roadGenerationData, config, lane),
+					Texture = texture ?? "asphalt",
+					Color = color is null ? null : $"rgba({color?.r * 255}, {color?.g * 255}, {color?.b * 255}, {color?.a})",
 					NetSection = !validSection ? new() : new()
 					{
 						PrefabName = section.name,
 						IsGroup = !string.IsNullOrEmpty(lane.GroupPrefabName),
 						DisplayName = GetAssetName((PrefabBase)groupPrefab ?? section),
-						Thumbnail = GetThumbnail(config, lane, section, groupPrefab, lane.Invert),
 						Width = validSection ? section.CalculateWidth() : 1F,
+						Thumbnail = thumbnail,
 					}
 				};
 			}
@@ -251,8 +257,12 @@ namespace RoadBuilder.Systems.UI
 			return binders;
 		}
 
-		private static string GetThumbnail(INetworkConfig config, LaneConfig lane, NetSectionPrefab section, LaneGroupPrefab groupPrefab, bool invert)
+		private static void GetThumbnailAndColor(INetworkConfig config, LaneConfig lane, NetSectionPrefab section, LaneGroupPrefab groupPrefab, bool invert, out string thumbnail, out Color? color, out string texture)
 		{
+			thumbnail = null;
+			color = null;
+			texture = null;
+
 			if (section.TryGet<RoadBuilderLaneDecorationInfo>(out var decorationInfo) && groupPrefab?.Options.FirstOrDefault(x => x.Type is LaneOptionType.Decoration) is RoadBuilderLaneOption decorationOption)
 			{
 				switch (LaneOptionsUtil.GetSelectedOptionValue(config, lane, decorationOption))
@@ -260,21 +270,21 @@ namespace RoadBuilder.Systems.UI
 					case "G":
 						if (decorationInfo.GrassThumbnail is not null or "")
 						{
-							return decorationInfo.GrassThumbnail;
+							thumbnail = decorationInfo.GrassThumbnail;
 						}
 
 						break;
 					case "T":
 						if (decorationInfo.TreeThumbnail is not null or "")
 						{
-							return decorationInfo.TreeThumbnail;
+							thumbnail = decorationInfo.TreeThumbnail;
 						}
 
 						break;
 					case "GT":
 						if (decorationInfo.GrassAndTreeThumbnail is not null or "")
 						{
-							return decorationInfo.GrassAndTreeThumbnail;
+							thumbnail = decorationInfo.GrassAndTreeThumbnail;
 						}
 
 						break;
@@ -283,31 +293,62 @@ namespace RoadBuilder.Systems.UI
 
 			if (section.TryGet<RoadBuilderLaneInfo>(out var sectionInfo))
 			{
-				if (!string.IsNullOrEmpty(invert ? sectionInfo.FrontThumbnail : sectionInfo.BackThumbnail))
+				if (thumbnail is null && !string.IsNullOrEmpty(invert ? sectionInfo.FrontThumbnail : sectionInfo.BackThumbnail))
 				{
-					return invert ? sectionInfo.FrontThumbnail : sectionInfo.BackThumbnail;
+					thumbnail = invert ? sectionInfo.FrontThumbnail : sectionInfo.BackThumbnail;
+				}
+
+				if (sectionInfo.LaneColor != default)
+				{
+					color = sectionInfo.LaneColor;
 				}
 			}
 
-			if (ImageSystem.GetIcon(section) is string sectionIcon)
+			if (thumbnail is null && ImageSystem.GetIcon(section) is string sectionIcon)
 			{
-				return sectionIcon;
+				thumbnail = sectionIcon;
 			}
 
 			if (groupPrefab?.TryGet<RoadBuilderLaneInfo>(out var groupInfo) ?? false)
 			{
-				if (!string.IsNullOrEmpty(invert ? groupInfo.FrontThumbnail : groupInfo.BackThumbnail))
+				if (thumbnail is null && !string.IsNullOrEmpty(invert ? groupInfo.FrontThumbnail : groupInfo.BackThumbnail))
 				{
-					return invert ? groupInfo.FrontThumbnail : groupInfo.BackThumbnail;
+					thumbnail = invert ? groupInfo.FrontThumbnail : groupInfo.BackThumbnail;
+				}
+
+				if (groupInfo.LaneColor != default && color is null)
+				{
+					color = groupInfo.LaneColor;
 				}
 			}
 
-			if (groupPrefab is null)
+			if (thumbnail is null && groupPrefab is not null)
 			{
-				return null;
+				thumbnail = ImageSystem.GetIcon(groupPrefab);
 			}
 
-			return ImageSystem.GetIcon(groupPrefab);
+			if (color is null)
+			{
+				if (config.Category.HasFlag(RoadCategory.Gravel))
+				{
+					texture = "gravel";
+					color = new(143 / 255f, 131 / 255f, 97 / 255f);
+				}
+				else if (config.Category.HasFlag(RoadCategory.Tiled))
+				{
+					texture = "tiled";
+					color = new(76 / 255f, 78 / 255f, 83 / 255f);
+				}
+			}
+
+			if (section.IsTrainOrSubway())
+			{
+				texture = "train";
+			}
+			else if (section.IsBus())
+			{
+				texture = "bus";
+			}
 		}
 
 		private string GetAssetName(PrefabBase prefab)

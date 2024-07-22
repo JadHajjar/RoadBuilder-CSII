@@ -4,11 +4,11 @@
     <g transform="matrix(-1,0,0,1,26,0)">
         <g id="b">
             <g id="Car-Tram-Front" serif:id="Car Tram Front">
-                <g id="Tram-Front" serif:id="Tram Front" transform="matrix(0.947181,0,0,0.974443,-1.69954,0)">
-                    <g transform="matrix(0.377781,0.0111483,-0.0222146,0.300046,11.8952,8.89525)">
+                <g id="Tram-Front" serif:id="Tram Front" transform="matrix(-0.947181,0,0,0.974443,25.312,0)">
+                    <g transform="matrix(0.19624,0.0111483,-0.0115395,0.300046,15.2849,8.89525)">
                         <path d="M24.944,48.952C24.944,48.12 24.268,47.443 23.435,47.443L20.417,47.443C19.584,47.443 18.907,48.12 18.907,48.952L18.907,54.701C18.907,55.534 19.587,56.266 20.42,56.266L23.432,56.154C24.265,56.154 24.944,55.534 24.944,54.701L24.944,48.952Z" style="fill:rgb(90,70,59);"/>
                     </g>
-                    <g transform="matrix(-0.377781,0.0111483,0.0222146,0.300046,14.0822,8.89525)">
+                    <g transform="matrix(-0.196555,0.0111483,0.011558,0.300046,10.7079,8.89525)">
                         <path d="M24.944,48.952C24.944,48.12 24.268,47.443 23.435,47.443L20.417,47.443C19.584,47.443 18.907,48.12 18.907,48.952L18.907,54.701C18.907,55.534 19.587,56.266 20.42,56.266L23.432,56.154C24.265,56.154 24.944,55.534 24.944,54.701L24.944,48.952Z" style="fill:rgb(90,70,59);"/>
                     </g>
                     <g transform="matrix(1,0,0,1.0553,3.5,4)">
@@ -55,32 +55,26 @@
                         <rect x="0" y="0" width="2" height="3" style="fill:rgb(111,108,108);"/>
                     </g>
                     <g>
-                        <g transform="matrix(1,0,0,1,-0.0112948,-3.64589e-15)">
+                        <g transform="matrix(0.519455,0,0,1,9.09999,-3.64589e-15)">
                             <g transform="matrix(1.73982,0,0,0.224511,17.2205,26.0084)">
-                                <rect x="0" y="0" width="2" height="3" style="fill:rgb(94,89,77);"/>
+                                <rect x="0" y="0" width="2" height="62.422" style="fill:rgb(105,105,105);"/>
                             </g>
                             <g transform="matrix(0.668485,0,0,0.306536,20.0316,25.7623)">
-                                <rect x="0" y="0" width="2" height="3" style="fill:rgb(140,140,140);"/>
+                                <rect x="0" y="0" width="2" height="46.522" style="fill:rgb(140,140,140);"/>
                             </g>
                             <g transform="matrix(0.668485,0,0,0.306536,16.552,25.7623)">
-                                <rect x="0" y="0" width="2" height="3" style="fill:rgb(140,140,140);"/>
+                                <rect x="0" y="0" width="2" height="46.522" style="fill:rgb(140,140,140);"/>
                             </g>
                         </g>
-                        <g transform="matrix(1,0,0,1,-11.9121,-3.64589e-15)">
+                        <g transform="matrix(0.520289,0,0,1,-2.81663,-3.64589e-15)">
                             <g transform="matrix(1.73982,0,0,0.224511,17.2205,26.0084)">
-                                <rect x="0" y="0" width="2" height="3" style="fill:rgb(94,89,77);"/>
+                                <rect x="0" y="0" width="2" height="62.422" style="fill:rgb(105,105,105);"/>
                             </g>
                             <g transform="matrix(0.668485,0,0,0.306536,20.0316,25.7623)">
-                                <rect x="0" y="0" width="2" height="3" style="fill:rgb(140,140,140);"/>
+                                <rect x="0" y="0" width="2" height="46.522" style="fill:rgb(140,140,140);"/>
                             </g>
                             <g transform="matrix(0.668485,0,0,0.306536,16.552,25.7623)">
-                                <rect x="0" y="0" width="2" height="3" style="fill:rgb(140,140,140);"/>
-                            </g>
-                            <g transform="matrix(1.35828,0,0,0.101662,29.4815,26.3769)">
-                                <rect x="0" y="0" width="2" height="3" style="fill:rgb(140,140,140);"/>
-                            </g>
-                            <g transform="matrix(1.38702,0,0,0.101662,17.5232,26.3769)">
-                                <rect x="0" y="0" width="2" height="3" style="fill:rgb(140,140,140);"/>
+                                <rect x="0" y="0" width="2" height="46.522" style="fill:rgb(140,140,140);"/>
                             </g>
                         </g>
                     </g>

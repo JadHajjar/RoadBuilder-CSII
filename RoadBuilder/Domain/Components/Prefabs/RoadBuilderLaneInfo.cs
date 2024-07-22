@@ -8,6 +8,8 @@ using System.Collections.Generic;
 
 using Unity.Entities;
 
+using UnityEngine;
+
 namespace RoadBuilder.Domain.Components.Prefabs
 {
 	[ComponentMenu("RoadBuilder/", new Type[] { typeof(NetSectionPrefab), typeof(LaneGroupPrefab) })]
@@ -18,6 +20,7 @@ namespace RoadBuilder.Domain.Components.Prefabs
 		public RoadCategory ExcludedCategories;
 		public string BackThumbnail;
 		public string FrontThumbnail;
+		public Color LaneColor;
 
 		public override void GetArchetypeComponents(HashSet<ComponentType> components)
 		{ }
@@ -58,6 +61,12 @@ namespace RoadBuilder.Domain.Components.Prefabs
 		public RoadBuilderLaneInfo WithThumbnail(string thumbnail)
 		{
 			FrontThumbnail = BackThumbnail = thumbnail;
+			return this;
+		}
+
+		public RoadBuilderLaneInfo WithColor(byte r, byte g, byte b, byte a = 255)
+		{
+			LaneColor = new Color(r / 255f, g / 255f, b / 255f, a / 255f);
 			return this;
 		}
 	}

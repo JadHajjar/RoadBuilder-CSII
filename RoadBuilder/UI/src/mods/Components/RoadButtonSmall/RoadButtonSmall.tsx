@@ -54,11 +54,20 @@ export const RoadButtonSmall = (props: _Props) => {
   return (
     <div ref={containerRef} className={styles.container} onMouseEnter={onMouseEnter}>
       <div className={classNames(styles.button, { [styles.dragging]: dragging })} onMouseDown={onMouseDown}>
-        <img src={props.roadLane.NetSection?.Thumbnail ?? "Media/Placeholder.svg"} className={props.roadLane.Invert && styles.inverted} />
+        <div className={styles.imageContainer}>
+          <img src={props.roadLane.NetSection?.Thumbnail ?? "Media/Placeholder.svg"} className={props.roadLane.Invert && styles.inverted} />
+        </div>
       </div>
       <div className={styles.informationBar}>
         <div className={styles.laneDesign}>
-          <img className={classNames(styles.arrow, props.roadLane.TwoWay ? styles.twoway : props.roadLane.Invert ? styles.down : styles.up)} />
+          <div
+            className={styles[props.roadLane.Texture ?? "asphalt"]}
+            style={{
+              backgroundColor: props.roadLane.Color,
+            }}
+          >
+            <img className={classNames(styles.arrow, props.roadLane.TwoWay ? styles.twoway : props.roadLane.Invert ? styles.down : styles.up)} />
+          </div>
         </div>
         <div className={styles.laneName}>{props.roadLane.NetSection!.Width! > 0 && props.roadLane.NetSection?.Width + " m"}</div>
       </div>
