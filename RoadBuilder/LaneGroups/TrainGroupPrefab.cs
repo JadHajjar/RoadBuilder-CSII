@@ -25,6 +25,7 @@ namespace RoadBuilder.LaneGroups
 
 			AddComponent<RoadBuilderLaneInfo>()
 				.WithExcluded(RoadCategory.Gravel | RoadCategory.Tiled | RoadCategory.Fence | RoadCategory.Pathway)
+				.WithColor(82, 62, 51)
 				.WithFrontThumbnail("coui://roadbuildericons/RB_TrainFront.svg")
 				.WithBackThumbnail("coui://roadbuildericons/RB_TrainRear.svg");
 

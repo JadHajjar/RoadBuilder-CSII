@@ -47,6 +47,20 @@ namespace RoadBuilder.Utilities
 			return carLanes.Any(x => x.m_Twoway) || trackLanes.Any(x => x.m_Twoway);
 		}
 
+		public static bool IsTrainOrSubway(this NetSectionPrefab netSection)
+		{
+			var trackLanes = FindLanes<TrackLane>(netSection);
+
+			return trackLanes.Any(x => x.m_TrackType is Game.Net.TrackTypes.Train or Game.Net.TrackTypes.Subway);
+		}
+
+		public static bool IsBus(this NetSectionPrefab netSection)
+		{
+			var carLanes = FindLanes<CarLane>(netSection);
+
+			return carLanes.Any(x => x.m_BusLane);
+		}
+
 		public static bool IsParking(this NetSectionPrefab netSection, out float angle)
 		{
 			var parkingLanes = FindLanes<ParkingLane>(netSection);

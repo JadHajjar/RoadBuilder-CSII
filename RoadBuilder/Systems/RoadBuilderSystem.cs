@@ -1,5 +1,6 @@
 ﻿using Colossal.Entities;
 using Colossal.Serialization.Entities;
+using Colossal.UI.Binding;
 
 using Game;
 using Game.Common;
@@ -74,7 +75,7 @@ namespace RoadBuilder.Systems
 
 				roadPrefab.Prefab.name = roadPrefab.Config.ID;
 
-				prefabSystem.UpdatePrefab(roadPrefab.Prefab, prefabSystem.GetEntity(roadPrefab.Prefab));
+				UpdatePrefab(roadPrefab.Prefab, prefabSystem.GetEntity(roadPrefab.Prefab));
 
 				RunUpdateSegments(prefabSystem.GetEntity(roadPrefab.Prefab));
 			}
@@ -250,7 +251,7 @@ namespace RoadBuilder.Systems
 
 					Configurations.Add(roadPrefab);
 
-					prefabSystem.UpdatePrefab(roadPrefab.Prefab, prefabSystem.GetEntity(roadPrefab.Prefab));
+					UpdatePrefab(roadPrefab.Prefab, prefabSystem.GetEntity(roadPrefab.Prefab));
 				}
 				catch (Exception ex)
 				{
@@ -391,6 +392,50 @@ namespace RoadBuilder.Systems
 			}
 
 			RoadGenerationData.LaneGroupPrefabs = netSectionsSystem.LaneGroups;
+		}
+
+		private void UpdatePrefab(NetGeometryPrefab prefab, Entity entity)
+		{
+			var id = entity.Index;
+			prefabSystem.UpdatePrefab(prefab, entity);
+
+
+			var m_SelectedAssetBinding = (typeof(ToolbarUISystem).GetField("m_SelectedAssetBinding", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(World.GetOrCreateSystemManaged<ToolbarUISystem>())
+			as ValueBinding<Entity>);
+
+			var m_SelectedAssetCategoryBinding = (typeof(ToolbarUISystem).GetField("m_SelectedAssetCategoryBinding", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(World.GetOrCreateSystemManaged<ToolbarUISystem>())
+			as ValueBinding<Entity>);
+			var m_SelectedAssetMenuBinding = (typeof(ToolbarUISystem).GetField("m_SelectedAssetMenuBinding", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(World.GetOrCreateSystemManaged<ToolbarUISystem>())
+			as ValueBinding<Entity>);
+
+			Mod.Log.Info(id);
+			Mod.Log.Info(m_SelectedAssetBinding.value.Index);
+			Mod.Log.Info(m_SelectedAssetCategoryBinding.value.Index);
+			Mod.Log.Info(m_SelectedAssetMenuBinding.value.Index);
+
+			m_SelectedAssetBinding.Update( Entity.Null);
+			m_SelectedAssetCategoryBinding.Update( Entity.Null);
+			m_SelectedAssetMenuBinding.Update( Entity.Null);
+
+			var newEntity = prefabSystem.GetEntity(prefab);
+
+			var ents = SystemAPI.QueryBuilder().WithAll<UIGroupElement>().Build().ToEntityArray(Allocator.Temp);
+
+			for (var i = 0; i < ents.Length; i++)
+			{
+				var buffer = EntityManager.GetBuffer<UIGroupElement>(ents[i]);
+
+				for (var j = 0; j < buffer.Length; j++)
+				{
+					if (buffer[j].m_Prefab.Index == id)
+					{
+						Mod.Log.Info("removed");
+						buffer.RemoveAt(j);
+						return;
+					}
+
+				}
+			}
 		}
 
 		private void RunUpdateSegments(Entity entity)

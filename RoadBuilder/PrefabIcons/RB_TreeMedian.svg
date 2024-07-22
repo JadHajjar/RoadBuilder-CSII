@@ -4,37 +4,39 @@
     <g id="b">
         <g id="Median">
             <g transform="matrix(0.8,0,0,1,2.6,-0.690176)">
-                <path d="M26,25.482C26,25.164 25.842,24.859 25.561,24.634C25.279,24.409 24.898,24.282 24.5,24.282C19.91,24.282 6.09,24.282 1.5,24.282C1.102,24.282 0.721,24.409 0.439,24.634C0.158,24.859 -0,25.164 -0,25.482C0,25.772 0,26.69 0,26.69L26,26.69L26,25.482Z" style="fill:rgb(160,160,160);"/>
+                <path d="M26,25.482C26,25.164 25.842,24.859 25.561,24.634C25.279,24.409 24.898,24.282 24.5,24.282C19.91,24.282 6.09,24.282 1.5,24.282C1.102,24.282 0.721,24.409 0.439,24.634C0.158,24.859 -0,25.164 -0,25.482C0,25.772 0,39.69 0,39.69L26,39.69L26,25.482Z" style="fill:rgb(160,160,160);"/>
             </g>
             <g transform="matrix(0.845328,0,0,1,2.22147,-0.690176)">
-                <rect x="3.213" y="24.282" width="19.087" height="2.408" style="fill:rgb(125,125,125);"/>
+                <rect x="3.213" y="24.282" width="19.087" height="15.408" style="fill:rgb(125,125,125);"/>
             </g>
         </g>
-        <g id="Group_2708" transform="matrix(1.2381,0,0,1.2381,-37.7619,36.0249)">
-            <g id="Path_3564" transform="matrix(1,0,0,1,39.345,-15.422)">
-                <path d="M0.35,0L2.505,0L3.132,5.38C2.661,5.695 0.459,5.697 0,5.38L0.35,0Z" style="fill:rgb(151,108,79);fill-rule:nonzero;"/>
-            </g>
-            <g transform="matrix(0.87219,0,0,0.87219,5.2402,-3.71888)">
-                <g id="Ellipse_885" transform="matrix(1,0,0,1,35,-24.097)">
-                    <ellipse cx="6" cy="5.5" rx="6" ry="5.5" style="fill:rgb(84,182,11);"/>
+        <g id="Tree-median" serif:id="Tree median" transform="matrix(1.2381,0,0,1.2381,-37.7619,36.0249)">
+            <g id="Tree-median1" serif:id="Tree median">
+                <g id="Path_3564" transform="matrix(1,0,0,1,39.345,-15.422)">
+                    <path d="M0.35,-8.3L2.505,-8.3L3.132,5.38C2.661,5.695 0.459,5.697 0,5.38L0.35,-8.3Z" style="fill:rgb(151,108,79);fill-rule:nonzero;"/>
                 </g>
-                <g id="Ellipse_886" transform="matrix(1,0,0,1,33,-26.097)">
-                    <ellipse cx="5" cy="5.5" rx="5" ry="5.5" style="fill:rgb(84,182,11);"/>
-                </g>
-                <g id="Path_3565" transform="matrix(1,0,0,1,35.456,-25.286)">
-                    <path d="M5.525,0C8.576,0 11.05,2.2 11.05,4.911C11.05,7.622 8.576,9.574 5.525,9.574C2.474,9.574 0,7.623 0,4.911C0,2.199 2.474,0 5.525,0Z" style="fill:rgb(121,221,44);fill-rule:nonzero;"/>
-                </g>
-                <g id="Ellipse_887" transform="matrix(1,0,0,1,33,-26.097)">
-                    <ellipse cx="5" cy="4.5" rx="5" ry="4.5" style="fill:rgb(121,221,44);"/>
-                </g>
-                <g id="Ellipse_883" transform="matrix(1,0,0,1,43,-23.097)">
-                    <circle cx="3" cy="3" r="3" style="fill:rgb(84,182,11);"/>
-                </g>
-                <g id="Ellipse_888" transform="matrix(1,0,0,1,35,-29.097)">
-                    <ellipse cx="6" cy="5.5" rx="6" ry="5.5" style="fill:rgb(121,221,44);"/>
-                </g>
-                <g id="Ellipse_889" transform="matrix(1,0,0,1,42,-24.097)">
-                    <ellipse cx="3" cy="2.5" rx="3" ry="2.5" style="fill:rgb(121,221,44);"/>
+                <g transform="matrix(0.87219,0,0,0.87219,5.2402,-11.7172)">
+                    <g id="Ellipse_885" transform="matrix(1,0,0,1,35,-24.097)">
+                        <ellipse cx="6" cy="5.5" rx="6" ry="5.5" style="fill:rgb(84,182,11);"/>
+                    </g>
+                    <g id="Ellipse_886" transform="matrix(1,0,0,1,33,-26.097)">
+                        <ellipse cx="5" cy="5.5" rx="5" ry="5.5" style="fill:rgb(84,182,11);"/>
+                    </g>
+                    <g id="Path_3565" transform="matrix(1,0,0,1,35.456,-25.286)">
+                        <path d="M5.525,0C8.576,0 11.05,2.2 11.05,4.911C11.05,7.622 8.576,9.574 5.525,9.574C2.474,9.574 0,7.623 0,4.911C0,2.199 2.474,0 5.525,0Z" style="fill:rgb(121,221,44);fill-rule:nonzero;"/>
+                    </g>
+                    <g id="Ellipse_887" transform="matrix(1,0,0,1,33,-26.097)">
+                        <ellipse cx="5" cy="4.5" rx="5" ry="4.5" style="fill:rgb(121,221,44);"/>
+                    </g>
+                    <g id="Ellipse_883" transform="matrix(1,0,0,1,43,-23.097)">
+                        <circle cx="3" cy="3" r="3" style="fill:rgb(84,182,11);"/>
+                    </g>
+                    <g id="Ellipse_888" transform="matrix(1,0,0,1,35,-29.097)">
+                        <ellipse cx="6" cy="5.5" rx="6" ry="5.5" style="fill:rgb(121,221,44);"/>
+                    </g>
+                    <g id="Ellipse_889" transform="matrix(1,0,0,1,42,-24.097)">
+                        <ellipse cx="3" cy="2.5" rx="3" ry="2.5" style="fill:rgb(121,221,44);"/>
+                    </g>
                 </g>
             </g>
         </g>

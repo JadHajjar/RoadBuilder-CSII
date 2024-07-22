@@ -31,6 +31,7 @@ namespace RoadBuilder.LaneGroups
 
 			AddComponent<RoadBuilderLaneInfo>()
 				.WithExcluded(RoadCategory.NonAsphalt)
+				.WithColor(204, 83, 71, 200)
 				.WithFrontThumbnail("coui://roadbuildericons/RB_BusFront.svg")
 				.WithBackThumbnail("coui://roadbuildericons/RB_BusRear.svg");
 

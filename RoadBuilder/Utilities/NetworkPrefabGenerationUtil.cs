@@ -1,6 +1,7 @@
 ﻿using Colossal.PSI.Common;
 
 using Game.Prefabs;
+using Game.UI;
 
 using RoadBuilder.Domain;
 using RoadBuilder.Domain.Components.Prefabs;
@@ -341,7 +342,7 @@ namespace RoadBuilder.Utilities
 			{
 				var serviceObject = ScriptableObject.CreateInstance<ServiceObject>();
 				serviceObject.m_Service = _roadGenerationData.ServicePrefabs[service];
-				//yield return serviceObject;
+				yield return serviceObject;
 			}
 
 			if (group != null)
@@ -349,7 +350,7 @@ namespace RoadBuilder.Utilities
 				var uIObject = ScriptableObject.CreateInstance<UIObject>();
 				uIObject.m_Group = _roadGenerationData.UIGroupPrefabs[group];
 				uIObject.m_Priority = 999999;
-				//yield return uIObject;
+				yield return uIObject;
 			}
 
 			if (NetworkPrefab.Config.Addons.HasFlag(RoadAddons.HasUndergroundWaterPipes))

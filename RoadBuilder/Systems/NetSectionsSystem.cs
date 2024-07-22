@@ -22,7 +22,9 @@ namespace RoadBuilder.Systems
 	{
 		private PrefabSystem prefabSystem;
 		private EntityQuery prefabQuery;
+		private EntityQuery allPrefabQuery;
 		private bool customSectionsSetUp;
+		private bool initialSetupFinished;
 
 		public event Action SectionsAdded;
 
@@ -37,49 +39,62 @@ namespace RoadBuilder.Systems
 
 			prefabSystem = World.GetOrCreateSystemManaged<PrefabSystem>();
 			prefabQuery = SystemAPI.QueryBuilder().WithAll<Created, PrefabData>().WithAny<NetSectionData, NetPieceData, NetLaneData>().Build();
-
-			RequireForUpdate(prefabQuery);
+			allPrefabQuery = SystemAPI.QueryBuilder().WithAll<PrefabData>().WithAny<NetSectionData, NetPieceData, NetLaneData>().Build();
 		}
 
 		protected override void OnUpdate()
 		{
-			var entities = prefabQuery.ToEntityArray(Allocator.Temp);
-
-			for (var i = 0; i < entities.Length; i++)
+			if (!initialSetupFinished)
 			{
-				if (!prefabSystem.TryGetPrefab<PrefabBase>(entities[i], out var prefab))
-				{
-					continue;
-				}
-
-				if (prefab is NetSectionPrefab netSectionPrefab)
-				{
-					NetSections[netSectionPrefab.name] = netSectionPrefab;
-				}
-				else if (prefab is NetPiecePrefab netPiecePrefab)
-				{
-					NetPieces[netPiecePrefab.name] = netPiecePrefab;
-				}
-				else if (prefab is NetLanePrefab netLanePrefab)
-				{
-					NetLanes[netLanePrefab.name] = netLanePrefab;
-				}
+				RequireForUpdate(prefabQuery);
 			}
 
-			if (!customSectionsSetUp && NetSections.Count > 0)
+			try
 			{
-				//AddCustomSections();
+				var entities = (initialSetupFinished ? prefabQuery : allPrefabQuery).ToEntityArray(Allocator.Temp);
 
-				AddCustomGroups();
+				for (var i = 0; i < entities.Length; i++)
+				{
+					if (!prefabSystem.TryGetPrefab<PrefabBase>(entities[i], out var prefab))
+					{
+						continue;
+					}
 
-				AddCustomPrefabComponents();
+					if (prefab is NetSectionPrefab netSectionPrefab)
+					{
+						NetSections[netSectionPrefab.name] = netSectionPrefab;
+					}
+					else if (prefab is NetPiecePrefab netPiecePrefab)
+					{
+						NetPieces[netPiecePrefab.name] = netPiecePrefab;
+					}
+					else if (prefab is NetLanePrefab netLanePrefab)
+					{
+						NetLanes[netLanePrefab.name] = netLanePrefab;
+					}
+				}
 
-				GameManager.instance.localizationManager.ReloadActiveLocale();
+				if (!customSectionsSetUp && NetSections.Count > 0)
+				{
+					//AddCustomSections();
 
-				customSectionsSetUp = true;
+					AddCustomGroups();
+
+					AddCustomPrefabComponents();
+
+					GameManager.instance.localizationManager.ReloadActiveLocale();
+
+					customSectionsSetUp = true;
+				}
+
+				SectionsAdded?.Invoke();
+
+				initialSetupFinished = true;
 			}
-
-			SectionsAdded?.Invoke();
+			catch (Exception ex)
+			{
+				Mod.Log.Error(ex);
+			}
 		}
 
 		private void AddCustomSections()
@@ -126,13 +141,13 @@ namespace RoadBuilder.Systems
 			_blacklist.ForEach(x => NetSections[x].AddOrGetComponent<RoadBuilderHide>());
 
 			SetUp("Pavement Path Section 3", "coui://roadbuildericons/RB_PedestrianLane.svg").WithRequired(RoadCategory.Pathway);
-			SetUp("Tiled Pedestrian Section 3", "coui://roadbuildericons/RB_GrassMedian_Centered.svg").WithRequired(RoadCategory.Tiled);
-			SetUp("Tiled Section 3", "coui://roadbuildericons/RB_GrassMedian_Centered.svg").WithRequired(RoadCategory.Tiled);
-			SetUp("Tiled Median Pedestrian 2", "coui://roadbuildericons/RB_GrassMedian_Centered.svg").WithRequired(RoadCategory.Tiled);
+			SetUp("Tiled Pedestrian Section 3", "coui://roadbuildericons/RB_PedestrianOnly.svg").WithRequired(RoadCategory.Tiled);
+			SetUp("Tiled Section 3", "coui://roadbuildericons/RB_TiledMedian_Centered.svg").WithRequired(RoadCategory.Tiled);
+			SetUp("Tiled Median Pedestrian 2", "coui://roadbuildericons/RB_TiledMedian_Centered.svg").WithRequired(RoadCategory.Tiled).WithThumbnail("coui://roadbuildericons/RB_TiledMedian.svg");
 			SetUp("Tiled Median 2", "coui://roadbuildericons/RB_TiledMedian_Centered.svg").WithRequired(RoadCategory.Tiled).WithThumbnail("coui://roadbuildericons/RB_TiledMedian.svg");
 			SetUp("Sound Barrier 1", "coui://roadbuildericons/RB_SoundBarrier.svg").WithExcluded(RoadCategory.RaisedSidewalk);
-			SetUp("Subway Median 8", "coui://roadbuildericons/RB_GrassMedian_Centered.svg").WithRequired(RoadCategory.Subway | RoadCategory.Train | RoadCategory.Tram);
-			SetUp("Subway Median 8 - Plain", "coui://roadbuildericons/RB_GrassMedian_Centered.svg").WithRequired(RoadCategory.Subway | RoadCategory.Train);
+			SetUp("Subway Median 8", "coui://roadbuildericons/RB_GrassMedian_Centered.svg").WithAny(RoadCategory.Subway | RoadCategory.Train | RoadCategory.Tram);
+			SetUp("Subway Median 8 - Plain", "coui://roadbuildericons/RB_GrassMedian_Centered.svg").WithAny(RoadCategory.Subway | RoadCategory.Train);
 		}
 
 		private RoadBuilderLaneInfo SetUp(string prefabName, string thumbnail)

@@ -12,16 +12,25 @@
 .button {
   position: relative;
   width: base.$laneButtonSize;
-  height: base.$laneButtonSize;
+  height: 192rem; //base.$laneButtonSize;
 
   transition: transform 0.2s;
   margin: 0 0rem;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
 
+  .imageContainer {
+    height: 222rem;
+    width: 100%;
+    overflow: hidden;
+  }
+
   img {
+    height: 320rem;
+    position: absolute;
+    top: 0;
     transition: width 0.25s, height 0.25s;
   }
 
@@ -30,7 +39,7 @@
   }
 
   &:hover {
-    transform: scale(1.05);
+    //transform: scale(1.05);
 
     & .closeButton {
       display: flex;
@@ -105,17 +114,22 @@
 
   .laneDesign {
     height: 60%;
-    background-color: rgb(40, 40, 40);
-    display: flex;
-    justify-content: center;
-    align-content: center;
+    background-color: rgb(35, 35, 35);
+
+    > div {
+      display: flex;
+      justify-content: center;
+      align-content: center;
+      height: 100%;
+    }
 
     .arrow {
-      height: 20rem;
-      width: 20rem;
+      height: 24rem;
+      width: 24rem;
       mask-size: 100%;
       background-color: #fff;
-      margin-top: 6rem;
+      margin-top: 4rem;
+      filter: drop-shadow(0px 0px 5rem rgba(0, 0, 0, 1));
 
       &.up {
         mask-image: url(coui://roadbuildericons/RB_Arrow.svg);
@@ -128,6 +142,36 @@
       &.twoway {
         mask-image: url(coui://roadbuildericons/RB_ArrowBoth.svg);
       }
+    }
+
+    .tiled {
+      background-image: url(coui://roadbuildericons/RB_TileSeamless.svg);
+      background-repeat: repeat repeat;
+      background-size: 58rem 58rem;
+    }
+
+    .train {
+      background-image: url(coui://roadbuildericons/RB_GravelSeamless.svg);
+      background-repeat: repeat repeat;
+      background-size: 29rem 29rem;
+    }
+
+    .gravel {
+      background-image: url(coui://roadbuildericons/RB_GravelSeamless.svg);
+      background-repeat: repeat repeat;
+      background-size: 38.66rem 38.66rem;
+    }
+
+    .bus {
+      background-image: url(coui://roadbuildericons/RB_AsphaltSeamless_15.svg);
+      background-repeat: repeat repeat;
+      background-size: 19.33rem 19.33rem;
+    }
+
+    .asphalt {
+      background-image: url(coui://roadbuildericons/RB_AsphaltSeamless.svg);
+      background-repeat: repeat repeat;
+      background-size: 19.33rem 19.33rem;
     }
   }
 }

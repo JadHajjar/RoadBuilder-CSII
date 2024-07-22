@@ -10,12 +10,29 @@ namespace RoadBuilder.LaneGroups
 	public class ShoulderGroupPrefab : BaseLaneGroupPrefab
 	{
 		private const string OptionName1 = "Lane Width";
+		private const string OptionName2 = "Ground Type";
 
 		public ShoulderGroupPrefab(Dictionary<string, NetSectionPrefab> sections) : base(sections)
 		{
 			DisplayName = "Shoulder";
 			Options = new RoadBuilderLaneOption[]
 			{
+				new()
+				{
+					DefaultValue = "Asphalt",
+					Type = LaneOptionType.SingleSelectionButtons,
+					Name = OptionName2,
+					Options = new RoadBuilderLaneOptionValue[]
+					{
+						new() { Value = "Asphalt", ThumbnailUrl = "coui://roadbuildericons/RB_CarWhite.svg" },
+						new() { Value = "Bus", ThumbnailUrl = "coui://roadbuildericons/RB_BusWhite.svg" },
+						new() { Value = "Tram", ThumbnailUrl = "coui://roadbuildericons/RB_TramWhite.svg" },
+						new() { Value = "Train", ThumbnailUrl = "coui://roadbuildericons/RB_TrainWhite.svg" },
+						new() { Value = "Subway", ThumbnailUrl = "coui://roadbuildericons/RB_SubwayWhite.svg" },
+						new() { Value = "Gravel", ThumbnailUrl = "coui://roadbuildericons/RB_GravelWhite.svg" },
+						new() { Value = "Tiled", ThumbnailUrl = "coui://roadbuildericons/RB_TiledWhite.svg" },
+					}
+				},
 				new()
 				{
 					DefaultValue = "1m",
@@ -33,17 +50,17 @@ namespace RoadBuilder.LaneGroups
 
 			AddComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_Empty.svg";
 
-			SetUp(sections["Alley Shoulder 1"], "1m").WithExcluded(RoadCategory.Train | RoadCategory.Tram | RoadCategory.Subway | RoadCategory.Tiled | RoadCategory.Gravel);
-			SetUp(sections["Highway Shoulder 2"], "2m").WithExcluded(RoadCategory.Train | RoadCategory.Tram | RoadCategory.Subway | RoadCategory.PublicTransport | RoadCategory.Tiled | RoadCategory.Gravel);
-			SetUp(sections["Public Transport Shoulder 1"], "1m").WithRequired(RoadCategory.PublicTransport);
-			SetUp(sections["Gravel Shoulder 1"], "1m").WithRequired(RoadCategory.Gravel);
-			SetUp(sections["Tiled Shoulder 1"], "1m").WithRequired(RoadCategory.Tiled);
-			SetUp(sections["Subway Shoulder 2"], "2m").WithRequired(RoadCategory.Subway);
-			SetUp(sections["Train Shoulder 2"], "2m").WithRequired(RoadCategory.Train);
-			SetUp(sections["Tram Shoulder 1"], "1m").WithRequired(RoadCategory.Tram);
+			SetUp(sections["Alley Shoulder 1"], "1m", "Asphalt");
+			SetUp(sections["Highway Shoulder 2"], "2m", "Asphalt");
+			SetUp(sections["Public Transport Shoulder 1"], "1m", "Bus");
+			SetUp(sections["Gravel Shoulder 1"], "1m", "Gravel");
+			SetUp(sections["Tiled Shoulder 1"], "1m", "Tiled");
+			SetUp(sections["Subway Shoulder 2"], "2m", "Subway");
+			SetUp(sections["Train Shoulder 2"], "2m", "Train");
+			SetUp(sections["Tram Shoulder 1"], "1m", "Tram");
 		}
 
-		private RoadBuilderLaneInfo SetUp(NetSectionPrefab prefab, string value1)
+		private RoadBuilderLaneInfo SetUp(NetSectionPrefab prefab, string value1, string value2)
 		{
 			var laneInfo = prefab.AddComponent<RoadBuilderLaneGroup>();
 			laneInfo.GroupPrefab = this;
@@ -53,6 +70,11 @@ namespace RoadBuilder.LaneGroups
 				{
 					OptionName = OptionName1,
 					Value = value1
+				},
+				new()
+				{
+					OptionName = OptionName2,
+					Value = value2
 				},
 			};
 
