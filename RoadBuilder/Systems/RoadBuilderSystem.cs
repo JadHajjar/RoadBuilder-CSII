@@ -24,6 +24,8 @@ using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
 
+using static MoveIt.QAccessor.QEntity;
+
 namespace RoadBuilder.Systems
 {
 	public partial class RoadBuilderSystem : GameSystemBase, ISerializable, IDefaultSerializable
@@ -39,6 +41,7 @@ namespace RoadBuilder.Systems
 		private RoadBuilderSerializeSystem roadBuilderSerializeSystem;
 		private ModificationBarrier1 modificationBarrier;
 		private EntityQuery prefabRefQuery;
+		private Dictionary<Entity, Entity> toolbarUISystemLastSelectedAssets;
 
 		public List<INetworkBuilderPrefab> Configurations { get; } = new();
 		public RoadGenerationData RoadGenerationData { get; private set; }
@@ -57,6 +60,8 @@ namespace RoadBuilder.Systems
 				.WithAll<RoadBuilderNetwork, PrefabRef>()
 				.WithNone<Updated, Temp>()
 				.Build();
+
+			toolbarUISystemLastSelectedAssets = typeof(ToolbarUISystem).GetField("m_LastSelectedAssets", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(World.GetOrCreateSystemManaged<ToolbarUISystem>()) as Dictionary<Entity, Entity>;
 		}
 
 		protected override void OnUpdate()
@@ -396,44 +401,30 @@ namespace RoadBuilder.Systems
 
 		private void UpdatePrefab(NetGeometryPrefab prefab, Entity entity)
 		{
-			var id = entity.Index;
 			prefabSystem.UpdatePrefab(prefab, entity);
 
-
-			var m_SelectedAssetBinding = (typeof(ToolbarUISystem).GetField("m_SelectedAssetBinding", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(World.GetOrCreateSystemManaged<ToolbarUISystem>())
-			as ValueBinding<Entity>);
-
-			var m_SelectedAssetCategoryBinding = (typeof(ToolbarUISystem).GetField("m_SelectedAssetCategoryBinding", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(World.GetOrCreateSystemManaged<ToolbarUISystem>())
-			as ValueBinding<Entity>);
-			var m_SelectedAssetMenuBinding = (typeof(ToolbarUISystem).GetField("m_SelectedAssetMenuBinding", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(World.GetOrCreateSystemManaged<ToolbarUISystem>())
-			as ValueBinding<Entity>);
-
-			Mod.Log.Info(id);
-			Mod.Log.Info(m_SelectedAssetBinding.value.Index);
-			Mod.Log.Info(m_SelectedAssetCategoryBinding.value.Index);
-			Mod.Log.Info(m_SelectedAssetMenuBinding.value.Index);
-
-			m_SelectedAssetBinding.Update( Entity.Null);
-			m_SelectedAssetCategoryBinding.Update( Entity.Null);
-			m_SelectedAssetMenuBinding.Update( Entity.Null);
-
-			var newEntity = prefabSystem.GetEntity(prefab);
-
-			var ents = SystemAPI.QueryBuilder().WithAll<UIGroupElement>().Build().ToEntityArray(Allocator.Temp);
-
-			for (var i = 0; i < ents.Length; i++)
+			foreach (var kvp in toolbarUISystemLastSelectedAssets)
 			{
-				var buffer = EntityManager.GetBuffer<UIGroupElement>(ents[i]);
+				if (kvp.Value == entity)
+				{
+					toolbarUISystemLastSelectedAssets.Remove(kvp.Key);
+					break;
+				}
+			}
+
+			var uIGroupElements = SystemAPI.QueryBuilder().WithAll<UIGroupElement>().Build().ToEntityArray(Allocator.Temp);
+
+			for (var i = 0; i < uIGroupElements.Length; i++)
+			{
+				var buffer = EntityManager.GetBuffer<UIGroupElement>(uIGroupElements[i]);
 
 				for (var j = 0; j < buffer.Length; j++)
 				{
-					if (buffer[j].m_Prefab.Index == id)
+					if (buffer[j].m_Prefab == entity)
 					{
-						Mod.Log.Info("removed");
 						buffer.RemoveAt(j);
 						return;
 					}
-
 				}
 			}
 		}
