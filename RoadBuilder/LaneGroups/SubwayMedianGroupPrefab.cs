@@ -11,7 +11,7 @@ namespace RoadBuilder.LaneGroups
 	{
 		private const string OptionName = "Style";
 
-		public SubwayMedianGroupPrefab(Dictionary<string, NetSectionPrefab> sections) : base(sections)
+		public override void Initialize(Dictionary<string, NetSectionPrefab> sections)
 		{
 			DisplayName = "Platform";
 			Options = new RoadBuilderLaneOption[]

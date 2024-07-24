@@ -12,7 +12,7 @@ namespace RoadBuilder.LaneGroups
 		private const string OptionName1 = "Parking";
 		private const string OptionName2 = "Width";
 
-		public SidewalkGroupPrefab(Dictionary<string, NetSectionPrefab> sections) : base(sections)
+		public override void Initialize(Dictionary<string, NetSectionPrefab> sections)
 		{
 			DisplayName = "Sidewalk";
 			Options = new RoadBuilderLaneOption[]

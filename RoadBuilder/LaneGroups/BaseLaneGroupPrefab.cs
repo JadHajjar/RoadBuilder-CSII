@@ -8,6 +8,6 @@ namespace RoadBuilder.LaneGroups
 {
 	public abstract class BaseLaneGroupPrefab : LaneGroupPrefab
 	{
-		protected BaseLaneGroupPrefab(Dictionary<string, NetSectionPrefab> _) { }
+		public abstract void Initialize(Dictionary<string, NetSectionPrefab> sections);
 	}
 }
