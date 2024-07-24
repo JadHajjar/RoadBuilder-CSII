@@ -16,6 +16,8 @@ using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Entities;
 
+using UnityEngine;
+
 namespace RoadBuilder.Systems
 {
 	public partial class NetSectionsSystem : GameSystemBase
@@ -161,8 +163,9 @@ namespace RoadBuilder.Systems
 			{
 				if (typeof(BaseLaneGroupPrefab).IsAssignableFrom(type) && !type.IsAbstract)
 				{
-					var prefab = (BaseLaneGroupPrefab)Activator.CreateInstance(type, NetSections);
+					var prefab = (BaseLaneGroupPrefab)ScriptableObject.CreateInstance(type);
 
+					prefab.Initialize(NetSections);
 					prefab.name = type.FullName;
 
 					prefabSystem.AddPrefab(prefab);

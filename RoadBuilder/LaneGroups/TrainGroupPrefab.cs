@@ -11,7 +11,7 @@ namespace RoadBuilder.LaneGroups
 	{
 		private const string OptionName = "Two-way Support";
 
-		public TrainGroupPrefab(Dictionary<string, NetSectionPrefab> sections) : base(sections)
+		public override void Initialize(Dictionary<string, NetSectionPrefab> sections)
 		{
 			DisplayName = "Train Track";
 			Options = new RoadBuilderLaneOption[]

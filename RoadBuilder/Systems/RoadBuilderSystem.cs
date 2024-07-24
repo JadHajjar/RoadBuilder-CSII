@@ -30,13 +30,13 @@ namespace RoadBuilder.Systems
 
 		private readonly Queue<INetworkBuilderPrefab> _updatedRoadPrefabsQueue = new();
 
+		private EntityQuery prefabRefQuery;
 		private RoadNameUtil roadNameUtil;
 		private PrefabSystem prefabSystem;
 		private PrefabUISystem prefabUISystem;
 		private NetSectionsSystem netSectionsSystem;
 		private RoadBuilderSerializeSystem roadBuilderSerializeSystem;
 		private ModificationBarrier1 modificationBarrier;
-		private EntityQuery prefabRefQuery;
 		private Dictionary<Entity, Entity> toolbarUISystemLastSelectedAssets;
 
 		public List<INetworkBuilderPrefab> Configurations { get; } = new();

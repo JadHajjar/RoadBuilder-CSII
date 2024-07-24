@@ -9,7 +9,7 @@ namespace RoadBuilder.LaneGroups
 {
 	public class TramGroupPrefab : BaseLaneGroupPrefab
 	{
-		public TramGroupPrefab(Dictionary<string, NetSectionPrefab> sections) : base(sections)
+		public override void Initialize(Dictionary<string, NetSectionPrefab> sections)
 		{
 			DisplayName = "Tram Track";
 			Options = new RoadBuilderLaneOption[0];
