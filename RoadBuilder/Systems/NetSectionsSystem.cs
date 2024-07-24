@@ -141,13 +141,9 @@ namespace RoadBuilder.Systems
 			_blacklist.ForEach(x => NetSections[x].AddOrGetComponent<RoadBuilderHide>());
 
 			SetUp("Pavement Path Section 3", "coui://roadbuildericons/RB_PedestrianLane.svg").WithRequired(RoadCategory.Pathway);
-			SetUp("Tiled Pedestrian Section 3", "coui://roadbuildericons/RB_PedestrianOnly.svg").WithRequired(RoadCategory.Tiled);
-			SetUp("Tiled Section 3", "coui://roadbuildericons/RB_TiledMedian_Centered.svg").WithRequired(RoadCategory.Tiled);
+			SetUp("Tiled Section 3", "coui://roadbuildericons/RB_PedestrianOnly.svg").WithRequired(RoadCategory.Tiled);
 			SetUp("Tiled Median Pedestrian 2", "coui://roadbuildericons/RB_TiledMedian_Centered.svg").WithRequired(RoadCategory.Tiled).WithThumbnail("coui://roadbuildericons/RB_TiledMedian.svg");
-			SetUp("Tiled Median 2", "coui://roadbuildericons/RB_TiledMedian_Centered.svg").WithRequired(RoadCategory.Tiled).WithThumbnail("coui://roadbuildericons/RB_TiledMedian.svg");
 			SetUp("Sound Barrier 1", "coui://roadbuildericons/RB_SoundBarrier.svg").WithExcluded(RoadCategory.RaisedSidewalk);
-			SetUp("Subway Median 8", "coui://roadbuildericons/RB_GrassMedian_Centered.svg").WithAny(RoadCategory.Subway | RoadCategory.Train | RoadCategory.Tram);
-			SetUp("Subway Median 8 - Plain", "coui://roadbuildericons/RB_GrassMedian_Centered.svg").WithAny(RoadCategory.Subway | RoadCategory.Train);
 		}
 
 		private RoadBuilderLaneInfo SetUp(string prefabName, string thumbnail)
@@ -180,6 +176,8 @@ namespace RoadBuilder.Systems
 		private readonly HashSet<string> _blacklist = new()
 		{
 			"Missing Net Section",
+			"Tiled Pedestrian Section 3",
+			"Tiled Median 2",
 			"Road Median 0",
 			"Highway Median 0",
 			"Alley Median 0",

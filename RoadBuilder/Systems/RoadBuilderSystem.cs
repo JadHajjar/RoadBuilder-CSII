@@ -1,6 +1,5 @@
 ﻿using Colossal.Entities;
 using Colossal.Serialization.Entities;
-using Colossal.UI.Binding;
 
 using Game;
 using Game.Common;
@@ -22,9 +21,6 @@ using System.Linq;
 
 using Unity.Collections;
 using Unity.Entities;
-using Unity.Jobs;
-
-using static MoveIt.QAccessor.QEntity;
 
 namespace RoadBuilder.Systems
 {
@@ -58,7 +54,7 @@ namespace RoadBuilder.Systems
 			roadNameUtil = new(this, prefabUISystem, netSectionsSystem);
 			prefabRefQuery = SystemAPI.QueryBuilder()
 				.WithAll<RoadBuilderNetwork, PrefabRef>()
-				.WithNone<Updated, Temp>()
+				.WithNone<RoadBuilderUpdateFlagComponent, Temp>()
 				.Build();
 
 			toolbarUISystemLastSelectedAssets = typeof(ToolbarUISystem).GetField("m_LastSelectedAssets", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(World.GetOrCreateSystemManaged<ToolbarUISystem>()) as Dictionary<Entity, Entity>;
@@ -80,9 +76,7 @@ namespace RoadBuilder.Systems
 
 				roadPrefab.Prefab.name = roadPrefab.Config.ID;
 
-				UpdatePrefab(roadPrefab.Prefab, prefabSystem.GetEntity(roadPrefab.Prefab));
-
-				RunUpdateSegments(prefabSystem.GetEntity(roadPrefab.Prefab));
+				UpdatePrefab(roadPrefab.Prefab);
 			}
 		}
 
@@ -229,6 +223,8 @@ namespace RoadBuilder.Systems
 
 		private void InitializeExistingRoadPrefabs(List<INetworkConfig> configs)
 		{
+			Mod.Log.InfoFormat("{0} ({1})", nameof(InitializeExistingRoadPrefabs), configs.Count);
+
 			foreach (var config in configs)
 			{
 				try
@@ -256,7 +252,7 @@ namespace RoadBuilder.Systems
 
 					Configurations.Add(roadPrefab);
 
-					UpdatePrefab(roadPrefab.Prefab, prefabSystem.GetEntity(roadPrefab.Prefab));
+					UpdatePrefab(roadPrefab.Prefab);
 				}
 				catch (Exception ex)
 				{
@@ -290,8 +286,8 @@ namespace RoadBuilder.Systems
 				{
 					EntityManager.SetComponentData(edge.m_Start, prefabRef);
 					EntityManager.SetComponentData(edge.m_End, prefabRef);
-					EntityManager.TryAddComponent<RoadBuilderNetwork>(edge.m_Start);
-					EntityManager.TryAddComponent<RoadBuilderNetwork>(edge.m_End);
+					//EntityManager.TryAddComponent<RoadBuilderNetwork>(edge.m_Start);
+					//EntityManager.TryAddComponent<RoadBuilderNetwork>(edge.m_End);
 				}
 
 				_updatedRoadPrefabsQueue.Enqueue(roadPrefab);
@@ -399,8 +395,10 @@ namespace RoadBuilder.Systems
 			RoadGenerationData.LaneGroupPrefabs = netSectionsSystem.LaneGroups;
 		}
 
-		private void UpdatePrefab(NetGeometryPrefab prefab, Entity entity)
+		private void UpdatePrefab(NetGeometryPrefab prefab)
 		{
+			var entity = prefabSystem.GetEntity(prefab);
+
 			prefabSystem.UpdatePrefab(prefab, entity);
 
 			foreach (var kvp in toolbarUISystemLastSelectedAssets)
@@ -426,88 +424,6 @@ namespace RoadBuilder.Systems
 						return;
 					}
 				}
-			}
-		}
-
-		private void RunUpdateSegments(Entity entity)
-		{
-			return;
-			var entities = prefabRefQuery.ToEntityArray(Allocator.Temp);
-
-			for (var i = 0; i < entities.Length; i++)
-			{
-				if (!EntityManager.TryGetComponent<PrefabRef>(entity, out var prefabRef) || prefabRef.m_Prefab != entity)
-				{
-					continue;
-				}
-
-				EntityManager.TryAddComponent<RoadBuilderUpdateFlagComponent>(entity);
-
-				if (EntityManager.TryGetBuffer<ConnectedEdge>(entity, true, out var edges))
-				{
-					for (var j = 0; j < edges.Length; j++)
-					{
-						if (EntityManager.TryGetComponent<Edge>(edges[j].m_Edge, out var edge))
-						{
-							EntityManager.TryAddComponent<RoadBuilderUpdateFlagComponent>(edges[j].m_Edge);
-							EntityManager.TryAddComponent<RoadBuilderUpdateFlagComponent>(edge.m_Start);
-							EntityManager.TryAddComponent<RoadBuilderUpdateFlagComponent>(edge.m_End);
-						}
-					}
-				}
-
-				if (EntityManager.TryGetBuffer<Game.Net.SubLane>(entity, true, out var subLanes))
-				{
-					for (var j = 0; j < edges.Length; j++)
-					{
-						EntityManager.TryAddComponent<RoadBuilderUpdateFlagComponent>(subLanes[i].m_SubLane);
-					}
-				}
-			}
-
-			return;
-			// Update all existing roads that use this road configuration
-			var job = new ApplyUpdatedJob()
-			{
-				Prefab = entity,
-				prefabRefArray = prefabRefQuery.ToComponentDataArray<PrefabRef>(Allocator.TempJob),
-				entities = prefabRefQuery.ToEntityArray(Allocator.TempJob),
-				PrefabRefTypeHandle = SystemAPI.GetComponentTypeHandle<PrefabRef>(true),
-				CommandBuffer = modificationBarrier.CreateCommandBuffer()
-			};
-
-			Dependency = job.Schedule(Dependency);
-		}
-
-		private struct ApplyUpdatedJob : IJob
-		{
-			internal Entity Prefab;
-			internal ComponentTypeHandle<PrefabRef> PrefabRefTypeHandle;
-			internal EntityCommandBuffer CommandBuffer;
-			internal ComponentLookup<Edge> EdgeLookup;
-			internal NativeArray<PrefabRef> prefabRefArray;
-			internal NativeArray<Entity> entities;
-
-			public void Execute()
-			{
-				for (var i = 0; i < prefabRefArray.Length; i++)
-				{
-					if (prefabRefArray[i].m_Prefab == Prefab)
-					{
-						var entity = entities[i];
-
-						CommandBuffer.AddComponent<Updated>(entity);
-
-						if (EdgeLookup.TryGetComponent(entity, out var edge))
-						{
-							CommandBuffer.AddComponent<Updated>(edge.m_Start);
-							CommandBuffer.AddComponent<Updated>(edge.m_End);
-						}
-					}
-				}
-
-				prefabRefArray.Dispose();
-				entities.Dispose();
 			}
 		}
 	}
