@@ -12,12 +12,27 @@ namespace RoadBuilder.Utilities
 	{
 		public static bool IsOneWay(this INetworkConfig config)
 		{
-			return config.Lanes.All(x => !x.Invert);
+			if (config.Lanes.Count == 0)
+			{
+				return false;
+			}
+
+			var first = config.Lanes[0].Invert;
+
+			for (var i = 1; i < config.Lanes.Count; i++)
+			{
+				if (config.Lanes[0].Invert != first)
+				{
+					return false;
+				}
+			}
+
+			return true;
 		}
 
 		public static float CalculateWidth(this NetSectionPrefab netSection)
 		{
-			var subSectionsWidth = netSection.m_SubSections.Sum(x => 
+			var subSectionsWidth = netSection.m_SubSections.Sum(x =>
 				x.m_RequireAll.Length == 0 &&
 				x.m_RequireAny.Length == 0 ? x.m_Section.CalculateWidth() : 0f);
 
@@ -26,14 +41,14 @@ namespace RoadBuilder.Utilities
 				return subSectionsWidth;
 			}
 
-			return subSectionsWidth + netSection.m_Pieces.Max(x => 
-				x.m_RequireAll.Length == 0 && 
+			return subSectionsWidth + netSection.m_Pieces.Max(x =>
+				x.m_RequireAll.Length == 0 &&
 				x.m_RequireAny.Length == 0 ? x.m_Piece.m_Width : 0f);
 		}
 
 		public static bool IsMedian(this NetSectionPrefab netSection)
 		{
-			return netSection.m_Pieces.Any(x => 
+			return netSection.m_Pieces.Any(x =>
 				x.m_RequireAll.Length == 0 &&
 				x.m_RequireAny.Length == 0 &&
 				x.m_Piece.TryGet<NetDividerPiece>(out var divider) && divider.m_BlockTraffic);

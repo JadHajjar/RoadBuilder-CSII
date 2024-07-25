@@ -1,4 +1,5 @@
-﻿using Game.Prefabs;
+﻿using Game.City;
+using Game.Prefabs;
 using Game.SceneFlow;
 using Game.Simulation;
 using Game.Tools;
@@ -36,6 +37,7 @@ namespace RoadBuilder.Systems.UI
 		private SimulationSystem simulationSystem;
 		private NetSectionsUISystem netSectionsUISystem;
 		private NetSectionsSystem netSectionsSystem;
+		private CityConfigurationSystem cityConfigurationSystem;
 		private ValueBindingHelper<RoadBuilderToolMode> RoadBuilderMode;
 		private ValueBindingHelper<string> RoadName;
 		private ValueBindingHelper<RoadLaneUIBinder[]> RoadLanes;
@@ -58,6 +60,7 @@ namespace RoadBuilder.Systems.UI
 			simulationSystem = World.GetOrCreateSystemManaged<SimulationSystem>();
 			netSectionsUISystem = World.GetOrCreateSystemManaged<NetSectionsUISystem>();
 			netSectionsSystem = World.GetOrCreateSystemManaged<NetSectionsSystem>();
+			cityConfigurationSystem = World.GetOrCreateSystemManaged<CityConfigurationSystem>();
 
 			toolSystem.EventToolChanged += OnToolChanged;
 
@@ -230,13 +233,15 @@ namespace RoadBuilder.Systems.UI
 			{
 				var lane = config.Lanes[i];
 				var validSection = NetworkPrefabGenerationUtil.GetNetSection(roadGenerationData, config, lane, out var section, out var groupPrefab);
+				var isBackward = cityConfigurationSystem.leftHandTraffic ? !lane.Invert : lane.Invert;
 
-				GetThumbnailAndColor(config, lane, section, groupPrefab, lane.Invert, out var thumbnail, out var color, out var texture);
+				GetThumbnailAndColor(config, lane, section, groupPrefab, isBackward, out var thumbnail, out var color, out var texture);
 
 				binders[i] = new RoadLaneUIBinder
 				{
 					Index = i,
-					Invert = lane.Invert,
+					Invert = isBackward,
+					InvertImage = lane.Invert,
 					TwoWay = validSection && section.SupportsTwoWay(),
 					SectionPrefabName = string.IsNullOrEmpty(lane.GroupPrefabName) ? lane.SectionPrefabName : lane.GroupPrefabName,
 					IsGroup = !string.IsNullOrEmpty(lane.GroupPrefabName),

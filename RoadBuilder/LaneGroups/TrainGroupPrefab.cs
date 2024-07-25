@@ -46,7 +46,7 @@ namespace RoadBuilder.LaneGroups
 					OptionName = OptionName,
 					Value = string.Empty
 				}
-			} :new LaneOptionCombination[0];
+			} : new LaneOptionCombination[0];
 
 			LinkedSections.Add(prefab);
 		}

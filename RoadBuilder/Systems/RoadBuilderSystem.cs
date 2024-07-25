@@ -2,6 +2,7 @@
 using Colossal.Serialization.Entities;
 
 using Game;
+using Game.City;
 using Game.Common;
 using Game.Net;
 using Game.Prefabs;
@@ -36,6 +37,7 @@ namespace RoadBuilder.Systems
 		private PrefabUISystem prefabUISystem;
 		private NetSectionsSystem netSectionsSystem;
 		private RoadBuilderSerializeSystem roadBuilderSerializeSystem;
+		private CityConfigurationSystem cityConfigurationSystem;
 		private ModificationBarrier1 modificationBarrier;
 		private Dictionary<Entity, Entity> toolbarUISystemLastSelectedAssets;
 
@@ -50,6 +52,7 @@ namespace RoadBuilder.Systems
 			prefabUISystem = World.GetOrCreateSystemManaged<PrefabUISystem>();
 			netSectionsSystem = World.GetOrCreateSystemManaged<NetSectionsSystem>();
 			roadBuilderSerializeSystem = World.GetOrCreateSystemManaged<RoadBuilderSerializeSystem>();
+			cityConfigurationSystem = World.GetOrCreateSystemManaged<CityConfigurationSystem>();
 			modificationBarrier = World.GetOrCreateSystemManaged<ModificationBarrier1>();
 			roadNameUtil = new(this, prefabUISystem, netSectionsSystem);
 			prefabRefQuery = SystemAPI.QueryBuilder()
@@ -183,6 +186,8 @@ namespace RoadBuilder.Systems
 				return;
 			}
 
+			Mod.Log.Debug(string.Join("\r\n", config.Lanes.Select(x => x.GroupPrefabName ?? x.SectionPrefabName)));
+
 			_updatedRoadPrefabsQueue.Enqueue(networkBuilderPrefab);
 		}
 
@@ -286,8 +291,8 @@ namespace RoadBuilder.Systems
 				{
 					EntityManager.SetComponentData(edge.m_Start, prefabRef);
 					EntityManager.SetComponentData(edge.m_End, prefabRef);
-					//EntityManager.TryAddComponent<RoadBuilderNetwork>(edge.m_Start);
-					//EntityManager.TryAddComponent<RoadBuilderNetwork>(edge.m_End);
+					EntityManager.TryAddComponent<RoadBuilderNetwork>(edge.m_Start);
+					EntityManager.TryAddComponent<RoadBuilderNetwork>(edge.m_End);
 				}
 
 				_updatedRoadPrefabsQueue.Enqueue(roadPrefab);
@@ -304,6 +309,8 @@ namespace RoadBuilder.Systems
 
 			var zoneBlockDataQuery = SystemAPI.QueryBuilder().WithAll<ZoneBlockData>().Build();
 			var zoneBlockDataEntities = zoneBlockDataQuery.ToEntityArray(Allocator.Temp);
+
+			RoadGenerationData.LeftHandTraffic = cityConfigurationSystem.leftHandTraffic;
 
 			for (var i = 0; i < zoneBlockDataEntities.Length; i++)
 			{

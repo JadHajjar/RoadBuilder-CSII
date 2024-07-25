@@ -10,12 +10,12 @@ namespace RoadBuilder.Utilities
 	{
 		public static bool TryAddComponent<T>(this EntityManager entityManager, Entity entity)
 		{
-            if (entityManager.HasComponent<T>(entity))
-            {
-                return false;
-            }
+			if (entityManager.HasComponent<T>(entity))
+			{
+				return false;
+			}
 
-            return entityManager.AddComponent(entity, ComponentType.ReadWrite<T>());
+			return entityManager.AddComponent(entity, ComponentType.ReadWrite<T>());
 		}
 
 		public static string FormatWords(this string str, bool forceUpper = false)

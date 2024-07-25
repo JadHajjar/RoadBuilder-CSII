@@ -21,7 +21,7 @@ namespace RoadBuilder.LaneGroups
 					Name = OptionName,
 					Type = LaneOptionType.SingleSelectionButtons,
 					DefaultValue = "Raised",
-					Options = new RoadBuilderLaneOptionValue[] 
+					Options = new RoadBuilderLaneOptionValue[]
 					{
 						new()
 						{

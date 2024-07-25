@@ -2,13 +2,14 @@
 
 using RoadBuilder.Domain.Components;
 using RoadBuilder.Domain.Components.Prefabs;
+
 using System.Collections.Generic;
 
 using Unity.Entities;
 
 namespace RoadBuilder.Domain.Prefabs
 {
-    public class LaneGroupPrefab : PrefabBase
+	public class LaneGroupPrefab : PrefabBase
 	{
 		public RoadBuilderLaneOption[] Options;
 
