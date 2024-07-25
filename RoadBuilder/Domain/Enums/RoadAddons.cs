@@ -16,5 +16,5 @@ namespace RoadBuilder.Domain.Enums
 		TreesLeft = 256,
 		TreesRight = 512,
 		TreesCenter = 1024,
-}
+	}
 }

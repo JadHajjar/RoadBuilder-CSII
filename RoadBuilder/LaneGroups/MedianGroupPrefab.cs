@@ -11,7 +11,7 @@ namespace RoadBuilder.LaneGroups
 	{
 		private const string OptionName = "Median Width";
 
-		public MedianGroupPrefab(Dictionary<string, NetSectionPrefab> sections) : base(sections)
+		public override void Initialize(Dictionary<string, NetSectionPrefab> sections)
 		{
 			DisplayName = "Median";
 			Options = new RoadBuilderLaneOption[]

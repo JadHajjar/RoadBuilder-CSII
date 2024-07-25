@@ -32,7 +32,7 @@ namespace RoadBuilder.Utilities
 			{
 				if (group is not null || !(section?.SupportsTwoWay() ?? false))
 				{
-					options.Add(GetInvertOption(config, lane, group?.Options?.FirstOrDefault(x => x.Type is LaneOptionType.TwoWay)));
+					options.Add(GetInvertOption(roadGenerationData, config, lane, group?.Options?.FirstOrDefault(x => x.Type is LaneOptionType.TwoWay)));
 				}
 			}
 
@@ -140,7 +140,7 @@ namespace RoadBuilder.Utilities
 			return value is not null && value == currentValue;
 		}
 
-		private static OptionSectionUIEntry GetInvertOption(INetworkConfig config, LaneConfig lane, RoadBuilderLaneOption twoWayOption)
+		private static OptionSectionUIEntry GetInvertOption(RoadGenerationData roadGenerationData, INetworkConfig config, LaneConfig lane, RoadBuilderLaneOption twoWayOption)
 		{
 			var isTwoWaySelected = twoWayOption is not null && GetSelectedOptionValue(config, lane, twoWayOption) == "1";
 
@@ -154,15 +154,15 @@ namespace RoadBuilder.Utilities
 					{
 						Name = "Backward",
 						Icon = "coui://roadbuildericons/RB_ArrowDown.svg",
-						Selected = !isTwoWaySelected && lane.Invert,
-						Id = 0,
+						Selected = !isTwoWaySelected && (roadGenerationData.LeftHandTraffic ? !lane.Invert : lane.Invert),
+						Id = roadGenerationData.LeftHandTraffic ? 1 : 0,
 					},
 					new()
 					{
 						Name = "Forward",
 						Icon = "coui://roadbuildericons/RB_Arrow.svg",
-						Selected = !isTwoWaySelected && !lane.Invert,
-						Id = 1,
+						Selected = !isTwoWaySelected && !(roadGenerationData.LeftHandTraffic ? !lane.Invert : lane.Invert),
+						Id = roadGenerationData.LeftHandTraffic ? 0 :  1,
 					},
 					new()
 					{
@@ -202,8 +202,6 @@ namespace RoadBuilder.Utilities
 						}
 					}
 
-					break;
-				default:
 					break;
 			}
 		}

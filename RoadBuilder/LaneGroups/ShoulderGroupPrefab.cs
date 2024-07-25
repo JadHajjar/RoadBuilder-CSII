@@ -1,7 +1,6 @@
 ﻿using Game.Prefabs;
 
 using RoadBuilder.Domain.Components.Prefabs;
-using RoadBuilder.Domain.Enums;
 
 using System.Collections.Generic;
 
@@ -12,7 +11,7 @@ namespace RoadBuilder.LaneGroups
 		private const string OptionName1 = "Lane Width";
 		private const string OptionName2 = "Ground Type";
 
-		public ShoulderGroupPrefab(Dictionary<string, NetSectionPrefab> sections) : base(sections)
+		public override void Initialize(Dictionary<string, NetSectionPrefab> sections)
 		{
 			DisplayName = "Shoulder";
 			Options = new RoadBuilderLaneOption[]

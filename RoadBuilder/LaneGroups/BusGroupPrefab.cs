@@ -11,7 +11,7 @@ namespace RoadBuilder.LaneGroups
 	{
 		private const string OptionName = "Lane Width";
 
-		public BusGroupPrefab(Dictionary<string, NetSectionPrefab> sections) : base(sections)
+		public override void Initialize(Dictionary<string, NetSectionPrefab> sections)
 		{
 			DisplayName = "Bus";
 			Options = new RoadBuilderLaneOption[]

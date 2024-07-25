@@ -45,7 +45,7 @@ namespace RoadBuilder.Utilities
 			{
 				try
 				{
-					LoadFromJson(File.ReadAllText(item));
+					list.Add(LoadFromJson(File.ReadAllText(item)));
 				}
 				catch (Exception ex)
 				{

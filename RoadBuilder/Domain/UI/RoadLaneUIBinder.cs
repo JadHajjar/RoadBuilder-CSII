@@ -12,6 +12,7 @@ namespace RoadBuilder.Domain.UI
 		public bool IsGroup;
 		public int Index;
 		public bool Invert;
+		public bool InvertImage;
 		public bool TwoWay;
 		public string Color;
 		public string Texture;

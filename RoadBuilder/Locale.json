@@ -7,5 +7,7 @@
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.AdvancedUserMode]": "Ignores safety restrictions on lanes.",
   "Assets.NAME[Gravel Drive Section 3]": "Gravel Car",
   "Assets.NAME[Sound Barrier 1]": "Sound Barrier",
-  "Assets.NAME[Pavement Path Section 3]": "Pavement Pedestrian"
+  "Assets.NAME[Pavement Path Section 3]": "Pavement Pedestrian",
+  "Assets.NAME[Tiled Section 3]": "Tiled Pedestrian",
+  "Assets.NAME[Tiled Median Pedestrian 2]": "Tiled Median"
 }
