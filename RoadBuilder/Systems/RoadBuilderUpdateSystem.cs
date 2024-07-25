@@ -64,8 +64,6 @@ namespace RoadBuilder.Systems
 
 			var edgeList = new HashSet<Entity>(edgeEntities);
 
-			Mod.Log.Debug("prefabs.Length " + prefabs.Length);
-
 			for (var j = 0; j < prefabs.Length; j++)
 			{
 				for (var i = 0; i < edgeEntities.Length; i++)
@@ -81,8 +79,6 @@ namespace RoadBuilder.Systems
 
 				EntityManager.RemoveComponent<RoadBuilderUpdateFlagComponent>(prefabs[j]);
 			}
-
-			Mod.Log.Debug("edgeList.Count " + edgeList.Count);
 
 			foreach (var entity in edgeList)
 			{
@@ -106,7 +102,7 @@ namespace RoadBuilder.Systems
 			{
 				for (var i = 0; i < connectedEdges2.Length; i++)
 				{
-					yield return connectedEdges1[i].m_Edge;
+					yield return connectedEdges2[i].m_Edge;
 				}
 			}
 		}
@@ -149,7 +145,6 @@ namespace RoadBuilder.Systems
 			if (entity != Entity.Null)
 			{
 				EntityManager.AddComponent<Updated>(entity);
-				EntityManager.AddComponent<BatchesUpdated>(entity);
 			}
 		}
 	}
