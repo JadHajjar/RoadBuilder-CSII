@@ -1,4 +1,5 @@
-﻿using Game.Prefabs;
+﻿using Game.City;
+using Game.Prefabs;
 using Game.SceneFlow;
 using Game.Simulation;
 using Game.Tools;
@@ -36,6 +37,7 @@ namespace RoadBuilder.Systems.UI
 		private SimulationSystem simulationSystem;
 		private NetSectionsUISystem netSectionsUISystem;
 		private NetSectionsSystem netSectionsSystem;
+		private CityConfigurationSystem cityConfigurationSystem;
 		private ValueBindingHelper<RoadBuilderToolMode> RoadBuilderMode;
 		private ValueBindingHelper<string> RoadName;
 		private ValueBindingHelper<RoadLaneUIBinder[]> RoadLanes;
@@ -58,6 +60,7 @@ namespace RoadBuilder.Systems.UI
 			simulationSystem = World.GetOrCreateSystemManaged<SimulationSystem>();
 			netSectionsUISystem = World.GetOrCreateSystemManaged<NetSectionsUISystem>();
 			netSectionsSystem = World.GetOrCreateSystemManaged<NetSectionsSystem>();
+			cityConfigurationSystem = World.GetOrCreateSystemManaged<CityConfigurationSystem>();
 
 			toolSystem.EventToolChanged += OnToolChanged;
 
@@ -197,6 +200,11 @@ namespace RoadBuilder.Systems.UI
 				}
 			}
 
+			if (cityConfigurationSystem.leftHandTraffic)
+			{
+				newLanes.Reverse();
+			}
+
 			config.Lanes = newLanes;
 		}
 
@@ -233,7 +241,7 @@ namespace RoadBuilder.Systems.UI
 
 				GetThumbnailAndColor(config, lane, section, groupPrefab, lane.Invert, out var thumbnail, out var color, out var texture);
 
-				binders[i] = new RoadLaneUIBinder
+				binders[cityConfigurationSystem.leftHandTraffic ? (binders.Length - i - 1) : i] = new RoadLaneUIBinder
 				{
 					Index = i,
 					Invert = lane.Invert,

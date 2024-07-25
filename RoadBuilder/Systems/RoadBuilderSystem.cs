@@ -286,8 +286,8 @@ namespace RoadBuilder.Systems
 				{
 					EntityManager.SetComponentData(edge.m_Start, prefabRef);
 					EntityManager.SetComponentData(edge.m_End, prefabRef);
-					//EntityManager.TryAddComponent<RoadBuilderNetwork>(edge.m_Start);
-					//EntityManager.TryAddComponent<RoadBuilderNetwork>(edge.m_End);
+					EntityManager.TryAddComponent<RoadBuilderNetwork>(edge.m_Start);
+					EntityManager.TryAddComponent<RoadBuilderNetwork>(edge.m_End);
 				}
 
 				_updatedRoadPrefabsQueue.Enqueue(roadPrefab);

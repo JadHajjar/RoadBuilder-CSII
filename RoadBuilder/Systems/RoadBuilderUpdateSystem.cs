@@ -1,4 +1,5 @@
 ﻿using Colossal.Entities;
+using Colossal.Serialization.Entities;
 
 using Game;
 using Game.Common;
@@ -18,6 +19,7 @@ namespace RoadBuilder.Systems
 	public partial class RoadBuilderUpdateSystem : GameSystemBase
 	{
 		private EntityQuery query;
+		private EntityQuery queryAll;
 		private EntityQuery prefabRefQuery;
 
 		protected override void OnCreate()
@@ -25,6 +27,7 @@ namespace RoadBuilder.Systems
 			base.OnCreate();
 
 			query = SystemAPI.QueryBuilder().WithAll<RoadBuilderPrefabData, Updated>().Build();
+			queryAll = SystemAPI.QueryBuilder().WithAll<RoadBuilderPrefabData>().Build();
 			prefabRefQuery = SystemAPI.QueryBuilder()
 				.WithAll<RoadBuilderNetwork, PrefabRef, Edge>()
 				.WithNone<RoadBuilderUpdateFlagComponent, Temp>()
@@ -33,12 +36,35 @@ namespace RoadBuilder.Systems
 			RequireForUpdate(query);
 		}
 
+		protected override void OnGamePreload(Purpose purpose, GameMode mode)
+		{
+			base.OnGamePreload(purpose, mode);
+
+			Enabled = false;
+		}
+
+		protected override void OnGameLoadingComplete(Purpose purpose, GameMode mode)
+		{
+			base.OnGameLoadingComplete(purpose, mode);
+
+			Enabled = true;
+
+			Update(in queryAll);
+		}
+
 		protected override void OnUpdate()
 		{
-			var prefabs = query.ToEntityArray(Allocator.Temp);
+			Update(in query);
+		}
+
+		protected void Update(in EntityQuery prefabQuery)
+		{
+			var prefabs = prefabQuery.ToEntityArray(Allocator.Temp);
 			var edgeEntities = prefabRefQuery.ToEntityArray(Allocator.Temp);
 
-			var edgeList = new HashSet<Entity>();
+			var edgeList = new HashSet<Entity>(edgeEntities);
+
+			Mod.Log.Debug("prefabs.Length " + prefabs.Length);
 
 			for (var j = 0; j < prefabs.Length; j++)
 			{
@@ -55,6 +81,8 @@ namespace RoadBuilder.Systems
 
 				EntityManager.RemoveComponent<RoadBuilderUpdateFlagComponent>(prefabs[j]);
 			}
+
+			Mod.Log.Debug("edgeList.Count " + edgeList.Count);
 
 			foreach (var entity in edgeList)
 			{
@@ -121,6 +149,7 @@ namespace RoadBuilder.Systems
 			if (entity != Entity.Null)
 			{
 				EntityManager.AddComponent<Updated>(entity);
+				EntityManager.AddComponent<BatchesUpdated>(entity);
 			}
 		}
 	}
