@@ -7,10 +7,8 @@ using Game.Prefabs;
 using Game.Tools;
 
 using RoadBuilder.Domain.Components;
-using RoadBuilder.Utilities;
 
 using System.Collections.Generic;
-using System.Linq;
 
 using Unity.Collections;
 using Unity.Entities;
@@ -87,25 +85,25 @@ namespace RoadBuilder.Systems
 
 		private void UpdateEdge(Entity entity)
 		{
-			EntityManager.AddComponent<Updated>(entity);
+			UpdateEntity(entity);
 
 			if (EntityManager.TryGetComponent<Composition>(entity, out var comp))
 			{
-				EntityManager.AddComponent<Updated>(comp.m_StartNode);
-				EntityManager.AddComponent<Updated>(comp.m_EndNode);
+				UpdateEntity(comp.m_StartNode);
+				UpdateEntity(comp.m_EndNode);
 			}
 
 			if (EntityManager.TryGetComponent<Edge>(entity, out var edge))
 			{
-				EntityManager.AddComponent<Updated>(edge.m_Start);
-				EntityManager.AddComponent<Updated>(edge.m_End);
+				UpdateEntity(edge.m_Start);
+				UpdateEntity(edge.m_End);
 			}
 
 			if (EntityManager.TryGetBuffer<Game.Net.SubLane>(entity, true, out var subLanes))
 			{
 				for (var j = 0; j < subLanes.Length; j++)
 				{
-					EntityManager.AddComponent<Updated>(subLanes[j].m_SubLane);
+					UpdateEntity(subLanes[j].m_SubLane);
 				}
 			}
 
@@ -113,8 +111,16 @@ namespace RoadBuilder.Systems
 			{
 				for (var j = 0; j < subObjects.Length; j++)
 				{
-					EntityManager.AddComponent<Updated>(subObjects[j].m_SubObject);
+					UpdateEntity(subObjects[j].m_SubObject);
 				}
+			}
+		}
+
+		private void UpdateEntity(Entity entity)
+		{
+			if (entity != Entity.Null)
+			{
+				EntityManager.AddComponent<Updated>(entity);
 			}
 		}
 	}
