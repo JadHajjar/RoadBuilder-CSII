@@ -63,7 +63,7 @@ namespace RoadBuilder.LaneGroups
 
 			SetUp(sections["Sidewalk With Parking 5"], "P", "5m");
 			SetUp(sections["Sidewalk 3.5"], "", "3.5m", false);
-			SetUp(sections["Sidewalk With Parking 6"], "P", "6m"); 
+			SetUp(sections["Sidewalk With Parking 6"], "P", "6m");
 			SetUp(sections["Sidewalk 4.5"], "", "4.5m", false);
 			SetUp(sections["Sidewalk With Parking 7"], "P", "7m");
 			SetUp(sections["Sidewalk With Parking 5.5"], "P", "5.5m");
