@@ -3,7 +3,7 @@ import { ModuleRegistryExtend } from "cs2/modding";
 import { roadBuilderToolMode$ } from "mods/bindings";
 import { RoadBuilderToolModeEnum } from "domain/RoadBuilderToolMode";
 
-export const RemoveVanillaAssetMenuComponent: ModuleRegistryExtend = (Component) => {
+export const RemoveVanillaRightToolbar: ModuleRegistryExtend = (Component) => {
   return (props) => {
     const { children, ...otherProps } = props || {};
 
