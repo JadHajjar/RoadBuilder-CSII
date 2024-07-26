@@ -21,13 +21,15 @@ export const DragAndDropScrollable = (props: _Props) => {
     let [isScrollPosInit, setIsScrollPosInit] = useState(false);
     let scrollRef = useRef<HTMLDivElement>(null);
     let rem = useRem();
+    const baseScrollSpeed = 10 * rem;
+    const wheelScrollMultiplier = 0.66;
     let [arrowState, setArrowState] = useState<ArrowState>(ArrowState.None);
 
     let onMouseOver = (dir: 'left' | 'right') => () => {        
         if (!scrollRef.current) {
             return;
         }
-        let dx = 10 * rem * (dir == 'left'? -1 : 1);        
+        let dx = baseScrollSpeed * (dir == 'left'? -1 : 1);        
         setScrollRoutine(setInterval(() => {         
             console.log(scrollRef.current?.scrollLeft);   
             scrollController.scrollBy(dx, 0);            
@@ -51,13 +53,26 @@ export const DragAndDropScrollable = (props: _Props) => {
         setArrowState(nState);
     }
 
+    let onScrollWheel = (evt: WheelEvent) => {
+        evt.preventDefault();
+        scrollController.scrollBy(evt.deltaY * wheelScrollMultiplier, 0);
+    }
+
+    // On Mount, on Detach
+    useEffect(() => {
+        return () => {
+            if(scrollRef.current) {
+                scrollRef.current.removeEventListener('wheel', onScrollWheel);
+            }
+        }
+    }, [])
+
     useEffect(() => {
         if (scrollController && scrollRef.current && !isScrollPosInit) {
             let maxScrollLeft = scrollRef.current.scrollWidth - scrollRef.current.clientWidth;            
             if (maxScrollLeft > 0) {
                 scrollController.scrollTo(maxScrollLeft/2, 0);            
-                console.log("Scroll to middle");
-                console.log(scrollRef.current?.scrollLeft, maxScrollLeft);
+                scrollRef.current.addEventListener('wheel', onScrollWheel);
                 setIsScrollPosInit(true);
             }            
         }        
