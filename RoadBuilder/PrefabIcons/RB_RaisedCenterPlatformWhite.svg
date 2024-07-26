@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 36 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="matrix(1.52628,0,0,1.90223,-1.84159,-36.1619)">
+        <g id="Center-Platform" serif:id="Center Platform">
+            <g transform="matrix(0.730444,0,0,0.182258,3.6856,25.3829)">
+                <rect x="3.213" y="24.282" width="19.087" height="15.408" style="fill:white;"/>
+            </g>
+            <g transform="matrix(1.18297,0,0,0.0476494,-2.08565,31.0926)">
+                <rect x="3.213" y="24.282" width="19.087" height="15.408" style="fill:white;"/>
+            </g>
+            <g transform="matrix(0.695582,0,0,0.849473,3.95743,7.04186)">
+                <path d="M26,26.078C26,25.086 24.776,24.282 23.267,24.282C18.272,24.282 7.728,24.282 2.733,24.282C1.224,24.282 0,25.086 0,26.078C0,26.078 0,26.078 0,26.078L26,26.078L26,26.078Z" style="fill:white;"/>
+            </g>
+        </g>
+    </g>
+</svg>

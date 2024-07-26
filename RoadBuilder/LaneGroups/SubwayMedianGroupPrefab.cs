@@ -26,12 +26,12 @@ namespace RoadBuilder.LaneGroups
 						new()
 						{
 							Value = "Raised",
-							ThumbnailUrl = "coui://roadbuildericons/RB_RaisedSidewalks.svg"
+							ThumbnailUrl = "coui://roadbuildericons/RB_RaisedCenterPlatformWhite.svg"
 						},
 						new()
 						{
 							Value = "Flat",
-							ThumbnailUrl = "coui://roadbuildericons/RB_RaisedSidewalks.svg"
+							ThumbnailUrl = "coui://roadbuildericons/RB_CenterPlatformWhite.svg"
 						}
 					}
 				}
@@ -40,13 +40,13 @@ namespace RoadBuilder.LaneGroups
 			AddComponent<RoadBuilderLaneInfo>()
 				.WithAny(RoadCategory.Train | RoadCategory.Subway | RoadCategory.Tram);
 
-			AddComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_TrainFront.svg";
+			AddComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_CenterPlatform.svg";
 
-			SetUp(sections["Subway Median 8"], "Raised");
-			SetUp(sections["Subway Median 8 - Plain"], "Flat");
+			SetUp(sections["Subway Median 8"], "Raised").WithThumbnail("coui://roadbuildericons/RB_CenterPlatform.svg");
+			SetUp(sections["Subway Median 8 - Plain"], "Flat").WithThumbnail(string.Empty);
 		}
 
-		private void SetUp(NetSectionPrefab prefab, string value)
+		private RoadBuilderLaneInfo SetUp(NetSectionPrefab prefab, string value)
 		{
 			var laneInfo = prefab.AddComponent<RoadBuilderLaneGroup>();
 			laneInfo.GroupPrefab = this;
@@ -60,6 +60,8 @@ namespace RoadBuilder.LaneGroups
 			};
 
 			LinkedSections.Add(prefab);
+
+			return prefab.AddComponent<RoadBuilderLaneInfo>();
 		}
 	}
 }
