@@ -70,6 +70,10 @@ namespace RoadBuilder.Systems
 				if (RoadGenerationData is null)
 				{
 					Mod.Log.Warn("Generating roads before generation data was initialized");
+
+					_updatedRoadPrefabsQueue.Clear();
+
+					return;
 				}
 
 				var roadPrefab = _updatedRoadPrefabsQueue.Dequeue();
@@ -80,6 +84,8 @@ namespace RoadBuilder.Systems
 				roadPrefab.Prefab.name = roadPrefab.Config.ID;
 
 				UpdatePrefab(roadPrefab.Prefab);
+
+				GameManager.instance.localizationManager.ReloadActiveLocale();
 			}
 		}
 

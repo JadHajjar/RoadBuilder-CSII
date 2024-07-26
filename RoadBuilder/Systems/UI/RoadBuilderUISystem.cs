@@ -65,11 +65,7 @@ namespace RoadBuilder.Systems.UI
 			toolSystem.EventToolChanged += OnToolChanged;
 
 			RoadBuilderMode = CreateBinding("RoadBuilderToolMode", RoadBuilderToolMode.None);
-			RoadName = CreateBinding("GetRoadName", "SetRoadName", string.Empty, name =>
-			{
-				UpdateRoad(x => x.Name = name);
-				GameManager.instance.localizationManager.ReloadActiveLocale();
-			});
+			RoadName = CreateBinding("GetRoadName", "SetRoadName", string.Empty, name =>					UpdateRoad(x => x.Name = name)			);
 			RoadLanes = CreateBinding("GetRoadLanes", new RoadLaneUIBinder[0]);
 			RoadOptions = CreateBinding("GetRoadOptions", new OptionSectionUIEntry[0]);
 			IsPaused = CreateBinding("IsPaused", simulationSystem.selectedSpeed == 0f);
