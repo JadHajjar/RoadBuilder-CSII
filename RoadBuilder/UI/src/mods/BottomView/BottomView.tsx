@@ -88,8 +88,10 @@ export const BottomView = () => {
   return (
     <div className={styles.viewContainer}>
       <DragAndDropScrollable className={styles.view} trackVisibility="always" horizontal controller={scrollController}>
+        <div className={styles.scrollBuffer}></div>
         {items}
         {roadLanes.length == 0 && !dragContext.netSectionItem ? <div className={styles.hint}>Drag Lanes Here</div> : <></>}
+        <div className={styles.scrollBuffer}></div>
       </DragAndDropScrollable>
       <div className={styles.bottomBG + " " + (isPaused && styles.paused)}>
         {isDragging ? (

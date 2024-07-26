@@ -18,6 +18,7 @@ enum ArrowState {
 export const DragAndDropScrollable = (props: _Props) => {
     let scrollController = VanillaComponentResolver.instance.useScrollController();    
     let [scrollRoutine, setScrollRoutine] = useState<number>();
+    let [isScrollPosInit, setIsScrollPosInit] = useState(false);
     let scrollRef = useRef<HTMLDivElement>(null);
     let rem = useRem();
     let [arrowState, setArrowState] = useState<ArrowState>(ArrowState.None);
@@ -51,6 +52,15 @@ export const DragAndDropScrollable = (props: _Props) => {
     }
 
     useEffect(() => {
+        if (scrollController && scrollRef.current && !isScrollPosInit) {
+            let maxScrollLeft = scrollRef.current.scrollWidth - scrollRef.current.clientWidth;            
+            if (maxScrollLeft > 0) {
+                scrollController.scrollTo(maxScrollLeft/2, 0);            
+                console.log("Scroll to middle");
+                console.log(scrollRef.current?.scrollLeft, maxScrollLeft);
+                setIsScrollPosInit(true);
+            }            
+        }        
         updateArrowState();
     }, [scrollRef.current, props.children]);
 
