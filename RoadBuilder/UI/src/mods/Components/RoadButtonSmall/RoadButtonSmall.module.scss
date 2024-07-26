@@ -25,6 +25,8 @@
     height: 222rem;
     width: 100%;
     overflow: hidden;
+    display: flex;
+    justify-content: center;
   }
 
   img {
@@ -39,7 +41,7 @@
   }
 
   &:hover {
-    //transform: scale(1.05);
+    
 
     & .closeButton {
       display: flex;
@@ -49,10 +51,11 @@
   }
 
   &.dragging {
+    overflow: hidden;
     img {
       opacity: 0.75;
       width: 65%;
-      height: 65%;
+      transform: translateY(12rem);
     }
   }
 }
