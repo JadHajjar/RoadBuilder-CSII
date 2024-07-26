@@ -40,16 +40,6 @@
     transform: scale(-1, 1);
   }
 
-  &:hover {
-    
-
-    & .closeButton {
-      display: flex;
-
-      animation: closeButton-enter 0.1s;
-    }
-  }
-
   &.dragging {
     overflow: hidden;
     img {
@@ -57,36 +47,6 @@
       width: 65%;
       transform: translateY(12rem);
     }
-  }
-}
-
-.closeButton {
-  display: none;
-  position: absolute;
-  right: -18rem;
-  top: -18rem;
-
-  background-color: #ff0000;
-  border-radius: 50%;
-  width: 24rem;
-  height: 24rem;
-
-  align-items: center;
-  justify-content: center;
-
-  img {
-    filter: invert(1);
-  }
-}
-
-@keyframes closeButton-enter {
-  0% {
-    transform: scale(0);
-    opacity: 0;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
   }
 }
 
