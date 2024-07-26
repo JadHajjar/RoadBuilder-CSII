@@ -2,7 +2,7 @@ import { Bounds1, Color, Theme, UniqueFocusKey } from "cs2/bindings";
 import { InputAction } from "cs2/input";
 import { ModuleRegistry } from "cs2/modding";
 import { BalloonDirection, FocusKey, PanelTheme, ScrollController } from "cs2/ui";
-import { CSSProperties, EventHandler, HTMLAttributes, MouseEventHandler, MutableRefObject, ReactNode } from "react";
+import { CSSProperties, EventHandler, HTMLAttributes, KeyboardEventHandler, MouseEventHandler, MutableRefObject, ReactNode } from "react";
 
 // These are specific to the types of components that this mod uses.
 // In the UI developer tools at http://localhost:9444/ go to Sources -> Index.js. Pretty print if it is formatted in a single line.
@@ -178,7 +178,9 @@ type EllipsisTextInput = {
   ref?: MutableRefObject<HTMLInputElement>;
   focusKey?: FocusKey;
   onClick?: MouseEventHandler;
+  onKeyDown?: KeyboardEventHandler<HTMLInputElement>;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onFocus?: () => void;
   onBlur?: () => void;
 };
 
