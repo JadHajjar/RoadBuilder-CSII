@@ -45,7 +45,8 @@ namespace RoadBuilder.LaneGroups
 				},
 			};
 
-			//AddComponent<RoadBuilderLaneInfo>().WithExcluded(RoadCategory.RaisedSidewalk);
+			AddComponent<RoadBuilderLaneInfo>()
+				.AddLaneThumbnail("coui://roadbuildericons/Thumb_Shoulder.svg");
 
 			AddComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_Empty.svg";
 

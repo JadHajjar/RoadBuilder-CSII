@@ -9,6 +9,7 @@ namespace RoadBuilder.Utilities
 		public static string ContentFolder { get; }
 		public static string SettingsFolder { get; }
 		public static string TempFolder { get; }
+		public static string GameUIPath { get; }
 
 		static FoldersUtil()
 		{
@@ -18,9 +19,15 @@ namespace RoadBuilder.Utilities
 
 			TempFolder = Path.Combine(EnvPath.kTempDataPath, nameof(RoadBuilder));
 
-			Directory.CreateDirectory(ContentFolder);   // Only create those
-			Directory.CreateDirectory(SettingsFolder);  // folders if you
-			Directory.CreateDirectory(TempFolder);      // need them
+			GameUIPath = Path.Combine(EnvPath.kStreamingDataPath, "~UI~", "GameUI");
+
+			if (Directory.Exists(TempFolder))
+			{
+				new DirectoryInfo(TempFolder).Delete(true);
+			}
+
+			Directory.CreateDirectory(ContentFolder);
+			Directory.CreateDirectory(TempFolder);
 		}
 	}
 }

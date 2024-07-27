@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g id="Shoulder" transform="matrix(1.5625,0,0,1.5625,3.36087,2.06216)">
+        <g transform="matrix(0.128,0,0,0.128,5.44,-5.76)">
+            <path d="M316.391,384.743L299.973,394.567L65,199.635L65,184.635L81.419,174.812L316.391,369.743L316.391,384.743Z" style="fill:rgb(67,67,67);"/>
+        </g>
+        <g transform="matrix(0.128,0,0,0.128,5.44,-5.76)">
+            <path d="M81.419,174.812L316.391,369.743L299.973,379.567L65,184.635L81.419,174.812Z" style="fill:rgb(113,110,110);"/>
+        </g>
+        <g id="Position" transform="matrix(0.64,0,0,0.64,-2.15096,-1.31978)">
+            <rect x="71.855" y="70.011" width="3.284" height="1.965" style="fill:none;"/>
+        </g>
+        <g id="Extents" transform="matrix(0.64,0,0,0.64,-2.15096,-1.31978)">
+            <rect x="24.861" y="28.024" width="50.278" height="43.951" style="fill:none;"/>
+        </g>
+    </g>
+</svg>

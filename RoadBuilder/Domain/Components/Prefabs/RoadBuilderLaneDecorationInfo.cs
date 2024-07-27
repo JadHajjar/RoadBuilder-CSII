@@ -15,6 +15,9 @@ namespace RoadBuilder.Domain.Components.Prefabs
 		public string GrassThumbnail;
 		public string TreeThumbnail;
 		public string GrassAndTreeThumbnail;
+		public string[] LaneGrassThumbnail;
+		public string[] LaneTreeThumbnail;
+		public string[] LaneGrassAndTreeThumbnail;
 
 		public override void GetArchetypeComponents(HashSet<ComponentType> components)
 		{ }

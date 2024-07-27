@@ -57,7 +57,9 @@ namespace RoadBuilder.LaneGroups
 				},
 			};
 
-			AddComponent<RoadBuilderLaneInfo>().WithRequired(RoadCategory.RaisedSidewalk);
+			AddComponent<RoadBuilderLaneInfo>()
+				.WithRequired(RoadCategory.RaisedSidewalk)
+				.AddLaneThumbnail("coui://roadbuildericons/Thumb_SidewalkWide.svg");
 
 			AddComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_WideSidewalkRight.svg";
 
@@ -126,6 +128,9 @@ namespace RoadBuilder.LaneGroups
 				decoInfo.GrassThumbnail = "coui://roadbuildericons/RB_SidewalkRightwGrass.svg";
 				decoInfo.TreeThumbnail = "coui://roadbuildericons/RB_SidewalkRightwTree.svg";
 				decoInfo.GrassAndTreeThumbnail = "coui://roadbuildericons/RB_SidewalkRightwTreeAndGrass.svg";
+				decoInfo.LaneGrassThumbnail = new[] { "coui://roadbuildericons/Thumb_SidewalkGrass.svg" };
+				decoInfo.LaneTreeThumbnail = new[] { "coui://roadbuildericons/Thumb_SidewalkTree.svg" };
+				decoInfo.LaneGrassAndTreeThumbnail = new[] { "coui://roadbuildericons/Thumb_SidewalkGrassTree.svg" };
 			}
 
 			LinkedSections.Add(prefab);

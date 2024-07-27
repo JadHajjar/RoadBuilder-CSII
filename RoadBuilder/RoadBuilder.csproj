@@ -81,6 +81,9 @@
 		<Reference Include="Colossal.Localization">
 			<Private>false</Private>
 		</Reference>
+		<Reference Include="cohtml.Net">
+			<Private>false</Private>
+		</Reference>
 		<Reference Include="UnityEngine.CoreModule">
 			<Private>false</Private>
 		</Reference>

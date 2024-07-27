@@ -91,8 +91,12 @@ namespace RoadBuilder.Utilities
 
 			if (generateId)
 			{
+				ThumbnailGenerationUtil.DeleteThumbnail(NetworkPrefab.Config.ID);
+
 				NetworkPrefab.Prefab.name = NetworkPrefab.Config.ID = $"{NetworkPrefab.GetType().Name.ToLower()[0]}{Guid.NewGuid()}-{PlatformManager.instance.userSpecificPath}";
 			}
+			
+			prefab.GetComponent<UIObject>().m_Icon = new ThumbnailGenerationUtil(NetworkPrefab, _roadGenerationData).GenerateThumbnail();
 		}
 
 		private IEnumerable<NetNodeStateInfo> GenerateNodeStates()
@@ -376,8 +380,8 @@ namespace RoadBuilder.Utilities
 			placeableNet.m_XPReward = 3;
 			placeableNet.m_ElevationRange = new Colossal.Mathematics.Bounds1
 			{
-				min = -50,
-				max = 50
+				min = -100,
+				max = 100
 			};
 
 			netSubObjects.m_SubObjects = GenerateSubObjects().ToArray();
@@ -519,12 +523,11 @@ namespace RoadBuilder.Utilities
 				service = "Roads";
 				var width = NetworkPrefab.Prefab.m_Sections.Sum(x => x.m_Section.CalculateWidth());
 
-				if (width > 45)
+				if (width >= 32)
 				{
 					group = "RoadsLargeRoads";
 				}
-
-				else if (width > 32)
+				else if (width > 22)
 				{
 					group = "RoadsMediumRoads";
 				}

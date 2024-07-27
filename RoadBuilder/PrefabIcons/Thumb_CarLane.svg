@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g id="Basic-Lane" serif:id="Basic Lane" transform="matrix(1.5625,0,0,1.5625,0,4.07298)">
+        <g transform="matrix(0.128,0,0,0.128,5.44,-5.76)">
+            <path d="M350,364.635L299.973,394.567L65,199.635L65,184.635L115.027,154.703L350,349.635L350,364.635Z" style="fill:rgb(67,67,67);"/>
+        </g>
+        <g transform="matrix(0.128,0,0,0.128,5.44,-5.76)">
+            <path d="M350,349.635L299.973,379.567L65,184.635L115.027,154.703L350,349.635Z" style="fill:rgb(146,145,145);"/>
+        </g>
+        <g id="Position" transform="matrix(0.64,0,0,0.64,0,-2.60671)">
+            <rect x="68.495" y="68" width="10.005" height="5.986" style="fill:none;"/>
+        </g>
+        <g id="Extents" transform="matrix(0.64,0,0,0.486053,0,8.78328)">
+            <rect x="21.5" y="10.801" width="57" height="63.185" style="fill:none;"/>
+        </g>
+    </g>
+</svg>
