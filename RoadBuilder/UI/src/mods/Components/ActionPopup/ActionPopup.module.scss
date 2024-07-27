@@ -37,6 +37,9 @@
   pointer-events: auto;
 
   opacity: 1;
+  &.hidden {
+    display: none;
+  }
 }
 .templateButton {
   transform: translate(-100rem, -80rem);
