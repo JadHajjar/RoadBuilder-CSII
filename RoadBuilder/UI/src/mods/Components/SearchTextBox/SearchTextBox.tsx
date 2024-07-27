@@ -12,10 +12,10 @@ import classNames from "classnames";
 
 const AssetGridTheme: Theme | any = getModule("game-ui/game/components/asset-menu/asset-grid/asset-grid.module.scss", "classes");
 
-export const SearchTextBox = (props: { onChange?: (val: string) => void }) => {
+export const SearchTextBox = (props: { onChange?: (val: string) => void, value?: string }) => {
   const { translate } = useLocalization();
   const searchRef = useRef(null);
-  let [searchQuery, setSearchQuery] = useState<string>("");
+  let [searchQuery, setSearchQuery] = useState<string>(props.value === undefined? "" : props.value);
 
   const onChange: React.ChangeEventHandler<HTMLInputElement> = ({ target }) => {
     setSearchQuery(target.value);
@@ -33,7 +33,7 @@ export const SearchTextBox = (props: { onChange?: (val: string) => void }) => {
         <TextInput
           ref={searchRef}
           multiline={1}
-          value={searchQuery}
+          value={props.value === undefined? searchQuery : props.value}
           disabled={false}
           type="text"
           className={classNames(TextInputTheme.input, styles.textBox)}

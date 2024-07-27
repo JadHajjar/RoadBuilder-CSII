@@ -3,7 +3,7 @@ import { LaneListItem } from "../Components/LaneListItem/LaneListItem";
 import styles from "./LaneListPanel.module.scss";
 import { useValue } from "cs2/api";
 import { allNetSections$, allRoadConfigurations$, roadBuilderToolMode$, roadListView$, setRoadListView } from "mods/bindings";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocalization } from "cs2/l10n";
 import { SearchTextBox } from "mods/Components/SearchTextBox/SearchTextBox";
 import { RoadConfigListItem } from "mods/Components/RoadConfigListItem/RoadConfigListItem";
@@ -17,6 +17,10 @@ export const LaneListPanel = () => {
   const netSections = useValue(allNetSections$);
   let [searchQuery, setSearchQuery] = useState<string>();
   let items: JSX.Element[];  
+  
+  useEffect(() => { // when the road list view changes value
+    setSearchQuery("");    
+  }, [roadListView]);
 
   if (roadListView || toolMode == RoadBuilderToolModeEnum.Picker) {    
     items = roadConfigurations
@@ -35,7 +39,7 @@ export const LaneListPanel = () => {
       <div className={styles.header}>
         {toolMode == RoadBuilderToolModeEnum.Picker && <div className={styles.title}>Created Roads</div>}
         <div style={{ marginTop: "6rem" }}>
-          <SearchTextBox onChange={setSearchQuery} />
+          <SearchTextBox value={searchQuery} onChange={setSearchQuery} />
         </div>
       </div>
       {toolMode != RoadBuilderToolModeEnum.Picker && (
