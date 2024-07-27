@@ -136,6 +136,7 @@ export const ModView = () => {
         <>
           <div className={styles.pickerHint}>Select on a Road to edit</div>
           <LaneListItemDrag ref={dragItemRef} />
+          <LaneListPanel />
         </>
       );
       break;

@@ -1,33 +1,30 @@
-import { Button, FOCUS_DISABLED, FocusKey, Scrollable } from "cs2/ui";
+import { Scrollable } from "cs2/ui";
 import { LaneListItem } from "../Components/LaneListItem/LaneListItem";
 import styles from "./LaneListPanel.module.scss";
 import { useValue } from "cs2/api";
 import { allNetSections$, allRoadConfigurations$, roadBuilderToolMode$, roadListView$, setRoadListView } from "mods/bindings";
-import { getModule } from "cs2/modding";
-import { MutableRefObject, MouseEventHandler, useState } from "react";
-import { VanillaComponentResolver } from "vanillacomponentresolver";
-import { Theme } from "cs2/bindings";
+import { useState } from "react";
 import { useLocalization } from "cs2/l10n";
 import { SearchTextBox } from "mods/Components/SearchTextBox/SearchTextBox";
 import { RoadConfigListItem } from "mods/Components/RoadConfigListItem/RoadConfigListItem";
 import { RoadBuilderToolModeEnum } from "domain/RoadBuilderToolMode";
 
 export const LaneListPanel = () => {
-  const { translate } = useLocalization();
+  const { translate } = useLocalization();  
   const toolMode = useValue(roadBuilderToolMode$);
   const roadListView = useValue(roadListView$);
+  const roadConfigurations = useValue(allRoadConfigurations$);
+  const netSections = useValue(allNetSections$);
   let [searchQuery, setSearchQuery] = useState<string>();
-  let items: JSX.Element[];
+  let items: JSX.Element[];  
 
-  if (roadListView) {
-    const roadConfigurations = useValue(allRoadConfigurations$);
+  if (roadListView || toolMode == RoadBuilderToolModeEnum.Picker) {    
     items = roadConfigurations
       .filter((val, idx) => val.Name)
       .filter((val, idx) => searchQuery == undefined || searchQuery == "" || val.Name.toLowerCase().indexOf(searchQuery.toLowerCase()) >= 0)
       .map((val, idx) => <RoadConfigListItem key={idx} road={val} />);
-  } else {
-    const allNetSections = useValue(allNetSections$);
-    items = allNetSections
+  } else {    
+    items = netSections
       .filter((val, idx) => val.PrefabName)
       .filter((val, idx) => searchQuery == undefined || searchQuery == "" || val.DisplayName.toLowerCase().indexOf(searchQuery.toLowerCase()) >= 0)
       .map((val, idx) => <LaneListItem key={idx} netSection={val} />);
