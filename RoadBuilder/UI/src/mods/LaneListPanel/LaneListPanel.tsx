@@ -15,7 +15,7 @@ export const LaneListPanel = () => {
   const roadListView = useValue(roadListView$);
   const roadConfigurations = useValue(allRoadConfigurations$);
   const netSections = useValue(allNetSections$);
-  let [searchQuery, setSearchQuery] = useState<string>();
+  let [searchQuery, setSearchQuery] = useState<string>("");
   let items: JSX.Element[];  
   
   useEffect(() => { // when the road list view changes value
