@@ -29,6 +29,8 @@ namespace RoadBuilder
 			Log.SetEffectiveness(Level.Debug);
 #endif
 
+			UIManager.defaultUISystem.AddHostLocation("roadbuilderthumbnails", FoldersUtil.TempFolder, true);
+
 			if (GameManager.instance.modManager.TryGetExecutableAsset(this, out var asset))
 			{
 				UIManager.defaultUISystem.AddHostLocation($"roadbuildericons", Path.Combine(Path.GetDirectoryName(asset.path), "PrefabIcons"), false);
@@ -66,6 +68,10 @@ namespace RoadBuilder
 			Log.Info(nameof(OnDispose));
 
 			Settings?.UnregisterInOptionsUI();
+
+			UIManager.defaultUISystem.RemoveHostLocation("roadbuilderthumbnails");
+
+			new DirectoryInfo(FoldersUtil.TempFolder).Delete(true);
 		}
 	}
 }

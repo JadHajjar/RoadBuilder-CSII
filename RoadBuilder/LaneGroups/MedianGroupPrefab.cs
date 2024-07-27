@@ -37,7 +37,8 @@ namespace RoadBuilder.LaneGroups
 
 			AddOrGetComponent<RoadBuilderLaneInfo>()
 				.WithExcluded(RoadCategory.NoRaisedSidewalkSupport)
-				.WithThumbnail("coui://roadbuildericons/RB_Median.svg");
+				.WithThumbnail("coui://roadbuildericons/RB_Median.svg")
+				.AddLaneThumbnail("coui://roadbuildericons/Thumb_SidewalkWide.svg");
 
 			AddOrGetComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_Median_Centered.svg";
 
@@ -45,6 +46,9 @@ namespace RoadBuilder.LaneGroups
 			decoInfo.GrassThumbnail = "coui://roadbuildericons/RB_GrassMedian.svg";
 			decoInfo.TreeThumbnail = "coui://roadbuildericons/RB_TreeMedian.svg";
 			decoInfo.GrassAndTreeThumbnail = "coui://roadbuildericons/RB_TreeGrassMedian.svg";
+			decoInfo.LaneGrassThumbnail = new[] { "coui://roadbuildericons/Thumb_SidewalkGrass.svg" };
+			decoInfo.LaneTreeThumbnail = new[] { "coui://roadbuildericons/Thumb_SidewalkTree.svg" };
+			decoInfo.LaneGrassAndTreeThumbnail = new[] { "coui://roadbuildericons/Thumb_SidewalkGrassTree.svg" };
 
 			SetUp(sections["Road Median 1"], "1m");
 			SetUp(sections["Road Median 2"], "2m");

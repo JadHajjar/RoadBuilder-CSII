@@ -5,6 +5,7 @@ using RoadBuilder.Domain.Prefabs;
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using Unity.Entities;
 
@@ -21,6 +22,7 @@ namespace RoadBuilder.Domain.Components.Prefabs
 		public string BackThumbnail;
 		public string FrontThumbnail;
 		public Color LaneColor;
+		public string[] LaneThumbnails;
 
 		public override void GetArchetypeComponents(HashSet<ComponentType> components)
 		{ }
@@ -61,6 +63,20 @@ namespace RoadBuilder.Domain.Components.Prefabs
 		public RoadBuilderLaneInfo WithThumbnail(string thumbnail)
 		{
 			FrontThumbnail = BackThumbnail = thumbnail;
+			return this;
+		}
+
+		public RoadBuilderLaneInfo AddLaneThumbnail(string thumbnail)
+		{
+			if (LaneThumbnails is null)
+			{
+				LaneThumbnails = new[] { thumbnail };
+			}
+			else
+			{
+				LaneThumbnails = LaneThumbnails.Append(thumbnail).ToArray();
+			}
+
 			return this;
 		}
 
