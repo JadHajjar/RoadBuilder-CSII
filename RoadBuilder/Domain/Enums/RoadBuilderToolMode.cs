@@ -5,6 +5,7 @@
 		None = 0,
 		Picker = 1,
 		Editing = 2,
-		EditingSingle = 3
+		EditingSingle = 3,
+		EditingNonExistent = 4,
 	}
 }

@@ -9,7 +9,7 @@ export const RemoveVanillaRightToolbar: ModuleRegistryExtend = (Component) => {
 
     const roadBuilderToolMode = useValue(roadBuilderToolMode$);
 
-    if (roadBuilderToolMode == RoadBuilderToolModeEnum.Editing || roadBuilderToolMode == RoadBuilderToolModeEnum.EditingSingle) {
+      if (roadBuilderToolMode != RoadBuilderToolModeEnum.None) {
       return <></>;
     }
 

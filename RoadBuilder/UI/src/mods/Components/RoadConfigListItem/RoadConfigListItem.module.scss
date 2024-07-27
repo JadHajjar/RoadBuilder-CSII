@@ -1,0 +1,98 @@
+$dragReprDim: 95%;
+
+.gridThumbnail {
+  width: 75rem;
+  height: 75rem;
+  margin: 0 8rem;
+}
+
+.gridItem {
+  margin: 4rem;
+  width: 295rem;
+  height: 90rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+
+  &.active {
+    background-color: var(--accentColorDark) !important;
+  }
+}
+
+.gridItemText {
+  flex: 1;
+  font-size: 14rem;
+  padding: 3rem;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--textColorDim);
+}
+
+.jpgThumb {
+  border-radius: 5rem;
+  margin-bottom: 5rem;
+}
+
+.rightSideContainer {
+  position: absolute;
+  top: 0.15em;
+  right: 0.15em;
+  display: flex;
+  flex-direction: column;
+}
+
+.rightSideContainer > img {
+  width: 1.15em;
+  height: 1.15em;
+  margin-bottom: 0.375em;
+  filter: drop-shadow(0px 0px 1rem rgba(0, 0, 0, 0.5));
+}
+
+.rightButtons {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 0.15s 0s;
+}
+
+.gridItem:hover .rightButtons {
+  opacity: 1;
+  transition: opacity 0.15s 0.15s;
+}
+
+.rightButtons Button {
+  flex: 1;
+  border: none;
+  border-radius: 0;
+  padding: 0 5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+
+  img {
+    width: 1.2em;
+    height: 1.2em;
+    filter: invert(1);
+  }
+
+  &:hover img {
+    filter: invert(1);
+  }
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    border: none;
+  }
+
+  &:active {
+    background: rgba(255, 255, 255, 0.5);
+    border: none;
+  }
+}

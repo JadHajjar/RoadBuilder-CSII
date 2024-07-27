@@ -2,11 +2,13 @@
 
 .panel {
   position: absolute;
-  width: 320rem;
+  width: 330rem;
   top: 100rem;
   bottom: 10rem + _base.$bottomBarOffset + _base.$bottomBarHeight;
   right: 10rem;
   z-index: 0;
+  display: flex;
+  flex-direction: column;
 
   background-color: var(--panelColorNormal);
   backdrop-filter: var(--panelBlur);
@@ -23,6 +25,7 @@
 
   .list {
     margin: 6rem;
+    flex: 1;
   }
 
   .list > :first-child {
@@ -44,7 +47,31 @@
   text-transform: uppercase;
   text-align: center;
   font-size: 12rem;
-  margin-bottom: 6rem;
+}
+
+.mode {
+  background-color: var(--panelColorDark);
+  display: flex;
+
+  > div {
+    flex: 1;
+    color: var(--textColorDim);
+    border-radius: 4rem;
+    padding: 2rem;
+    margin: 4rem 8rem 8rem 8rem;
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 14rem;
+    transition: background-color 0.25s;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.3);
+    }
+  }
+
+  .selected {
+    background-color: var(--accentColorDark) !important;
+  }
 }
 
 @keyframes entry {

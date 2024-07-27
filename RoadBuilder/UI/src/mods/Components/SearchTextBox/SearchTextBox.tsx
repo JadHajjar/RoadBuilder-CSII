@@ -6,6 +6,8 @@ import { useLocalization } from "cs2/l10n";
 import { useRef, useState } from "react";
 import { TextInput, TextInputTheme } from "../TextInput/TextInput";
 import { VanillaComponentResolver } from "vanillacomponentresolver";
+import magnifierIcon from "images/magnifier.svg";
+import arrowLeftClear from "images/arrowLeftClear.svg";
 import classNames from "classnames";
 
 const AssetGridTheme: Theme | any = getModule("game-ui/game/components/asset-menu/asset-grid/asset-grid.module.scss", "classes");
@@ -47,11 +49,11 @@ export const SearchTextBox = (props: { onChange?: (val: string) => void }) => {
             onSelect={clearText}
             focusKey={VanillaComponentResolver.instance.FOCUS_DISABLED}
           >
-            <img src="coui://uil/Standard/ArrowLeftClear.svg"></img>
+            <img src={arrowLeftClear}></img>
           </Button>
         ) : (
           <div className={classNames(VanillaComponentResolver.instance.assetGridTheme.item, styles.clearIcon)}>
-            <img src="coui://uil/Standard/MagnifierThin.svg"></img>
+            <img src={magnifierIcon}></img>
           </div>
         )}
       </div>

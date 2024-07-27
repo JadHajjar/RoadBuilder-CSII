@@ -132,10 +132,16 @@ export const ModView = () => {
   let content: JSX.Element | null = null;
   switch (roadBuilderToolMode) {
     case RoadBuilderToolModeEnum.Picker:
-      content = <div className={styles.pickerHint}>Select on a Road to edit</div>;
+      content = (
+        <>
+          <div className={styles.pickerHint}>Select on a Road to edit</div>
+          <LaneListItemDrag ref={dragItemRef} />
+        </>
+      );
       break;
     case RoadBuilderToolModeEnum.Editing:
     case RoadBuilderToolModeEnum.EditingSingle:
+    case RoadBuilderToolModeEnum.EditingNonExistent:
       content = (
         <>
           <LaneListPanel />

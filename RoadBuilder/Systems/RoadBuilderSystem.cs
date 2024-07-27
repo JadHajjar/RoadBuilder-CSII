@@ -14,6 +14,7 @@ using RoadBuilder.Domain;
 using RoadBuilder.Domain.Components;
 using RoadBuilder.Domain.Configurations;
 using RoadBuilder.Domain.Prefabs;
+using RoadBuilder.Systems.UI;
 using RoadBuilder.Utilities;
 
 using System;
@@ -54,13 +55,11 @@ namespace RoadBuilder.Systems
 			roadBuilderSerializeSystem = World.GetOrCreateSystemManaged<RoadBuilderSerializeSystem>();
 			cityConfigurationSystem = World.GetOrCreateSystemManaged<CityConfigurationSystem>();
 			modificationBarrier = World.GetOrCreateSystemManaged<ModificationBarrier1>();
-			roadNameUtil = new(this, prefabUISystem, netSectionsSystem);
+			roadNameUtil = new(this, World.GetOrCreateSystemManaged<RoadBuilderUISystem>(), prefabUISystem, netSectionsSystem);
 			prefabRefQuery = SystemAPI.QueryBuilder()
 				.WithAll<RoadBuilderNetwork, PrefabRef>()
 				.WithNone<RoadBuilderUpdateFlagComponent, Temp>()
 				.Build();
-
-			toolbarUISystemLastSelectedAssets = typeof(ToolbarUISystem).GetField("m_LastSelectedAssets", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(World.GetOrCreateSystemManaged<ToolbarUISystem>()) as Dictionary<Entity, Entity>;
 		}
 
 		protected override void OnUpdate()
@@ -94,6 +93,8 @@ namespace RoadBuilder.Systems
 			base.OnGamePreload(purpose, mode);
 
 			FillRoadGenerationData();
+
+			toolbarUISystemLastSelectedAssets ??= typeof(ToolbarUISystem).GetField("m_LastSelectedAssets", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(World.GetOrCreateSystemManaged<ToolbarUISystem>()) as Dictionary<Entity, Entity>;
 		}
 
 		public void Deserialize<TReader>(TReader reader) where TReader : IReader
@@ -408,7 +409,7 @@ namespace RoadBuilder.Systems
 			RoadGenerationData.LaneGroupPrefabs = netSectionsSystem.LaneGroups;
 		}
 
-		private void UpdatePrefab(NetGeometryPrefab prefab)
+		public void UpdatePrefab(NetGeometryPrefab prefab)
 		{
 			var entity = prefabSystem.GetEntity(prefab);
 
