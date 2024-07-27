@@ -27,7 +27,6 @@
   max-height: 26rem;
   margin-right: 15rem;
   font-size: var(--fontSizeM);
-  font-weight: bold;
 }
 
 .optionContent {
@@ -37,7 +36,6 @@
   justify-content: flex-end;
   flex-wrap: wrap;
   flex: 1;
-  gap: 1em;
 }
 
 .optionContent > .singleButton {
