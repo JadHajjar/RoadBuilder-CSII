@@ -5,6 +5,7 @@ using Game;
 using Game.Common;
 using Game.Net;
 using Game.Prefabs;
+using Game.SceneFlow;
 using Game.Tools;
 
 using RoadBuilder.Domain.Components;
@@ -50,6 +51,8 @@ namespace RoadBuilder.Systems
 			Enabled = true;
 
 			Update(in queryAll);
+
+			GameManager.instance.localizationManager.ReloadActiveLocale();
 		}
 
 		protected override void OnUpdate()
@@ -86,7 +89,7 @@ namespace RoadBuilder.Systems
 			}
 		}
 
-		private IEnumerable<Entity> GetEdges(Entity entity)
+		public IEnumerable<Entity> GetEdges(Entity entity)
 		{
 			var edge = EntityManager.GetComponentData<Edge>(entity);
 
@@ -107,7 +110,7 @@ namespace RoadBuilder.Systems
 			}
 		}
 
-		private void UpdateEdge(Entity entity)
+		public void UpdateEdge(Entity entity)
 		{
 			UpdateEntity(entity);
 

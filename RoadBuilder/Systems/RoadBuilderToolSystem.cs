@@ -134,7 +134,7 @@ namespace RoadBuilder.Systems
 
 		private void TryHighlightEntity(Entity entity)
 		{
-			if (!EntityManager.HasComponent<Highlighted>(entity))
+			if (entity != Entity.Null && !EntityManager.HasComponent<Highlighted>(entity))
 			{
 				EntityManager.AddComponent<Highlighted>(entity);
 				EntityManager.AddComponent<BatchesUpdated>(entity);
@@ -148,7 +148,8 @@ namespace RoadBuilder.Systems
 				return false;
 			}
 
-			return EntityManager.GetComponentData<PrefabRef>(roadBuilderUISystem.WorkingEntity).m_Prefab == prefabRef;
+			return roadBuilderUISystem.WorkingEntity != Entity.Null
+				&& EntityManager.GetComponentData<PrefabRef>(roadBuilderUISystem.WorkingEntity).m_Prefab == prefabRef;
 		}
 
 		private bool HandlePicker(out Entity entity)

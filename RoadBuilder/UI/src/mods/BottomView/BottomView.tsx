@@ -81,7 +81,7 @@ export const BottomView = () => {
   items.push(<DragAndDropDivider ref={(elem) => (dividersRef.current[roadLanes.length] = elem!)} key={items.length} listIdx={roadLanes.length} />);
 
   let copyButtonStyle: CSSProperties = {
-    visibility: toolMode == RoadBuilderToolModeEnum.EditingSingle ? "hidden" : "initial",
+    visibility: toolMode != RoadBuilderToolModeEnum.Editing ? "hidden" : "initial",
   };
 
   let isDragging = dragContext.netSectionItem || dragContext.roadLane;

@@ -34,10 +34,9 @@ export const LaneListItem = ({ netSection }: { netSection: NetSectionItem }) => 
       onMouseDown={onMouseDown}
       className={classNames(VanillaComponentResolver.instance.assetGridTheme.item, styles.gridItem, dragging && styles.moving)}
     >
-      <img
-        src={netSection.Thumbnail ?? "Media/Placeholder.svg"}
-        className={classNames(styles.gridThumbnail)}
-      />
+      <div className={classNames(styles.gridThumbnail)}>
+        <img src={netSection.Thumbnail ?? "Media/Placeholder.svg"} />
+      </div>
 
       <div className={classNames(styles.gridItemText)}>
         <p>{netSection.DisplayName}</p>
@@ -80,19 +79,15 @@ export const LaneListItemDrag = forwardRef<HTMLDivElement>((props, ref) => {
     left: `calc( ${dragData.mousePosition.x}px - 40rem)`,
     top: `calc( ${dragData.mousePosition.y}px - 40rem)`,
   };
-  let containerClasses = classNames(
-    VanillaComponentResolver.instance.assetGridTheme.item,
-    styles.gridItem,
-    styles.dragRepresentation,
-    { [styles.bottomRow]: dragType == DragType.Order }
-  );
+  let containerClasses = classNames(VanillaComponentResolver.instance.assetGridTheme.item, styles.gridItem, styles.dragRepresentation, {
+    [styles.bottomRow]: dragType == DragType.Order,
+  });
 
   return (
     <div style={offsetStyle} className={containerClasses} ref={ref}>
-      <img
-        src={netSection.Thumbnail ?? "Media/Placeholder.svg"}
-        className={classNames(VanillaComponentResolver.instance.assetGridTheme.thumbnail, styles.gridThumbnail)}
-      />
+      <div className={classNames(VanillaComponentResolver.instance.assetGridTheme.thumbnail, styles.gridThumbnail)}>
+        <img src={netSection.Thumbnail ?? "Media/Placeholder.svg"} />
+      </div>
     </div>
   );
 });
