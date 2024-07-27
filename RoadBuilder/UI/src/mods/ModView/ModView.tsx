@@ -19,10 +19,12 @@ import { NetSectionsStore, NetSectionsStoreContext } from "mods/Contexts/NetSect
 import { RoadPropertiesPanel } from "mods/RoadPropertiesPanel/RoadPropertiesPanel";
 import { LanePropertiesContext, LanePropertiesContextData } from "mods/Contexts/LanePropertiesContext";
 import { EditPropertiesPopup } from "mods/Components/EditPropertiesPopup/EditPropertiesPopup";
+import { useLocalization } from "cs2/l10n";
 
 export const ModView = () => {
   const roadBuilderToolMode = useValue(roadBuilderToolMode$);
   let rem = useRem();
+  let {translate} = useLocalization();
 
   let [draggingItem, setDraggingItem] = useState<NetSectionItem | undefined>();
   let [draggingLane, setDraggingLane] = useState<RoadLane | undefined>();
@@ -159,7 +161,7 @@ export const ModView = () => {
     case RoadBuilderToolModeEnum.Picker:
       content = (
         <>
-          <div className={styles.pickerHint}>Select on a Road to edit</div>
+          <div className={styles.pickerHint}>{translate("Prompt[PickerHint]", "Click On A Road")}</div>
           <LaneListItemDrag ref={dragItemRef} />
           <LaneListPanel />
         </>
