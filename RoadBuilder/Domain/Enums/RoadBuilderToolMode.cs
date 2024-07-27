@@ -4,8 +4,9 @@
 	{
 		None = 0,
 		Picker = 1,
-		Editing = 2,
-		EditingSingle = 3,
-		EditingNonExistent = 4,
+		ActionSelection = 2,
+		Editing = 3,
+		EditingSingle = 4,
+		EditingNonExistent = 5
 	}
 }
