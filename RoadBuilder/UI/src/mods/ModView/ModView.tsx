@@ -1,6 +1,6 @@
 import { MouseEventHandler, startTransition, useContext, useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { BottomView } from "../BottomView/BottomView";
-import { LaneListPanel } from "../LaneListPanel/LaneListPanel";
+import { SidePanel } from "mods/SidePanel/SidePanel";
 import { DragContext, DragContextData } from "mods/Contexts/DragContext";
 import { NetSectionItem } from "domain/NetSectionItem";
 import { Number2 } from "cs2/ui";
@@ -163,7 +163,7 @@ export const ModView = () => {
         <>
           <div className={styles.pickerHint}>{translate("Prompt[PickerHint]", "Click On A Road")}</div>
           <LaneListItemDrag ref={dragItemRef} />
-          <LaneListPanel />
+          <SidePanel />
         </>
       );
       break;
@@ -179,7 +179,7 @@ export const ModView = () => {
     case RoadBuilderToolModeEnum.EditingNonExistent:
       content = (
         <>
-          <LaneListPanel />
+          <SidePanel />
           <BottomView />
           <RoadPropertiesPanel />
           <LaneListItemDrag ref={dragItemRef} />

@@ -1,6 +1,6 @@
 import { Scrollable } from "cs2/ui";
 import { LaneListItem } from "../Components/LaneListItem/LaneListItem";
-import styles from "./LaneListPanel.module.scss";
+import styles from "./SidePanel.module.scss";
 import { useValue } from "cs2/api";
 import { allNetSections$, allRoadConfigurations$, roadBuilderToolMode$, roadListView$, setRoadListView } from "mods/bindings";
 import { useEffect, useState } from "react";
@@ -9,7 +9,7 @@ import { SearchTextBox } from "mods/Components/SearchTextBox/SearchTextBox";
 import { RoadConfigListItem } from "mods/Components/RoadConfigListItem/RoadConfigListItem";
 import { RoadBuilderToolModeEnum } from "domain/RoadBuilderToolMode";
 
-export const LaneListPanel = () => {
+export const SidePanel = () => {
   const { translate } = useLocalization();  
   const toolMode = useValue(roadBuilderToolMode$);
   const roadListView = useValue(roadListView$);
