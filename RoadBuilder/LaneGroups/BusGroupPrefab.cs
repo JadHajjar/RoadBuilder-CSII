@@ -33,7 +33,8 @@ namespace RoadBuilder.LaneGroups
 				.WithExcluded(RoadCategory.NonAsphalt)
 				.WithColor(204, 83, 71, 200)
 				.WithFrontThumbnail("coui://roadbuildericons/RB_BusFront.svg")
-				.WithBackThumbnail("coui://roadbuildericons/RB_BusRear.svg");
+				.WithBackThumbnail("coui://roadbuildericons/RB_BusRear.svg")
+				.AddLaneThumbnail("coui://roadbuildericons/Thumb_BusLane.svg");
 
 			AddComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_Bus_Centered.svg";
 

@@ -37,10 +37,8 @@ namespace RoadBuilder.Utilities
 
 			var elements = new List<XElement>();
 
-			var currentX = (totalSize - totalWidth) / 2;
-			var currentY = totalHeight - svgs[0].ExtentsRect.Height + ((totalSize - totalHeight) / 2);
-
-			currentY += svgs[svgs.Count - 1].ExtentsRect.Height - svgs[0].ExtentsRect.Height + 10;
+			var currentX = (totalSize - totalWidth) / 4;
+			var currentY = (totalSize - totalHeight) / 2 + totalHeight - 50;
 
 			foreach (var item in svgs)
 			{
@@ -213,7 +211,7 @@ namespace RoadBuilder.Utilities
 		{
 			var rectElement = xmlDocument
 				.Descendants()
-				.FirstOrDefault(e => e.Name.LocalName == "rect" && (string)e.Parent.Attribute("id") == rectId);
+				.FirstOrDefault(e => e.Name.LocalName == "rect" && ((string)e.Attribute("id") == rectId || (string)e.Parent.Attribute("id") == rectId));
 
 			if (rectElement == null)
 			{

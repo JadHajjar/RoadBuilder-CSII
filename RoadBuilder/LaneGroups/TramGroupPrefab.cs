@@ -17,7 +17,8 @@ namespace RoadBuilder.LaneGroups
 			AddComponent<RoadBuilderLaneInfo>()
 				.WithExcluded(RoadCategory.Gravel | RoadCategory.Pathway | RoadCategory.Fence)
 				.WithFrontThumbnail("coui://roadbuildericons/RB_TramFront.svg")
-				.WithBackThumbnail("coui://roadbuildericons/RB_TramRear.svg");
+				.WithBackThumbnail("coui://roadbuildericons/RB_TramRear.svg")
+				.AddLaneThumbnail("coui://roadbuildericons/Thumb_TramLane.svg");
 
 			AddComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_TramFront.svg";
 

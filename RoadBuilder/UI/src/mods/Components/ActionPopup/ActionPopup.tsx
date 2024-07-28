@@ -6,31 +6,35 @@ import styles from "./ActionPopup.module.scss";
 import { useLocalization } from "cs2/l10n";
 import { CSSProperties } from "react";
 import { useRem } from "cs2/utils";
-import { cancelActionPopup, createNewPrefab, editPrefab, IsCustomRoadSelected$ } from "mods/bindings";
+import { cancelActionPopup, createNewPrefab, editPrefab, IsCustomRoadSelected$, pickPrefab } from "mods/bindings";
 
-export default (props: {popupPosition: Number2}) => {
-  const { translate } = useLocalization();  
-  let isCustomRoadSelected = useValue(IsCustomRoadSelected$);  
+export default (props: { popupPosition: Number2 }) => {
+  const { translate } = useLocalization();
+  //let isCustomRoadSelected = useValue(IsCustomRoadSelected$);
 
-  let positionStyle : CSSProperties = {
-    transform:  `translate(${props.popupPosition?.x}px, ${props.popupPosition?.y}px)`
+  let positionStyle: CSSProperties = {
+    transform: `translate(${props.popupPosition?.x}px, ${props.popupPosition?.y}px)`,
   };
-  
+
   return (
     <div className={styles.container}>
-      <div className={styles.relContainer} style={positionStyle}>        
-        {/* Use as Template */}        
+      <div className={styles.relContainer} style={positionStyle}>
+        {/* Pick Prefab */}
+        <Button className={classNames(styles.pickerButton, styles.button)} onSelect={pickPrefab} variant="flat" focusKey={FOCUS_AUTO}>
+          {translate("Prompt[Picker]", "Place More")}
+        </Button>
+        {/* Use as Template */}
         <Button className={classNames(styles.templateButton, styles.button)} variant="flat" onSelect={createNewPrefab} focusKey={FOCUS_AUTO}>
           {translate("Prompt[UseAsTemplate]", "Use As Template")}
-        </Button>                
-        {/* Edit Prefab */}        
-        <Button className={classNames(styles.editButton, styles.button, {[styles.hidden]: !isCustomRoadSelected})} onSelect={editPrefab} variant="flat" focusKey={FOCUS_AUTO}>
+        </Button>
+        {/* Edit Prefab */}
+        <Button className={classNames(styles.editButton, styles.button)} onSelect={editPrefab} variant="flat" focusKey={FOCUS_AUTO}>
           {translate("Prompt[EditAllInstances]", "Edit All Instances")}
         </Button>
-        {/* Cancel Button */}        
+        {/* Cancel Button */}
         <Button className={classNames(styles.cancelButton, styles.button)} onSelect={cancelActionPopup} variant="flat" focusKey={FOCUS_DISABLED}>
           {translate("Common.ACTION[Cancel]", "Cancel")}
-        </Button>        
+        </Button>
       </div>
     </div>
   );

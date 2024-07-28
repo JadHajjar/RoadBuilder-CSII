@@ -1,4 +1,4 @@
-@use '../../base.scss';
+@use "../../base.scss";
 
 @mixin entry_animation($identifier, $deltaX, $deltaY) {
   @keyframes entry-#{$identifier} {
@@ -7,7 +7,7 @@
       transform: translate($deltaX, $deltaY);
       pointer-events: none;
     }
-  } 
+  }
   animation: 0.2s entry-#{$identifier} backwards;
 }
 
@@ -24,7 +24,7 @@
 .relContainer {
   position: relative;
   width: auto;
-  height: auto;  
+  height: auto;
   pointer-events: auto;
 }
 
@@ -33,24 +33,42 @@
 
   position: absolute;
   width: 200rem;
-  height: 40rem;      
+  height: 40rem;
   pointer-events: auto;
+  transition: background-color 0.15s, color 0.15s;
+  font-size: 14rem;
+  text-transform: uppercase;
 
   opacity: 1;
   &.hidden {
     display: none;
   }
+  &:hover {
+    background-color: rgba(227, 227, 227, 0.85);
+  }
+}
+.pickerButton {
+  transform: translate(-260rem, -20rem);
+  @include entry_animation(template, -100rem, 0rem);
 }
 .templateButton {
-  transform: translate(-100rem, -80rem);
-  @include entry_animation(template, -100rem, 0rem);  
+  transform: translate(80rem, -20rem);
+  @include entry_animation(create, -100rem, -20rem);
 }
 .editButton {
-  transform: translate(80rem, -20rem); 
-  @include entry_animation(create, -100rem, -20rem);   
+  font-weight: 600;
+  background-color: var(--accentColorDark-hover);
+  color: var(--normalTextColorHighlightDimmer);
+  transform: translate(-100rem, -90rem);
+  @include entry_animation(template, -100rem, 0rem);
+
+  &:hover {
+    background-color: var(--accentColorDark);
+  }
 }
 .cancelButton {
-  transform: translate(-50rem, 40rem);
-  @include entry_animation(cancel, -50rem, 0rem);    
+  background-color: rgba(217, 217, 217, 0.35);
+  transform: translate(-50rem, 50rem);
+  @include entry_animation(cancel, -50rem, 0rem);
   width: 100rem;
 }

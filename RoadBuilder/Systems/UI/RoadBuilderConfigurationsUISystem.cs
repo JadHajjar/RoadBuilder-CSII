@@ -1,12 +1,13 @@
 ﻿using Colossal.Entities;
+using Colossal.Win32;
 
 using Game.Common;
 using Game.Net;
 using Game.Prefabs;
 using Game.Rendering;
+using Game.SceneFlow;
 using Game.Tools;
 using Game.UI;
-using Game.UI.InGame;
 
 using RoadBuilder.Domain.Components;
 using RoadBuilder.Domain.Enums;
@@ -105,7 +106,7 @@ namespace RoadBuilder.Systems.UI
 			{
 				lastFindIndex = 0;
 			}
-			
+
 			lastFindId = id;
 
 			var prefabEntity = prefabSystem.GetEntity(prefab.Prefab);
@@ -149,6 +150,11 @@ namespace RoadBuilder.Systems.UI
 
 		private void DeleteRoad(string id)
 		{
+			GameManager.instance.userInterface.appBindings.ShowConfirmationDialog(new ConfirmationDialog(null, "RoadBuilder.DIALOG_MESSAGE[DELETE]", "Common.DIALOG_ACTION[Yes]", "Common.DIALOG_ACTION[No]"), msg => { if (msg == 0) ApplyDeleteRoad(id); });
+		}
+
+		private void ApplyDeleteRoad(string id)
+		{
 			var prefab = roadBuilderSystem.Configurations.FirstOrDefault(x => x.Config.ID == id);
 
 			if (prefab is null)
@@ -156,13 +162,13 @@ namespace RoadBuilder.Systems.UI
 				return;
 			}
 
-            if (roadBuilderUISystem.WorkingId == prefab.Config.ID)
-            {
+			if (roadBuilderUISystem.WorkingId == prefab.Config.ID)
+			{
 				roadBuilderUISystem.WorkingEntity = Entity.Null;
 				roadBuilderUISystem.Mode = RoadBuilderToolMode.Picker;
 			}
 
-            LocalSaveUtil.DeletePreviousLocalConfig(prefab.Config);
+			LocalSaveUtil.DeletePreviousLocalConfig(prefab.Config);
 
 			var prefabEntity = prefabSystem.GetEntity(prefab.Prefab);
 			var edgeEntities = prefabRefQuery.ToEntityArray(Allocator.Temp);

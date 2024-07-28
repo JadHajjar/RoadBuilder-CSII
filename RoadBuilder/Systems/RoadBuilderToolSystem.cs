@@ -113,6 +113,7 @@ namespace RoadBuilder.Systems
 				}
 
 				case RoadBuilderToolMode.Editing:
+				case RoadBuilderToolMode.EditingNonExistent:
 				{
 					HandleHighlight(roadBuilderNetworkQuery, IsWorkingEntityPrefab);
 
@@ -181,16 +182,15 @@ namespace RoadBuilder.Systems
 
 			if (applyAction.WasPerformedThisFrame())
 			{
-				roadBuilderUISystem.ShowActionPopup(entity, prefab);
-                //if (prefab is INetworkBuilderPrefab)
-                //{
-                //	roadBuilderUISystem.EditPrefab(entity);
-                //}
-                //else
-                //{
-                //	roadBuilderUISystem.CreateNewPrefab(entity);
-                //}
-            }
+				if (prefab is INetworkBuilderPrefab)
+				{
+					roadBuilderUISystem.ShowActionPopup(entity, prefab);
+				}
+				else
+				{
+					roadBuilderUISystem.CreateNewPrefab(entity);
+				}
+			}
 
 			return true;
 		}

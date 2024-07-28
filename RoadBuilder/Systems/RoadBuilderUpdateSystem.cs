@@ -9,6 +9,7 @@ using Game.SceneFlow;
 using Game.Tools;
 
 using RoadBuilder.Domain.Components;
+using RoadBuilder.Systems.UI;
 
 using System.Collections.Generic;
 
@@ -19,6 +20,7 @@ namespace RoadBuilder.Systems
 {
 	public partial class RoadBuilderUpdateSystem : GameSystemBase
 	{
+		private RoadBuilderConfigurationsUISystem roadBuilderConfigurationsUISystem;
 		private EntityQuery query;
 		private EntityQuery queryAll;
 		private EntityQuery prefabRefQuery;
@@ -27,6 +29,7 @@ namespace RoadBuilder.Systems
 		{
 			base.OnCreate();
 
+			roadBuilderConfigurationsUISystem = World.GetOrCreateSystemManaged<RoadBuilderConfigurationsUISystem>();
 			query = SystemAPI.QueryBuilder().WithAll<RoadBuilderPrefabData, Updated>().Build();
 			queryAll = SystemAPI.QueryBuilder().WithAll<RoadBuilderPrefabData>().Build();
 			prefabRefQuery = SystemAPI.QueryBuilder()
@@ -57,6 +60,8 @@ namespace RoadBuilder.Systems
 
 		protected override void OnUpdate()
 		{
+			roadBuilderConfigurationsUISystem.UpdateConfigurationList();
+
 			Update(in query);
 		}
 
