@@ -49,15 +49,13 @@ export const RoadPropertiesPanel = () => {
       <div className={styles.title}>Road Properties</div>
 
       <OptionsSection name="Name">
-        <input
+        <VanillaComponentResolver.instance.EllipsisTextInput
           onChange={({target}) => setNewRoadName(target.value)}
           placeholder={"Road Name"}
           value={isEditingName? newRoadName : roadName}          
-          onKeyDown={onRoadNameKeyDown}
-          className={ styles.textInput}
+          
           onBlur={onFinishEditRoadName}
           onFocus={onStartEditRoadName}
-          type="text"
         />
       </OptionsSection>
 
