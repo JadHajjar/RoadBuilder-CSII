@@ -18,11 +18,10 @@ export const isPaused$ = bindValue<boolean>(mod.id, "IsPaused");
 export const roadListView$ = bindValue<boolean>(mod.id, "RoadListView");
 export const IsCustomRoadSelected$ = bindValue<boolean>(mod.id, "IsCustomRoadSelected", false);
 
-
-
 export const toggleTool = trigger.bind(null, mod.id, "ToggleTool");
 export const clearTool = trigger.bind(null, mod.id, "ClearTool");
 export const createNewPrefab = trigger.bind(null, mod.id, "CreateNewPrefab"); // create a new prefab from the selected one
+export const pickPrefab = trigger.bind(null, mod.id, "PickPrefab"); // create a new prefab from the selected one
 export const editPrefab = trigger.bind(null, mod.id, "EditPrefab"); // edit the selected prefab
 export const cancelActionPopup = trigger.bind(null, mod.id, "CancelActionPopup");
 export const setRoadName = (name: string) => trigger(mod.id, "SetRoadName", name);

@@ -79,13 +79,14 @@ namespace RoadBuilder.Systems.UI
 			RoadListView = CreateBinding("RoadListView", "SetRoadListView", true);
 			IsCustomRoadSelected = CreateBinding("IsCustomRoadSelected", false);
 
-            CreateTrigger<RoadLaneUIBinder[]>("SetRoadLanes", x => UpdateRoad(c => UpdateLaneOrder(c, x)));
+			CreateTrigger<RoadLaneUIBinder[]>("SetRoadLanes", x => UpdateRoad(c => UpdateLaneOrder(c, x)));
 			CreateTrigger<int, int, int>("RoadOptionClicked", (x, y, z) => UpdateRoad(c => RoadOptionClicked(c, x, y, z)));
 			CreateTrigger<int, int, int, int>("OptionClicked", (i, x, y, z) => UpdateRoad(c => LaneOptionClicked(c, i, x, y, z)));
 			CreateTrigger("ToggleTool", ToggleTool);
 			CreateTrigger("CreateNewPrefab", () => CreateNewPrefab(workingEntity));
 			CreateTrigger("ClearTool", ClearTool);
-			CreateTrigger("EditPrefab", () => EditPrefab(workingEntity));
+			CreateTrigger("PickPrefab", PickPrefab);
+			CreateTrigger("EditPrefab", EditPrefab);
 			CreateTrigger("CancelActionPopup", CancelActionPopup);
 		}
 
@@ -116,6 +117,8 @@ namespace RoadBuilder.Systems.UI
 
 				toolSystem.selected = Entity.Null;
 				toolSystem.activeTool = roadBuilderToolSystem;
+
+				roadBuilderConfigurationsUISystem.UpdateConfigurationList();
 			}
 		}
 
@@ -130,7 +133,7 @@ namespace RoadBuilder.Systems.UI
 		internal void ShowActionPopup(Entity entity, PrefabBase prefab)
 		{
 			IsCustomRoadSelected.Value = prefab is INetworkBuilderPrefab;
-            SetWorkingEntity(entity, RoadBuilderToolMode.ActionSelection);
+			SetWorkingEntity(entity, RoadBuilderToolMode.ActionSelection);
 		}
 
 		public void CancelActionPopup()
@@ -138,9 +141,20 @@ namespace RoadBuilder.Systems.UI
 			SetWorkingEntity(Entity.Null, RoadBuilderToolMode.Picker);
 		}
 
-		public void EditPrefab(Entity entity)
+		public void EditPrefab()
 		{
-			SetWorkingEntity(entity, RoadBuilderToolMode.Editing);
+			if (workingEntity != Entity.Null)
+			{
+				SetWorkingEntity(workingEntity, RoadBuilderToolMode.Editing);
+			}
+		}
+
+		public void PickPrefab()
+		{
+			if (workingEntity != Entity.Null)
+			{
+				toolSystem.ActivatePrefabTool(prefabSystem.GetPrefab<PrefabBase>(EntityManager.GetComponentData<PrefabRef>(workingEntity)));
+			}
 		}
 
 		public void CreateNewPrefab(Entity entity)
@@ -152,20 +166,27 @@ namespace RoadBuilder.Systems.UI
 		{
 			workingEntity = entity;
 
-			bool isConfigEditorOpened = mode >= RoadBuilderToolMode.Editing;
-            RoadBuilderMode.Value = mode;
-			RoadListView.Value = !isConfigEditorOpened;
-			if (!isConfigEditorOpened && entity != Entity.Null)
+			RoadBuilderMode.Value = mode;
+
+			roadBuilderConfigurationsUISystem.UpdateConfigurationList();
+
+			if (mode is RoadBuilderToolMode.Picker)
 			{
-                var config = roadBuilderSystem.GetOrGenerateConfiguration(workingEntity);
+				RoadListView.Value = true;
+				RoadId.Value = string.Empty;
+				return;
+			}
 
-                if (config == null)
-                {
-                    return;
-                }
+			RoadListView.Value = false;
 
-                SetWorkingPrefab(config, mode);
-            }			
+			var config = roadBuilderSystem.GetOrGenerateConfiguration(workingEntity);
+
+			if (config == null)
+			{
+				return;
+			}
+
+			SetWorkingPrefab(config, mode);
 		}
 
 		public void SetWorkingPrefab(INetworkConfig config, RoadBuilderToolMode mode)
@@ -176,8 +197,6 @@ namespace RoadBuilder.Systems.UI
 			RoadName.Value = config.Name;
 			RoadOptions.Value = RoadOptionsUtil.GetRoadOptions(config);
 			RoadLanes.Value = From(config);
-
-			roadBuilderConfigurationsUISystem.UpdateConfigurationList();
 		}
 
 		private void UpdateRoad(Action<INetworkConfig> action)
@@ -203,8 +222,6 @@ namespace RoadBuilder.Systems.UI
 			RoadName.Value = config.Name;
 			RoadOptions.Value = RoadOptionsUtil.GetRoadOptions(config);
 			RoadLanes.Value = From(config);
-
-			roadBuilderConfigurationsUISystem.UpdateConfigurationList();
 		}
 
 		private void UpdateLaneOrder(INetworkConfig config, RoadLaneUIBinder[] roadLanes)

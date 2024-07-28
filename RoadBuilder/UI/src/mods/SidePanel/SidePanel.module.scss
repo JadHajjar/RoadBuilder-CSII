@@ -51,9 +51,11 @@
 .mode {
   background-color: var(--panelColorDark);
   display: flex;
+  padding: 0 8rem;
 
   > div {
     flex: 1;
+    background-color: rgba(255, 255, 255, 0.1);
     color: var(--textColorDim);
     border-radius: 4rem;
     padding: 2rem;
@@ -64,7 +66,7 @@
     transition: background-color 0.25s;
 
     &:hover {
-      background-color: rgba(255, 255, 255, 0.3);
+      background-color: rgba(255, 255, 255, 0.35);
     }
   }
 

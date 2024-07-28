@@ -91,7 +91,7 @@ namespace RoadBuilder.Utilities
 
 			if (generateId)
 			{
-				ThumbnailGenerationUtil.DeleteThumbnail(NetworkPrefab.Config.ID);
+				//ThumbnailGenerationUtil.DeleteThumbnail(NetworkPrefab.Config.ID);
 
 				NetworkPrefab.Prefab.name = NetworkPrefab.Config.ID = $"{NetworkPrefab.GetType().Name.ToLower()[0]}{Guid.NewGuid()}-{PlatformManager.instance.userSpecificPath}";
 			}

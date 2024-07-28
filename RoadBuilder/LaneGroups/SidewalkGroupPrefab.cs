@@ -119,7 +119,9 @@ namespace RoadBuilder.LaneGroups
 			{
 				prefab.AddComponent<RoadBuilderLaneInfo>()
 					.WithFrontThumbnail("coui://roadbuildericons/RB_SidewalkwParkingFront.svg")
-					.WithBackThumbnail("coui://roadbuildericons/RB_SidewalkwParkingRear.svg");
+					.WithBackThumbnail("coui://roadbuildericons/RB_SidewalkwParkingRear.svg")
+					.AddLaneThumbnail("coui://roadbuildericons/Thumb_ParkingLane.svg")
+					.AddLaneThumbnail("coui://roadbuildericons/Thumb_ParkingSidewalk.svg");
 			}
 
 			if (deco)

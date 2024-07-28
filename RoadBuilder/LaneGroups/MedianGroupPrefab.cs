@@ -38,7 +38,7 @@ namespace RoadBuilder.LaneGroups
 			AddOrGetComponent<RoadBuilderLaneInfo>()
 				.WithExcluded(RoadCategory.NoRaisedSidewalkSupport)
 				.WithThumbnail("coui://roadbuildericons/RB_Median.svg")
-				.AddLaneThumbnail("coui://roadbuildericons/Thumb_SidewalkWide.svg");
+				.AddLaneThumbnail("coui://roadbuildericons/Thumb_MedianSmall.svg");
 
 			AddOrGetComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_Median_Centered.svg";
 
@@ -52,10 +52,10 @@ namespace RoadBuilder.LaneGroups
 
 			SetUp(sections["Road Median 1"], "1m");
 			SetUp(sections["Road Median 2"], "2m");
-			SetUp(sections["Road Median 5"], "5m", true);
+			SetUp(sections["Road Median 5"], "5m", true).AddOrGetComponent<RoadBuilderLaneInfo>().AddLaneThumbnail("coui://roadbuildericons/Thumb_MedianWide.svg");
 		}
 
-		private void SetUp(NetSectionPrefab prefab, string value, bool hasGrass = false)
+		private NetSectionPrefab SetUp(NetSectionPrefab prefab, string value, bool hasGrass = false)
 		{
 			var laneInfo = prefab.AddComponent<RoadBuilderLaneGroup>();
 			laneInfo.GroupPrefab = this;
@@ -83,6 +83,8 @@ namespace RoadBuilder.LaneGroups
 			};
 
 			LinkedSections.Add(prefab);
+
+			return prefab;
 		}
 	}
 }

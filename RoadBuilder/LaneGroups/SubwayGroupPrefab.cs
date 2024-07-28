@@ -27,7 +27,9 @@ namespace RoadBuilder.LaneGroups
 				.WithExcluded(RoadCategory.Gravel | RoadCategory.Tiled | RoadCategory.Fence | RoadCategory.Pathway)
 				.WithColor(66, 60, 51)
 				.WithFrontThumbnail("coui://roadbuildericons/RB_SubwayFront.svg")
-				.WithBackThumbnail("coui://roadbuildericons/RB_SubwayRear.svg");
+				.WithBackThumbnail("coui://roadbuildericons/RB_SubwayRear.svg")
+				.AddLaneThumbnail("coui://roadbuildericons/Thumb_SubwayRail.svg")
+				.AddLaneThumbnail("coui://roadbuildericons/Thumb_TrackLane.svg");
 
 			AddComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_SubwayFront.svg";
 
