@@ -58,12 +58,12 @@ $dragReprDim: 95%;
   justify-content: space-around;
   height: 100%;
   opacity: 0;
-  transition: opacity 0.15s 0s;
+  transition: opacity 0.1s 0s;
 }
 
 .gridItem:hover .rightButtons {
   opacity: 1;
-  transition: opacity 0.15s 0.15s;
+  transition: opacity 0.1s 0.1s;
 }
 
 .rightButtons Button {
