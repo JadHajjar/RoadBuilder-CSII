@@ -181,15 +181,16 @@ namespace RoadBuilder.Systems
 
 			if (applyAction.WasPerformedThisFrame())
 			{
-				if (prefab is INetworkBuilderPrefab)
-				{
-					roadBuilderUISystem.EditPrefab(entity);
-				}
-				else
-				{
-					roadBuilderUISystem.CreateNewPrefab(entity);
-				}
-			}
+				roadBuilderUISystem.ShowActionPopup(entity, prefab);
+                //if (prefab is INetworkBuilderPrefab)
+                //{
+                //	roadBuilderUISystem.EditPrefab(entity);
+                //}
+                //else
+                //{
+                //	roadBuilderUISystem.CreateNewPrefab(entity);
+                //}
+            }
 
 			return true;
 		}

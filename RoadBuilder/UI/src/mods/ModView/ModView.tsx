@@ -1,6 +1,6 @@
 import { MouseEventHandler, startTransition, useContext, useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { BottomView } from "../BottomView/BottomView";
-import { LaneListPanel } from "../LaneListPanel/LaneListPanel";
+import { SidePanel } from "mods/SidePanel/SidePanel";
 import { DragContext, DragContextData } from "mods/Contexts/DragContext";
 import { NetSectionItem } from "domain/NetSectionItem";
 import { Number2 } from "cs2/ui";
@@ -19,16 +19,19 @@ import { NetSectionsStore, NetSectionsStoreContext } from "mods/Contexts/NetSect
 import { RoadPropertiesPanel } from "mods/RoadPropertiesPanel/RoadPropertiesPanel";
 import { LanePropertiesContext, LanePropertiesContextData } from "mods/Contexts/LanePropertiesContext";
 import { EditPropertiesPopup } from "mods/Components/EditPropertiesPopup/EditPropertiesPopup";
+import { useLocalization } from "cs2/l10n";
 
 export const ModView = () => {
   const roadBuilderToolMode = useValue(roadBuilderToolMode$);
   let rem = useRem();
+  let {translate} = useLocalization();
 
   let [draggingItem, setDraggingItem] = useState<NetSectionItem | undefined>();
   let [draggingLane, setDraggingLane] = useState<RoadLane | undefined>();
   let [mousePosition, setMousePosition] = useState<Number2>({ x: 0, y: 0 });
   let [mouseReleased, setMouseReleased] = useState<boolean>(false);
   let [fromDragIndex, setFromDragIndex] = useState<number | undefined>(undefined);
+  let [actionPopupPosition, setActionPopupPosition] = useState<Number2>({ x: 0, y: 0 });
   let dragItemRef = useRef<HTMLDivElement>(null);
   let allNetSections = useValue(allNetSections$);
   let defaultLanePropCtx = useContext(LanePropertiesContext);
@@ -116,6 +119,30 @@ export const ModView = () => {
   );
 
   useEffect(() => {
+    switch(roadBuilderToolMode) {
+        case RoadBuilderToolModeEnum.ActionSelection:
+          let halfPopupWidth = rem * 500/2;
+          let halfPopupHeight = rem * 120/2;
+          let bodySize = document.body.getBoundingClientRect();
+          let deltaRight = bodySize.width - (mousePosition.x + halfPopupWidth);
+          let deltaLeft = mousePosition.x - halfPopupWidth;
+          let deltaTop = mousePosition.y - halfPopupHeight;
+          let deltaBottom = bodySize.height - (mousePosition.y + halfPopupHeight);          
+          let nPos = mousePosition;          
+          if (deltaRight <  0 || deltaLeft < 0) {
+            nPos = {...nPos, x: nPos.x + Math.min(deltaRight, deltaLeft < 0? -deltaLeft : 0)}
+          }          
+          if (deltaBottom < 0 || deltaTop < 0) {
+            nPos = {...nPos, y: nPos.y + Math.min(deltaBottom, deltaTop < 0? -deltaTop : 0)}
+          }
+          setActionPopupPosition(nPos);
+          break;        
+        default:          
+          break;
+    }
+  }, [roadBuilderToolMode]);
+
+  useEffect(() => {
     document.addEventListener("mousemove", onMouseMove);
     document.addEventListener("mousedown", onMouseDown);
     document.addEventListener("mouseup", onMouseRelease);
@@ -134,8 +161,16 @@ export const ModView = () => {
     case RoadBuilderToolModeEnum.Picker:
       content = (
         <>
-          <div className={styles.pickerHint}>Select on a Road to edit</div>
+          <div className={styles.pickerHint}>{translate("Prompt[PickerHint]", "Click On A Road")}</div>
           <LaneListItemDrag ref={dragItemRef} />
+          <SidePanel />
+        </>
+      );
+      break;
+    case RoadBuilderToolModeEnum.ActionSelection:
+      content = (
+        <>
+          <ActionPopup popupPosition={actionPopupPosition}/>
         </>
       );
       break;
@@ -144,7 +179,7 @@ export const ModView = () => {
     case RoadBuilderToolModeEnum.EditingNonExistent:
       content = (
         <>
-          <LaneListPanel />
+          <SidePanel />
           <BottomView />
           <RoadPropertiesPanel />
           <LaneListItemDrag ref={dragItemRef} />

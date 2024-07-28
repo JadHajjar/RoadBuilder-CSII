@@ -12,35 +12,31 @@ import classNames from "classnames";
 
 const AssetGridTheme: Theme | any = getModule("game-ui/game/components/asset-menu/asset-grid/asset-grid.module.scss", "classes");
 
-export const SearchTextBox = (props: { onChange?: (val: string) => void }) => {
+export const SearchTextBox = (props: { onChange?: (val: string) => void, value?: string }) => {
   const { translate } = useLocalization();
-  const searchRef = useRef(null);
-  let [searchQuery, setSearchQuery] = useState<string>("");
+  let [searchQuery, setSearchQuery] = useState<string>(props.value == undefined? "" : props.value);
 
   const onChange: React.ChangeEventHandler<HTMLInputElement> = ({ target }) => {
     setSearchQuery(target.value);
-    props.onChange?.call(null, target.value);
+    props.onChange && props.onChange(target.value);
   };
 
   const clearText = () => {
-    setSearchQuery("");
-    props.onChange?.call(null, "");
+    setSearchQuery('');
+    props.onChange && props.onChange('');
   };
 
   return (
     <div className={styles.container}>
-      <div className={styles.searchArea}>
-        <TextInput
-          ref={searchRef}
-          multiline={1}
-          value={searchQuery}
+      <div className={styles.searchArea}>        
+        <input        
+          value={props.value === undefined? searchQuery : props.value}
           disabled={false}
           type="text"
           className={classNames(TextInputTheme.input, styles.textBox)}
-          focusKey={FOCUS_DISABLED}
           onChange={onChange}
           placeholder={translate("Editor.SEARCH_PLACEHOLDER", "Search...")!}
-        ></TextInput>
+        />
 
         {searchQuery.trim() !== "" ? (
           <Button
@@ -52,7 +48,7 @@ export const SearchTextBox = (props: { onChange?: (val: string) => void }) => {
             <img src={arrowLeftClear}></img>
           </Button>
         ) : (
-          <div className={classNames(VanillaComponentResolver.instance.assetGridTheme.item, styles.clearIcon)}>
+          <div className={classNames(VanillaComponentResolver.instance.assetGridTheme.item, styles.searchIcon)}>
             <img src={magnifierIcon}></img>
           </div>
         )}

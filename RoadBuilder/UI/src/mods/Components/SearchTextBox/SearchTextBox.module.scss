@@ -12,7 +12,7 @@
   margin: 0 0.5em;
 }
 
-.clearIcon {
+.clearIcon, .searchIcon {
   height: 1.9em;
   width: 1.9em;
   padding: 0.5rem;
@@ -21,11 +21,13 @@
   top: 50%;
   right: 0.2em;
   transform: translate(0, -50%);
+  img {
+    height: 1.5em;
+    width: 1.5em;
+  }
 }
-
-.clearIcon img {
-  height: 1.5em;
-  width: 1.5em;
+.searchIcon {
+  pointer-events: none;
 }
 
 .textBox {
