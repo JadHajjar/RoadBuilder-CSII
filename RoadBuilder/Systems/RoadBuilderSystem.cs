@@ -95,13 +95,13 @@ namespace RoadBuilder.Systems
 			FillRoadGenerationData();
 
 			toolbarUISystemLastSelectedAssets ??= typeof(ToolbarUISystem).GetField("m_LastSelectedAssets", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(World.GetOrCreateSystemManaged<ToolbarUISystem>()) as Dictionary<Entity, Entity>;
+
+			SetDefaults(default);
 		}
 
 		public void Deserialize<TReader>(TReader reader) where TReader : IReader
 		{
 			Mod.Log.Info(nameof(Deserialize));
-
-			Configurations.Clear();
 
 			reader.Read(out ushort version);
 			reader.Read(out int length);
@@ -118,7 +118,7 @@ namespace RoadBuilder.Systems
 					nameof(TrackConfig) => new TrackConfig(),
 					nameof(FenceConfig) => new FenceConfig(),
 					nameof(PathConfig) => new PathConfig(),
-					_ => throw new System.Exception("Unknown Configuration Type: " + type),
+					_ => throw new Exception("Unknown Configuration Type: " + type),
 				};
 
 				config.Version = version;
@@ -139,17 +139,25 @@ namespace RoadBuilder.Systems
 			Mod.Log.Info($"{configs.Count} configurations loaded");
 
 			InitializeExistingRoadPrefabs(configs);
-
-			GameManager.instance.localizationManager.ReloadActiveLocale();
 		}
 
 		public void Serialize<TWriter>(TWriter writer) where TWriter : IWriter
 		{
 			Mod.Log.Info(nameof(Serialize));
 
-			writer.Write(CURRENT_VERSION);
+			var query = SystemAPI.QueryBuilder().WithAll<RoadBuilderPrefabData>().Build();
+			var prefabEntities = query.ToEntityArray(Allocator.Temp);
+			var configs = new List<INetworkBuilderPrefab>();
 
-			var configs = Configurations.FindAll(c => roadBuilderSerializeSystem.UsedConfigurations.Contains(c.Config.ID));
+			for (var i = 0; i < prefabEntities.Length; i++)
+			{
+				if (prefabSystem.TryGetPrefab<PrefabBase>(prefabEntities[i], out var prefabBase) && prefabBase is INetworkBuilderPrefab prefab)
+				{
+					configs.Add(prefab);
+				}
+			}
+
+			writer.Write(CURRENT_VERSION);
 
 			writer.Write(configs.Count);
 
@@ -173,8 +181,6 @@ namespace RoadBuilder.Systems
 		public void SetDefaults(Context context)
 		{
 			Mod.Log.Info(nameof(SetDefaults));
-
-			Configurations.Clear();
 
 			InitializeExistingRoadPrefabs(LocalSaveUtil.LoadConfigs().ToList());
 		}
@@ -239,8 +245,14 @@ namespace RoadBuilder.Systems
 
 			foreach (var config in configs)
 			{
+				if (Configurations.Any(x => x.Config.ID == config.ID))
+				{
+					continue;
+				}
+
 				try
 				{
+
 					config.ApplyVersionChanges();
 
 					var roadPrefab = NetworkPrefabGenerationUtil.CreatePrefab(config);
