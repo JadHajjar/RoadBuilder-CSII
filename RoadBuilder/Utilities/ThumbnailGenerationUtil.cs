@@ -7,6 +7,7 @@ using RoadBuilder.Domain.Prefabs;
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -42,7 +43,7 @@ namespace RoadBuilder.Utilities
 
 			foreach (var item in svgs)
 			{
-				elements.Insert(0, item.SetBounds(currentX, currentY - item.PositionRect.Height));
+				elements.Insert(0, item.SetBounds(currentX, currentY));
 
 				currentX += item.PositionRect.Width;
 				currentY -= item.PositionRect.Height;
@@ -218,10 +219,10 @@ namespace RoadBuilder.Utilities
 				throw new Exception($"Rect element with id '{rectId}' not found.");
 			}
 
-			var x = double.Parse(rectElement.Attribute("x").Value);
-			var y = double.Parse(rectElement.Attribute("y").Value);
-			var width = double.Parse(rectElement.Attribute("width").Value);
-			var height = double.Parse(rectElement.Attribute("height").Value);
+			double.TryParse(rectElement.Attribute("x").Value, NumberStyles.Any, CultureInfo.InvariantCulture, out var x);
+			double.TryParse(rectElement.Attribute("y").Value, NumberStyles.Any, CultureInfo.InvariantCulture, out var y);
+			double.TryParse(rectElement.Attribute("width").Value, NumberStyles.Any, CultureInfo.InvariantCulture, out var width);
+			double.TryParse(rectElement.Attribute("height").Value, NumberStyles.Any, CultureInfo.InvariantCulture, out var height);
 
 			return new Rectangle(x, y, width, height);
 		}
@@ -252,7 +253,7 @@ namespace RoadBuilder.Utilities
 			public XElement SetBounds(double offsetX, double offsetY)
 			{
 				return new XElement("g"
-					, new XAttribute("transform", $"matrix(1,0,0,1,{offsetX - PositionRect.X},{offsetY - PositionRect.Y})")
+					, new XAttribute("transform", $"matrix(1,0,0,1,{(offsetX - PositionRect.X).ToString(CultureInfo.InvariantCulture)},{(offsetY - PositionRect.Y - PositionRect.Height).ToString(CultureInfo.InvariantCulture)})")
 					, Svg.Elements());
 			}
 
