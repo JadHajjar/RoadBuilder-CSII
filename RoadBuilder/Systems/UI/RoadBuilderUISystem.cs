@@ -32,6 +32,7 @@ namespace RoadBuilder.Systems.UI
 		private PrefabUISystem prefabUISystem;
 		private ToolSystem toolSystem;
 		private RoadBuilderSystem roadBuilderSystem;
+		private RoadGenerationDataSystem roadGenerationDataSystem;
 		private RoadBuilderToolSystem roadBuilderToolSystem;
 		private DefaultToolSystem defaultToolSystem;
 		private SimulationSystem simulationSystem;
@@ -65,6 +66,7 @@ namespace RoadBuilder.Systems.UI
 			prefabUISystem = World.GetOrCreateSystemManaged<PrefabUISystem>();
 			toolSystem = World.GetOrCreateSystemManaged<ToolSystem>();
 			roadBuilderSystem = World.GetOrCreateSystemManaged<RoadBuilderSystem>();
+			roadGenerationDataSystem = World.GetOrCreateSystemManaged<RoadGenerationDataSystem>();
 			roadBuilderToolSystem = World.GetOrCreateSystemManaged<RoadBuilderToolSystem>();
 			defaultToolSystem = World.GetOrCreateSystemManaged<DefaultToolSystem>();
 			simulationSystem = World.GetOrCreateSystemManaged<SimulationSystem>();
@@ -270,7 +272,7 @@ namespace RoadBuilder.Systems.UI
 
 			config.Lanes.RemoveAll(x =>
 			{
-				NetworkPrefabGenerationUtil.GetNetSection(roadBuilderSystem.RoadGenerationData, config, x, out var section, out var group);
+				NetworkPrefabGenerationUtil.GetNetSection(roadGenerationDataSystem.RoadGenerationData, config, x, out var section, out var group);
 
 				return !(section?.MatchCategories(config) ?? true) || !(group?.MatchCategories(config) ?? true);
 			});
@@ -282,7 +284,7 @@ namespace RoadBuilder.Systems.UI
 
 			if (existingLane != null)
 			{
-				LaneOptionsUtil.OptionClicked(roadBuilderSystem.RoadGenerationData, config, existingLane, option, id, value);
+				LaneOptionsUtil.OptionClicked(roadGenerationDataSystem.RoadGenerationData, config, existingLane, option, id, value);
 			}
 		}
 
@@ -293,7 +295,7 @@ namespace RoadBuilder.Systems.UI
 			for (var i = 0; i < binders.Length; i++)
 			{
 				var lane = config.Lanes[i];
-				var validSection = NetworkPrefabGenerationUtil.GetNetSection(roadBuilderSystem.RoadGenerationData, config, lane, out var section, out var groupPrefab);
+				var validSection = NetworkPrefabGenerationUtil.GetNetSection(roadGenerationDataSystem.RoadGenerationData, config, lane, out var section, out var groupPrefab);
 				var isBackward = cityConfigurationSystem.leftHandTraffic ? !lane.Invert : lane.Invert;
 
 				GetThumbnailAndColor(config, lane, section, groupPrefab, isBackward, out var thumbnail, out var color, out var texture);
@@ -306,7 +308,7 @@ namespace RoadBuilder.Systems.UI
 					TwoWay = validSection && section.SupportsTwoWay(),
 					SectionPrefabName = string.IsNullOrEmpty(lane.GroupPrefabName) ? lane.SectionPrefabName : lane.GroupPrefabName,
 					IsGroup = !string.IsNullOrEmpty(lane.GroupPrefabName),
-					Options = LaneOptionsUtil.GenerateOptions(roadBuilderSystem.RoadGenerationData, config, lane),
+					Options = LaneOptionsUtil.GenerateOptions(roadGenerationDataSystem.RoadGenerationData, config, lane),
 					Texture = texture ?? "asphalt",
 					Color = color is null ? null : $"rgba({color?.r * 255}, {color?.g * 255}, {color?.b * 255}, {color?.a})",
 					NetSection = !validSection ? new() : new()
@@ -419,7 +421,7 @@ namespace RoadBuilder.Systems.UI
 
 		public string GetLaneName(INetworkConfig config, LaneConfig lane)
 		{
-			var validSection = NetworkPrefabGenerationUtil.GetNetSection(roadBuilderSystem.RoadGenerationData, config, lane, out var section, out var groupPrefab);
+			var validSection = NetworkPrefabGenerationUtil.GetNetSection(roadGenerationDataSystem.RoadGenerationData, config, lane, out var section, out var groupPrefab);
 
 			if (validSection)
 			{
