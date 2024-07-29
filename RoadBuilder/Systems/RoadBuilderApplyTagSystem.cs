@@ -40,7 +40,7 @@ namespace RoadBuilder.Systems
 			{
 				var entity = entities[i];
 
-				if (prefabSystem.GetPrefab<PrefabBase>(EntityManager.GetComponentData<PrefabRef>(entity)) is INetworkBuilderPrefab)
+				if (prefabSystem.TryGetPrefab<PrefabBase>(EntityManager.GetComponentData<PrefabRef>(entity), out var prefab) && prefab is INetworkBuilderPrefab)
 				{
 					EntityManager.AddComponent<RoadBuilderNetwork>(entity);
 

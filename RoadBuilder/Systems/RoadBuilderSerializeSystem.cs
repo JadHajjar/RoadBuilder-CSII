@@ -18,6 +18,7 @@ namespace RoadBuilder.Systems
 {
 	public partial class RoadBuilderSerializeSystem : GameSystemBase
 	{
+		private static RoadBuilderSystem roadBuilderSystem;
 		private static PrefabSystem prefabSystem;
 		private EntityQuery roadBuilderNetsQuery;
 
@@ -27,6 +28,7 @@ namespace RoadBuilder.Systems
 		{
 			base.OnCreate();
 
+			roadBuilderSystem = World.GetOrCreateSystemManaged<RoadBuilderSystem>();
 			prefabSystem = World.GetOrCreateSystemManaged<PrefabSystem>();
 			roadBuilderNetsQuery = SystemAPI.QueryBuilder()
 				.WithAll<RoadBuilderNetwork, PrefabRef>()
@@ -51,7 +53,7 @@ namespace RoadBuilder.Systems
 			{
 				var prefab = NetworkPrefabGenerationUtil.CreatePrefab(config);
 
-				if (!prefabSystem.TryGetPrefab(prefab.Prefab.GetPrefabID(), out _))
+				if (!prefabSystem.TryGetPrefab(prefab.Prefab.GetPrefabID(), out _) && !roadBuilderSystem.Configurations.Any(x => x.Config.ID == prefab.Config.ID))
 				{
 					Mod.Log.Debug($"Added: {type} - {id}");
 

@@ -28,6 +28,9 @@ namespace RoadBuilder
 		[SettingsUIMouseBinding(nameof(RoadBuilder) + "Cancel"), SettingsUIHidden]
 		public ProxyBinding CancelMimic { get; set; }
 
+		[SettingsUISection(MAIN_SECTION, MAIN_GROUP), SettingsUIKeyboardBinding()]
+		public ProxyBinding ToolToggle { get; set; }
+
 		[SettingsUISection(MAIN_SECTION, MAIN_GROUP)]
 		public bool SaveUsedRoadsOnly { get; set; }
 

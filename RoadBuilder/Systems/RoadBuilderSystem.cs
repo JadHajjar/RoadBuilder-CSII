@@ -10,7 +10,6 @@ using Game.SceneFlow;
 using Game.Tools;
 using Game.UI.InGame;
 
-using RoadBuilder.Domain;
 using RoadBuilder.Domain.Components;
 using RoadBuilder.Domain.Configurations;
 using RoadBuilder.Domain.Prefabs;
@@ -39,11 +38,11 @@ namespace RoadBuilder.Systems
 		private NetSectionsSystem netSectionsSystem;
 		private RoadBuilderSerializeSystem roadBuilderSerializeSystem;
 		private CityConfigurationSystem cityConfigurationSystem;
+		private RoadGenerationDataSystem roadGenerationDataSystem;
 		private ModificationBarrier1 modificationBarrier;
 		private Dictionary<Entity, Entity> toolbarUISystemLastSelectedAssets;
 
 		public List<INetworkBuilderPrefab> Configurations { get; } = new();
-		public RoadGenerationData RoadGenerationData { get; private set; }
 
 		protected override void OnCreate()
 		{
@@ -54,6 +53,7 @@ namespace RoadBuilder.Systems
 			netSectionsSystem = World.GetOrCreateSystemManaged<NetSectionsSystem>();
 			roadBuilderSerializeSystem = World.GetOrCreateSystemManaged<RoadBuilderSerializeSystem>();
 			cityConfigurationSystem = World.GetOrCreateSystemManaged<CityConfigurationSystem>();
+			roadGenerationDataSystem = World.GetOrCreateSystemManaged<RoadGenerationDataSystem>();
 			modificationBarrier = World.GetOrCreateSystemManaged<ModificationBarrier1>();
 			roadNameUtil = new(this, World.GetOrCreateSystemManaged<RoadBuilderUISystem>(), prefabUISystem, netSectionsSystem);
 			prefabRefQuery = SystemAPI.QueryBuilder()
@@ -66,7 +66,7 @@ namespace RoadBuilder.Systems
 		{
 			while (_updatedRoadPrefabsQueue.Count > 0)
 			{
-				if (RoadGenerationData is null)
+				if (roadGenerationDataSystem.RoadGenerationData is null)
 				{
 					Mod.Log.Warn("Generating roads before generation data was initialized");
 
@@ -76,7 +76,7 @@ namespace RoadBuilder.Systems
 				}
 
 				var roadPrefab = _updatedRoadPrefabsQueue.Dequeue();
-				var roadPrefabGeneration = new NetworkPrefabGenerationUtil(roadPrefab, RoadGenerationData ?? new());
+				var roadPrefabGeneration = new NetworkPrefabGenerationUtil(roadPrefab, roadGenerationDataSystem.RoadGenerationData);
 
 				roadPrefabGeneration.GenerateRoad();
 
@@ -92,25 +92,22 @@ namespace RoadBuilder.Systems
 		{
 			base.OnGamePreload(purpose, mode);
 
-			FillRoadGenerationData();
-
 			toolbarUISystemLastSelectedAssets ??= typeof(ToolbarUISystem).GetField("m_LastSelectedAssets", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(World.GetOrCreateSystemManaged<ToolbarUISystem>()) as Dictionary<Entity, Entity>;
 		}
 
-        protected override void OnGameLoadingComplete(Purpose purpose, GameMode mode)
-        {
-            base.OnGameLoadingComplete(purpose, mode);
-            if (mode == GameMode.Game)
-            {
-                GameManager.instance.localizationManager.ReloadActiveLocale();
-            }
-        }
+		protected override void OnGameLoadingComplete(Purpose purpose, GameMode mode)
+		{
+			base.OnGameLoadingComplete(purpose, mode);
 
-        public void Deserialize<TReader>(TReader reader) where TReader : IReader
+			if (mode == GameMode.Game)
+			{
+				GameManager.instance.localizationManager.ReloadActiveLocale();
+			}
+		}
+
+		public void Deserialize<TReader>(TReader reader) where TReader : IReader
 		{
 			Mod.Log.Info(nameof(Deserialize));
-
-			Configurations.Clear();
 
 			reader.Read(out ushort version);
 			reader.Read(out int length);
@@ -127,7 +124,7 @@ namespace RoadBuilder.Systems
 					nameof(TrackConfig) => new TrackConfig(),
 					nameof(FenceConfig) => new FenceConfig(),
 					nameof(PathConfig) => new PathConfig(),
-					_ => throw new System.Exception("Unknown Configuration Type: " + type),
+					_ => throw new Exception("Unknown Configuration Type: " + type),
 				};
 
 				config.Version = version;
@@ -154,9 +151,19 @@ namespace RoadBuilder.Systems
 		{
 			Mod.Log.Info(nameof(Serialize));
 
-			writer.Write(CURRENT_VERSION);
+			var query = SystemAPI.QueryBuilder().WithAll<RoadBuilderPrefabData>().Build();
+			var prefabEntities = query.ToEntityArray(Allocator.Temp);
+			var configs = new List<INetworkBuilderPrefab>();
 
-			var configs = Configurations.FindAll(c => roadBuilderSerializeSystem.UsedConfigurations.Contains(c.Config.ID));
+			for (var i = 0; i < prefabEntities.Length; i++)
+			{
+				if (prefabSystem.TryGetPrefab<PrefabBase>(prefabEntities[i], out var prefabBase) && prefabBase is INetworkBuilderPrefab prefab)
+				{
+					configs.Add(prefab);
+				}
+			}
+
+			writer.Write(CURRENT_VERSION);
 
 			writer.Write(configs.Count);
 
@@ -178,13 +185,7 @@ namespace RoadBuilder.Systems
 		}
 
 		public void SetDefaults(Context context)
-		{
-			Mod.Log.Info(nameof(SetDefaults));
-
-			Configurations.Clear();
-
-			InitializeExistingRoadPrefabs(LocalSaveUtil.LoadConfigs().ToList());
-		}
+		{ }
 
 		public void UpdateRoad(INetworkConfig config, Entity entity, bool createNewPrefab)
 		{
@@ -222,7 +223,12 @@ namespace RoadBuilder.Systems
 				return networkBuilderPrefab.Config;
 			}
 
-			return new NetworkConfigGenerationUtil(roadPrefab, RoadGenerationData, prefabUISystem).GenerateConfiguration();
+			if (roadGenerationDataSystem.RoadGenerationData is null)
+			{
+				return null;
+			}
+
+			return new NetworkConfigGenerationUtil(roadPrefab, roadGenerationDataSystem.RoadGenerationData, prefabUISystem).GenerateConfiguration();
 		}
 
 		public INetworkConfig GenerateConfiguration(Entity entity)
@@ -237,37 +243,47 @@ namespace RoadBuilder.Systems
 				return null;
 			}
 
-			return new NetworkConfigGenerationUtil(roadPrefab, RoadGenerationData, prefabUISystem).GenerateConfiguration();
+			if (roadGenerationDataSystem.RoadGenerationData is null)
+			{
+				return null;
+			}
+
+			return new NetworkConfigGenerationUtil(roadPrefab, roadGenerationDataSystem.RoadGenerationData, prefabUISystem).GenerateConfiguration();
 		}
 
-		private void InitializeExistingRoadPrefabs(List<INetworkConfig> configs)
+		public void InitializeExistingRoadPrefabs(List<INetworkConfig> configs)
 		{
 			Mod.Log.InfoFormat("{0} ({1})", nameof(InitializeExistingRoadPrefabs), configs.Count);
 
+			if (roadGenerationDataSystem.RoadGenerationData is null)
+			{
+				Mod.Log.Warn("Generating roads before generation data was initialized");
+
+				return;
+			}
+
 			foreach (var config in configs)
 			{
+				if (Configurations.Any(x => x.Config.ID == config.ID))
+				{
+					continue;
+				}
+
 				try
 				{
 					config.ApplyVersionChanges();
 
 					var roadPrefab = NetworkPrefabGenerationUtil.CreatePrefab(config);
+					var exists = false;
 
-					if (prefabSystem.TryGetPrefab(roadPrefab.Prefab.GetPrefabID(), out var prefabBase))
+					if (exists = prefabSystem.TryGetPrefab(roadPrefab.Prefab.GetPrefabID(), out var prefabBase))
 					{
 						roadPrefab = prefabBase as INetworkBuilderPrefab;
 
 						roadPrefab.Config = config;
 					}
-					else
-					{
-						if(!prefabSystem.AddPrefab(roadPrefab.Prefab))
-						{
-							Mod.Log.Error($"Unable to add prefab {roadPrefab.Prefab.name} config name: {roadPrefab.Config.Name}!");
-							continue;
-						}
-					}
 
-					var roadPrefabGeneration = new NetworkPrefabGenerationUtil(roadPrefab, RoadGenerationData ?? new());
+					var roadPrefabGeneration = new NetworkPrefabGenerationUtil(roadPrefab, roadGenerationDataSystem.RoadGenerationData);
 
 					roadPrefabGeneration.GenerateRoad(false);
 
@@ -275,7 +291,15 @@ namespace RoadBuilder.Systems
 
 					Configurations.Add(roadPrefab);
 
-					UpdatePrefab(roadPrefab.Prefab);
+					if (exists)
+					{
+						UpdatePrefab(roadPrefab.Prefab);
+					}
+					else if (!prefabSystem.AddPrefab(roadPrefab.Prefab))
+					{
+						Mod.Log.Error($"Unable to add prefab {roadPrefab.Prefab.name} config name: {roadPrefab.Config.Name}!");
+						continue;
+					}
 				}
 				catch (Exception ex)
 				{
@@ -286,10 +310,17 @@ namespace RoadBuilder.Systems
 
 		private void CreateNewRoadPrefab(INetworkConfig config, Entity entity)
 		{
+			if (roadGenerationDataSystem.RoadGenerationData is null)
+			{
+				Mod.Log.Warn("Generating roads before generation data was initialized");
+
+				return;
+			}
+
 			try
 			{
 				var roadPrefab = NetworkPrefabGenerationUtil.CreatePrefab(config);
-				var roadPrefabGeneration = new NetworkPrefabGenerationUtil(roadPrefab, RoadGenerationData ?? new());
+				var roadPrefabGeneration = new NetworkPrefabGenerationUtil(roadPrefab, roadGenerationDataSystem.RoadGenerationData);
 
 				roadPrefabGeneration.GenerateRoad();
 
@@ -319,105 +350,6 @@ namespace RoadBuilder.Systems
 			{
 				Mod.Log.Error(ex);
 			}
-		}
-
-		private void FillRoadGenerationData()
-		{
-			RoadGenerationData = new();
-
-			var zoneBlockDataQuery = SystemAPI.QueryBuilder().WithAll<ZoneBlockData>().Build();
-			var zoneBlockDataEntities = zoneBlockDataQuery.ToEntityArray(Allocator.Temp);
-
-			RoadGenerationData.LeftHandTraffic = cityConfigurationSystem.leftHandTraffic;
-
-			for (var i = 0; i < zoneBlockDataEntities.Length; i++)
-			{
-				if (prefabSystem.TryGetPrefab<ZoneBlockPrefab>(zoneBlockDataEntities[i], out var prefab))
-				{
-					if (prefab.name == "Zone Block")
-					{
-						RoadGenerationData.ZoneBlockPrefab = prefab;
-
-						break;
-					}
-				}
-			}
-
-			var outsideConnectionDataQuery = SystemAPI.QueryBuilder().WithAll<OutsideConnectionData, TrafficSpawnerData>().Build();
-			var outsideConnectionDataEntities = outsideConnectionDataQuery.ToEntityArray(Allocator.Temp);
-
-			for (var i = 0; i < outsideConnectionDataEntities.Length; i++)
-			{
-				if (prefabSystem.TryGetPrefab<MarkerObjectPrefab>(outsideConnectionDataEntities[i], out var prefab))
-				{
-					if (prefab.name == "Road Outside Connection - Oneway")
-					{
-						RoadGenerationData.OutsideConnectionOneWay = prefab;
-					}
-
-					if (prefab.name == "Road Outside Connection - Twoway")
-					{
-						RoadGenerationData.OutsideConnectionTwoWay = prefab;
-					}
-				}
-			}
-
-			var aggregateNetDataQuery = SystemAPI.QueryBuilder().WithAll<AggregateNetData>().Build();
-			var aggregateNetDataEntities = aggregateNetDataQuery.ToEntityArray(Allocator.Temp);
-
-			for (var i = 0; i < aggregateNetDataEntities.Length; i++)
-			{
-				if (prefabSystem.TryGetPrefab<AggregateNetPrefab>(aggregateNetDataEntities[i], out var prefab))
-				{
-					RoadGenerationData.AggregateNetPrefabs[prefab.name] = prefab;
-				}
-			}
-
-			var netSectionDataQuery = SystemAPI.QueryBuilder().WithAll<NetSectionData>().Build();
-			var netSectionDataEntities = netSectionDataQuery.ToEntityArray(Allocator.Temp);
-
-			for (var i = 0; i < netSectionDataEntities.Length; i++)
-			{
-				if (prefabSystem.TryGetPrefab<NetSectionPrefab>(netSectionDataEntities[i], out var prefab))
-				{
-					RoadGenerationData.NetSectionPrefabs[prefab.name] = prefab;
-				}
-			}
-
-			var serviceObjectDataQuery = SystemAPI.QueryBuilder().WithAll<ServiceData>().Build();
-			var serviceObjectDataEntities = serviceObjectDataQuery.ToEntityArray(Allocator.Temp);
-
-			for (var i = 0; i < serviceObjectDataEntities.Length; i++)
-			{
-				if (prefabSystem.TryGetPrefab<ServicePrefab>(serviceObjectDataEntities[i], out var prefab))
-				{
-					RoadGenerationData.ServicePrefabs[prefab.name] = prefab;
-				}
-			}
-
-			var pillarDataQuery = SystemAPI.QueryBuilder().WithAll<PillarData>().Build();
-			var pillarDataEntities = pillarDataQuery.ToEntityArray(Allocator.Temp);
-
-			for (var i = 0; i < pillarDataEntities.Length; i++)
-			{
-				if (prefabSystem.TryGetPrefab<StaticObjectPrefab>(pillarDataEntities[i], out var prefab))
-				{
-					RoadGenerationData.PillarPrefabs[prefab.name] = prefab;
-				}
-			}
-
-			var uIGroupElementQuery = SystemAPI.QueryBuilder().WithAll<UIGroupElement>().Build();
-			var uIGroupElementEntities = uIGroupElementQuery.ToEntityArray(Allocator.Temp);
-
-			for (var i = 0; i < uIGroupElementEntities.Length; i++)
-			{
-				if (prefabSystem.TryGetPrefab<UIGroupPrefab>(uIGroupElementEntities[i], out var prefab))
-				{
-					RoadGenerationData.UIGroupPrefabs[prefab.name] = prefab;
-				}
-			}
-
-			RoadGenerationData.LaneGroupPrefabs = netSectionsSystem.LaneGroups;
 		}
 
 		public void UpdatePrefab(NetGeometryPrefab prefab)
