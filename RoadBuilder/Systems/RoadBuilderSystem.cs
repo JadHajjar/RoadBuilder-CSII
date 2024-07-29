@@ -99,7 +99,16 @@ namespace RoadBuilder.Systems
 			SetDefaults(default);
 		}
 
-		public void Deserialize<TReader>(TReader reader) where TReader : IReader
+        protected override void OnGameLoadingComplete(Purpose purpose, GameMode mode)
+        {
+            base.OnGameLoadingComplete(purpose, mode);
+            if (mode == GameMode.Game)
+            {
+                GameManager.instance.localizationManager.ReloadActiveLocale();
+            }
+        }
+
+        public void Deserialize<TReader>(TReader reader) where TReader : IReader
 		{
 			Mod.Log.Info(nameof(Deserialize));
 
@@ -265,7 +274,11 @@ namespace RoadBuilder.Systems
 					}
 					else
 					{
-						prefabSystem.AddPrefab(roadPrefab.Prefab);
+						if(!prefabSystem.AddPrefab(roadPrefab.Prefab))
+						{
+							Mod.Log.Error($"Unable to add prefab {roadPrefab.Prefab.name} config name: {roadPrefab.Config.Name}!");
+							continue;
+						}
 					}
 
 					var roadPrefabGeneration = new NetworkPrefabGenerationUtil(roadPrefab, RoadGenerationData ?? new());
