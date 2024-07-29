@@ -97,7 +97,16 @@ namespace RoadBuilder.Systems
 			toolbarUISystemLastSelectedAssets ??= typeof(ToolbarUISystem).GetField("m_LastSelectedAssets", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(World.GetOrCreateSystemManaged<ToolbarUISystem>()) as Dictionary<Entity, Entity>;
 		}
 
-		public void Deserialize<TReader>(TReader reader) where TReader : IReader
+        protected override void OnGameLoadingComplete(Purpose purpose, GameMode mode)
+        {
+            base.OnGameLoadingComplete(purpose, mode);
+            if (mode == GameMode.Game)
+            {
+                GameManager.instance.localizationManager.ReloadActiveLocale();
+            }
+        }
+
+        public void Deserialize<TReader>(TReader reader) where TReader : IReader
 		{
 			Mod.Log.Info(nameof(Deserialize));
 
@@ -139,8 +148,6 @@ namespace RoadBuilder.Systems
 			Mod.Log.Info($"{configs.Count} configurations loaded");
 
 			InitializeExistingRoadPrefabs(configs);
-
-			GameManager.instance.localizationManager.ReloadActiveLocale();
 		}
 
 		public void Serialize<TWriter>(TWriter writer) where TWriter : IWriter
