@@ -260,7 +260,11 @@ namespace RoadBuilder.Systems
 					}
 					else
 					{
-						prefabSystem.AddPrefab(roadPrefab.Prefab);
+						if(!prefabSystem.AddPrefab(roadPrefab.Prefab))
+						{
+							Mod.Log.Error($"Unable to add prefab {roadPrefab.Prefab.name} config name: {roadPrefab.Config.Name}!");
+							continue;
+						}
 					}
 
 					var roadPrefabGeneration = new NetworkPrefabGenerationUtil(roadPrefab, RoadGenerationData ?? new());
