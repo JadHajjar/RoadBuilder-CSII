@@ -39,6 +39,8 @@ namespace RoadBuilder.Utilities
 			prefab.Config = config;
 			prefab.Prefab.name = config.ID;
 			prefab.Prefab.m_Sections = new NetSectionInfo[0];
+			prefab.Prefab.m_EdgeStates = new NetEdgeStateInfo[0];
+			prefab.Prefab.m_NodeStates = new NetNodeStateInfo[0];
 
 			return prefab;
 		}
