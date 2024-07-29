@@ -140,7 +140,13 @@ namespace RoadBuilder.Systems
 
 		private void AddCustomPrefabComponents()
 		{
-			_blacklist.ForEach(x => NetSections[x].AddOrGetComponent<RoadBuilderHide>());
+			_blacklist.ForEach(x =>
+			{
+				if (NetSections.TryGetValue(x, out var prefab))
+				{
+					prefab.AddOrGetComponent<RoadBuilderHide>();
+				}
+			});
 
 			SetUp("Pavement Path Section 3", "coui://roadbuildericons/RB_PedestrianLane.svg").WithRequired(RoadCategory.Pathway).AddLaneThumbnail("coui://roadbuildericons/Thumb_PedestrianLaneWide.svg");
 			SetUp("Tiled Section 3", "coui://roadbuildericons/RB_PedestrianOnly.svg").WithRequired(RoadCategory.Tiled).AddLaneThumbnail("coui://roadbuildericons/Thumb_TiledSmall.svg");
