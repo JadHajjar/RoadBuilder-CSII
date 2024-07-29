@@ -1,4 +1,5 @@
 ﻿using Game.City;
+using Game.Input;
 using Game.Prefabs;
 using Game.SceneFlow;
 using Game.Simulation;
@@ -47,6 +48,7 @@ namespace RoadBuilder.Systems.UI
 		private ValueBindingHelper<bool> RoadListView;
 		private ValueBindingHelper<bool> IsPaused;
 		private ValueBindingHelper<bool> IsCustomRoadSelected;
+		private ProxyAction _toolKeyBinding;
 
 		public RoadBuilderToolMode Mode { get => RoadBuilderMode; set => RoadBuilderMode.Value = value; }
 		public string WorkingId => RoadId;
@@ -55,6 +57,9 @@ namespace RoadBuilder.Systems.UI
 		protected override void OnCreate()
 		{
 			base.OnCreate();
+
+			_toolKeyBinding = Mod.Settings.GetAction(nameof(Setting.ToolToggle));
+			_toolKeyBinding.shouldBeEnabled = true;
 
 			prefabSystem = World.GetOrCreateSystemManaged<PrefabSystem>();
 			prefabUISystem = World.GetOrCreateSystemManaged<PrefabUISystem>();
@@ -93,6 +98,11 @@ namespace RoadBuilder.Systems.UI
 		protected override void OnUpdate()
 		{
 			IsPaused.Value = simulationSystem.selectedSpeed == 0f;
+
+			if (_toolKeyBinding.WasPerformedThisFrame())
+			{
+				ToggleTool();
+			}
 
 			base.OnUpdate();
 		}
@@ -151,9 +161,9 @@ namespace RoadBuilder.Systems.UI
 
 		public void PickPrefab()
 		{
-			if (workingEntity != Entity.Null)
+			if (workingEntity != Entity.Null && prefabSystem.TryGetPrefab<PrefabBase>(EntityManager.GetComponentData<PrefabRef>(workingEntity), out var prefab))
 			{
-				toolSystem.ActivatePrefabTool(prefabSystem.GetPrefab<PrefabBase>(EntityManager.GetComponentData<PrefabRef>(workingEntity)));
+				toolSystem.ActivatePrefabTool(prefab);
 			}
 		}
 
