@@ -21,7 +21,7 @@ namespace RoadBuilder.Utilities
 
 			for (var i = 1; i < config.Lanes.Count; i++)
 			{
-				if (config.Lanes[0].Invert != first)
+				if (config.Lanes[i].Invert != first)
 				{
 					return false;
 				}
