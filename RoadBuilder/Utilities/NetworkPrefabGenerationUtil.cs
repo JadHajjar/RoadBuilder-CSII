@@ -495,11 +495,12 @@ namespace RoadBuilder.Utilities
 				};
 			}
 
+			var isOneWay = NetworkPrefab.Config.IsOneWay();
 			yield return new NetSubObjectInfo
 			{
-				m_Object = NetworkPrefab.Config.IsOneWay() ? _roadGenerationData.OutsideConnectionOneWay : _roadGenerationData.OutsideConnectionTwoWay,
+				m_Object = isOneWay ? _roadGenerationData.OutsideConnectionOneWay : _roadGenerationData.OutsideConnectionTwoWay,
 				m_Position = new float3(0, 5, 0),
-				m_Rotation = new quaternion(NetworkPrefab.Config.IsOneWay() ? 1 : 0, 0, 0, 0),
+				m_Rotation = new quaternion(isOneWay ? 1 : 0, 0, 0, 0),
 				m_Placement = NetObjectPlacement.Node,
 				m_RequireOutsideConnection = true,
 			};
