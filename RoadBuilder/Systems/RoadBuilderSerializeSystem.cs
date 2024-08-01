@@ -1,6 +1,8 @@
-﻿using Game;
+﻿using Colossal.Serialization.Entities;
+
+using Game;
 using Game.Prefabs;
-using Game.Tools;
+using Game.SceneFlow;
 
 using RoadBuilder.Domain.Components;
 using RoadBuilder.Domain.Configurations;
@@ -18,11 +20,11 @@ namespace RoadBuilder.Systems
 {
 	public partial class RoadBuilderSerializeSystem : GameSystemBase
 	{
+		public const ushort CURRENT_VERSION = 1;
+
 		private static RoadBuilderSystem roadBuilderSystem;
 		private static PrefabSystem prefabSystem;
-		private EntityQuery roadBuilderNetsQuery;
-
-		public IEnumerable<string> UsedConfigurations { get; private set; } = Enumerable.Empty<string>();
+		private static List<INetworkBuilderPrefab> prefabsToUpdate = new();
 
 		protected override void OnCreate()
 		{
@@ -30,80 +32,107 @@ namespace RoadBuilder.Systems
 
 			roadBuilderSystem = World.GetOrCreateSystemManaged<RoadBuilderSystem>();
 			prefabSystem = World.GetOrCreateSystemManaged<PrefabSystem>();
-			roadBuilderNetsQuery = SystemAPI.QueryBuilder()
-				.WithAll<RoadBuilderNetwork, PrefabRef>()
-				.WithNone<Temp>()
-				.Build();
-		}
-
-		public static void RegisterRoadID(string type, string id)
-		{
-			Mod.Log.Debug($"Try Register: {type} - {id}");
-
-			INetworkConfig config = type switch
-			{
-				nameof(RoadConfig) => new RoadConfig { ID = id },
-				nameof(TrackConfig) => new TrackConfig { ID = id },
-				nameof(FenceConfig) => new FenceConfig { ID = id },
-				nameof(PathConfig) => new PathConfig { ID = id },
-				_ => null
-			};
-
-			try
-			{
-				var prefab = NetworkPrefabGenerationUtil.CreatePrefab(config);
-
-				if (!prefabSystem.TryGetPrefab(prefab.Prefab.GetPrefabID(), out _) && !roadBuilderSystem.Configurations.Any(x => x.Config.ID == prefab.Config.ID))
-				{
-					Mod.Log.Debug($"Added: {type} - {id}");
-
-					prefabSystem.AddPrefab(prefab.Prefab);
-				}
-			}
-			catch (Exception ex)
-			{
-				Mod.Log.Error(ex);
-			}
 		}
 
 		protected override void OnUpdate()
 		{
-			if (!SystemAPI.TryGetSingletonBuffer<NetworkConfigBuffer>(out var networkConfigBuffer))
-			{
-				var singleton = EntityManager.CreateSingletonBuffer<NetworkConfigBuffer>();
-
-				networkConfigBuffer = EntityManager.GetBuffer<NetworkConfigBuffer>(singleton);
-			}
-
+			var roadBuilderNetsQuery = SystemAPI.QueryBuilder().WithAll<RoadBuilderNetwork, PrefabRef>().Build();
 			var prefabRefs = roadBuilderNetsQuery.ToComponentDataArray<PrefabRef>(Allocator.Temp);
 
-			networkConfigBuffer.Clear();
+			var placedNetworks = CreateNetworksList(in prefabRefs);
 
-			var addedIds = new List<string>();
-
-			for (var i = 0; i < prefabRefs.Length; i++)
+			foreach (var prefabName in placedNetworks)
 			{
-				if (!prefabSystem.TryGetPrefab<NetGeometryPrefab>(prefabRefs[i], out var prefabBase)
-					|| prefabBase is not INetworkBuilderPrefab prefab
-					|| addedIds.Contains(prefab.Config.ID))
+				var entity = EntityManager.CreateEntity();
+
+				EntityManager.AddComponentData(entity, new NetworkConfigComponent { NetworkId = prefabName });
+			}
+
+			foreach (var config in roadBuilderSystem.Configurations.Values)
+			{
+				if (Mod.Settings.SaveUsedRoadsOnly && !placedNetworks.Contains(config.Config.ID))
 				{
 					continue;
 				}
 
-				addedIds.Add(prefab.Config.ID);
+				LocalSaveUtil.Save(config.Config);
+			}
+		}
 
-				Mod.Log.Debug($"Serializing: {prefab.Config.GetType().Name} - {prefab.Config.ID}");
+		protected override void OnGameLoadingComplete(Purpose purpose, GameMode mode)
+		{
+			base.OnGameLoadingComplete(purpose, mode);
 
-				networkConfigBuffer.Add(new NetworkConfigBuffer
-				{
-					ConfigurationType = prefab.Config.GetType().Name,
-					ConfigurationID = prefab.Config.ID
-				});
+			foreach (var item in prefabsToUpdate)
+			{
+				roadBuilderSystem.UpdatePrefab(item.Prefab);
 			}
 
-			Mod.Log.Debug($"Serialized {addedIds.Count}");
+			prefabsToUpdate.Clear();
+		}
 
-			UsedConfigurations = addedIds;
+		private List<string> CreateNetworksList(in NativeArray<PrefabRef> prefabRefs)
+		{
+			var list = new List<string>();
+
+			for (var i = 0; i < prefabRefs.Length; i++)
+			{
+				if (prefabSystem.GetPrefab<PrefabBase>(prefabRefs[i]) is not INetworkBuilderPrefab prefab)
+				{
+					continue;
+				}
+
+				if (!list.Contains(prefab.Prefab.name))
+				{
+					list.Add(prefab.Prefab.name);
+				}
+			}
+
+			return list;
+		}
+
+		public static void DeserializeNetwork<TReader>(TReader reader) where TReader : IReader
+		{
+			reader.Read(out ushort version);
+			reader.Read(out string type);
+
+			INetworkConfig config = type switch
+			{
+				nameof(RoadConfig) => new RoadConfig(),
+				nameof(TrackConfig) => new TrackConfig(),
+				nameof(FenceConfig) => new FenceConfig(),
+				nameof(PathConfig) => new PathConfig(),
+				_ => throw new Exception("Unknown Configuration Type: " + type),
+			};
+
+			config.Version = version;
+
+			reader.Read(config);
+
+			config.ApplyVersionChanges();
+
+			Mod.Log.Debug($"DeserializeNetwork: {type} {config.ID}");
+
+			var prefab = roadBuilderSystem.AddPrefab(config);
+
+			if (prefab is not null)
+			{
+				prefabsToUpdate.Add(prefab);
+			}
+		}
+
+		public static void SerializeNetwork<TWriter>(TWriter writer, string networkId) where TWriter : IWriter
+		{
+			if (!roadBuilderSystem.Configurations.TryGetValue(networkId, out var prefab))
+			{
+				Mod.Log.Error("Trying to save a prefab that has no configuration: " + networkId);
+
+				return;
+			}
+
+			writer.Write(CURRENT_VERSION);
+			writer.Write(prefab.Config.GetType().Name);
+			writer.Write(prefab.Config);
 		}
 	}
 }

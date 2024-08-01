@@ -130,7 +130,7 @@ namespace RoadBuilder.Utilities
 
 		public static bool MatchCategories(this PrefabBase prefab, INetworkConfig config)
 		{
-			if (Mod.Settings.AdvancedUserMode || config is null || !prefab.TryGet<RoadBuilderLaneInfo>(out var info))
+			if (config is null || !prefab.TryGet<RoadBuilderLaneInfo>(out var info))
 			{
 				return true;
 			}
@@ -144,7 +144,7 @@ namespace RoadBuilder.Utilities
 
 		public static bool MatchCategories(this RoadBuilderLaneInfo info, INetworkConfig config)
 		{
-			if (Mod.Settings.AdvancedUserMode || config is null)
+			if (config is null)
 			{
 				return true;
 			}

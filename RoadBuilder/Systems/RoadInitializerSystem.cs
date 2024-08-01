@@ -1,8 +1,15 @@
-﻿using Game;
+﻿using Colossal.Serialization.Entities;
+
+using Game;
+using Game.Common;
+using Game.Prefabs;
 
 using RoadBuilder.Utilities;
 
 using System.Linq;
+
+using Unity.Collections;
+using Unity.Entities;
 
 namespace RoadBuilder.Systems
 {
@@ -30,7 +37,12 @@ namespace RoadBuilder.Systems
 
 			Enabled = false;
 
-			roadBuilderSystem.InitializeExistingRoadPrefabs(LocalSaveUtil.LoadConfigs().ToList());
+			foreach (var item in LocalSaveUtil.LoadConfigs())
+			{
+				roadBuilderSystem.AddPrefab(item);
+			}
+
+			roadBuilderSystem.UpdateConfigurationList();
 		}
 	}
 }

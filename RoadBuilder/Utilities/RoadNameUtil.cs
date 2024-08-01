@@ -35,7 +35,7 @@ namespace RoadBuilder.Utilities
 
 		public IEnumerable<KeyValuePair<string, string>> ReadEntries(IList<IDictionaryEntryError> errors, Dictionary<string, int> indexCounts)
 		{
-			foreach (var item in _roadBuilderSystem.Configurations)
+			foreach (var item in _roadBuilderSystem.Configurations.Values)
 			{
 				_prefabUISystem.GetTitleAndDescription(item.Prefab, out var titleId, out var descriptionId);
 

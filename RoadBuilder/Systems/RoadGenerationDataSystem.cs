@@ -139,6 +139,8 @@ namespace RoadBuilder.Systems
 
 			if (!firstTimeRun)
 			{
+				Mod.Log.Debug("RoadGenerationData First Created");
+
 				firstTimeRun = true;
 
 				RequireAnyForUpdate(

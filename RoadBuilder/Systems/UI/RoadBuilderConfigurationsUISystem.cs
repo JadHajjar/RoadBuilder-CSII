@@ -26,7 +26,7 @@ namespace RoadBuilder.Systems.UI
 	{
 		private RoadBuilderSystem roadBuilderSystem;
 		private RoadBuilderUISystem roadBuilderUISystem;
-		private RoadBuilderUpdateSystem roadBuilderUpdateSystem;
+		private RoadBuilderPrefabUpdateSystem roadBuilderUpdateSystem;
 		private PrefabSystem prefabSystem;
 		private CameraUpdateSystem cameraUpdateSystem;
 		private ToolSystem toolSystem;
@@ -43,10 +43,12 @@ namespace RoadBuilder.Systems.UI
 
 			roadBuilderSystem = World.GetOrCreateSystemManaged<RoadBuilderSystem>();
 			roadBuilderUISystem = World.GetOrCreateSystemManaged<RoadBuilderUISystem>();
-			roadBuilderUpdateSystem = World.GetOrCreateSystemManaged<RoadBuilderUpdateSystem>();
+			roadBuilderUpdateSystem = World.GetOrCreateSystemManaged<RoadBuilderPrefabUpdateSystem>();
 			prefabSystem = World.GetOrCreateSystemManaged<PrefabSystem>();
 			cameraUpdateSystem = World.GetOrCreateSystemManaged<CameraUpdateSystem>();
 			toolSystem = World.GetOrCreateSystemManaged<ToolSystem>();
+
+			roadBuilderSystem.ConfigurationsUpdated += UpdateConfigurationList;
 
 			prefabRefQuery = SystemAPI.QueryBuilder()
 				.WithAll<RoadBuilderNetwork, PrefabRef, Edge>()
@@ -63,17 +65,15 @@ namespace RoadBuilder.Systems.UI
 		{
 			RoadConfigurations.Value = roadBuilderSystem.Configurations.Select(x => new RoadConfigurationUIBinder
 			{
-				ID = x.Config.ID,
-				Name = x.Config.Name,
-				Thumbnail = ImageSystem.GetIcon(x.Prefab)
+				ID = x.Key,
+				Name = x.Value.Config.Name,
+				Thumbnail = ImageSystem.GetIcon(x.Value.Prefab)
 			}).ToArray();
 		}
 
 		private void ActivateRoad(string id)
 		{
-			var prefab = roadBuilderSystem.Configurations.FirstOrDefault(x => x.Config.ID == id);
-
-			if (prefab is null)
+			if (roadBuilderSystem.Configurations.TryGetValue(id, out var prefab))
 			{
 				return;
 			}
@@ -83,9 +83,7 @@ namespace RoadBuilder.Systems.UI
 
 		private void EditRoad(string id)
 		{
-			var prefab = roadBuilderSystem.Configurations.FirstOrDefault(x => x.Config.ID == id);
-
-			if (prefab is null)
+			if (roadBuilderSystem.Configurations.TryGetValue(id, out var prefab))
 			{
 				return;
 			}
@@ -95,9 +93,7 @@ namespace RoadBuilder.Systems.UI
 
 		private void FindRoad(string id)
 		{
-			var prefab = roadBuilderSystem.Configurations.FirstOrDefault(x => x.Config.ID == id);
-
-			if (prefab is null)
+			if (roadBuilderSystem.Configurations.TryGetValue(id, out var prefab))
 			{
 				return;
 			}
@@ -155,10 +151,9 @@ namespace RoadBuilder.Systems.UI
 
 		private void ApplyDeleteRoad(string id)
 		{
-			var prefab = roadBuilderSystem.Configurations.FirstOrDefault(x => x.Config.ID == id);
-
-			if (prefab is null)
+			if (roadBuilderSystem.Configurations.TryGetValue(id, out var prefab))
 			{
+				Mod.Log.Warn(id + " not found");
 				return;
 			}
 
@@ -192,10 +187,10 @@ namespace RoadBuilder.Systems.UI
 				roadBuilderUpdateSystem.UpdateEdge(entity);
 			}
 
-			roadBuilderSystem.Configurations.Remove(prefab);
+			roadBuilderSystem.Configurations.Remove(id);
 
-			prefab.Prefab.Remove<UIObject>();
-			prefab.Prefab.Remove<ServiceObject>();
+			prefab.Deleted = true;
+			prefab.Prefab.components.Clear();
 
 			roadBuilderSystem.UpdatePrefab(prefab.Prefab);
 

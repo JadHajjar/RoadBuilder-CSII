@@ -54,7 +54,7 @@ namespace RoadBuilder.Systems.UI
 					continue;
 				}
 
-				if (!prefab.MatchCategories(activeConfig))
+				if (!Mod.Settings.AdvancedUserMode && (!prefab.Has<RoadBuilderLaneInfo>() || !prefab.MatchCategories(activeConfig)))
 				{
 					continue;
 				}
