@@ -9,6 +9,8 @@ using Game.SceneFlow;
 using Game.Tools;
 using Game.UI;
 
+using HarmonyLib;
+
 using RoadBuilder.Domain.Components;
 using RoadBuilder.Domain.Enums;
 using RoadBuilder.Domain.UI;
@@ -73,7 +75,7 @@ namespace RoadBuilder.Systems.UI
 
 		private void ActivateRoad(string id)
 		{
-			if (roadBuilderSystem.Configurations.TryGetValue(id, out var prefab))
+			if (!roadBuilderSystem.Configurations.TryGetValue(id, out var prefab))
 			{
 				return;
 			}
@@ -83,7 +85,7 @@ namespace RoadBuilder.Systems.UI
 
 		private void EditRoad(string id)
 		{
-			if (roadBuilderSystem.Configurations.TryGetValue(id, out var prefab))
+			if (!roadBuilderSystem.Configurations.TryGetValue(id, out var prefab))
 			{
 				return;
 			}
@@ -93,7 +95,7 @@ namespace RoadBuilder.Systems.UI
 
 		private void FindRoad(string id)
 		{
-			if (roadBuilderSystem.Configurations.TryGetValue(id, out var prefab))
+			if (!roadBuilderSystem.Configurations.TryGetValue(id, out var prefab))
 			{
 				return;
 			}
@@ -151,9 +153,8 @@ namespace RoadBuilder.Systems.UI
 
 		private void ApplyDeleteRoad(string id)
 		{
-			if (roadBuilderSystem.Configurations.TryGetValue(id, out var prefab))
+			if (!roadBuilderSystem.Configurations.TryGetValue(id, out var prefab))
 			{
-				Mod.Log.Warn(id + " not found");
 				return;
 			}
 

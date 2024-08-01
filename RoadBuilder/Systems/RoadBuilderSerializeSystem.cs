@@ -2,7 +2,6 @@
 
 using Game;
 using Game.Prefabs;
-using Game.SceneFlow;
 
 using RoadBuilder.Domain.Components;
 using RoadBuilder.Domain.Configurations;
@@ -11,7 +10,6 @@ using RoadBuilder.Utilities;
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 using Unity.Collections;
 using Unity.Entities;
@@ -24,7 +22,7 @@ namespace RoadBuilder.Systems
 
 		private static RoadBuilderSystem roadBuilderSystem;
 		private static PrefabSystem prefabSystem;
-		private static List<INetworkBuilderPrefab> prefabsToUpdate = new();
+		private static readonly List<INetworkBuilderPrefab> prefabsToUpdate = new();
 
 		protected override void OnCreate()
 		{
@@ -36,6 +34,8 @@ namespace RoadBuilder.Systems
 
 		protected override void OnUpdate()
 		{
+			roadBuilderSystem.UpdateConfigurationList();
+
 			var roadBuilderNetsQuery = SystemAPI.QueryBuilder().WithAll<RoadBuilderNetwork, PrefabRef>().Build();
 			var prefabRefs = roadBuilderNetsQuery.ToComponentDataArray<PrefabRef>(Allocator.Temp);
 
@@ -80,6 +80,11 @@ namespace RoadBuilder.Systems
 				if (prefabSystem.GetPrefab<PrefabBase>(prefabRefs[i]) is not INetworkBuilderPrefab prefab)
 				{
 					continue;
+				}
+
+				if (prefab.Prefab.name != prefab.Config.ID)
+				{
+					Mod.Log.Warn($"ANOMALY - NAME <> ID: {prefab.Prefab.name} - {prefab.Config.ID}");
 				}
 
 				if (!list.Contains(prefab.Prefab.name))
