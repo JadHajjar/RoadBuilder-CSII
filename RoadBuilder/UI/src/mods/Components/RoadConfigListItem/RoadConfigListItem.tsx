@@ -18,7 +18,7 @@ export const RoadConfigListItem = ({ road }: { road: RoadConfiguration }) => {
       className={classNames(VanillaComponentResolver.instance.assetGridTheme.item, styles.gridItem, getRoadId == road.ID && styles.active)}
       onClick={() => activateRoad(road.ID)}
     >
-      <img className={classNames(styles.gridThumbnail)} src={road.Thumbnail ?? "Media/Placeholder.svg"} />
+      <img className={classNames(styles.gridThumbnail)} src={road.Thumbnail ?? "coui://roadbuildericons/RB_Unknown.svg"} />
 
       <div className={classNames(styles.gridItemText)}>
         <p>{road.Name}</p>

@@ -12,7 +12,17 @@
   margin: 0 0.5em;
 }
 
-.clearIcon, .searchIcon {
+.placeholder {
+  pointer-events: none;
+  color: rgba(255, 255, 255, 0.6);
+  position: absolute;
+  top: 50%;
+  left: 10rem;
+  transform: translate(0, -50%);
+}
+
+.clearIcon,
+.searchIcon {
   height: 1.9em;
   width: 1.9em;
   padding: 0.5rem;

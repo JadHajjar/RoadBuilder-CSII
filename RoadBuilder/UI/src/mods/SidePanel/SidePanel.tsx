@@ -10,24 +10,25 @@ import { RoadConfigListItem } from "mods/Components/RoadConfigListItem/RoadConfi
 import { RoadBuilderToolModeEnum } from "domain/RoadBuilderToolMode";
 
 export const SidePanel = () => {
-  const { translate } = useLocalization();  
+  const { translate } = useLocalization();
   const toolMode = useValue(roadBuilderToolMode$);
   const roadListView = useValue(roadListView$);
   const roadConfigurations = useValue(allRoadConfigurations$);
   const netSections = useValue(allNetSections$);
   let [searchQuery, setSearchQuery] = useState<string>("");
-  let items: JSX.Element[];  
-  
-  useEffect(() => { // when the road list view changes value
-    setSearchQuery("");    
+  let items: JSX.Element[];
+
+  useEffect(() => {
+    // when the road list view changes value
+    setSearchQuery("");
   }, [roadListView]);
 
-  if (roadListView || toolMode == RoadBuilderToolModeEnum.Picker) {    
+  if (roadListView || toolMode == RoadBuilderToolModeEnum.Picker) {
     items = roadConfigurations
       .filter((val, idx) => val.Name)
       .filter((val, idx) => searchQuery == undefined || searchQuery == "" || val.Name.toLowerCase().indexOf(searchQuery.toLowerCase()) >= 0)
       .map((val, idx) => <RoadConfigListItem key={idx} road={val} />);
-  } else {    
+  } else {
     items = netSections
       .filter((val, idx) => val.PrefabName)
       .filter((val, idx) => searchQuery == undefined || searchQuery == "" || val.DisplayName.toLowerCase().indexOf(searchQuery.toLowerCase()) >= 0)
@@ -38,32 +39,32 @@ export const SidePanel = () => {
     <div className={styles.panel}>
       <div className={styles.header}>
         {toolMode == RoadBuilderToolModeEnum.Picker && <div className={styles.title}>Created Roads</div>}
+        {toolMode != RoadBuilderToolModeEnum.Picker && (
+          <div className={styles.mode}>
+            <div
+              className={!roadListView && styles.selected}
+              onClick={() => {
+                setRoadListView(false);
+                setSearchQuery("");
+              }}
+            >
+              Available Lanes
+            </div>
+            <div
+              className={roadListView && styles.selected}
+              onClick={() => {
+                setRoadListView(true);
+                setSearchQuery("");
+              }}
+            >
+              Created Roads
+            </div>
+          </div>
+        )}
         <div style={{ marginTop: "6rem" }}>
           <SearchTextBox value={searchQuery} onChange={setSearchQuery} />
         </div>
       </div>
-      {toolMode != RoadBuilderToolModeEnum.Picker && (
-        <div className={styles.mode}>
-          <div
-            className={!roadListView && styles.selected}
-            onClick={() => {
-              setRoadListView(false);
-              setSearchQuery("");
-            }}
-          >
-            Available Lanes
-          </div>
-          <div
-            className={roadListView && styles.selected}
-            onClick={() => {
-              setRoadListView(true);
-              setSearchQuery("");
-            }}
-          >
-            Created Roads
-          </div>
-        </div>
-      )}
       <Scrollable className={styles.list} vertical smooth trackVisibility="scrollable">
         {items}
       </Scrollable>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 128 128" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g id="b" transform="matrix(4.92308,0,0,4.92308,0,0)">
+        <g transform="matrix(0.0262676,0,0,0.0252116,2.01508,2.64656)">
+            <g transform="matrix(22.2222,0,0,22.2222,0,0)">
+                <path d="M1.253,16.789L1.313,19.975L17.175,33.154L36.385,21.661L36.359,18.571L32.406,20.936L32.406,22.452L21.211,29.15L21.201,27.538L17.139,29.968L1.253,16.789Z" style="fill:white;"/>
+            </g>
+            <g transform="matrix(22.2222,0,0,22.2222,0,0)">
+                <path d="M21.072,26.201L17.149,28.548L1.263,15.369L5.186,13.022L5.422,13.218L7.118,12.831L15.139,8.032L31.025,21.211L21.305,27.026L23.005,26.01L7.118,12.831L5.422,13.218L21.072,26.201ZM19.765,18.041L21.001,17.301L24.477,20.185L23.241,20.925L19.765,18.041ZM12.811,12.272L14.047,11.533L17.524,14.417L16.288,15.156L12.811,12.272Z" style="fill:white;"/>
+            </g>
+            <g transform="matrix(22.2222,0,0,22.2222,0,0)">
+                <path d="M36.359,16.984L32.045,19.566L16.158,6.386L20.473,3.805L36.359,16.984Z" style="fill:white;"/>
+            </g>
+        </g>
+    </g>
+    <g id="Mod-Icon" serif:id="Mod Icon">
+    </g>
+</svg>
