@@ -6,15 +6,15 @@ import { useLocalization } from "cs2/l10n";
 import { useRef, useState } from "react";
 import { TextInput, TextInputTheme } from "../TextInput/TextInput";
 import { VanillaComponentResolver } from "vanillacomponentresolver";
-import magnifierIcon from "images/magnifier.svg";
-import arrowLeftClear from "images/arrowLeftClear.svg";
+import magnifierIcon from "images/RB_Magnifier.svg";
+import arrowLeftClear from "images/RB_ArrowLeftClear.svg";
 import classNames from "classnames";
 
 const AssetGridTheme: Theme | any = getModule("game-ui/game/components/asset-menu/asset-grid/asset-grid.module.scss", "classes");
 
-export const SearchTextBox = (props: { onChange?: (val: string) => void, value?: string }) => {
+export const SearchTextBox = (props: { onChange?: (val: string) => void; value?: string }) => {
   const { translate } = useLocalization();
-  let [searchQuery, setSearchQuery] = useState<string>(props.value == undefined? "" : props.value);
+  let [searchQuery, setSearchQuery] = useState<string>(props.value == undefined ? "" : props.value);
 
   const onChange: React.ChangeEventHandler<HTMLInputElement> = ({ target }) => {
     setSearchQuery(target.value);
@@ -22,21 +22,24 @@ export const SearchTextBox = (props: { onChange?: (val: string) => void, value?:
   };
 
   const clearText = () => {
-    setSearchQuery('');
-    props.onChange && props.onChange('');
+    setSearchQuery("");
+    props.onChange && props.onChange("");
   };
 
   return (
     <div className={styles.container}>
-      <div className={styles.searchArea}>        
-        <input        
-          value={props.value === undefined? searchQuery : props.value}
+      <div className={styles.searchArea}>
+        <input
+          value={props.value === undefined ? searchQuery : props.value}
           disabled={false}
           type="text"
           className={classNames(TextInputTheme.input, styles.textBox)}
           onChange={onChange}
-          placeholder={translate("Editor.SEARCH_PLACEHOLDER", "Search...")!}
         />
+
+        {(props.value === undefined ? searchQuery : props.value) === "" && (
+          <span className={styles.placeholder}>{translate("Editor.SEARCH_PLACEHOLDER", "Search...")!}</span>
+        )}
 
         {searchQuery.trim() !== "" ? (
           <Button

@@ -8,5 +8,6 @@ namespace RoadBuilder.Domain.Prefabs
 	{
 		INetworkConfig Config { get; set; }
 		NetGeometryPrefab Prefab { get; }
+		bool Deleted { get; set; }
 	}
 }

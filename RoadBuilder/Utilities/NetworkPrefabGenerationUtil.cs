@@ -67,9 +67,9 @@ namespace RoadBuilder.Utilities
 			prefab.m_MaxSlopeSteepness = cfg.MaxSlopeSteepness;
 			prefab.m_InvertMode = CompositionInvertMode.FlipLefthandTraffic;
 			prefab.m_AggregateType = _roadGenerationData.AggregateNetPrefabs.TryGetValue(cfg.AggregateType ?? string.Empty, out var aggregate) ? aggregate : null;
+			prefab.m_Sections = Fix(GenerateSections()).ToArray();
 			prefab.m_NodeStates = GenerateNodeStates().ToArray();
 			prefab.m_EdgeStates = GenerateEdgeStates().ToArray();
-			prefab.m_Sections = Fix(GenerateSections()).ToArray();
 
 			if (cfg is RoadConfig roadConfig)
 			{
@@ -79,6 +79,14 @@ namespace RoadBuilder.Utilities
 				roadPrefab.m_TrafficLights = roadConfig.Addons.HasFlag(RoadAddons.GeneratesTrafficLights);
 				roadPrefab.m_HighwayRules = roadConfig.Category.HasFlag(RoadCategory.Highway);
 				roadPrefab.m_ZoneBlock = roadConfig.Addons.HasFlag(RoadAddons.GeneratesZoningBlocks) ? _roadGenerationData.ZoneBlockPrefab : null;
+			}
+
+			if (prefab is TrackBuilderPrefab trackPrefab)
+			{
+				trackPrefab.m_TrackType =
+					cfg.Category.HasFlag(RoadCategory.Train) ? Game.Net.TrackTypes.Train :
+					cfg.Category.HasFlag(RoadCategory.Subway) ? Game.Net.TrackTypes.Subway :
+					Game.Net.TrackTypes.Tram;
 			}
 
 			prefab.components.ForEach(UnityEngine.Object.Destroy);
@@ -97,7 +105,7 @@ namespace RoadBuilder.Utilities
 
 				NetworkPrefab.Prefab.name = NetworkPrefab.Config.ID = $"{NetworkPrefab.GetType().Name.ToLower()[0]}{Guid.NewGuid()}-{PlatformManager.instance.userSpecificPath}";
 			}
-			
+
 			prefab.GetComponent<UIObject>().m_Icon = new ThumbnailGenerationUtil(NetworkPrefab, _roadGenerationData).GenerateThumbnail();
 		}
 
@@ -175,6 +183,14 @@ namespace RoadBuilder.Utilities
 				{
 					states.Add(NetPieceRequirements.Pavement);
 				}
+			}
+
+			var trackLanes = NetworkPrefab.Prefab.m_Sections.SelectMany(x => x.m_Section.FindLanes<TrackLane>()).ToList();
+
+			if (trackLanes.Any(x => x.m_TrackType is Game.Net.TrackTypes.Tram))
+			{
+				states.Add(NetPieceRequirements.TramTrack);
+				states.Add(NetPieceRequirements.OppositeTramTrack);
 			}
 
 			if (NetworkPrefab.Config.Addons.HasFlag(RoadAddons.GrassLeft))
@@ -479,10 +495,12 @@ namespace RoadBuilder.Utilities
 				};
 			}
 
+			var isOneWay = NetworkPrefab.Config.IsOneWay();
 			yield return new NetSubObjectInfo
 			{
-				m_Object = NetworkPrefab.Config.IsOneWay() ? _roadGenerationData.OutsideConnectionOneWay : _roadGenerationData.OutsideConnectionTwoWay,
+				m_Object = isOneWay ? _roadGenerationData.OutsideConnectionOneWay : _roadGenerationData.OutsideConnectionTwoWay,
 				m_Position = new float3(0, 5, 0),
+				m_Rotation = new quaternion(isOneWay ? 1 : 0, 0, 0, 0),
 				m_Placement = NetObjectPlacement.Node,
 				m_RequireOutsideConnection = true,
 			};

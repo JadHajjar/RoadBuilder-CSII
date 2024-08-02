@@ -55,7 +55,7 @@ export const RoadButtonSmall = (props: _Props) => {
     <div ref={containerRef} className={styles.container} onMouseEnter={onMouseEnter}>
       <div className={classNames(styles.button, { [styles.dragging]: dragging })} onMouseDown={onMouseDown}>
         <div className={styles.imageContainer}>
-          <img src={props.roadLane.NetSection?.Thumbnail ?? "Media/Placeholder.svg"} className={props.roadLane.InvertImage && styles.inverted} />
+          <img src={props.roadLane.NetSection?.Thumbnail ?? "coui://roadbuildericons/RB_Unknown.svg"} className={props.roadLane.InvertImage && styles.inverted} />
         </div>
       </div>
       <div className={styles.informationBar}>

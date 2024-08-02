@@ -18,10 +18,10 @@ using Unity.Entities;
 
 namespace RoadBuilder.Systems
 {
-	public partial class RoadBuilderUpdateSystem : GameSystemBase
+	public partial class RoadBuilderPrefabUpdateSystem : GameSystemBase
 	{
-		private RoadBuilderConfigurationsUISystem roadBuilderConfigurationsUISystem;
-		private EntityQuery query;
+		private RoadBuilderSystem roadBuilderSystem;
+		private EntityQuery queryUpdated;
 		private EntityQuery queryAll;
 		private EntityQuery prefabRefQuery;
 
@@ -29,15 +29,15 @@ namespace RoadBuilder.Systems
 		{
 			base.OnCreate();
 
-			roadBuilderConfigurationsUISystem = World.GetOrCreateSystemManaged<RoadBuilderConfigurationsUISystem>();
-			query = SystemAPI.QueryBuilder().WithAll<RoadBuilderPrefabData, Updated>().Build();
-			queryAll = SystemAPI.QueryBuilder().WithAll<RoadBuilderPrefabData>().Build();
+			roadBuilderSystem = World.GetOrCreateSystemManaged<RoadBuilderSystem>();
+			queryUpdated = SystemAPI.QueryBuilder().WithAll<RoadBuilderPrefabData, Updated>().Build();
+			queryAll = SystemAPI.QueryBuilder().WithAll<RoadBuilderPrefabData>().WithAny<Created, Updated>().Build();
 			prefabRefQuery = SystemAPI.QueryBuilder()
 				.WithAll<RoadBuilderNetwork, PrefabRef, Edge>()
 				.WithNone<RoadBuilderUpdateFlagComponent, Temp>()
 				.Build();
 
-			RequireForUpdate(query);
+			RequireForUpdate(queryAll);
 		}
 
 		protected override void OnGamePreload(Purpose purpose, GameMode mode)
@@ -53,16 +53,18 @@ namespace RoadBuilder.Systems
 
 			Enabled = true;
 
-			Update(in queryAll);
+			//Update(in queryAll);
 
 			GameManager.instance.localizationManager.ReloadActiveLocale();
 		}
 
 		protected override void OnUpdate()
 		{
-			roadBuilderConfigurationsUISystem.UpdateConfigurationList();
+			GameManager.instance.localizationManager.ReloadActiveLocale();
 
-			Update(in query);
+			roadBuilderSystem.UpdateConfigurationList();
+
+			Update(in queryUpdated);
 		}
 
 		protected void Update(in EntityQuery prefabQuery)

@@ -56,8 +56,8 @@ namespace RoadBuilder.LaneGroups
 			SetUp(sections["Gravel Shoulder 1"], "1m", "Gravel").AddLaneThumbnail("coui://roadbuildericons/Thumb_ShoulderGravel.svg");
 			SetUp(sections["Tiled Shoulder 1"], "1m", "Tiled").AddLaneThumbnail("coui://roadbuildericons/Thumb_ShoulderPedestrian.svg");
 			SetUp(sections["Subway Shoulder 2"], "2m", "Subway").AddLaneThumbnail("coui://roadbuildericons/Thumb_ShoulderTrack.svg");
-			SetUp(sections["Train Shoulder 2"], "2m", "Train").AddLaneThumbnail("coui://roadbuildericons/Thumb_ShoulderTrack.svg");
-			SetUp(sections["Tram Shoulder 1"], "1m", "Tram").AddLaneThumbnail("coui://roadbuildericons/Thumb_ShoulderTrack.svg");
+			SetUp(sections["Train Shoulder 2"], "2m", "Train").WithThumbnail("coui://roadbuildericons/RB_TrainShoulder.svg").AddLaneThumbnail("coui://roadbuildericons/Thumb_ShoulderTrack.svg");
+			SetUp(sections["Tram Shoulder 1"], "1m", "Tram").WithThumbnail("coui://roadbuildericons/RB_TramShoulder.svg").AddLaneThumbnail("coui://roadbuildericons/Thumb_ShoulderTrack.svg");
 		}
 
 		private RoadBuilderLaneInfo SetUp(NetSectionPrefab prefab, string value1, string value2)

@@ -15,7 +15,7 @@ namespace RoadBuilder.Utilities
 		{
 			DeletePreviousLocalConfig(config);
 
-			config.Version = RoadBuilderSystem.CURRENT_VERSION;
+			config.Version = RoadBuilderSerializeSystem.CURRENT_VERSION;
 			config.OriginalID = config.ID;
 			config.Type = config.GetType().Name;
 

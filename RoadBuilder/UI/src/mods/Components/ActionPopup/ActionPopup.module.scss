@@ -32,43 +32,70 @@
   @include base.basicButton();
 
   position: absolute;
-  width: 200rem;
+  width: 220rem;
   height: 40rem;
   pointer-events: auto;
   transition: background-color 0.15s, color 0.15s;
-  font-size: 14rem;
+  font-size: 16rem;
   text-transform: uppercase;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--panelColorDark);
+  color: var(--normalTextColorHighlightDimmer);
 
   opacity: 1;
   &.hidden {
     display: none;
   }
   &:hover {
-    background-color: rgba(227, 227, 227, 0.85);
+    background-color: var(--menuPanel3);
+  }
+  img {
+    width: 30rem;
+    height: 30rem;
+    margin-right: 10rem;
+    background-color: var(--normalTextColorHighlightDimmer);
+    mask-size: contain;
+    mask-position: 50% 50%;
   }
 }
 .pickerButton {
-  transform: translate(-260rem, -20rem);
+  transform: translate(-290rem, -20rem);
   @include entry_animation(template, -100rem, 0rem);
+  filter: saturate(0.5);
+
+  img {
+    mask-image: url(coui://roadbuildericons/RB_PlaceMore.svg);
+  }
 }
 .templateButton {
   transform: translate(80rem, -20rem);
   @include entry_animation(create, -100rem, -20rem);
+  filter: saturate(0.5);
+
+  img {
+    mask-image: url(coui://roadbuildericons/RB_UseTemplate.svg);
+  }
 }
 .editButton {
-  font-weight: 600;
   background-color: var(--accentColorDark-hover);
-  color: var(--normalTextColorHighlightDimmer);
-  transform: translate(-100rem, -90rem);
+  transform: translate(-110rem, -100rem);
   @include entry_animation(template, -100rem, 0rem);
 
   &:hover {
     background-color: var(--accentColorDark);
   }
+
+  img {
+    mask-image: url(coui://roadbuildericons/RB_EditAll.svg);
+  }
 }
 .cancelButton {
-  background-color: rgba(217, 217, 217, 0.35);
-  transform: translate(-50rem, 50rem);
+  background-color: var(--menuPanel2);
+  transform: translate(-50rem, 60rem);
   @include entry_animation(cancel, -50rem, 0rem);
   width: 100rem;
+  font-weight: inherit;
 }

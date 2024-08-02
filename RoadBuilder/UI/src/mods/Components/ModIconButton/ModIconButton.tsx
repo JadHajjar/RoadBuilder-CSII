@@ -4,7 +4,7 @@ import { tool } from "cs2/bindings";
 import { bindValue, trigger, useValue } from "cs2/api";
 import mod from "mod.json";
 import styles from "./ModIconButton.module.scss";
-import trafficIcon from "images/mod-icon.svg";
+import trafficIcon from "images/RB_ModIcon.svg";
 import { RoadBuilderToolModeEnum } from "domain/RoadBuilderToolMode";
 import { roadBuilderToolMode$, toggleTool } from "mods/bindings";
 

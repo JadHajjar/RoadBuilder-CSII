@@ -49,12 +49,12 @@ namespace RoadBuilder.Systems.UI
 
 			foreach (var prefab in netSectionsSystem.NetSections.Values)
 			{
-				if (prefab.Has<RoadBuilderLaneGroup>() || prefab.Has<RoadBuilderHide>())
+				if (prefab.Has<RoadBuilderLaneGroup>() || !prefab.Has<RoadBuilderLaneInfo>())
 				{
 					continue;
 				}
 
-				if (!prefab.MatchCategories(activeConfig))
+				if (!Mod.Settings.AdvancedUserMode && (!prefab.Has<RoadBuilderLaneInfo>() || !prefab.MatchCategories(activeConfig)))
 				{
 					continue;
 				}
