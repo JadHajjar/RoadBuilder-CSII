@@ -25,6 +25,5 @@
 }
 
 .textInput {
-  @include _base.textInputBasic();
-  width: 175rem;
+  width: 200rem;
 }
