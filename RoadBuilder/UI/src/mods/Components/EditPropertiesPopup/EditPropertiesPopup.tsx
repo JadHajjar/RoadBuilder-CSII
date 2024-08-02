@@ -6,7 +6,7 @@ import { OptionsPanelComponent } from "../OptionsPanel/OptionsPanel";
 import { LanePropertiesContext } from "mods/Contexts/LanePropertiesContext";
 import { useValue } from "cs2/api";
 import { roadLanes$, setRoadLanes } from "mods/bindings";
-import { removeAt } from "mods/util";
+import { duplicateAt, removeAt } from "mods/util";
 import { laneOptionClicked } from "mods/bindings";
 import { DragContext } from "mods/Contexts/DragContext";
 
@@ -24,6 +24,12 @@ export const EditPropertiesPopup = () => {
     left: laneCtx.position.x + "px",
   };
 
+  let onCopy = () => {
+    laneCtx.close();
+    let nList = duplicateAt(roadLanes, laneCtx.index);
+    setRoadLanes(nList);
+  };
+
   let onDelete = () => {
     laneCtx.close();
     let nList = removeAt(roadLanes, laneCtx.index);
@@ -39,7 +45,12 @@ export const EditPropertiesPopup = () => {
     <div className={styles.view} style={inlineStyle} onMouseLeave={laneCtx.close}>
       <div className={styles.topBar}>
         <div className={styles.title}>{laneCtx.laneData.NetSection?.DisplayName}</div>
-        <Button className={styles.deleteButton} onSelect={onDelete} variant="icon" />
+        <div className={styles.copyButton} onClick={onCopy}>
+          <img />
+        </div>
+        <div className={styles.deleteButton} onClick={onDelete}>
+          <img />
+        </div>
       </div>
       <div className={styles.content}>
         <div className={styles.options}>

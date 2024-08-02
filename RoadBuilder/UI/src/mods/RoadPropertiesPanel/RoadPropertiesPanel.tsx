@@ -24,16 +24,16 @@ export const RoadPropertiesPanel = () => {
     console.log("FIN");
     setRoadName(newRoadName);
     setIsEditingName(false);
-  }
+  };
 
   let onStartEditRoadName = () => {
-    setNewRoadName(roadName); 
-    setIsEditingName(true);       
-  }
+    setNewRoadName(roadName);
+    setIsEditingName(true);
+  };
 
   let onRoadNameKeyDown = (baseEvt: KeyboardEvent<HTMLInputElement>) => {
-    let evt : KeyboardEvent<HTMLInputElement> = baseEvt as any;        
-    if (evt && evt.key == 'Enter') {
+    let evt: KeyboardEvent<HTMLInputElement> = baseEvt as any;
+    if (evt && evt.key == "Enter") {
       evt.preventDefault();
       evt.currentTarget.selectionEnd = 0;
       evt.currentTarget.blur(); // auto triggers "onFinishEditRoadName"
@@ -41,8 +41,7 @@ export const RoadPropertiesPanel = () => {
     } else {
       return true;
     }
-  }
-
+  };
 
   return (
     <div className={styles.panel}>
@@ -50,10 +49,10 @@ export const RoadPropertiesPanel = () => {
 
       <OptionsSection name="Name">
         <VanillaComponentResolver.instance.EllipsisTextInput
-          onChange={({target}) => setNewRoadName(target.value)}
+          onChange={({ target }) => setNewRoadName(target.value)}
           placeholder={"Road Name"}
-          value={isEditingName? newRoadName : roadName}          
-          
+          value={isEditingName ? newRoadName : roadName}
+          className={styles.textInput}
           onBlur={onFinishEditRoadName}
           onFocus={onStartEditRoadName}
         />
