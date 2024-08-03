@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg width="100%" height="100%" viewBox="0 0 128 128" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
-    <g id="Tram-Pole" serif:id="Tram Pole" transform="matrix(4.92308,0,0,4.92308,0,0)">
-        <g transform="matrix(1.01033,0,0,0.649895,-0.0874172,27.8293)">
-            <path d="M8.414,-42.419L18.795,-53.328L18.795,-54.381L8.332,-43.21L0.863,-43.21L0.863,-42.419L8.414,-42.419Z" style="fill:url(#_Linear1);"/>
-        </g>
+    <g id="Tram-Pole" serif:id="Tram Pole" transform="matrix(4.92308,0,0,4.92308,-33.2325,0)">
         <g transform="matrix(0.203125,0,0,0.203125,0,0)">
             <path d="M101.349,-41.37L99.435,-41.37L99.023,-44.039L95.304,-44.039L95.043,-41.37L93.129,-41.37L93.054,125.966L101.274,125.966L101.349,-41.37Z" style="fill:rgb(182,182,182);"/>
         </g>
@@ -12,7 +9,4 @@
             <path d="M23.005,49.124L21.057,49.124L20.917,83.231L23.145,83.231L23.005,49.124Z" style="fill:rgb(91,91,91);"/>
         </g>
     </g>
-    <defs>
-        <linearGradient id="_Linear1" x1="0" y1="0" x2="1" y2="0" gradientUnits="userSpaceOnUse" gradientTransform="matrix(18.7083,0,0,11.9619,0.0865234,-48.3999)"><stop offset="0" style="stop-color:black;stop-opacity:0"/><stop offset="0.27" style="stop-color:rgb(4,4,4);stop-opacity:1"/><stop offset="1" style="stop-color:rgb(37,37,37);stop-opacity:1"/></linearGradient>
-    </defs>
 </svg>

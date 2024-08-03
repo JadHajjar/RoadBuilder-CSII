@@ -38,7 +38,12 @@ export const SidePanel = () => {
   return (
     <div className={styles.panel}>
       <div className={styles.header}>
-        {toolMode == RoadBuilderToolModeEnum.Picker && <div className={styles.title}>Created Roads</div>}
+        {toolMode == RoadBuilderToolModeEnum.Picker && (
+          <div className={styles.subHeader}>
+            <div className={styles.title}>Created Roads</div>
+            <div className={styles.roadCount}>{roadConfigurations.length + " roads"}</div>
+          </div>
+        )}
         {toolMode != RoadBuilderToolModeEnum.Picker && (
           <div className={styles.mode}>
             <div

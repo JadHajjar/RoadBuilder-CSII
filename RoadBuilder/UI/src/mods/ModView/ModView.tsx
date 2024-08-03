@@ -89,9 +89,7 @@ export const ModView = () => {
 
   let onMouseRelease = (evt: MouseEvent) => {
     let isDragging = draggingItem != undefined || draggingLane != undefined;
-    if (evt.button == MouseButtons.Secondary && roadBuilderToolMode == RoadBuilderToolModeEnum.Picker) {
-      toggleTool();
-    } else if (evt.button == MouseButtons.Primary && isDragging) {
+    if (evt.button == MouseButtons.Primary && isDragging) {
       setMouseReleased(true);
     } else if (evt.button == MouseButtons.Secondary && isDragging) {
       setDraggingItem(undefined);

@@ -12,6 +12,7 @@ import { RoadLane } from "domain/RoadLane";
 import { VanillaComponentResolver } from "vanillacomponentresolver";
 import { DragAndDropScrollable } from "mods/Components/DragAndDropScrollable/DragAndDropScrollable";
 import { DeleteAreaDnD } from "mods/Components/DeleteAreaDnD/DeleteAreaDnD";
+import { useLocalization } from "cs2/l10n";
 
 export const BottomView = () => {
   let dragContext = useContext(DragContext);
@@ -20,6 +21,7 @@ export const BottomView = () => {
   let isPaused = useValue(isPaused$);
   let dividersRef = useRef<DragAndDropDividerRef[]>([]);
   let scrollController = VanillaComponentResolver.instance.useScrollController();
+  let { translate } = useLocalization();
 
   useEffect(() => {}, [scrollController]);
 
@@ -108,15 +110,16 @@ export const BottomView = () => {
                     toggleTool();
                   }}
                 >
-                  <img src="coui://gameui/Media/Glyphs/ArrowLeft.svg" />
+                  <img />
                 </Button>
               </Tooltip>
               <Button style={copyButtonStyle} className={styles.copyButton} variant="flat" onSelect={createNewPrefab}>
-                Copy to a new road
+                <img />
+                {translate("Prompt[UseAsTemplate]", "Use As Template")}
               </Button>
             </div>
             <Button className={styles.closeButton} variant="flat" onSelect={clearTool}>
-              <img src="Media/Glyphs/Close.svg" />
+              <img />
             </Button>
           </>
         )}

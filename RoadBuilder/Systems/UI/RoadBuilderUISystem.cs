@@ -89,6 +89,7 @@ namespace RoadBuilder.Systems.UI
 			CreateTrigger<RoadLaneUIBinder[]>("SetRoadLanes", x => UpdateRoad(c => UpdateLaneOrder(c, x)));
 			CreateTrigger<int, int, int>("RoadOptionClicked", (x, y, z) => UpdateRoad(c => RoadOptionClicked(c, x, y, z)));
 			CreateTrigger<int, int, int, int>("OptionClicked", (i, x, y, z) => UpdateRoad(c => LaneOptionClicked(c, i, x, y, z)));
+			CreateTrigger<int>("DuplicateLane", x => UpdateRoad(c => DuplicateLane(c, x)));
 			CreateTrigger("ToggleTool", ToggleTool);
 			CreateTrigger("CreateNewPrefab", () => CreateNewPrefab(workingEntity));
 			CreateTrigger("ClearTool", ClearTool);
@@ -254,16 +255,87 @@ namespace RoadBuilder.Systems.UI
 
 					if (lane.GroupPrefabName is not null && netSectionsSystem.LaneGroups.TryGetValue(lane.GroupPrefabName, out var group))
 					{
+						var similarLane = FindSimilarLane(config.Lanes, newLanes.Count - 1, lane.GroupPrefabName);
+
+						if (similarLane != null)
+						{
+							lane.GroupOptions = new(similarLane.GroupOptions);
+						}
+
 						LaneOptionsUtil.FixGroupOptions(config, lane, group);
 					}
 
-					lane.Invert = newLanes.Count < roadLanes.Length / 2;
+					if (newLanes.Count == 0)
+					{
+						lane.Invert = true;
+					}
+					else if (newLanes.Count > 1)
+					{
+						lane.Invert = newLanes[1].Invert;
+					}
+					else if (config.Lanes.Count > 1)
+					{
+						lane.Invert = config.Lanes[1].Invert;
+					}
 
 					newLanes.Add(lane);
 				}
 			}
 
 			config.Lanes = newLanes;
+		}
+
+		private LaneConfig FindSimilarLane(List<LaneConfig> array, int startIndex, string groupPrefabName)
+		{
+			if (array.Count == 0 || startIndex < 0 || startIndex >= array.Count)
+			{
+				return null;
+			}
+
+			// Check the starting index first
+			if (array[startIndex].GroupPrefabName == groupPrefabName)
+			{
+				return array[startIndex];
+			}
+
+			var left = startIndex - 1;
+			var right = startIndex + 1;
+
+			while (left >= 0 || right < array.Count)
+			{
+				if (left >= 0 && array[left].GroupPrefabName == groupPrefabName)
+				{
+					return array[left];
+				}
+
+				if (right < array.Count && array[right].GroupPrefabName == groupPrefabName)
+				{
+					return array[right];
+				}
+
+				left--;
+				right++;
+			}
+
+			return null;
+		}
+
+		private void DuplicateLane(INetworkConfig config, int index)
+		{
+			var existingLane = config.Lanes.ElementAtOrDefault(index);
+
+			if (existingLane is null)
+			{
+				return;
+			}
+
+			config.Lanes.Insert(index, new LaneConfig
+			{
+				SectionPrefabName = existingLane.SectionPrefabName,
+				GroupPrefabName = existingLane.GroupPrefabName,
+				Invert = existingLane.Invert,
+				GroupOptions = new(existingLane.GroupOptions),
+			});
 		}
 
 		private void RoadOptionClicked(INetworkConfig config, int option, int id, int value)
@@ -311,11 +383,11 @@ namespace RoadBuilder.Systems.UI
 					Options = LaneOptionsUtil.GenerateOptions(roadGenerationDataSystem.RoadGenerationData, config, lane),
 					Texture = texture ?? "asphalt",
 					Color = color is null ? null : $"rgba({color?.r * 255}, {color?.g * 255}, {color?.b * 255}, {color?.a})",
-					NetSection = !validSection ? new() : new()
+					NetSection = new()
 					{
-						PrefabName = section.name,
+						PrefabName = section?.name ?? groupPrefab?.name,
 						IsGroup = !string.IsNullOrEmpty(lane.GroupPrefabName),
-						DisplayName = GetAssetName((PrefabBase)groupPrefab ?? section),
+						DisplayName = validSection && groupPrefab is null ? "Unknown Lane" : GetAssetName((PrefabBase)groupPrefab ?? section),
 						Width = validSection ? section.CalculateWidth() : 1F,
 						Thumbnail = thumbnail,
 					}
@@ -330,6 +402,11 @@ namespace RoadBuilder.Systems.UI
 			thumbnail = null;
 			color = null;
 			texture = null;
+
+			if (section is null)
+			{
+				return;
+			}
 
 			if (section.TryGet<RoadBuilderLaneDecorationInfo>(out var decorationInfo) && groupPrefab?.Options.FirstOrDefault(x => x.Type is LaneOptionType.Decoration) is RoadBuilderLaneOption decorationOption)
 			{

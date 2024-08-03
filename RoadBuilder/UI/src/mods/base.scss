@@ -67,17 +67,33 @@ $laneButtonSize: 64rem;
 @mixin basicButton() {
   padding: 8rem;
   border-radius: 4rem;
-  background-color: rgba(217, 217, 217, 0.71);
   backdrop-filter: blur(4px);
-  text-align: center;
-  color: black;
   border: none;
+  transition: background-color 0.15s, color 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--panelColorDark);
+  color: var(--menuText1Normal);
+  opacity: 1;
+  filter: brightness(1.1) saturate(0.8);
 
-  &:hover {
-    background: rgba(217, 217, 217, 0.8);
+  &.hidden {
+    display: none;
   }
-
+  &:hover {
+    background-color: var(--panelColorNormal);
+  }
   &:active {
-    background: rgba(217, 217, 217, 1);
+    background-image: none !important;
+    background-color: var(--accentColorDark-focused) !important;
+  }
+  img {
+    width: 30rem;
+    height: 30rem;
+    margin-right: 10rem;
+    background-color: var(--menuText1Normal);
+    mask-size: contain;
+    mask-position: 50% 50%;
   }
 }
