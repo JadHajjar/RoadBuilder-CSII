@@ -1,6 +1,6 @@
 import styles from "./EditPropertiesPopup.module.scss";
 import { Button } from "cs2/ui";
-import { CSSProperties, useContext } from "react";
+import { CSSProperties, MouseEvent, MouseEventHandler, useContext } from "react";
 import { useRem } from "cs2/utils";
 import { OptionsPanelComponent } from "../OptionsPanel/OptionsPanel";
 import { LanePropertiesContext } from "mods/Contexts/LanePropertiesContext";
@@ -41,30 +41,31 @@ export const EditPropertiesPopup = () => {
   if (!currentLane || isDragging) return <></>;
 
   return (
-    <div className={styles.view} style={inlineStyle} onMouseLeave={laneCtx.close}>
-      <div className={styles.topBar}>
-        <div className={styles.title}>{laneCtx.laneData.NetSection?.DisplayName}</div>
-        <div className={styles.copyButton} onClick={onCopy}>
-          <img />
+    <div className={styles.viewContainer} style={inlineStyle}  onMouseLeave={laneCtx.close}>
+      <div className={styles.view}>
+        <div className={styles.topBar}>
+          <div className={styles.title}>{laneCtx.laneData.NetSection?.DisplayName}</div>
+          <div className={styles.copyButton} onClick={onCopy}>
+            <img />
+          </div>
+          <div className={styles.deleteButton} onClick={onDelete}>
+            <img />
+          </div>
         </div>
-        <div className={styles.deleteButton} onClick={onDelete}>
-          <img />
+        <div className={styles.content}>
+          <div className={styles.options}>
+            {currentLane?.Options != undefined && currentLane?.Options?.length !== 0 ? (
+              <OptionsPanelComponent
+                OnChange={(x, y, z) =>{console.log("CLICKED LANE OPT");laneOptionClicked(currentLane.Index, x, y, z)}}
+                options={currentLane?.Options ?? new Array()}
+              ></OptionsPanelComponent>
+            ) : (
+              <span> No Options Available</span>
+            )}
+          </div>
+          <div className={styles.caret}></div>
         </div>
-      </div>
-      <div className={styles.content}>
-        <div className={styles.options}>
-          {currentLane?.Options != undefined && currentLane?.Options?.length !== 0 ? (
-            <OptionsPanelComponent
-              OnChange={(x, y, z) => laneOptionClicked(currentLane.Index, x, y, z)}
-              options={currentLane?.Options ?? new Array()}
-            ></OptionsPanelComponent>
-          ) : (
-            <span> No Options Available</span>
-          )}
-        </div>
-        <div className={styles.caret}></div>
-        <div className={styles.hoverDetector}></div>
-      </div>
+      </div>      
     </div>
   );
 };
