@@ -54,7 +54,7 @@ export const EditPropertiesPopup = () => {
           <div className={styles.options}>
             {currentLane?.Options != undefined && currentLane?.Options?.length !== 0 ? (
               <OptionsPanelComponent
-                OnChange={(x, y, z) =>{console.log("CLICKED LANE OPT");laneOptionClicked(currentLane.Index, x, y, z)}}
+                OnChange={(x, y, z) =>laneOptionClicked(currentLane.Index, x, y, z)}
                 options={currentLane?.Options ?? new Array()}
               ></OptionsPanelComponent>
             ) : (
