@@ -4,8 +4,9 @@
 	{
 		SingleSelectionButtons = 0,
 		MultiSelectionButtons = 10,
-		ValueUpDown = 20,
-		Decoration = 30,
-		TwoWay = 40
+		Toggle = 20,
+		ValueUpDown = 30,
+		Decoration = 40,
+		TwoWay = 50
 	}
 }

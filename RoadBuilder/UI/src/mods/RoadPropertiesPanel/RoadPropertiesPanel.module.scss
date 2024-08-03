@@ -16,15 +16,24 @@
   pointer-events: auto;
 }
 
+.header {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 12rem 6rem 12rem;
+}
+
 .title {
   color: var(--accentColorNormal);
   text-transform: uppercase;
+  font-size: 13rem;
+}
+
+.roadWidth {
+  color: var(--menuText1Normal);
   text-align: center;
-  font-size: 12rem;
-  margin-bottom: 6rem;
+  font-size: 14rem;
 }
 
 .textInput {
-  @include _base.textInputBasic();
-  width: 175rem;
+  width: 200rem;
 }

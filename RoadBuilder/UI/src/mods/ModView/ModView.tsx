@@ -1,4 +1,4 @@
-import { MouseEventHandler, startTransition, useContext, useEffect, useMemo, useRef, useState, useTransition } from "react";
+import { startTransition, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { BottomView } from "../BottomView/BottomView";
 import { SidePanel } from "mods/SidePanel/SidePanel";
 import { DragContext, DragContextData } from "mods/Contexts/DragContext";
@@ -9,17 +9,15 @@ import RB_ClickOnRoad from "images/RB_ClickOnRoad.svg";
 
 import styles from "./ModView.module.scss";
 import { MouseButtons } from "mods/util";
-import { bindValue, useValue } from "cs2/api";
+import { useValue } from "cs2/api";
 import { RoadBuilderToolModeEnum } from "domain/RoadBuilderToolMode";
-import { allNetSections$, roadBuilderToolMode$, toggleTool } from "mods/bindings";
+import { allNetSections$, roadBuilderToolMode$ } from "mods/bindings";
 import ActionPopup from "mods/Components/ActionPopup/ActionPopup";
 import { useRem } from "cs2/utils";
-import { tool } from "cs2/bindings";
 import { RoadLane } from "domain/RoadLane";
-import { NetSectionsStore, NetSectionsStoreContext } from "mods/Contexts/NetSectionsStore";
+import { NetSectionsStoreContext } from "mods/Contexts/NetSectionsStore";
 import { RoadPropertiesPanel } from "mods/RoadPropertiesPanel/RoadPropertiesPanel";
 import { LanePropertiesContext, LanePropertiesContextData } from "mods/Contexts/LanePropertiesContext";
-import { EditPropertiesPopup } from "mods/Components/EditPropertiesPopup/EditPropertiesPopup";
 import { useLocalization } from "cs2/l10n";
 
 export const ModView = () => {
@@ -89,9 +87,7 @@ export const ModView = () => {
 
   let onMouseRelease = (evt: MouseEvent) => {
     let isDragging = draggingItem != undefined || draggingLane != undefined;
-    if (evt.button == MouseButtons.Secondary && roadBuilderToolMode == RoadBuilderToolModeEnum.Picker) {
-      toggleTool();
-    } else if (evt.button == MouseButtons.Primary && isDragging) {
+    if (evt.button == MouseButtons.Primary && isDragging) {
       setMouseReleased(true);
     } else if (evt.button == MouseButtons.Secondary && isDragging) {
       setDraggingItem(undefined);
@@ -188,8 +184,7 @@ export const ModView = () => {
           <SidePanel />
           <BottomView />
           <RoadPropertiesPanel />
-          <LaneListItemDrag ref={dragItemRef} />
-          <EditPropertiesPopup />
+          <LaneListItemDrag ref={dragItemRef} />          
         </>
       );
       break;

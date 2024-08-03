@@ -26,7 +26,7 @@ namespace RoadBuilder.Systems
 {
 	public partial class RoadBuilderSystem : GameSystemBase
 	{
-		public readonly Queue<INetworkBuilderPrefab> _updatedRoadPrefabsQueue = new();
+		private readonly Queue<INetworkBuilderPrefab> _updatedRoadPrefabsQueue = new();
 
 		private EntityQuery prefabRefQuery;
 		private RoadNameUtil roadNameUtil;
@@ -261,7 +261,6 @@ namespace RoadBuilder.Systems
 				}
 
 				_updatedRoadPrefabsQueue.Enqueue(roadPrefab);
-				//prefabSystem.UpdatePrefab(roadPrefab.Prefab);
 
 				return roadPrefab;
 			}
@@ -282,7 +281,7 @@ namespace RoadBuilder.Systems
 
 			for (var i = 0; i < prefabs.Length; i++)
 			{
-				if (prefabSystem.GetPrefab<PrefabBase>(prefabs[i]) is INetworkBuilderPrefab prefab)
+				if (prefabSystem.GetPrefab<PrefabBase>(prefabs[i]) is INetworkBuilderPrefab prefab && !prefab.Deleted)
 				{
 					Configurations[prefab.Prefab.name] = prefab;
 				}

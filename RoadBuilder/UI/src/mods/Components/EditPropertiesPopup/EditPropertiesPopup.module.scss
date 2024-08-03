@@ -1,9 +1,17 @@
-@use '../../base.scss' as _base;
+@use "../../base.scss" as _base;
+
+.viewContainer {
+  position: absolute;
+  width: 320rem;
+  bottom: -20rem;//240rem;
+  padding: 10rem;
+  background-color: rgba(255, 255, 255, 0.0);
+  transform: translateX(-160rem);
+  pointer-events: auto;
+}
 
 .view {
-  position: absolute;
-  width: 300rem;
-  bottom: 250rem;
+  width: 100%;  
   background-color: var(--panelColorNormal);
   backdrop-filter: var(--panelBlur);
   color: var(--textColorDim);
@@ -16,11 +24,9 @@
   display: flex;
   flex-direction: column;
   transform-origin: bottom center;
-  transform: translateX(-150rem);
 
   //animation: enter 0.2s;
-  color: rgba($color: #fff, $alpha: 1);
-  pointer-events: auto;
+  color: rgba($color: #fff, $alpha: 1);  
 }
 
 .topBar {
@@ -31,31 +37,53 @@
   background-color: var(--panelColorDark);
   border-top-left-radius: var(--panelRadius);
   border-top-right-radius: var(--panelRadius);
-  padding: 5rem;
   align-items: center;
   justify-content: space-between;
+  overflow: hidden;
+}
 
-  & .deleteButton {
-    margin-left: 5rem;
-    mask-image: url(coui://gameui/Media/Glyphs/Trash.svg);
+.deleteButton,
+.copyButton {
+  margin-left: 5rem;
+  width: 32rem;
+  height: 32rem;
+  padding: 4rem;
 
-    &:hover {
-      background-color: rgb(186, 26, 17);
-    }
+  img {
+    background-color: #fff;
+    mask-size: contain;
+    mask-position: 50% 50%;
+    width: 24rem;
+    height: 24rem;
   }
-  & .closeButton {
-    mask-image: url(coui://gameui/Media/Glyphs/Close.svg);
-  }
-  > button {
-    background-color: rgba(255, 255, 255, 0.7);
-    mask-size: 100%;
-    &:hover {
-      background-color: white;
-    }
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.15);
   }
 }
 
+.copyButton img {
+  width: 22rem;
+  height: 22rem;
+  margin-top: 1rem;
+  mask-image: url(coui://gameui/Media/Glyphs/Copy.svg);
+}
+
+.deleteButton img {
+  mask-image: url(coui://gameui/Media/Glyphs/Trash.svg);
+}
+
+.copyButton:hover img {
+  background-color: var(--selectedColor-active);
+}
+
+.deleteButton:hover img {
+  background-color: var(--animation-curve-active-n1-stroke);
+}
+
 .title {
+  margin: 5rem;
+  margin-left: 12rem;
   coh-font-fit-mode: shrink;
   height: 22rem;
   flex: 1;
@@ -67,7 +95,7 @@
   flex-grow: 1;
   width: 100%;
   flex-direction: column;
-  align-items: center;  
+  align-items: center;
   padding-top: 10rem;
 
   .options {
@@ -79,7 +107,7 @@
 
   .caret {
     position: absolute;
-    bottom: -30rem;    
+    bottom: -30rem;
     width: 80rem;
     height: 20rem;
     background-color: var(--panelColorNormal);
@@ -87,17 +115,18 @@
     mask-image: url(coui://gameui/Media/Misc/BalloonArrowBottom.svg#1);
     mask-size: 100% 80rem;
     mask-position: 50% 95%;
-  }
-  
-  .hoverDetector {
-    position: absolute;  
-    height: 20rem;
-    bottom: -30rem;
-    width: 100rem;
-    background-color: rgba(255, 255, 255, 0);
-    z-index: 2;
-  }
+  }  
 }
+
+// .exitDetector {
+//   position: absolute;
+//     width: 20rem;
+//     transform: translateX(70rem);
+//     height: 120rem;
+//     bottom: -140rem;
+//     background-color: rgba(255, 255, 255, 0.8);
+//     z-index: -1;
+// }
 
 @keyframes enter {
   0% {

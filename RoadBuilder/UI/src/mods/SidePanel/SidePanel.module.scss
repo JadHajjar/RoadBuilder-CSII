@@ -41,11 +41,22 @@
   padding: 6rem;
 }
 
+.subHeader {
+  display: flex;
+  justify-content: space-between;
+  padding: 2rem 10rem;
+}
+
 .title {
   color: var(--accentColorNormal);
   text-transform: uppercase;
+  font-size: 13rem;
+}
+
+.roadCount {
+  color: var(--menuText1Normal);
   text-align: center;
-  font-size: 12rem;
+  font-size: 14rem;
 }
 
 .mode {

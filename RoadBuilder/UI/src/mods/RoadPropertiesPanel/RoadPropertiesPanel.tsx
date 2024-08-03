@@ -1,6 +1,6 @@
 import { useValue } from "cs2/api";
 import styles from "./RoadPropertiesPanel.module.scss";
-import { roadOptions$, getRoadName$, setRoadName } from "mods/bindings";
+import { roadOptions$, getRoadName$, setRoadName, roadLanes$ } from "mods/bindings";
 import { TextInput, TextInputTheme } from "mods/Components/TextInput/TextInput";
 import { FOCUS_DISABLED } from "cs2/ui";
 import { Theme } from "cs2/bindings";
@@ -16,44 +16,41 @@ const DropdownStyle: Theme | any = getModule("game-ui/menu/themes/dropdown.modul
 export const RoadPropertiesPanel = () => {
   let roadOptions = useValue(roadOptions$);
   let roadName = useValue(getRoadName$);
+  let roadLanes = useValue(roadLanes$);
+  let roadWidth = 0;
+
+  for (let index = 0; index < roadLanes.length; index++) {
+    roadWidth += roadLanes[index].NetSection?.Width ?? 0;
+  }
+
+  let roadUnits = roadWidth % 8 == 0 ? (roadWidth / 8).toString() : (roadWidth / 8).toFixed(1);
 
   let [newRoadName, setNewRoadName] = useState(roadName);
   let [isEditingName, setIsEditingName] = useState(false);
 
   let onFinishEditRoadName = () => {
-    console.log("FIN");
     setRoadName(newRoadName);
     setIsEditingName(false);
-  }
+  };
 
   let onStartEditRoadName = () => {
-    setNewRoadName(roadName); 
-    setIsEditingName(true);       
-  }
-
-  let onRoadNameKeyDown = (baseEvt: KeyboardEvent<HTMLInputElement>) => {
-    let evt : KeyboardEvent<HTMLInputElement> = baseEvt as any;        
-    if (evt && evt.key == 'Enter') {
-      evt.preventDefault();
-      evt.currentTarget.selectionEnd = 0;
-      evt.currentTarget.blur(); // auto triggers "onFinishEditRoadName"
-      return false;
-    } else {
-      return true;
-    }
-  }
-
+    setNewRoadName(roadName);
+    setIsEditingName(true);
+  };
 
   return (
     <div className={styles.panel}>
-      <div className={styles.title}>Road Properties</div>
+      <div className={styles.header}>
+        <div className={styles.title}>Road Properties</div>
+        <div className={styles.roadWidth}>{`${roadWidth}m / ${roadUnits}U`}</div>
+      </div>
 
       <OptionsSection name="Name">
         <VanillaComponentResolver.instance.EllipsisTextInput
-          onChange={({target}) => setNewRoadName(target.value)}
+          onChange={({ target }) => setNewRoadName(target.value)}
           placeholder={"Road Name"}
-          value={isEditingName? newRoadName : roadName}          
-          
+          value={isEditingName ? newRoadName : roadName}
+          className={styles.textInput}
           onBlur={onFinishEditRoadName}
           onFocus={onStartEditRoadName}
         />

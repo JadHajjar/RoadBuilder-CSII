@@ -78,20 +78,58 @@
   }
 }
 
-.backButton,
-.closeButton {
-  padding: 4rem;
+.bottomRightButtonBar {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: row;
+  justify-content: flex-end;
+  > * {
+    margin-right: 20rem;
+  }
+  > *:last-child {
+    margin-right: 0;
+  }
+}
+
+.backButton,
+.closeButton,
+.deleteRoadButton,
+.copyButton {
+  @include base.basicButton();
 
   img {
     width: 1.3em;
     height: 1.3em;
-    filter: invert(1);
   }
-  &:hover img {
-    filter: invert(1);
+}
+
+.backButton {
+  img {
+    margin: 0rem;
+    mask-image: url(coui://gameui/Media/Glyphs/ArrowLeft.svg);
+  }
+}
+
+.closeButton {
+  img {
+    margin: 0rem;
+    mask-image: url(coui://gameui/Media/Glyphs/Close.svg);
+  }
+}
+
+.deleteRoadButton {  
+  padding: 4rem 8rem;
+  img {
+    mask-image: url(coui://gameui/Media/Glyphs/Trash.svg);
+  }
+  &:hover {
+    background-color: var(--negativeColor);
+  }
+}
+
+.copyButton {
+  padding: 4rem 8rem;
+  img {
+    mask-image: url(coui://roadbuildericons/RB_UseTemplate.svg);
   }
 }
 
@@ -99,26 +137,6 @@
   display: block;
   width: 60rem;
   height: 20rem;
-}
-
-.copyButton,
-.backButton,
-.closeButton {
-  border-radius: 6rem;
-  background-color: rgba(255, 255, 255, 0.3);
-  border: none;
-  &:hover {
-    background-color: rgba(255, 255, 255, 0.4);
-    border: none;
-  }
-  &:active {
-    background: rgba(255, 255, 255, 0.5);
-    border: none;
-  }
-}
-
-.copyButton {
-  padding: 4rem 8rem;
 }
 
 .hint {
@@ -133,6 +151,14 @@
   color: var(--normalTextColor);
 
   animation: hintEntry 0.2s;
+}
+
+.editPropertiesContainer {
+  position: absolute;
+  width: 100vw;
+  height: 1px;
+  top: 0px;
+  z-index: 1;
 }
 
 @keyframes hintEntry {

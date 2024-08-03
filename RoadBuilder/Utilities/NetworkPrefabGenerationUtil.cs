@@ -1,6 +1,7 @@
 ﻿using Colossal.PSI.Common;
 
 using Game.Prefabs;
+using Game.SceneFlow;
 
 using RoadBuilder.Domain;
 using RoadBuilder.Domain.Components.Prefabs;
@@ -106,7 +107,17 @@ namespace RoadBuilder.Utilities
 				NetworkPrefab.Prefab.name = NetworkPrefab.Config.ID = $"{NetworkPrefab.GetType().Name.ToLower()[0]}{Guid.NewGuid()}-{PlatformManager.instance.userSpecificPath}";
 			}
 
-			prefab.GetComponent<UIObject>().m_Icon = new ThumbnailGenerationUtil(NetworkPrefab, _roadGenerationData).GenerateThumbnail();
+			if (GameManager.instance.configuration.uiDeveloperMode)
+			{
+				return;
+			}
+
+			var thumbnail = new ThumbnailGenerationUtil(NetworkPrefab, _roadGenerationData).GenerateThumbnail();
+
+			if (thumbnail is not null and not "")
+			{
+				prefab.GetComponent<UIObject>().m_Icon = thumbnail;
+			}
 		}
 
 		private IEnumerable<NetNodeStateInfo> GenerateNodeStates()

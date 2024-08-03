@@ -22,7 +22,7 @@ namespace RoadBuilder.Systems
 
 		private static RoadBuilderSystem roadBuilderSystem;
 		private static PrefabSystem prefabSystem;
-		private static readonly List<INetworkBuilderPrefab> prefabsToUpdate = new();
+		private static readonly List<INetworkBuilderPrefab> _prefabsToUpdate = new();
 
 		protected override void OnCreate()
 		{
@@ -63,12 +63,12 @@ namespace RoadBuilder.Systems
 		{
 			base.OnGameLoadingComplete(purpose, mode);
 
-			foreach (var item in prefabsToUpdate)
+			foreach (var item in _prefabsToUpdate)
 			{
 				roadBuilderSystem.UpdatePrefab(item.Prefab);
 			}
 
-			prefabsToUpdate.Clear();
+			_prefabsToUpdate.Clear();
 		}
 
 		private List<string> CreateNetworksList(in NativeArray<PrefabRef> prefabRefs)
@@ -89,6 +89,8 @@ namespace RoadBuilder.Systems
 
 				if (!list.Contains(prefab.Prefab.name))
 				{
+					Mod.Log.Debug("Adding for save: " + prefab.Config.Name + " - " + prefab.Config.ID);
+
 					list.Add(prefab.Prefab.name);
 				}
 			}
@@ -122,7 +124,7 @@ namespace RoadBuilder.Systems
 
 			if (prefab is not null)
 			{
-				prefabsToUpdate.Add(prefab);
+				_prefabsToUpdate.Add(prefab);
 			}
 		}
 
