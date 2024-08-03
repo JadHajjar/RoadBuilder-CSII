@@ -30,48 +30,62 @@ namespace RoadBuilder.Utilities
 
 		public string GenerateThumbnail()
 		{
-			var svgs = GetSvgItems();
-
-			var totalWidth = svgs[0].ExtentsRect.Width - svgs[0].PositionRect.Width + svgs.Sum(x => x.PositionRect.Width);
-			var totalHeight = svgs[svgs.Count - 1].ExtentsRect.Height - svgs[svgs.Count - 1].PositionRect.Height + svgs.Sum(x => x.PositionRect.Height);
-			var totalSize = Math.Max(totalWidth, totalHeight) + 10;
-
-			var elements = new List<XElement>();
-
-			var currentX = (totalSize - totalWidth) / 4;
-			var currentY = (totalSize - totalHeight) / 2 + totalHeight - 50;
-
-			foreach (var item in svgs)
+			try
 			{
-				elements.Insert(0, item.SetBounds(currentX, currentY));
+				var svgs = GetSvgItems();
 
-				currentX += item.PositionRect.Width;
-				currentY -= item.PositionRect.Height;
+				if (svgs.Count == 0)
+				{
+					return null;
+				}
+
+				var totalWidth = svgs[0].ExtentsRect.Width - svgs[0].PositionRect.Width + svgs.Sum(x => x.PositionRect.Width);
+				var totalHeight = svgs[svgs.Count - 1].ExtentsRect.Height - svgs[svgs.Count - 1].PositionRect.Height + svgs.Sum(x => x.PositionRect.Height);
+				var totalSize = Math.Max(totalWidth, totalHeight) + 10;
+
+				var elements = new List<XElement>();
+
+				var currentX = (totalSize - totalWidth) / 4;
+				var currentY = ((totalSize - totalHeight) / 2) + totalHeight - 50;
+
+				foreach (var item in svgs)
+				{
+					elements.Insert(0, item.SetBounds(currentX, currentY));
+
+					currentX += item.PositionRect.Width;
+					currentY -= item.PositionRect.Height;
+				}
+
+				XNamespace aw = "http://www.w3.org/2000/svg";
+				var combinedSvg = new XElement(aw + "svg",
+					new XAttribute("width", "100%"),
+					new XAttribute("height", "100%"),
+					new XAttribute("viewBox", $"0 0 {totalSize} {totalSize}"),
+					new XAttribute("version", "1.1"),
+					new XAttribute(XNamespace.Xmlns + "xlink", "http://www.w3.org/1999/xlink"),
+					new XAttribute(XNamespace.Xmlns + "serif", "http://www.serif.com/"),
+					new XAttribute(XNamespace.Xmlns + "space", "preserve"),
+					new XAttribute("xmlns", "http://www.w3.org/2000/svg"),
+					new XAttribute("style", "fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"),
+					elements
+				);
+
+				var combinedXml = new XDocument(
+					new XDeclaration("1.0", "UTF-8", "no"),
+					new XDocumentType("svg", "-//W3C//DTD SVG 1.1//EN", "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd", null),
+					combinedSvg
+				);
+
+				combinedXml.Save(Path.Combine(FoldersUtil.TempFolder, NetworkPrefab.Config.ID + ".svg"));
+
+				return $"coui://roadbuilderthumbnails/{NetworkPrefab.Config.ID}.svg";
 			}
+			catch (Exception ex)
+			{
+				Mod.Log.Error(ex, "Error during thumbnail generation");
 
-			XNamespace aw = "http://www.w3.org/2000/svg";
-			var combinedSvg = new XElement(aw + "svg",
-				new XAttribute("width", "100%"),
-				new XAttribute("height", "100%"),
-				new XAttribute("viewBox", $"0 0 {totalSize} {totalSize}"),
-				new XAttribute("version", "1.1"),
-				new XAttribute(XNamespace.Xmlns + "xlink", "http://www.w3.org/1999/xlink"),
-				new XAttribute(XNamespace.Xmlns + "serif", "http://www.serif.com/"),
-				new XAttribute(XNamespace.Xmlns + "space", "preserve"),
-				new XAttribute("xmlns", "http://www.w3.org/2000/svg"),
-				new XAttribute("style", "fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"),
-				elements
-			);
-
-			var combinedXml = new XDocument(
-				new XDeclaration("1.0", "UTF-8", "no"),
-				new XDocumentType("svg", "-//W3C//DTD SVG 1.1//EN", "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd", null),
-				combinedSvg
-			);
-
-			combinedXml.Save(Path.Combine(FoldersUtil.TempFolder, NetworkPrefab.Config.ID + ".svg"));
-
-			return $"coui://roadbuilderthumbnails/{NetworkPrefab.Config.ID}.svg";
+				return null;
+			}
 		}
 
 		private List<SvgItem> GetSvgItems()

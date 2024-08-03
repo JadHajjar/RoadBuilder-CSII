@@ -5,10 +5,11 @@ import { useRem } from "cs2/utils";
 import { OptionsPanelComponent } from "../OptionsPanel/OptionsPanel";
 import { LanePropertiesContext } from "mods/Contexts/LanePropertiesContext";
 import { useValue } from "cs2/api";
-import { roadLanes$, setRoadLanes } from "mods/bindings";
-import { duplicateAt, removeAt } from "mods/util";
+import { duplicateLane, roadLanes$, setRoadLanes } from "mods/bindings";
+import { removeAt } from "mods/util";
 import { laneOptionClicked } from "mods/bindings";
 import { DragContext } from "mods/Contexts/DragContext";
+import { RoadLane } from "domain/RoadLane";
 
 export const EditPropertiesPopup = () => {
   let rem = useRem();
@@ -25,9 +26,7 @@ export const EditPropertiesPopup = () => {
   };
 
   let onCopy = () => {
-    laneCtx.close();
-    let nList = duplicateAt(roadLanes, laneCtx.index);
-    setRoadLanes(nList);
+    duplicateLane(laneCtx.index);
   };
 
   let onDelete = () => {

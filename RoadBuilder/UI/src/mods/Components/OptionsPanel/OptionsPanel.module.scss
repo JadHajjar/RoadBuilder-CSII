@@ -40,7 +40,15 @@
 
 .optionContent > .singleButton {
   margin: 2rem !important;
+}
+
+.optionContent button {
   width: 32rem;
+  height: 32rem;
+}
+
+.numberField {
+  width: 75rem;
   height: 32rem;
 }
 

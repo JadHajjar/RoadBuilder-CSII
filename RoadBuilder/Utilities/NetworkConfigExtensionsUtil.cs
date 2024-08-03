@@ -12,14 +12,14 @@ namespace RoadBuilder.Utilities
 	{
 		public static bool IsOneWay(this INetworkConfig config)
 		{
-			if (config.Lanes.Count == 0)
+			if (config.Lanes.Count < 2)
 			{
-				return false;
+				return true;
 			}
 
-			var first = config.Lanes[0].Invert;
+			var first = config.Lanes[1].Invert;
 
-			for (var i = 1; i < config.Lanes.Count; i++)
+			for (var i = 2; i < config.Lanes.Count - 1; i++)
 			{
 				if (config.Lanes[i].Invert != first)
 				{

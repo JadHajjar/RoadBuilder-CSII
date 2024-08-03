@@ -29,24 +29,24 @@ export const OptionsPanelComponent = (props: _Props) => {
                       onSelect={() => props.OnChange(section.id, option.id, -1)}
                       src="Media/Glyphs/ThickStrokeArrowDown.svg"
                       focusKey={VanillaComponentResolver.instance.FOCUS_DISABLED}
-                      className={
-                        VanillaComponentResolver.instance.toolButtonTheme.button +
-                        " " +
+                      className={classNames(
+                        VanillaComponentResolver.instance.toolButtonTheme.button,
                         VanillaComponentResolver.instance.mouseToolOptionsTheme.startButton
-                      }
+                      )}
                     />
 
-                    <div className={VanillaComponentResolver.instance.mouseToolOptionsTheme.numberField}>{option.value}</div>
+                    <div className={classNames(VanillaComponentResolver.instance.mouseToolOptionsTheme.numberField, styles.numberField)}>
+                      {option.value}
+                    </div>
 
                     <VanillaComponentResolver.instance.ToolButton
                       onSelect={() => props.OnChange(section.id, option.id, 1)}
                       src="Media/Glyphs/ThickStrokeArrowUp.svg"
                       focusKey={VanillaComponentResolver.instance.FOCUS_DISABLED}
-                      className={
-                        VanillaComponentResolver.instance.toolButtonTheme.button +
-                        " " +
+                      className={classNames(
+                        VanillaComponentResolver.instance.toolButtonTheme.button,
                         VanillaComponentResolver.instance.mouseToolOptionsTheme.endButton
-                      }
+                      )}
                     />
                   </>
                 ) : (
