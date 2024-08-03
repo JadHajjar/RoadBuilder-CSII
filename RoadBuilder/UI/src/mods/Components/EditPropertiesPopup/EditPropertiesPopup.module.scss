@@ -3,7 +3,7 @@
 .viewContainer {
   position: absolute;
   width: 320rem;
-  bottom: 240rem;
+  bottom: 0rem;//240rem;
   padding: 10rem;
   background-color: rgba(255, 255, 255, 0.0);
   transform: translateX(-160rem);
@@ -118,14 +118,15 @@
   }  
 }
 
-.hoverDetector {
-  position: absolute;
-  width: _base.$laneButtonSize;
-  height: 80rem;
-  bottom: -80rem;
-  background-color: rgba(255, 255, 255, 0.8);
-  z-index: -1;
-}
+// .exitDetector {
+//   position: absolute;
+//     width: 20rem;
+//     transform: translateX(70rem);
+//     height: 120rem;
+//     bottom: -140rem;
+//     background-color: rgba(255, 255, 255, 0.8);
+//     z-index: -1;
+// }
 
 @keyframes enter {
   0% {

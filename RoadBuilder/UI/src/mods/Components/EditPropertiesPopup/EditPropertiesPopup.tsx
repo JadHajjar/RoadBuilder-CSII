@@ -1,6 +1,5 @@
 import styles from "./EditPropertiesPopup.module.scss";
-import { Button } from "cs2/ui";
-import { CSSProperties, MouseEvent, MouseEventHandler, useContext } from "react";
+import { CSSProperties, useContext } from "react";
 import { useRem } from "cs2/utils";
 import { OptionsPanelComponent } from "../OptionsPanel/OptionsPanel";
 import { LanePropertiesContext } from "mods/Contexts/LanePropertiesContext";
@@ -9,7 +8,6 @@ import { duplicateLane, roadLanes$, setRoadLanes } from "mods/bindings";
 import { removeAt } from "mods/util";
 import { laneOptionClicked } from "mods/bindings";
 import { DragContext } from "mods/Contexts/DragContext";
-import { RoadLane } from "domain/RoadLane";
 
 export const EditPropertiesPopup = () => {
   let rem = useRem();

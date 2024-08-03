@@ -1,7 +1,7 @@
 import styles from "./BottomView.module.scss";
 import { RoadButtonSmall } from "../Components/RoadButtonSmall/RoadButtonSmall";
 import { DragAndDropDivider, DragAndDropDividerRef } from "mods/Components/DragAndDropDivider/DragAndDropDivider";
-import { Button, Scrollable, Tooltip } from "cs2/ui";
+import { Button, Tooltip } from "cs2/ui";
 import { NetSectionItem } from "domain/NetSectionItem";
 import { CSSProperties, useContext, useEffect, useRef } from "react";
 import { DragContext } from "mods/Contexts/DragContext";
@@ -13,9 +13,12 @@ import { VanillaComponentResolver } from "vanillacomponentresolver";
 import { DragAndDropScrollable } from "mods/Components/DragAndDropScrollable/DragAndDropScrollable";
 import { DeleteAreaDnD } from "mods/Components/DeleteAreaDnD/DeleteAreaDnD";
 import { useLocalization } from "cs2/l10n";
+import { EditPropertiesPopup } from "mods/Components/EditPropertiesPopup/EditPropertiesPopup";
+import { LanePropertiesContext } from "mods/Contexts/LanePropertiesContext";
 
 export const BottomView = () => {
   let dragContext = useContext(DragContext);
+  let laneCtx = useContext(LanePropertiesContext);
   let toolMode = useValue(roadBuilderToolMode$);
   let roadLanes = useValue(roadLanes$);
   let isPaused = useValue(isPaused$);
@@ -88,7 +91,10 @@ export const BottomView = () => {
 
   let isDragging = dragContext.netSectionItem || dragContext.roadLane;
   return (
-    <div className={styles.viewContainer}>
+    <div className={styles.viewContainer} onMouseLeave={laneCtx.close}>
+      <div className={styles.editPropertiesContainer}>
+        <EditPropertiesPopup />
+      </div>
       <DragAndDropScrollable className={styles.view} trackVisibility="always" horizontal controller={scrollController}>
         <div className={styles.scrollBuffer}></div>
         {items}
@@ -123,7 +129,7 @@ export const BottomView = () => {
             </Button>
           </>
         )}
-      </div>
+      </div>      
       <DeleteAreaDnD onRemove={deleteLane} />
     </div>
   );

@@ -130,6 +130,13 @@
   animation: hintEntry 0.2s;
 }
 
+.editPropertiesContainer {
+  position: absolute;
+  width: 100vw;
+  height: 1px;
+  top: 0px;
+}
+
 @keyframes hintEntry {
   0% {
     opacity: 0;
