@@ -185,7 +185,9 @@ namespace RoadBuilder.Utilities
 				}
 			}
 
-			var trackLanes = NetworkPrefab.Prefab.m_Sections.SelectMany(x => x.m_Section.FindLanes<TrackLane>()).ToList();
+			states.Add(NetPieceRequirements.MiddlePlatform);
+
+            var trackLanes = NetworkPrefab.Prefab.m_Sections.SelectMany(x => x.m_Section.FindLanes<TrackLane>()).ToList();
 
 			if (trackLanes.Any(x => x.m_TrackType is Game.Net.TrackTypes.Tram))
 			{
