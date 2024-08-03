@@ -23,6 +23,8 @@ export const SidePanel = () => {
     setSearchQuery("");
   }, [roadListView]);
 
+  if (toolMode == RoadBuilderToolModeEnum.Picker && roadConfigurations.length === 0) return <></>;
+
   if (roadListView || toolMode == RoadBuilderToolModeEnum.Picker) {
     items = roadConfigurations
       .filter((val, idx) => val.Name)

@@ -9,7 +9,6 @@ using Game.SceneFlow;
 using Game.Tools;
 
 using RoadBuilder.Domain.Components;
-using RoadBuilder.Systems.UI;
 
 using System.Collections.Generic;
 
@@ -34,7 +33,7 @@ namespace RoadBuilder.Systems
 			queryAll = SystemAPI.QueryBuilder().WithAll<RoadBuilderPrefabData>().WithAny<Created, Updated>().Build();
 			prefabRefQuery = SystemAPI.QueryBuilder()
 				.WithAll<RoadBuilderNetwork, PrefabRef, Edge>()
-				.WithNone<RoadBuilderUpdateFlagComponent, Temp>()
+				.WithNone<Temp>()
 				.Build();
 
 			RequireForUpdate(queryAll);
@@ -52,8 +51,6 @@ namespace RoadBuilder.Systems
 			base.OnGameLoadingComplete(purpose, mode);
 
 			Enabled = true;
-
-			//Update(in queryAll);
 
 			GameManager.instance.localizationManager.ReloadActiveLocale();
 		}
@@ -86,8 +83,6 @@ namespace RoadBuilder.Systems
 						}
 					}
 				}
-
-				EntityManager.RemoveComponent<RoadBuilderUpdateFlagComponent>(prefabs[j]);
 			}
 
 			foreach (var entity in edgeList)
@@ -98,7 +93,10 @@ namespace RoadBuilder.Systems
 
 		public IEnumerable<Entity> GetEdges(Entity entity)
 		{
-			var edge = EntityManager.GetComponentData<Edge>(entity);
+			if (!EntityManager.TryGetComponent<Edge>(entity, out var edge))
+			{
+				yield break;
+			}
 
 			if (EntityManager.TryGetBuffer<ConnectedEdge>(edge.m_Start, true, out var connectedEdges1))
 			{
@@ -152,7 +150,7 @@ namespace RoadBuilder.Systems
 
 		private void UpdateEntity(Entity entity)
 		{
-			if (entity != Entity.Null)
+			if (entity != Entity.Null && !EntityManager.HasComponent<Deleted>(entity))
 			{
 				EntityManager.AddComponent<Updated>(entity);
 			}

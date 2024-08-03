@@ -269,7 +269,7 @@ namespace RoadBuilder.Systems.UI
 					{
 						lane.Invert = true;
 					}
-					else if (newLanes.Count > 1)
+					else if (newLanes.Count > 1)	
 					{
 						lane.Invert = newLanes[1].Invert;
 					}

@@ -1,14 +1,7 @@
-﻿using Colossal.Serialization.Entities;
-
-using Game;
-using Game.Common;
-using Game.Prefabs;
+﻿using Game;
 
 using RoadBuilder.Utilities;
 
-using System.Linq;
-
-using Unity.Collections;
 using Unity.Entities;
 
 namespace RoadBuilder.Systems
@@ -39,7 +32,9 @@ namespace RoadBuilder.Systems
 
 			foreach (var item in LocalSaveUtil.LoadConfigs())
 			{
-				roadBuilderSystem.AddPrefab(item);
+				Mod.Log.Debug($"LoadLocalNetwork: {item.GetType().Name} {item.ID}");
+
+				roadBuilderSystem.AddPrefab(item, queueForUpdate: false);
 			}
 
 			roadBuilderSystem.UpdateConfigurationList();

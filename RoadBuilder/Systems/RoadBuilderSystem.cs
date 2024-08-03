@@ -57,7 +57,7 @@ namespace RoadBuilder.Systems
 			roadNameUtil = new(this, World.GetOrCreateSystemManaged<RoadBuilderUISystem>(), prefabUISystem, netSectionsSystem);
 			prefabRefQuery = SystemAPI.QueryBuilder()
 				.WithAll<RoadBuilderNetwork, PrefabRef>()
-				.WithNone<RoadBuilderUpdateFlagComponent, Temp>()
+				.WithNone<Temp>()
 				.Build();
 
 			// Delay getting the toolbar ui system assets for the next frame
@@ -177,7 +177,7 @@ namespace RoadBuilder.Systems
 
 			try
 			{
-				var roadPrefab = AddPrefab(config, true);
+				var roadPrefab = AddPrefab(config, generateId: true);
 
 				if (roadPrefab is null)
 				{
@@ -236,7 +236,7 @@ namespace RoadBuilder.Systems
 			}
 		}
 
-		public INetworkBuilderPrefab AddPrefab(INetworkConfig config, bool generateId = false)
+		public INetworkBuilderPrefab AddPrefab(INetworkConfig config, bool generateId = false, bool queueForUpdate = true)
 		{
 			try
 			{
@@ -260,7 +260,10 @@ namespace RoadBuilder.Systems
 					Mod.Log.Error($"Unable to add prefab {roadPrefab.Prefab.name} config name: {roadPrefab.Config.Name}");
 				}
 
-				_updatedRoadPrefabsQueue.Enqueue(roadPrefab);
+				if (queueForUpdate)
+				{
+					_updatedRoadPrefabsQueue.Enqueue(roadPrefab);
+				}
 
 				return roadPrefab;
 			}

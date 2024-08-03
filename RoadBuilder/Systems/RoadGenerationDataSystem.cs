@@ -7,6 +7,8 @@ using Game.Prefabs;
 
 using RoadBuilder.Domain;
 
+using System.Diagnostics;
+
 using Unity.Collections;
 using Unity.Entities;
 
@@ -39,6 +41,7 @@ namespace RoadBuilder.Systems
 
 		protected override void OnUpdate()
 		{
+			var stopWatch = Stopwatch.StartNew();
 			var roadGenerationData = new RoadGenerationData();
 
 			var zoneBlockDataQuery = SystemAPI.QueryBuilder().WithAll<ZoneBlockData>().Build();
@@ -152,6 +155,9 @@ namespace RoadBuilder.Systems
 					SystemAPI.QueryBuilder().WithAll<PillarData>().WithAny<Updated, Created>().Build(),
 					SystemAPI.QueryBuilder().WithAll<UIGroupElement>().WithAny<Updated, Created>().Build());
 			}
+
+			stopWatch.Stop();
+			Mod.Log.InfoFormat("Road Generation Data assembled in {0}ms", stopWatch.ElapsedMilliseconds);
 		}
 	}
 }
