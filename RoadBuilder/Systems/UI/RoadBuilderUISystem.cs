@@ -254,14 +254,7 @@ namespace RoadBuilder.Systems.UI
 					var lane = item.ToLaneConfig();
 
 					if (lane.GroupPrefabName is not null && netSectionsSystem.LaneGroups.TryGetValue(lane.GroupPrefabName, out var group))
-					{
-						var similarLane = FindSimilarLane(config.Lanes, newLanes.Count - 1, lane.GroupPrefabName);
-
-						if (similarLane != null)
-						{
-							lane.GroupOptions = new(similarLane.GroupOptions);
-						}
-
+					{						
 						LaneOptionsUtil.FixGroupOptions(config, lane, group);
 					}
 

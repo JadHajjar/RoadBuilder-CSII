@@ -1,23 +1,27 @@
 import styles from "./BottomView.module.scss";
 import { RoadButtonSmall } from "../Components/RoadButtonSmall/RoadButtonSmall";
 import { DragAndDropDivider, DragAndDropDividerRef } from "mods/Components/DragAndDropDivider/DragAndDropDivider";
-import { Button, Scrollable, Tooltip } from "cs2/ui";
+import { Button, Tooltip } from "cs2/ui";
 import { NetSectionItem } from "domain/NetSectionItem";
 import { CSSProperties, useContext, useEffect, useRef } from "react";
 import { DragContext } from "mods/Contexts/DragContext";
 import { useValue } from "cs2/api";
-import { clearTool, createNewPrefab, setRoadLanes, roadBuilderToolMode$, roadLanes$, isPaused$, toggleTool } from "mods/bindings";
+import { clearTool, createNewPrefab, setRoadLanes, roadBuilderToolMode$, roadLanes$, isPaused$, toggleTool, deleteRoad, getRoadId$ } from "mods/bindings";
 import { RoadBuilderToolModeEnum } from "domain/RoadBuilderToolMode";
 import { RoadLane } from "domain/RoadLane";
 import { VanillaComponentResolver } from "vanillacomponentresolver";
 import { DragAndDropScrollable } from "mods/Components/DragAndDropScrollable/DragAndDropScrollable";
 import { DeleteAreaDnD } from "mods/Components/DeleteAreaDnD/DeleteAreaDnD";
 import { useLocalization } from "cs2/l10n";
+import { EditPropertiesPopup } from "mods/Components/EditPropertiesPopup/EditPropertiesPopup";
+import { LanePropertiesContext } from "mods/Contexts/LanePropertiesContext";
 
 export const BottomView = () => {
   let dragContext = useContext(DragContext);
+  let laneCtx = useContext(LanePropertiesContext);
   let toolMode = useValue(roadBuilderToolMode$);
   let roadLanes = useValue(roadLanes$);
+  let roadId = useValue(getRoadId$);
   let isPaused = useValue(isPaused$);
   let dividersRef = useRef<DragAndDropDividerRef[]>([]);
   let scrollController = VanillaComponentResolver.instance.useScrollController();
@@ -88,7 +92,10 @@ export const BottomView = () => {
 
   let isDragging = dragContext.netSectionItem || dragContext.roadLane;
   return (
-    <div className={styles.viewContainer}>
+    <div className={styles.viewContainer} onMouseLeave={laneCtx.close}>
+      <div className={styles.editPropertiesContainer}>
+        <EditPropertiesPopup />
+      </div>
       <DragAndDropScrollable className={styles.view} trackVisibility="always" horizontal controller={scrollController}>
         <div className={styles.scrollBuffer}></div>
         {items}
@@ -118,12 +125,18 @@ export const BottomView = () => {
                 {translate("Prompt[UseAsTemplate]", "Use As Template")}
               </Button>
             </div>
-            <Button className={styles.closeButton} variant="flat" onSelect={clearTool}>
-              <img />
-            </Button>
+            <div className={styles.bottomRightButtonBar}>
+              <Button style={copyButtonStyle} className={styles.deleteRoadButton} variant="flat" onSelect={() => deleteRoad(roadId)}>
+                  <img />
+                  {translate("Prompt[Delete]", "Delete Road")}
+                </Button>
+              <Button className={styles.closeButton} variant="flat" onSelect={clearTool}>
+                <img />
+              </Button>
+            </div>
           </>
         )}
-      </div>
+      </div>      
       <DeleteAreaDnD onRemove={deleteLane} />
     </div>
   );

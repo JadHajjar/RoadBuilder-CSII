@@ -78,8 +78,21 @@
   }
 }
 
+.bottomRightButtonBar {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  > * {
+    margin-right: 20rem;
+  }
+  > *:last-child {
+    margin-right: 0;
+  }
+}
+
 .backButton,
 .closeButton,
+.deleteRoadButton,
 .copyButton {
   @include base.basicButton();
 
@@ -100,6 +113,16 @@
   img {
     margin: 0rem;
     mask-image: url(coui://gameui/Media/Glyphs/Close.svg);
+  }
+}
+
+.deleteRoadButton {  
+  padding: 4rem 8rem;
+  img {
+    mask-image: url(coui://gameui/Media/Glyphs/Trash.svg);
+  }
+  &:hover {
+    background-color: var(--negativeColor);
   }
 }
 
@@ -128,6 +151,14 @@
   color: var(--normalTextColor);
 
   animation: hintEntry 0.2s;
+}
+
+.editPropertiesContainer {
+  position: absolute;
+  width: 100vw;
+  height: 1px;
+  top: 0px;
+  z-index: 1;
 }
 
 @keyframes hintEntry {

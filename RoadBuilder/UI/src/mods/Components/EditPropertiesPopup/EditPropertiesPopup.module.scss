@@ -1,9 +1,17 @@
 @use "../../base.scss" as _base;
 
-.view {
+.viewContainer {
   position: absolute;
-  width: 300rem;
-  bottom: 250rem;
+  width: 320rem;
+  bottom: -20rem;//240rem;
+  padding: 10rem;
+  background-color: rgba(255, 255, 255, 0.0);
+  transform: translateX(-160rem);
+  pointer-events: auto;
+}
+
+.view {
+  width: 100%;  
   background-color: var(--panelColorNormal);
   backdrop-filter: var(--panelBlur);
   color: var(--textColorDim);
@@ -16,11 +24,9 @@
   display: flex;
   flex-direction: column;
   transform-origin: bottom center;
-  transform: translateX(-150rem);
 
   //animation: enter 0.2s;
-  color: rgba($color: #fff, $alpha: 1);
-  pointer-events: auto;
+  color: rgba($color: #fff, $alpha: 1);  
 }
 
 .topBar {
@@ -77,6 +83,7 @@
 
 .title {
   margin: 5rem;
+  margin-left: 12rem;
   coh-font-fit-mode: shrink;
   height: 22rem;
   flex: 1;
@@ -108,17 +115,18 @@
     mask-image: url(coui://gameui/Media/Misc/BalloonArrowBottom.svg#1);
     mask-size: 100% 80rem;
     mask-position: 50% 95%;
-  }
-
-  .hoverDetector {
-    position: absolute;
-    height: 20rem;
-    bottom: -30rem;
-    width: 100rem;
-    background-color: rgba(255, 255, 255, 0);
-    z-index: 2;
-  }
+  }  
 }
+
+// .exitDetector {
+//   position: absolute;
+//     width: 20rem;
+//     transform: translateX(70rem);
+//     height: 120rem;
+//     bottom: -140rem;
+//     background-color: rgba(255, 255, 255, 0.8);
+//     z-index: -1;
+// }
 
 @keyframes enter {
   0% {
