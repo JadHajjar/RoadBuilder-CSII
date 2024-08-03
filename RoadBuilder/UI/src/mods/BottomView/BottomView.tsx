@@ -6,7 +6,7 @@ import { NetSectionItem } from "domain/NetSectionItem";
 import { CSSProperties, useContext, useEffect, useRef } from "react";
 import { DragContext } from "mods/Contexts/DragContext";
 import { useValue } from "cs2/api";
-import { clearTool, createNewPrefab, setRoadLanes, roadBuilderToolMode$, roadLanes$, isPaused$, toggleTool } from "mods/bindings";
+import { clearTool, createNewPrefab, setRoadLanes, roadBuilderToolMode$, roadLanes$, isPaused$, toggleTool, deleteRoad, getRoadId$ } from "mods/bindings";
 import { RoadBuilderToolModeEnum } from "domain/RoadBuilderToolMode";
 import { RoadLane } from "domain/RoadLane";
 import { VanillaComponentResolver } from "vanillacomponentresolver";
@@ -21,6 +21,7 @@ export const BottomView = () => {
   let laneCtx = useContext(LanePropertiesContext);
   let toolMode = useValue(roadBuilderToolMode$);
   let roadLanes = useValue(roadLanes$);
+  let roadId = useValue(getRoadId$);
   let isPaused = useValue(isPaused$);
   let dividersRef = useRef<DragAndDropDividerRef[]>([]);
   let scrollController = VanillaComponentResolver.instance.useScrollController();
@@ -124,9 +125,15 @@ export const BottomView = () => {
                 {translate("Prompt[UseAsTemplate]", "Use As Template")}
               </Button>
             </div>
-            <Button className={styles.closeButton} variant="flat" onSelect={clearTool}>
-              <img />
-            </Button>
+            <div className={styles.bottomRightButtonBar}>
+              <Button style={copyButtonStyle} className={styles.deleteRoadButton} variant="flat" onSelect={() => deleteRoad(roadId)}>
+                  <img />
+                  {translate("Prompt[Delete]", "Delete Road")}
+                </Button>
+              <Button className={styles.closeButton} variant="flat" onSelect={clearTool}>
+                <img />
+              </Button>
+            </div>
           </>
         )}
       </div>      
