@@ -27,6 +27,7 @@ namespace RoadBuilder.Systems.UI
 	public partial class RoadBuilderUISystem : ExtendedUISystemBase
 	{
 		private Entity workingEntity;
+		private INetworkConfig workingConfig;
 
 		private PrefabSystem prefabSystem;
 		private PrefabUISystem prefabUISystem;
@@ -52,8 +53,8 @@ namespace RoadBuilder.Systems.UI
 		private ProxyAction _toolKeyBinding;
 
 		public RoadBuilderToolMode Mode { get => RoadBuilderMode; set => RoadBuilderMode.Value = value; }
-		public string WorkingId => RoadId;
-		public Entity WorkingEntity { get => workingEntity; set => workingEntity = value; }
+		public string WorkingId => workingConfig?.ID ?? string.Empty;
+		public Entity WorkingEntity => workingEntity;
 
 		protected override void OnCreate()
 		{
@@ -101,6 +102,7 @@ namespace RoadBuilder.Systems.UI
 		protected override void OnUpdate()
 		{
 			IsPaused.Value = simulationSystem.selectedSpeed == 0f;
+			RoadId.Value = workingConfig?.ID ?? string.Empty;
 
 			if (_toolKeyBinding.WasPerformedThisFrame())
 			{
@@ -185,19 +187,12 @@ namespace RoadBuilder.Systems.UI
 
 			if (mode is RoadBuilderToolMode.Picker)
 			{
+				workingConfig = null;
 				RoadListView.Value = true;
-				RoadId.Value = string.Empty;
 				return;
 			}
-
-			RoadListView.Value = false;
 
 			var config = roadBuilderSystem.GetOrGenerateConfiguration(workingEntity);
-
-			if (config == null)
-			{
-				return;
-			}
 
 			SetWorkingPrefab(config, mode);
 		}
@@ -205,8 +200,15 @@ namespace RoadBuilder.Systems.UI
 		public void SetWorkingPrefab(INetworkConfig config, RoadBuilderToolMode mode)
 		{
 			RoadBuilderMode.Value = mode;
+			workingConfig = config;
+
+			if (config is null)
+			{
+				return;
+			}
+
+			RoadListView.Value = false;
 			netSectionsUISystem.RefreshEntries(config);
-			RoadId.Value = config.ID;
 			RoadName.Value = config.Name;
 			RoadOptions.Value = RoadOptionsUtil.GetRoadOptions(config);
 			RoadLanes.Value = From(config);
@@ -215,7 +217,8 @@ namespace RoadBuilder.Systems.UI
 		private void UpdateRoad(Action<INetworkConfig> action)
 		{
 			var createNew = RoadBuilderMode.Value is RoadBuilderToolMode.EditingSingle;
-			var config = createNew
+			var nonExistent = RoadBuilderMode.Value is RoadBuilderToolMode.EditingNonExistent;
+			var config = nonExistent ? workingConfig : createNew
 				? roadBuilderSystem.GenerateConfiguration(workingEntity)
 				: roadBuilderSystem.GetOrGenerateConfiguration(workingEntity);
 
@@ -226,12 +229,19 @@ namespace RoadBuilder.Systems.UI
 
 			action(config);
 
-			roadBuilderSystem.UpdateRoad(config, workingEntity, createNew);
+			if (RoadBuilderMode.Value is not RoadBuilderToolMode.EditingNonExistent)
+			{
+				roadBuilderSystem.UpdateRoad(config, workingEntity, createNew);
 
-			RoadBuilderMode.Value = RoadBuilderToolMode.Editing;
+				RoadBuilderMode.Value = RoadBuilderToolMode.Editing;
+			}
+			else
+			{
+				roadBuilderSystem.UpdateRoad(config, Entity.Null, false);
+			}
 
+			workingConfig = config;
 			netSectionsUISystem.RefreshEntries(config);
-			RoadId.Value = config.ID;
 			RoadName.Value = config.Name;
 			RoadOptions.Value = RoadOptionsUtil.GetRoadOptions(config);
 			RoadLanes.Value = From(config);
@@ -254,7 +264,7 @@ namespace RoadBuilder.Systems.UI
 					var lane = item.ToLaneConfig();
 
 					if (lane.GroupPrefabName is not null && netSectionsSystem.LaneGroups.TryGetValue(lane.GroupPrefabName, out var group))
-					{						
+					{
 						LaneOptionsUtil.FixGroupOptions(config, lane, group);
 					}
 
@@ -262,9 +272,9 @@ namespace RoadBuilder.Systems.UI
 					{
 						lane.Invert = true;
 					}
-					else if (newLanes.Count > 1)	
+					else if (newLanes.Count > 1)
 					{
-						lane.Invert = newLanes[1].Invert;
+						lane.Invert = newLanes[newLanes.Count - 1].Invert;
 					}
 					else if (config.Lanes.Count > 1)
 					{
@@ -276,41 +286,6 @@ namespace RoadBuilder.Systems.UI
 			}
 
 			config.Lanes = newLanes;
-		}
-
-		private LaneConfig FindSimilarLane(List<LaneConfig> array, int startIndex, string groupPrefabName)
-		{
-			if (array.Count == 0 || startIndex < 0 || startIndex >= array.Count)
-			{
-				return null;
-			}
-
-			// Check the starting index first
-			if (array[startIndex].GroupPrefabName == groupPrefabName)
-			{
-				return array[startIndex];
-			}
-
-			var left = startIndex - 1;
-			var right = startIndex + 1;
-
-			while (left >= 0 || right < array.Count)
-			{
-				if (left >= 0 && array[left].GroupPrefabName == groupPrefabName)
-				{
-					return array[left];
-				}
-
-				if (right < array.Count && array[right].GroupPrefabName == groupPrefabName)
-				{
-					return array[right];
-				}
-
-				left--;
-				right++;
-			}
-
-			return null;
 		}
 
 		private void DuplicateLane(INetworkConfig config, int index)
@@ -380,7 +355,7 @@ namespace RoadBuilder.Systems.UI
 					{
 						PrefabName = section?.name ?? groupPrefab?.name,
 						IsGroup = !string.IsNullOrEmpty(lane.GroupPrefabName),
-						DisplayName = validSection && groupPrefab is null ? "Unknown Lane" : GetAssetName((PrefabBase)groupPrefab ?? section),
+						DisplayName = !validSection && groupPrefab is null ? "Unknown Lane" : GetAssetName((PrefabBase)groupPrefab ?? section),
 						Width = validSection ? section.CalculateWidth() : 1F,
 						Thumbnail = thumbnail,
 					}

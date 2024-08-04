@@ -106,16 +106,30 @@ namespace RoadBuilder.Systems
 
 		public void UpdateRoad(INetworkConfig config, Entity entity, bool createNewPrefab)
 		{
-			if (!EntityManager.TryGetComponent<PrefabRef>(entity, out var prefabRef))
+			INetworkBuilderPrefab networkBuilderPrefab;
+
+			if (entity == Entity.Null)
 			{
-				return;
+				if (!Configurations.TryGetValue(config.ID, out networkBuilderPrefab))
+				{
+					return;
+				}
 			}
-
-			if (createNewPrefab || !(prefabSystem.TryGetPrefab<NetGeometryPrefab>(prefabRef, out var netPrefab) && netPrefab is INetworkBuilderPrefab networkBuilderPrefab))
+			else
 			{
-				CreateNewRoadPrefab(config, entity);
+				if (!EntityManager.TryGetComponent<PrefabRef>(entity, out var prefabRef))
+				{
+					return;
+				}
 
-				return;
+				if (createNewPrefab || !(prefabSystem.TryGetPrefab<NetGeometryPrefab>(prefabRef, out var netPrefab) && netPrefab is INetworkBuilderPrefab _networkBuilderPrefab))
+				{
+					CreateNewRoadPrefab(config, entity);
+
+					return;
+				}
+
+				networkBuilderPrefab = _networkBuilderPrefab;
 			}
 
 			_updatedRoadPrefabsQueue.Enqueue(networkBuilderPrefab);

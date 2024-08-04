@@ -167,8 +167,7 @@ namespace RoadBuilder.Systems.UI
 
 			if (roadBuilderUISystem.WorkingId == prefab.Config.ID)
 			{
-				roadBuilderUISystem.WorkingEntity = Entity.Null;
-				roadBuilderUISystem.Mode = RoadBuilderToolMode.Picker;
+				roadBuilderUISystem.SetWorkingPrefab(null, RoadBuilderToolMode.Picker);
 			}
 
 			LocalSaveUtil.DeletePreviousLocalConfig(prefab.Config);

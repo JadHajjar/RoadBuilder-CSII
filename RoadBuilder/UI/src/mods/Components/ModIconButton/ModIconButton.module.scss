@@ -1,5 +1,6 @@
 .toggle {
   background-color: var(--accentColorNormal);
+  transition: background-color 0.15s;
 
   &:hover {
     background-color: var(--accentColorNormal-hover);
@@ -22,6 +23,7 @@
     background-color: white;
     mask-size: contain;
     mask-position: 50% 50%;
+    transition: background-color 0.15s;
   }
 }
 

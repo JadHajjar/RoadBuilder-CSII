@@ -148,7 +148,7 @@ namespace RoadBuilder.Systems
 				}
 			});
 
-			SetUp("Alley Drive Section 3", "coui://roadbuildericons/RB_CargoFront.svg").WithExcluded(RoadCategory.NonAsphalt).WithFrontThumbnail("coui://roadbuildericons/RB_CargoFront.svg").WithBackThumbnail("coui://roadbuildericons/RB_CargoRear.svg");
+			SetUp("Alley Drive Section 3", "coui://roadbuildericons/RB_AlleyCar_Centered.svg").WithExcluded(RoadCategory.NonAsphalt).WithFrontThumbnail("coui://roadbuildericons/RB_AlleyCarFront.svg").WithBackThumbnail("coui://roadbuildericons/RB_AlleyCarRear.svg");
 			SetUp("Pavement Path Section 3", "coui://roadbuildericons/RB_PedestrianLane.svg").WithRequired(RoadCategory.Pathway).AddLaneThumbnail("coui://roadbuildericons/Thumb_PedestrianLaneWide.svg");
 			SetUp("Tiled Section 3", "coui://roadbuildericons/RB_PedestrianOnly.svg").WithRequired(RoadCategory.Tiled).AddLaneThumbnail("coui://roadbuildericons/Thumb_TiledSmall.svg");
 			SetUp("Tiled Median Pedestrian 2", "coui://roadbuildericons/RB_TiledMedian_Centered.svg").WithRequired(RoadCategory.Tiled).WithThumbnail("coui://roadbuildericons/RB_TiledMedian.svg").AddLaneThumbnail("coui://roadbuildericons/Thumb_PedestrianLaneSmall.svg");

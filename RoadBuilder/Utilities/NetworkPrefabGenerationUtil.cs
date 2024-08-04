@@ -470,13 +470,15 @@ namespace RoadBuilder.Utilities
 				yield return new NetSectionInfo
 				{
 					m_Section = _roadGenerationData.NetSectionPrefabs["Pipeline Spacing Section 1"],
-					m_Offset = new float3(0, -1.45f, 0)
+					m_Offset = new float3(0, -1.45f, 0),
+					m_RequireNone = new[] { NetPieceRequirements.Node, NetPieceRequirements.Edge }
 				};
 
 				yield return new NetSectionInfo
 				{
 					m_Section = _roadGenerationData.NetSectionPrefabs["Stormwater Pipe Section 1.5"],
-					m_Offset = new float3(0, -1.45f, 0)
+					m_Offset = new float3(0, -1.45f, 0),
+					m_RequireNone = new[] { NetPieceRequirements.Node, NetPieceRequirements.Edge }
 				};
 			}
 		}
