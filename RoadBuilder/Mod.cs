@@ -71,8 +71,6 @@ namespace RoadBuilder
 			updateSystem.UpdateAt<RoadBuilderUISystem>(SystemUpdatePhase.UIUpdate);
 			updateSystem.UpdateAt<NetSectionsUISystem>(SystemUpdatePhase.UIUpdate);
 			updateSystem.UpdateAt<RoadBuilderConfigurationsUISystem>(SystemUpdatePhase.UIUpdate);
-
-			//updateSystem.UpdateBefore<MedianPlatformSystem, NetCompositionSystem>(SystemUpdatePhase.Modification4);
 		}
 
 		public void CreatePlatformUpgrade()
