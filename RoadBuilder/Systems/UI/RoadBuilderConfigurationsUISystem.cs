@@ -30,7 +30,7 @@ namespace RoadBuilder.Systems.UI
 		private CameraUpdateSystem cameraUpdateSystem;
 		private ToolSystem toolSystem;
 		private EntityQuery prefabRefQuery;
-
+		private EntityQuery edgeRefQuery;
 		private ValueBindingHelper<RoadConfigurationUIBinder[]> RoadConfigurations;
 
 		private string lastFindId;
@@ -51,6 +51,10 @@ namespace RoadBuilder.Systems.UI
 
 			prefabRefQuery = SystemAPI.QueryBuilder()
 				.WithAll<RoadBuilderNetwork, PrefabRef>()
+				.Build();
+
+			edgeRefQuery = SystemAPI.QueryBuilder()
+				.WithAll<RoadBuilderNetwork, PrefabRef, Edge>()
 				.Build();
 
 			RoadConfigurations = CreateBinding("GetRoadConfigurations", new RoadConfigurationUIBinder[0]);
@@ -105,7 +109,7 @@ namespace RoadBuilder.Systems.UI
 			lastFindId = id;
 
 			var prefabEntity = prefabSystem.GetEntity(prefab.Prefab);
-			var edgeEntities = prefabRefQuery.ToEntityArray(Allocator.Temp);
+			var edgeEntities = edgeRefQuery.ToEntityArray(Allocator.Temp);
 			var index = 0;
 			var first = Entity.Null;
 
@@ -131,14 +135,16 @@ namespace RoadBuilder.Systems.UI
 				}
 			}
 
+			lastFindIndex = 0;
 			JumpTo(first);
 		}
 
 		private void JumpTo(Entity entity)
 		{
+			lastFindIndex++;
+
 			if (cameraUpdateSystem.orbitCameraController != null && entity != Entity.Null)
 			{
-				lastFindIndex++;
 				cameraUpdateSystem.orbitCameraController.followedEntity = entity;
 				cameraUpdateSystem.orbitCameraController.TryMatchPosition(cameraUpdateSystem.activeCameraController);
 				cameraUpdateSystem.activeCameraController = cameraUpdateSystem.orbitCameraController;

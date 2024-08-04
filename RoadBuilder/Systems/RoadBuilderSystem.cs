@@ -301,6 +301,8 @@ namespace RoadBuilder.Systems
 				if (prefabSystem.GetPrefab<PrefabBase>(prefabs[i]) is INetworkBuilderPrefab prefab && !prefab.Deleted)
 				{
 					Configurations[prefab.Prefab.name] = prefab;
+
+					Mod.Log.Debug("Configuration Found: " + prefab.Prefab.name);
 				}
 			}
 
