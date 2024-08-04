@@ -55,6 +55,7 @@ namespace RoadBuilder
 			}
 
 			AssetDatabase.global.LoadSettings(nameof(RoadBuilder), Settings, new Setting(this));
+			CreatePlatformUpgrade();
 
 			updateSystem.UpdateAfter<NetSectionsSystem, PrefabInitializeSystem>(SystemUpdatePhase.PrefabUpdate);
 			updateSystem.UpdateAfter<RoadBuilderPrefabUpdateSystem, PrefabInitializeSystem>(SystemUpdatePhase.PrefabUpdate);
