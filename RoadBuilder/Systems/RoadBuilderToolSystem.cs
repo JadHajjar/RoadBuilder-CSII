@@ -69,9 +69,9 @@ namespace RoadBuilder.Systems
 		{
 			base.InitializeRaycast();
 
-			m_ToolRaycastSystem.netLayerMask = Layer.Road | Layer.TrainTrack | Layer.TramTrack | Layer.SubwayTrack | Layer.Pathway | Layer.Fence | Layer.PublicTransportRoad;
+			m_ToolRaycastSystem.netLayerMask = Layer.Road | Layer.TrainTrack | Layer.TramTrack | Layer.SubwayTrack | Layer.Pathway | Layer.PublicTransportRoad /*| Layer.Fence*/ ;
 			m_ToolRaycastSystem.typeMask = TypeMask.Net;
-			m_ToolRaycastSystem.collisionMask = CollisionMask.OnGround;
+			m_ToolRaycastSystem.collisionMask = CollisionMask.OnGround | CollisionMask.Overground;
 		}
 
 		protected override JobHandle OnUpdate(JobHandle inputDeps)
@@ -115,7 +115,7 @@ namespace RoadBuilder.Systems
 				case RoadBuilderToolMode.Editing:
 				case RoadBuilderToolMode.EditingNonExistent:
 				{
-					HandleHighlight(roadBuilderNetworkQuery, IsWorkingEntityPrefab);
+					HandleHighlight(roadBuilderNetworkQuery, IsWorkingPrefab);
 
 					break;
 				}
@@ -142,15 +142,14 @@ namespace RoadBuilder.Systems
 			}
 		}
 
-		private bool IsWorkingEntityPrefab(Entity entity)
+		private bool IsWorkingPrefab(Entity entity)
 		{
 			if (!EntityManager.TryGetComponent<PrefabRef>(entity, out var prefabRef))
 			{
 				return false;
 			}
 
-			return roadBuilderUISystem.WorkingEntity != Entity.Null
-				&& EntityManager.GetComponentData<PrefabRef>(roadBuilderUISystem.WorkingEntity).m_Prefab == prefabRef;
+			return roadBuilderUISystem.WorkingId == prefabSystem.GetPrefabName(prefabRef);
 		}
 
 		private bool HandlePicker(out Entity entity)
@@ -176,6 +175,11 @@ namespace RoadBuilder.Systems
 			}
 
 			if (prefab is RoadPrefab && !EntityManager.HasComponent<Road>(entity))
+			{
+				return false;
+			}
+
+			if (prefab.Has<Bridge>())
 			{
 				return false;
 			}

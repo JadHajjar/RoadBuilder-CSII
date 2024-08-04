@@ -69,6 +69,8 @@ namespace RoadBuilder.Systems
 			}
 
 			_prefabsToUpdate.Clear();
+
+			roadBuilderSystem.UpdateConfigurationList();
 		}
 
 		private List<string> CreateNetworksList(in NativeArray<PrefabRef> prefabRefs)
@@ -77,7 +79,7 @@ namespace RoadBuilder.Systems
 
 			for (var i = 0; i < prefabRefs.Length; i++)
 			{
-				if (prefabSystem.GetPrefab<PrefabBase>(prefabRefs[i]) is not INetworkBuilderPrefab prefab)
+				if (prefabSystem.GetPrefab<PrefabBase>(prefabRefs[i]) is not INetworkBuilderPrefab prefab || prefab.Deleted)
 				{
 					continue;
 				}

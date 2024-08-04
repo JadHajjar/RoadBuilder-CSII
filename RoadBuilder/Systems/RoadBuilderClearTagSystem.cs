@@ -25,7 +25,8 @@ namespace RoadBuilder.Systems
 
 			prefabSystem = World.GetOrCreateSystemManaged<PrefabSystem>();
 			segmentQuery = SystemAPI.QueryBuilder()
-				.WithAll<Edge, PrefabRef, Created, RoadBuilderNetwork>()
+				.WithAll<Edge, PrefabRef, RoadBuilderNetwork>()
+				.WithAny<Created, Updated>()
 				.WithNone<Temp>()
 				.Build();
 
@@ -40,7 +41,7 @@ namespace RoadBuilder.Systems
 			{
 				var entity = entities[i];
 
-				if (!prefabSystem.TryGetPrefab<PrefabBase>(EntityManager.GetComponentData<PrefabRef>(entity), out var prefab) && prefab is INetworkBuilderPrefab)
+				if (!prefabSystem.TryGetPrefab<PrefabBase>(EntityManager.GetComponentData<PrefabRef>(entity), out var prefab) || prefab is not INetworkBuilderPrefab)
 				{
 					EntityManager.RemoveComponent<RoadBuilderNetwork>(entity);
 

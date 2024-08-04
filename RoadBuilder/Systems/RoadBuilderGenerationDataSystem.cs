@@ -12,11 +12,10 @@ using Unity.Entities;
 
 namespace RoadBuilder.Systems
 {
-	public partial class RoadGenerationDataSystem : GameSystemBase
-	{
+	public partial class RoadBuilderGenerationDataSystem : RoadBuilderNetSectionsSystem
+    {
 		private PrefabSystem prefabSystem;
 		private CityConfigurationSystem cityConfigurationSystem;
-		private NetSectionsSystem netSectionsSystem;
 		private bool firstTimeRun;
 
 		public RoadGenerationData RoadGenerationData { get; private set; }
@@ -27,18 +26,12 @@ namespace RoadBuilder.Systems
 
 			prefabSystem = World.GetOrCreateSystemManaged<PrefabSystem>();
 			cityConfigurationSystem = World.GetOrCreateSystemManaged<CityConfigurationSystem>();
-			netSectionsSystem = World.GetOrCreateSystemManaged<NetSectionsSystem>();
-		}
-
-		protected override void OnGamePreload(Purpose purpose, GameMode mode)
-		{
-			base.OnGamePreload(purpose, mode);
-
-			OnUpdate();
 		}
 
 		protected override void OnUpdate()
 		{
+			base.OnUpdate();
+
 			var roadGenerationData = new RoadGenerationData();
 
 			var zoneBlockDataQuery = SystemAPI.QueryBuilder().WithAll<ZoneBlockData>().Build();
@@ -133,7 +126,7 @@ namespace RoadBuilder.Systems
 				}
 			}
 
-			roadGenerationData.LaneGroupPrefabs = netSectionsSystem.LaneGroups;
+			roadGenerationData.LaneGroupPrefabs = LaneGroups;
 
 			RoadGenerationData = roadGenerationData;
 
@@ -152,6 +145,8 @@ namespace RoadBuilder.Systems
 					SystemAPI.QueryBuilder().WithAll<PillarData>().WithAny<Updated, Created>().Build(),
 					SystemAPI.QueryBuilder().WithAll<UIGroupElement>().WithAny<Updated, Created>().Build());
 			}
+
+			Mod.Log.Info("Road Generation Data assembled");
 		}
 	}
 }

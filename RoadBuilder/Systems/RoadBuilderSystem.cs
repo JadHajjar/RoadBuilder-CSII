@@ -26,16 +26,16 @@ namespace RoadBuilder.Systems
 {
 	public partial class RoadBuilderSystem : GameSystemBase
 	{
-		private readonly Queue<INetworkBuilderPrefab> _updatedRoadPrefabsQueue = new();
+		private readonly Queue<(INetworkBuilderPrefab prefab, bool generateId)> _updatedRoadPrefabsQueue = new();
 
 		private EntityQuery prefabRefQuery;
 		private RoadNameUtil roadNameUtil;
 		private PrefabSystem prefabSystem;
 		private PrefabUISystem prefabUISystem;
-		private NetSectionsSystem netSectionsSystem;
+		private RoadBuilderNetSectionsSystem netSectionsSystem;
 		private RoadBuilderSerializeSystem roadBuilderSerializeSystem;
 		private CityConfigurationSystem cityConfigurationSystem;
-		private RoadGenerationDataSystem roadGenerationDataSystem;
+		private RoadBuilderGenerationDataSystem roadGenerationDataSystem;
 		private ModificationBarrier1 modificationBarrier;
 		private Dictionary<Entity, Entity> toolbarUISystemLastSelectedAssets;
 
@@ -49,15 +49,15 @@ namespace RoadBuilder.Systems
 
 			prefabSystem = World.GetOrCreateSystemManaged<PrefabSystem>();
 			prefabUISystem = World.GetOrCreateSystemManaged<PrefabUISystem>();
-			netSectionsSystem = World.GetOrCreateSystemManaged<NetSectionsSystem>();
+            netSectionsSystem = World.GetOrCreateSystemManaged<RoadBuilderNetSectionsSystem>();
 			roadBuilderSerializeSystem = World.GetOrCreateSystemManaged<RoadBuilderSerializeSystem>();
 			cityConfigurationSystem = World.GetOrCreateSystemManaged<CityConfigurationSystem>();
-			roadGenerationDataSystem = World.GetOrCreateSystemManaged<RoadGenerationDataSystem>();
+			roadGenerationDataSystem = World.GetOrCreateSystemManaged<RoadBuilderGenerationDataSystem>();
 			modificationBarrier = World.GetOrCreateSystemManaged<ModificationBarrier1>();
 			roadNameUtil = new(this, World.GetOrCreateSystemManaged<RoadBuilderUISystem>(), prefabUISystem, netSectionsSystem);
 			prefabRefQuery = SystemAPI.QueryBuilder()
 				.WithAll<RoadBuilderNetwork, PrefabRef>()
-				.WithNone<RoadBuilderUpdateFlagComponent, Temp>()
+				.WithNone<Temp>()
 				.Build();
 
 			// Delay getting the toolbar ui system assets for the next frame
@@ -82,14 +82,14 @@ namespace RoadBuilder.Systems
 					return;
 				}
 
-				var roadPrefab = _updatedRoadPrefabsQueue.Dequeue();
-				var roadPrefabGeneration = new NetworkPrefabGenerationUtil(roadPrefab, roadGenerationDataSystem.RoadGenerationData);
+				var item = _updatedRoadPrefabsQueue.Dequeue();
+				var roadPrefabGeneration = new NetworkPrefabGenerationUtil(item.prefab, roadGenerationDataSystem.RoadGenerationData);
 
-				roadPrefabGeneration.GenerateRoad();
+				roadPrefabGeneration.GenerateRoad(item.generateId);
 
-				roadPrefab.Prefab.name = roadPrefab.Config.ID;
+				item.prefab.Prefab.name = item.prefab.Config.ID;
 
-				UpdatePrefab(roadPrefab.Prefab);
+				UpdatePrefab(item.prefab.Prefab);
 			}
 			while (_updatedRoadPrefabsQueue.Count > 0);
 		}
@@ -106,19 +106,33 @@ namespace RoadBuilder.Systems
 
 		public void UpdateRoad(INetworkConfig config, Entity entity, bool createNewPrefab)
 		{
-			if (!EntityManager.TryGetComponent<PrefabRef>(entity, out var prefabRef))
+			INetworkBuilderPrefab networkBuilderPrefab;
+
+			if (entity == Entity.Null)
 			{
-				return;
+				if (!Configurations.TryGetValue(config.ID, out networkBuilderPrefab))
+				{
+					return;
+				}
+			}
+			else
+			{
+				if (!EntityManager.TryGetComponent<PrefabRef>(entity, out var prefabRef))
+				{
+					return;
+				}
+
+				if (createNewPrefab || !(prefabSystem.TryGetPrefab<NetGeometryPrefab>(prefabRef, out var netPrefab) && netPrefab is INetworkBuilderPrefab _networkBuilderPrefab))
+				{
+					CreateNewRoadPrefab(config, entity);
+
+					return;
+				}
+
+				networkBuilderPrefab = _networkBuilderPrefab;
 			}
 
-			if (createNewPrefab || !(prefabSystem.TryGetPrefab<NetGeometryPrefab>(prefabRef, out var netPrefab) && netPrefab is INetworkBuilderPrefab networkBuilderPrefab))
-			{
-				CreateNewRoadPrefab(config, entity);
-
-				return;
-			}
-
-			_updatedRoadPrefabsQueue.Enqueue(networkBuilderPrefab);
+			_updatedRoadPrefabsQueue.Enqueue((networkBuilderPrefab, true));
 		}
 
 		public INetworkConfig GetOrGenerateConfiguration(Entity entity)
@@ -177,7 +191,7 @@ namespace RoadBuilder.Systems
 
 			try
 			{
-				var roadPrefab = AddPrefab(config, true);
+				var roadPrefab = AddPrefab(config, generateId: true);
 
 				if (roadPrefab is null)
 				{
@@ -208,6 +222,8 @@ namespace RoadBuilder.Systems
 		{
 			var entity = prefabSystem.GetEntity(prefab);
 
+			EntityManager.AddComponent<DiscardedRoadBuilderPrefab>(entity);
+
 			prefabSystem.UpdatePrefab(prefab, entity);
 
 			foreach (var kvp in toolbarUISystemLastSelectedAssets)
@@ -236,18 +252,18 @@ namespace RoadBuilder.Systems
 			}
 		}
 
-		public INetworkBuilderPrefab AddPrefab(INetworkConfig config, bool generateId = false)
+		public INetworkBuilderPrefab AddPrefab(INetworkConfig config, bool generateId = false, bool queueForUpdate = true)
 		{
 			try
 			{
-				var roadPrefab = NetworkPrefabGenerationUtil.CreatePrefab(config);
-
-				if (prefabSystem.TryGetPrefab(roadPrefab.Prefab.GetPrefabID(), out _))
+				if (config.ID is not null && Configurations.ContainsKey(config.ID))
 				{
 					Mod.Log.Debug("Trying to add a road that already exists: " + config.ID);
 
 					return null;
 				}
+
+				var roadPrefab = NetworkPrefabGenerationUtil.CreatePrefab(config);
 
 				var roadPrefabGeneration = new NetworkPrefabGenerationUtil(roadPrefab, roadGenerationDataSystem.RoadGenerationData);
 
@@ -258,9 +274,11 @@ namespace RoadBuilder.Systems
 				if (!prefabSystem.AddPrefab(roadPrefab.Prefab))
 				{
 					Mod.Log.Error($"Unable to add prefab {roadPrefab.Prefab.name} config name: {roadPrefab.Config.Name}");
+
+					return null;
 				}
 
-				_updatedRoadPrefabsQueue.Enqueue(roadPrefab);
+				_updatedRoadPrefabsQueue.Enqueue((roadPrefab, false));
 
 				return roadPrefab;
 			}
@@ -274,7 +292,7 @@ namespace RoadBuilder.Systems
 
 		public void UpdateConfigurationList()
 		{
-			var roadBuilderConfigsQuery = SystemAPI.QueryBuilder().WithAll<RoadBuilderPrefabData>().Build();
+			var roadBuilderConfigsQuery = SystemAPI.QueryBuilder().WithAll<RoadBuilderPrefabData>().WithNone<DiscardedRoadBuilderPrefab>().Build();
 			var prefabs = roadBuilderConfigsQuery.ToEntityArray(Allocator.Temp);
 
 			Configurations.Clear();
@@ -284,6 +302,8 @@ namespace RoadBuilder.Systems
 				if (prefabSystem.GetPrefab<PrefabBase>(prefabs[i]) is INetworkBuilderPrefab prefab && !prefab.Deleted)
 				{
 					Configurations[prefab.Prefab.name] = prefab;
+
+					Mod.Log.Debug("Configuration Found: " + prefab.Prefab.name);
 				}
 			}
 

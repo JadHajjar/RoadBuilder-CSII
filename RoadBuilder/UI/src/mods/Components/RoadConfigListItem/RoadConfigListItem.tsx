@@ -18,21 +18,23 @@ export const RoadConfigListItem = ({ road }: { road: RoadConfiguration }) => {
       className={classNames(VanillaComponentResolver.instance.assetGridTheme.item, styles.gridItem, getRoadId == road.ID && styles.active)}
       onClick={() => activateRoad(road.ID)}
     >
-      <img className={classNames(styles.gridThumbnail)} src={road.Thumbnail ?? "coui://roadbuildericons/RB_Unknown.svg"} />
+      <div className={styles.itemInfo}>
+        <img className={classNames(styles.gridThumbnail)} src={road.Thumbnail ?? "coui://roadbuildericons/RB_Unknown.svg"} />
 
-      <div className={classNames(styles.gridItemText)}>
-        <p>{road.Name}</p>
+        <div className={classNames(styles.gridItemText)}>
+          <p>{road.Name}</p>
+        </div>
       </div>
 
-      <div className={styles.rightButtons}>
+      <div className={styles.buttons}>
         <Button variant="flat" onSelect={() => editRoad(road.ID)}>
-          <img src="Media/Glyphs/Pen.svg" />
+          <img style={{ maskImage: "url(coui://gameui/Media/Glyphs/Pen.svg)" }} /> Edit
         </Button>
         <Button variant="flat" onSelect={() => findRoad(road.ID)}>
-          <img src="Media/Radio/MapMarker.svg" />
+          <img style={{ maskImage: "url(coui://gameui/Media/Radio/MapMarker.svg)" }} /> Find
         </Button>
-        <Button variant="flat" onSelect={() => deleteRoad(road.ID)}>
-          <img src="Media/Glyphs/Trash.svg" />
+        <Button variant="flat" onSelect={() => deleteRoad(road.ID)} className={styles.danger}>
+          <img style={{ maskImage: "url(coui://gameui/Media/Glyphs/Trash.svg)" }} /> Delete
         </Button>
       </div>
     </div>

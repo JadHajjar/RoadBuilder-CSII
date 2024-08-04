@@ -1,29 +1,22 @@
-﻿using Colossal.Serialization.Entities;
-
-using Game;
-using Game.Common;
-using Game.Prefabs;
+﻿using Game;
 
 using RoadBuilder.Utilities;
 
-using System.Linq;
-
-using Unity.Collections;
 using Unity.Entities;
 
 namespace RoadBuilder.Systems
 {
-	public partial class RoadInitializerSystem : GameSystemBase
+	public partial class RoadBuilderInitializerSystem : GameSystemBase
 	{
 		private RoadBuilderSystem roadBuilderSystem;
-		private RoadGenerationDataSystem roadGenerationDataSystem;
+		private RoadBuilderGenerationDataSystem roadGenerationDataSystem;
 
 		protected override void OnCreate()
 		{
 			base.OnCreate();
 
 			roadBuilderSystem = World.GetOrCreateSystemManaged<RoadBuilderSystem>();
-			roadGenerationDataSystem = World.GetOrCreateSystemManaged<RoadGenerationDataSystem>();
+			roadGenerationDataSystem = World.GetOrCreateSystemManaged<RoadBuilderGenerationDataSystem>();
 		}
 
 		protected override void OnUpdate()
@@ -39,7 +32,9 @@ namespace RoadBuilder.Systems
 
 			foreach (var item in LocalSaveUtil.LoadConfigs())
 			{
-				roadBuilderSystem.AddPrefab(item);
+				Mod.Log.Debug($"LoadLocalNetwork: {item.GetType().Name} {item.ID}");
+
+				roadBuilderSystem.AddPrefab(item, queueForUpdate: false);
 			}
 
 			roadBuilderSystem.UpdateConfigurationList();

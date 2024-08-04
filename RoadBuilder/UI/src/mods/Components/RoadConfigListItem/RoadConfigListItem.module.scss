@@ -1,25 +1,44 @@
-$dragReprDim: 95%;
-
-.gridThumbnail {
-  width: 75rem;
-  height: 75rem;
-  margin: 0 8rem;
-}
+@use "../../base.scss";
 
 .gridItem {
   margin: 4rem;
   width: 295rem;
-  height: 90rem;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  position: relative;
+  height: 95rem;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 
   &.active {
     background-color: var(--accentColorDark) !important;
   }
+
+  &:hover .itemInfo,
+  &:active .itemInfo {
+    height: 65rem;
+  }
+
+  &:hover .gridThumbnail,
+  &:active .gridThumbnail {
+    height: 55rem;
+  }
+}
+
+.itemInfo {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 95rem;
+  transition: height 0.15s;
+}
+
+.gridThumbnail {
+  width: 75rem;
+  height: 75rem;
+  margin: 4rem;
+  transition: width 0.15s, height 0.15s;
 }
 
 .gridItemText {
@@ -29,7 +48,7 @@ $dragReprDim: 95%;
   text-align: left;
   overflow: hidden;
   text-overflow: ellipsis;
-  color: var(--textColorDim);
+  color: var(--normalTextColor);
 }
 
 .jpgThumb {
@@ -37,62 +56,40 @@ $dragReprDim: 95%;
   margin-bottom: 5rem;
 }
 
-.rightSideContainer {
-  position: absolute;
-  top: 0.15em;
-  right: 0.15em;
+.buttons {
+  width: 100%;
   display: flex;
-  flex-direction: column;
-}
-
-.rightSideContainer > img {
-  width: 1.15em;
-  height: 1.15em;
-  margin-bottom: 0.375em;
-  filter: drop-shadow(0px 0px 1rem rgba(0, 0, 0, 0.5));
-}
-
-.rightButtons {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  height: 100%;
-  opacity: 0;
-  transition: opacity 0.1s 0s;
-}
-
-.gridItem:hover .rightButtons {
-  opacity: 1;
-  transition: opacity 0.1s 0.1s;
-}
-
-.rightButtons Button {
-  flex: 1;
-  border: none;
-  border-radius: 0;
-  padding: 0 5rem;
-  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-  background: transparent;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.gridItem:hover .buttons,
+.gridItem:active .buttons {
+  opacity: 1;
+}
+
+.buttons Button {
+  @include base.basicButton();
+
+  flex: 1;
+  border-radius: 0;
+  padding: 4rem;
+  backdrop-filter: none;
+  background: none;
+
+  &:hover {
+    background-color: var(--hoverColorBright);
+  }
+
+  &.danger:active {
+    background-color: var(--animation-curve-active-n1-stroke) !important;
+  }
 
   img {
     width: 1.2em;
     height: 1.2em;
-    filter: invert(1);
-  }
-
-  &:hover img {
-    filter: invert(1);
-  }
-
-  &:hover {
-    background-color: rgba(255, 255, 255, 0.3);
-    border: none;
-  }
-
-  &:active {
-    background: rgba(255, 255, 255, 0.5);
-    border: none;
   }
 }
