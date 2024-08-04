@@ -33,12 +33,12 @@ namespace RoadBuilder.Systems.UI
 		private PrefabUISystem prefabUISystem;
 		private ToolSystem toolSystem;
 		private RoadBuilderSystem roadBuilderSystem;
-		private RoadGenerationDataSystem roadGenerationDataSystem;
+		private RoadBuilderGenerationDataSystem roadGenerationDataSystem;
 		private RoadBuilderToolSystem roadBuilderToolSystem;
 		private DefaultToolSystem defaultToolSystem;
 		private SimulationSystem simulationSystem;
-		private NetSectionsUISystem netSectionsUISystem;
-		private NetSectionsSystem netSectionsSystem;
+		private RoadBuilderNetSectionsUISystem netSectionsUISystem;
+		private RoadBuilderNetSectionsSystem netSectionsSystem;
 		private CityConfigurationSystem cityConfigurationSystem;
 		private RoadBuilderConfigurationsUISystem roadBuilderConfigurationsUISystem;
 
@@ -67,12 +67,12 @@ namespace RoadBuilder.Systems.UI
 			prefabUISystem = World.GetOrCreateSystemManaged<PrefabUISystem>();
 			toolSystem = World.GetOrCreateSystemManaged<ToolSystem>();
 			roadBuilderSystem = World.GetOrCreateSystemManaged<RoadBuilderSystem>();
-			roadGenerationDataSystem = World.GetOrCreateSystemManaged<RoadGenerationDataSystem>();
+			roadGenerationDataSystem = World.GetOrCreateSystemManaged<RoadBuilderGenerationDataSystem>();
 			roadBuilderToolSystem = World.GetOrCreateSystemManaged<RoadBuilderToolSystem>();
 			defaultToolSystem = World.GetOrCreateSystemManaged<DefaultToolSystem>();
 			simulationSystem = World.GetOrCreateSystemManaged<SimulationSystem>();
-			netSectionsUISystem = World.GetOrCreateSystemManaged<NetSectionsUISystem>();
-			netSectionsSystem = World.GetOrCreateSystemManaged<NetSectionsSystem>();
+			netSectionsUISystem = World.GetOrCreateSystemManaged<RoadBuilderNetSectionsUISystem>();
+            netSectionsSystem = World.GetOrCreateSystemManaged<RoadBuilderNetSectionsSystem>();
 			cityConfigurationSystem = World.GetOrCreateSystemManaged<CityConfigurationSystem>();
 			roadBuilderConfigurationsUISystem = World.GetOrCreateSystemManaged<RoadBuilderConfigurationsUISystem>();
 

@@ -20,7 +20,7 @@ using UnityEngine;
 
 namespace RoadBuilder.Systems
 {
-	public partial class NetSectionsSystem : GameSystemBase
+	public partial class RoadBuilderNetSectionsSystem : GameSystemBase
 	{
 		private PrefabSystem prefabSystem;
 		private EntityQuery prefabQuery;
@@ -46,11 +46,6 @@ namespace RoadBuilder.Systems
 
 		protected override void OnUpdate()
 		{
-			if (!initialSetupFinished)
-			{
-				RequireForUpdate(prefabQuery);
-			}
-
 			try
 			{
 				var entities = (initialSetupFinished ? prefabQuery : allPrefabQuery).ToEntityArray(Allocator.Temp);
@@ -78,25 +73,35 @@ namespace RoadBuilder.Systems
 
 				if (!customSectionsSetUp && NetSections.Count > 0)
 				{
-					//AddCustomSections();
-
-					AddCustomGroups();
-
-					AddCustomPrefabComponents();
-
-					GameManager.instance.localizationManager.ReloadActiveLocale();
-
-					customSectionsSetUp = true;
+					DoCustomSectionSetup();
 				}
 
 				SectionsAdded?.Invoke();
 
-				initialSetupFinished = true;
+				if (!initialSetupFinished)
+				{
+					initialSetupFinished = true;
+
+					RequireForUpdate(prefabQuery);
+				}
 			}
 			catch (Exception ex)
 			{
 				Mod.Log.Error(ex);
 			}
+		}
+
+		private void DoCustomSectionSetup()
+		{
+			//AddCustomSections();
+
+			AddCustomGroups();
+
+			AddCustomPrefabComponents();
+
+			GameManager.instance.localizationManager.ReloadActiveLocale();
+
+			customSectionsSetUp = true;
 		}
 
 		private void AddCustomSections()
@@ -165,7 +170,7 @@ namespace RoadBuilder.Systems
 
 		private void AddCustomGroups()
 		{
-			foreach (var type in typeof(NetSectionsSystem).Assembly.GetTypes())
+			foreach (var type in typeof(RoadBuilderNetSectionsSystem).Assembly.GetTypes())
 			{
 				if (typeof(BaseLaneGroupPrefab).IsAssignableFrom(type) && !type.IsAbstract)
 				{
@@ -174,9 +179,9 @@ namespace RoadBuilder.Systems
 					prefab.Initialize(NetSections);
 					prefab.name = type.FullName;
 
-					prefabSystem.AddPrefab(prefab);
+                    prefabSystem.AddPrefab(prefab);
 
-					LaneGroups[prefab.name] = prefab;
+                    LaneGroups[prefab.name] = prefab;
 				}
 			}
 		}

@@ -22,7 +22,7 @@ namespace RoadBuilder.Utilities
 			Invert,
 		}
 
-		private static readonly NetSectionsSystem _netSectionsSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystemManaged<NetSectionsSystem>();
+		private static readonly RoadBuilderNetSectionsSystem _netSectionsSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystemManaged<RoadBuilderNetSectionsSystem>();
 
 		public static List<OptionSectionUIEntry> GenerateOptions(RoadGenerationData roadGenerationData, INetworkConfig config, LaneConfig lane)
 		{

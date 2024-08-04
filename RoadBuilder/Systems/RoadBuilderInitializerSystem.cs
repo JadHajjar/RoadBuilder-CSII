@@ -6,17 +6,17 @@ using Unity.Entities;
 
 namespace RoadBuilder.Systems
 {
-	public partial class RoadInitializerSystem : GameSystemBase
+	public partial class RoadBuilderInitializerSystem : GameSystemBase
 	{
 		private RoadBuilderSystem roadBuilderSystem;
-		private RoadGenerationDataSystem roadGenerationDataSystem;
+		private RoadBuilderGenerationDataSystem roadGenerationDataSystem;
 
 		protected override void OnCreate()
 		{
 			base.OnCreate();
 
 			roadBuilderSystem = World.GetOrCreateSystemManaged<RoadBuilderSystem>();
-			roadGenerationDataSystem = World.GetOrCreateSystemManaged<RoadGenerationDataSystem>();
+			roadGenerationDataSystem = World.GetOrCreateSystemManaged<RoadBuilderGenerationDataSystem>();
 		}
 
 		protected override void OnUpdate()

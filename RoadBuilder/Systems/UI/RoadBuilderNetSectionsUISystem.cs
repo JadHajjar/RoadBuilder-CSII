@@ -15,11 +15,11 @@ using Unity.Entities;
 
 namespace RoadBuilder.Systems.UI
 {
-	public partial class NetSectionsUISystem : ExtendedUISystemBase
+	public partial class RoadBuilderNetSectionsUISystem : ExtendedUISystemBase
 	{
 		private PrefabSystem prefabSystem;
 		private PrefabUISystem prefabUISystem;
-		private NetSectionsSystem netSectionsSystem;
+		private RoadBuilderNetSectionsSystem netSectionsSystem;
 		private ValueBindingHelper<NetSectionItem[]> _NetSections;
 		private INetworkConfig activeConfig;
 
@@ -29,7 +29,7 @@ namespace RoadBuilder.Systems.UI
 
 			prefabSystem = World.GetOrCreateSystemManaged<PrefabSystem>();
 			prefabUISystem = World.GetOrCreateSystemManaged<PrefabUISystem>();
-			netSectionsSystem = World.GetOrCreateSystemManaged<NetSectionsSystem>();
+            netSectionsSystem = World.GetOrCreateSystemManaged<RoadBuilderNetSectionsSystem>();
 
 			_NetSections = CreateBinding("NetSections", GetSections());
 

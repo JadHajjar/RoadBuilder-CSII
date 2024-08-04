@@ -7,18 +7,15 @@ using Game.Prefabs;
 
 using RoadBuilder.Domain;
 
-using System.Diagnostics;
-
 using Unity.Collections;
 using Unity.Entities;
 
 namespace RoadBuilder.Systems
 {
-	public partial class RoadGenerationDataSystem : GameSystemBase
-	{
+	public partial class RoadBuilderGenerationDataSystem : RoadBuilderNetSectionsSystem
+    {
 		private PrefabSystem prefabSystem;
 		private CityConfigurationSystem cityConfigurationSystem;
-		private NetSectionsSystem netSectionsSystem;
 		private bool firstTimeRun;
 
 		public RoadGenerationData RoadGenerationData { get; private set; }
@@ -29,19 +26,12 @@ namespace RoadBuilder.Systems
 
 			prefabSystem = World.GetOrCreateSystemManaged<PrefabSystem>();
 			cityConfigurationSystem = World.GetOrCreateSystemManaged<CityConfigurationSystem>();
-			netSectionsSystem = World.GetOrCreateSystemManaged<NetSectionsSystem>();
-		}
-
-		protected override void OnGamePreload(Purpose purpose, GameMode mode)
-		{
-			base.OnGamePreload(purpose, mode);
-
-			OnUpdate();
 		}
 
 		protected override void OnUpdate()
 		{
-			var stopWatch = Stopwatch.StartNew();
+			base.OnUpdate();
+
 			var roadGenerationData = new RoadGenerationData();
 
 			var zoneBlockDataQuery = SystemAPI.QueryBuilder().WithAll<ZoneBlockData>().Build();
@@ -136,7 +126,7 @@ namespace RoadBuilder.Systems
 				}
 			}
 
-			roadGenerationData.LaneGroupPrefabs = netSectionsSystem.LaneGroups;
+			roadGenerationData.LaneGroupPrefabs = LaneGroups;
 
 			RoadGenerationData = roadGenerationData;
 
@@ -156,8 +146,7 @@ namespace RoadBuilder.Systems
 					SystemAPI.QueryBuilder().WithAll<UIGroupElement>().WithAny<Updated, Created>().Build());
 			}
 
-			stopWatch.Stop();
-			Mod.Log.InfoFormat("Road Generation Data assembled in {0}ms", stopWatch.ElapsedMilliseconds);
+			Mod.Log.Info("Road Generation Data assembled");
 		}
 	}
 }
