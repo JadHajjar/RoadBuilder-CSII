@@ -33,7 +33,7 @@ export const RoadConfigListItem = ({ road }: { road: RoadConfiguration }) => {
         <Button variant="flat" onSelect={() => findRoad(road.ID)}>
           <img style={{ maskImage: "url(coui://gameui/Media/Radio/MapMarker.svg)" }} /> Find
         </Button>
-        <Button variant="flat" onSelect={() => deleteRoad(road.ID)}>
+        <Button variant="flat" onSelect={() => deleteRoad(road.ID)} className={styles.danger}>
           <img style={{ maskImage: "url(coui://gameui/Media/Glyphs/Trash.svg)" }} /> Delete
         </Button>
       </div>

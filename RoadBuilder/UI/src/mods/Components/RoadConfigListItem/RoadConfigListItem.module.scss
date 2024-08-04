@@ -13,11 +13,13 @@
     background-color: var(--accentColorDark) !important;
   }
 
-  &:hover .itemInfo {
+  &:hover .itemInfo,
+  &:active .itemInfo {
     height: 65rem;
   }
 
-  &:hover .gridThumbnail {
+  &:hover .gridThumbnail,
+  &:active .gridThumbnail {
     height: 55rem;
   }
 }
@@ -64,7 +66,8 @@
   transition: opacity 0.3s;
 }
 
-.gridItem:hover .buttons {
+.gridItem:hover .buttons,
+.gridItem:active .buttons {
   opacity: 1;
 }
 
@@ -79,6 +82,10 @@
 
   &:hover {
     background-color: var(--hoverColorBright);
+  }
+
+  &.danger:active {
+    background-color: var(--animation-curve-active-n1-stroke) !important;
   }
 
   img {

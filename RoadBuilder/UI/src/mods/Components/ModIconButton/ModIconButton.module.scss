@@ -10,14 +10,18 @@
   }
 
   &.selected {
-    background-color: var(--accentColorLight);
+    background-color: white;
 
     img {
-      filter: drop-shadow(0 1rem 1rem rgba(0, 0, 0, 0.2));
+      background-color: var(--accentColorNormal);
     }
   }
   img {
-    filter: drop-shadow(0 0 1rem rgba(0, 0, 0, 0.15));
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    mask-size: contain;
+    mask-position: 50% 50%;
   }
 }
 
