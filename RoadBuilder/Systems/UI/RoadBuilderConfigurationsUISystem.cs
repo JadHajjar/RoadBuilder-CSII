@@ -1,5 +1,4 @@
 ﻿using Colossal.Entities;
-using Colossal.Win32;
 
 using Game.Common;
 using Game.Net;
@@ -8,8 +7,6 @@ using Game.Rendering;
 using Game.SceneFlow;
 using Game.Tools;
 using Game.UI;
-
-using HarmonyLib;
 
 using RoadBuilder.Domain.Components;
 using RoadBuilder.Domain.Enums;
@@ -33,7 +30,7 @@ namespace RoadBuilder.Systems.UI
 		private CameraUpdateSystem cameraUpdateSystem;
 		private ToolSystem toolSystem;
 		private EntityQuery prefabRefQuery;
-
+		private EntityQuery edgeRefQuery;
 		private ValueBindingHelper<RoadConfigurationUIBinder[]> RoadConfigurations;
 
 		private string lastFindId;
@@ -53,6 +50,10 @@ namespace RoadBuilder.Systems.UI
 			roadBuilderSystem.ConfigurationsUpdated += UpdateConfigurationList;
 
 			prefabRefQuery = SystemAPI.QueryBuilder()
+				.WithAll<RoadBuilderNetwork, PrefabRef>()
+				.Build();
+
+			edgeRefQuery = SystemAPI.QueryBuilder()
 				.WithAll<RoadBuilderNetwork, PrefabRef, Edge>()
 				.Build();
 
@@ -90,7 +91,7 @@ namespace RoadBuilder.Systems.UI
 				return;
 			}
 
-			roadBuilderUISystem.SetWorkingPrefab(prefab.Config, Domain.Enums.RoadBuilderToolMode.EditingNonExistent);
+			roadBuilderUISystem.SetWorkingPrefab(prefab.Config, RoadBuilderToolMode.EditingNonExistent);
 		}
 
 		private void FindRoad(string id)
@@ -108,38 +109,42 @@ namespace RoadBuilder.Systems.UI
 			lastFindId = id;
 
 			var prefabEntity = prefabSystem.GetEntity(prefab.Prefab);
-			var edgeEntities = prefabRefQuery.ToEntityArray(Allocator.Temp);
+			var edgeEntities = edgeRefQuery.ToEntityArray(Allocator.Temp);
 			var index = 0;
 			var first = Entity.Null;
 
 			for (var i = 0; i < edgeEntities.Length; i++)
 			{
-				if (EntityManager.TryGetComponent<PrefabRef>(edgeEntities[i], out var prefabRef) && prefabRef.m_Prefab == prefabEntity)
+				var entity = edgeEntities[i];
+
+				if (EntityManager.TryGetComponent<PrefabRef>(entity, out var prefabRef) && prefabRef.m_Prefab == prefabEntity)
 				{
 					if (index == lastFindIndex)
 					{
-						JumpTo(edgeEntities[i]);
+						JumpTo(entity);
 
 						return;
 					}
 
 					if (index == 0)
 					{
-						first = edgeEntities[i];
+						first = entity;
 					}
 
 					index++;
 				}
 			}
 
+			lastFindIndex = 0;
 			JumpTo(first);
 		}
 
 		private void JumpTo(Entity entity)
 		{
+			lastFindIndex++;
+
 			if (cameraUpdateSystem.orbitCameraController != null && entity != Entity.Null)
 			{
-				lastFindIndex++;
 				cameraUpdateSystem.orbitCameraController.followedEntity = entity;
 				cameraUpdateSystem.orbitCameraController.TryMatchPosition(cameraUpdateSystem.activeCameraController);
 				cameraUpdateSystem.activeCameraController = cameraUpdateSystem.orbitCameraController;
@@ -148,7 +153,13 @@ namespace RoadBuilder.Systems.UI
 
 		private void DeleteRoad(string id)
 		{
-			GameManager.instance.userInterface.appBindings.ShowConfirmationDialog(new ConfirmationDialog(null, "RoadBuilder.DIALOG_MESSAGE[DELETE]", "Common.DIALOG_ACTION[Yes]", "Common.DIALOG_ACTION[No]"), msg => { if (msg == 0) ApplyDeleteRoad(id); });
+			GameManager.instance.userInterface.appBindings.ShowConfirmationDialog(new ConfirmationDialog(null, "RoadBuilder.DIALOG_MESSAGE[DELETE]", "Common.DIALOG_ACTION[Yes]", "Common.DIALOG_ACTION[No]"), msg =>
+			{
+				if (msg == 0)
+				{
+					ApplyDeleteRoad(id);
+				}
+			});
 		}
 
 		private void ApplyDeleteRoad(string id)
@@ -158,28 +169,54 @@ namespace RoadBuilder.Systems.UI
 				return;
 			}
 
+			prefab.Deleted = true;
+
 			if (roadBuilderUISystem.WorkingId == prefab.Config.ID)
 			{
-				roadBuilderUISystem.WorkingEntity = Entity.Null;
-				roadBuilderUISystem.Mode = RoadBuilderToolMode.Picker;
+				roadBuilderUISystem.SetWorkingPrefab(null, RoadBuilderToolMode.Picker);
 			}
 
 			LocalSaveUtil.DeletePreviousLocalConfig(prefab.Config);
 
 			var prefabEntity = prefabSystem.GetEntity(prefab.Prefab);
 			var edgeEntities = prefabRefQuery.ToEntityArray(Allocator.Temp);
-			var edgeList = new HashSet<Entity>(edgeEntities);
+			var edgeList = new HashSet<Entity>();
 
 			for (var i = 0; i < edgeEntities.Length; i++)
 			{
-				if (EntityManager.TryGetComponent<PrefabRef>(edgeEntities[i], out var prefabRef) && prefabRef.m_Prefab == prefabEntity)
-				{
-					EntityManager.AddComponent<Deleted>(edgeEntities[i]);
+				var entity = edgeEntities[i];
 
-					foreach (var edge in roadBuilderUpdateSystem.GetEdges(edgeEntities[i]))
+				if (EntityManager.TryGetComponent<PrefabRef>(entity, out var prefabRef) && prefabRef.m_Prefab == prefabEntity)
+				{
+					if (EntityManager.HasComponent<Edge>(entity))
 					{
-						edgeList.Add(edge);
+						EntityManager.AddComponent<Deleted>(entity);
+
+						foreach (var edge in roadBuilderUpdateSystem.GetEdges(entity))
+						{
+							edgeList.Add(edge);
+						}
 					}
+					else if (EntityManager.TryGetBuffer<ConnectedEdge>(entity, true, out var connectedEdges1))
+					{
+						if (connectedEdges1.Length <= 1)
+						{
+							EntityManager.AddComponent<Deleted>(entity);
+						}
+						else
+						{
+							EntityManager.SetComponentData(entity, new PrefabRef
+							{
+								m_Prefab = EntityManager.GetComponentData<PrefabRef>(connectedEdges1[0].m_Edge).m_Prefab
+							});
+						}
+					}
+					else
+					{
+						EntityManager.AddComponent<Deleted>(entity);
+					}
+
+					EntityManager.RemoveComponent<RoadBuilderNetwork>(entity);
 				}
 			}
 
@@ -188,14 +225,11 @@ namespace RoadBuilder.Systems.UI
 				roadBuilderUpdateSystem.UpdateEdge(entity);
 			}
 
-			roadBuilderSystem.Configurations.Remove(id);
-
-			prefab.Deleted = true;
 			prefab.Prefab.components.Clear();
 
 			roadBuilderSystem.UpdatePrefab(prefab.Prefab);
 
-			UpdateConfigurationList();
+			roadBuilderSystem.UpdateConfigurationList();
 		}
 	}
 }

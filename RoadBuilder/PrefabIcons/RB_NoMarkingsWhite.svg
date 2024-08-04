@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="matrix(0.0323293,0,0,0.0310296,2.4801,3.2573)">
+        <g id="b">
+            <g>
+                <g transform="matrix(22.2222,0,0,22.2222,0,0)">
+                    <path d="M2.932,15.794L4.659,14.786L20.521,27.965L18.819,28.974L2.932,15.794Z" style="fill:white;"/>
+                </g>
+                <g transform="matrix(22.2222,0,0,22.2222,0,0)">
+                    <path d="M17.388,7.118L19.006,6.173L34.869,19.352L33.274,20.297L17.388,7.118Z" style="fill:white;"/>
+                </g>
+                <g transform="matrix(22.2222,0,0,22.2222,0,0)">
+                    <path d="M7.271,13.706L15.292,8.908L7.271,13.706ZM19.918,18.916L21.153,18.177L24.63,21.061L23.394,21.8L19.918,18.916ZM12.964,13.148L14.2,12.408L17.677,15.293L16.441,16.032L12.964,13.148Z" style="fill:white;"/>
+                </g>
+                <g>
+                    <g transform="matrix(49.494,0,0,51.5671,-225.229,-259.71)">
+                        <path d="M21.781,8.283C21.781,5.86 19.814,3.893 17.391,3.893L8.609,3.893C6.186,3.893 4.219,5.86 4.219,8.283L4.219,17.717C4.219,20.14 6.186,22.107 8.609,22.107L17.391,22.107C19.814,22.107 21.781,20.14 21.781,17.717L21.781,8.283ZM20.64,8.897C20.64,6.788 18.928,5.077 16.82,5.077L9.18,5.077C7.072,5.077 5.36,6.788 5.36,8.897L5.36,17.103C5.36,19.212 7.072,20.923 9.18,20.923L16.82,20.923C18.928,20.923 20.64,19.212 20.64,17.103L20.64,8.897Z" style="fill:white;"/>
+                    </g>
+                    <g transform="matrix(3.03063e-15,51.5671,-54.2201,3.45909e-15,1115.57,-253.323)">
+                        <path d="M5.791,6.46L21.107,17.595L19.999,19.144L4.731,7.59L5.791,6.46Z" style="fill:white;"/>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

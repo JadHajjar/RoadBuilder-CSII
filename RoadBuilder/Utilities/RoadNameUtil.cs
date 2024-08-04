@@ -18,9 +18,9 @@ namespace RoadBuilder.Utilities
 		private readonly RoadBuilderSystem _roadBuilderSystem;
 		private readonly RoadBuilderUISystem _roadBuilderUISystem;
 		private readonly PrefabUISystem _prefabUISystem;
-		private readonly NetSectionsSystem _netSectionsSystem;
+		private readonly RoadBuilderNetSectionsSystem _netSectionsSystem;
 
-		public RoadNameUtil(RoadBuilderSystem roadBuilderSystem, RoadBuilderUISystem roadBuilderUISystem, PrefabUISystem prefabUISystem, NetSectionsSystem netSectionsSystem)
+		public RoadNameUtil(RoadBuilderSystem roadBuilderSystem, RoadBuilderUISystem roadBuilderUISystem, PrefabUISystem prefabUISystem, RoadBuilderNetSectionsSystem netSectionsSystem)
 		{
 			_roadBuilderSystem = roadBuilderSystem;
 			_roadBuilderUISystem = roadBuilderUISystem;

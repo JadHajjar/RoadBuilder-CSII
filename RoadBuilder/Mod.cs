@@ -57,11 +57,10 @@ namespace RoadBuilder
 			AssetDatabase.global.LoadSettings(nameof(RoadBuilder), Settings, new Setting(this));
 			CreatePlatformUpgrade();
 
-			updateSystem.UpdateAfter<NetSectionsSystem, PrefabInitializeSystem>(SystemUpdatePhase.PrefabUpdate);
+			updateSystem.UpdateAfter<RoadBuilderGenerationDataSystem, PrefabInitializeSystem>(SystemUpdatePhase.PrefabUpdate);
 			updateSystem.UpdateAfter<RoadBuilderPrefabUpdateSystem, PrefabInitializeSystem>(SystemUpdatePhase.PrefabUpdate);
-			updateSystem.UpdateAt<RoadInitializerSystem>(SystemUpdatePhase.PrefabUpdate);
+			updateSystem.UpdateAt<RoadBuilderInitializerSystem>(SystemUpdatePhase.MainLoop);
 			updateSystem.UpdateAt<RoadBuilderInfoViewFixSystem>(SystemUpdatePhase.PrefabUpdate);
-			updateSystem.UpdateAt<RoadGenerationDataSystem>(SystemUpdatePhase.PrefabReferences);
 			updateSystem.UpdateBefore<RoadBuilderSerializeSystem>(SystemUpdatePhase.Serialize);
 			updateSystem.UpdateAt<RoadBuilderSystem>(SystemUpdatePhase.Modification1);
 			updateSystem.UpdateAt<RoadBuilderApplyTagSystem>(SystemUpdatePhase.Modification2);
@@ -69,7 +68,7 @@ namespace RoadBuilder
 			updateSystem.UpdateAt<RoadBuilderToolSystem>(SystemUpdatePhase.ToolUpdate);
 			updateSystem.UpdateAt<RoadBuilderConfigCleanupSystem>(SystemUpdatePhase.MainLoop);
 			updateSystem.UpdateAt<RoadBuilderUISystem>(SystemUpdatePhase.UIUpdate);
-			updateSystem.UpdateAt<NetSectionsUISystem>(SystemUpdatePhase.UIUpdate);
+			updateSystem.UpdateAt<RoadBuilderNetSectionsUISystem>(SystemUpdatePhase.UIUpdate);
 			updateSystem.UpdateAt<RoadBuilderConfigurationsUISystem>(SystemUpdatePhase.UIUpdate);
 		}
 
