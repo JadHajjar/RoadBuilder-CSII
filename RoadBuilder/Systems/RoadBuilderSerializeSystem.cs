@@ -18,7 +18,9 @@ namespace RoadBuilder.Systems
 {
 	public partial class RoadBuilderSerializeSystem : GameSystemBase
 	{
-		public const ushort CURRENT_VERSION = 1;
+		public const ushort CURRENT_VERSION = 2;
+		/* Version 2 > Removed aggregate type
+		 */ 
 
 		private static RoadBuilderSystem roadBuilderSystem;
 		private static PrefabSystem prefabSystem;

@@ -17,7 +17,6 @@ namespace RoadBuilder.Domain.Configurations
 		RoadCategory Category { get; set; }
 		RoadAddons Addons { get; set; }
 		float MaxSlopeSteepness { get; set; }
-		string AggregateType { get; set; }
 		List<LaneConfig> Lanes { get; set; }
 		string PillarPrefabName { get; set; }
 

@@ -72,7 +72,7 @@ namespace RoadBuilder.Systems.UI
 			defaultToolSystem = World.GetOrCreateSystemManaged<DefaultToolSystem>();
 			simulationSystem = World.GetOrCreateSystemManaged<SimulationSystem>();
 			netSectionsUISystem = World.GetOrCreateSystemManaged<RoadBuilderNetSectionsUISystem>();
-            netSectionsSystem = World.GetOrCreateSystemManaged<RoadBuilderNetSectionsSystem>();
+			netSectionsSystem = World.GetOrCreateSystemManaged<RoadBuilderNetSectionsSystem>();
 			cityConfigurationSystem = World.GetOrCreateSystemManaged<CityConfigurationSystem>();
 			roadBuilderConfigurationsUISystem = World.GetOrCreateSystemManaged<RoadBuilderConfigurationsUISystem>();
 
@@ -229,18 +229,31 @@ namespace RoadBuilder.Systems.UI
 
 			action(config);
 
-			if (RoadBuilderMode.Value is not RoadBuilderToolMode.EditingNonExistent)
+			if (nonExistent)
 			{
-				roadBuilderSystem.UpdateRoad(config, workingEntity, createNew);
+				roadBuilderSystem.UpdateRoad(config, Entity.Null, false);
+
+				workingConfig = config;
+			}
+			else if (createNew)
+			{
+				roadBuilderSystem.UpdateRoad(config, workingEntity, true);
 
 				RoadBuilderMode.Value = RoadBuilderToolMode.Editing;
+
+				GameManager.instance.RegisterUpdater(() =>
+				{
+					if (prefabSystem.TryGetPrefab<PrefabBase>(EntityManager.GetComponentData<PrefabRef>(workingEntity), out var prefab) && prefab is INetworkBuilderPrefab builderPrefab)
+					{
+						workingConfig = builderPrefab.Config;
+					}
+				});
 			}
 			else
 			{
-				roadBuilderSystem.UpdateRoad(config, Entity.Null, false);
+				roadBuilderSystem.UpdateRoad(config, workingEntity, false);
 			}
 
-			workingConfig = config;
 			netSectionsUISystem.RefreshEntries(config);
 			RoadName.Value = config.Name;
 			RoadOptions.Value = RoadOptionsUtil.GetRoadOptions(config);

@@ -63,7 +63,6 @@ namespace RoadBuilder.Utilities
 
 			config.Name = $"Custom {GetAssetName(NetworkPrefab)}";
 			config.MaxSlopeSteepness = NetworkPrefab.m_MaxSlopeSteepness;
-			config.AggregateType = NetworkPrefab.m_AggregateType?.name;
 			config.PillarPrefabName = FindPillarPrefab(NetworkPrefab);
 
 			if (NetworkPrefab.Has<WaterPipeConnection>())
