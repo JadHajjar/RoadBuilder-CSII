@@ -3,7 +3,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![RoadBuilder-CSII][product-screenshot]](https://example.com)
+RoadBuilder-CSII mod
 
 Github Repo for the Roadbuilder-CSII project.
 
