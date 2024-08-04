@@ -87,7 +87,7 @@ namespace RoadBuilder
 
 			var nUIObject = Object.Instantiate(baseUIObject);
 			nUIObject.m_Icon = "coui://gameui/Media/Placeholder.svg";
-			nUIObject.name = "RB_MedianPlatformUpgrade";
+			nUIObject.name = nUIObject.name.Replace("Grass", "RB_MedianPlatformUpgrade");
 			platformPrefab.AddComponentFrom(nUIObject);
 
 			var netUpgrade = Object.Instantiate(baseNetUpgrade);
