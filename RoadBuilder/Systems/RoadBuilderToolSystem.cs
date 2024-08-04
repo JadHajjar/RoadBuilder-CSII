@@ -202,19 +202,32 @@ namespace RoadBuilder.Systems
 		private void HandleHighlight(EntityQuery query, Func<Entity, bool> shouldBeHighlighted)
 		{
 			var entities = query.ToEntityArray(Allocator.Temp);
+			var editing = roadBuilderUISystem.Mode >= RoadBuilderToolMode.Editing;
 
 			for (var i = 0; i < entities.Length; i++)
 			{
-				if (shouldBeHighlighted != null && shouldBeHighlighted(entities[i]))
+				var entity = entities[i];
+
+				if (shouldBeHighlighted != null && shouldBeHighlighted(entity))
 				{
-					EntityManager.AddComponent<Highlighted>(entities[i]);
+					EntityManager.AddComponent<Highlighted>(entity);
+
+					if (editing)
+					{
+						EntityManager.AddComponent<RoadBuilderUpdateFlagComponent>(entity);
+					}
 				}
 				else
 				{
-					EntityManager.RemoveComponent<Highlighted>(entities[i]);
+					EntityManager.RemoveComponent<Highlighted>(entity);
+
+					if (editing)
+					{
+						EntityManager.RemoveComponent<RoadBuilderUpdateFlagComponent>(entity);
+					}
 				}
 
-				EntityManager.AddComponent<BatchesUpdated>(entities[i]);
+				EntityManager.AddComponent<BatchesUpdated>(entity);
 			}
 		}
 
