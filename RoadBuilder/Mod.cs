@@ -12,8 +12,11 @@ using HarmonyLib;
 using RoadBuilder.Systems;
 using RoadBuilder.Systems.UI;
 using RoadBuilder.Utilities;
-
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using Unity.Entities;
+using UnityEngine;
 
 namespace RoadBuilder
 {
@@ -68,8 +71,41 @@ namespace RoadBuilder
 			updateSystem.UpdateAt<NetSectionsUISystem>(SystemUpdatePhase.UIUpdate);
 			updateSystem.UpdateAt<RoadBuilderConfigurationsUISystem>(SystemUpdatePhase.UIUpdate);
 
-			updateSystem.UpdateBefore<MedianPlatformSystem, NetCompositionSystem>(SystemUpdatePhase.Modification4);
+			//updateSystem.UpdateBefore<MedianPlatformSystem, NetCompositionSystem>(SystemUpdatePhase.Modification4);
 		}
+
+		public void CreatePlatformUpgrade()
+		{
+            var prefabSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystemManaged<PrefabSystem>();
+            var prefabs = Traverse.Create(prefabSystem).Field<List<PrefabBase>>("m_Prefabs").Value;
+            var basePrefab = prefabs.FirstOrDefault(p => p.name == "Grass");
+			var baseUIObject = basePrefab.GetComponent<UIObject>();
+			var baseNetUpgrade = basePrefab.GetComponent<NetUpgrade>();
+			
+			var platformPrefab = Object.Instantiate(basePrefab);
+			platformPrefab.name = "RB_MedianPlatformUpgrade";
+			platformPrefab.Remove<UIObject>();
+
+			var nUIObject = Object.Instantiate(baseUIObject);
+			nUIObject.m_Icon = "coui://gameui/Media/Placeholder.svg";
+			nUIObject.name = "RB_MedianPlatformUpgrade";
+			platformPrefab.AddComponentFrom(nUIObject);
+
+			var netUpgrade = Object.Instantiate(baseNetUpgrade);
+			netUpgrade.m_SetState = new[]
+			{
+				NetPieceRequirements.MiddlePlatform
+			};
+			netUpgrade.m_UnsetState = new NetPieceRequirements[0];
+			platformPrefab.Remove<NetUpgrade>();
+			platformPrefab.AddComponentFrom(netUpgrade);
+
+
+            if (!prefabSystem.AddPrefab(platformPrefab))
+			{
+				Mod.Log.Warn("Unable to create platform upgrade prefab");
+			}
+        }
 
 		public void OnDispose()
 		{
