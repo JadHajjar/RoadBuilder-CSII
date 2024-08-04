@@ -222,6 +222,8 @@ namespace RoadBuilder.Systems
 		{
 			var entity = prefabSystem.GetEntity(prefab);
 
+			EntityManager.AddComponent<DiscardedRoadBuilderPrefab>(entity);
+
 			prefabSystem.UpdatePrefab(prefab, entity);
 
 			foreach (var kvp in toolbarUISystemLastSelectedAssets)
@@ -254,14 +256,14 @@ namespace RoadBuilder.Systems
 		{
 			try
 			{
-				var roadPrefab = NetworkPrefabGenerationUtil.CreatePrefab(config);
-
-				if (prefabSystem.TryGetPrefab(roadPrefab.Prefab.GetPrefabID(), out _))
+				if (config.ID is not null && Configurations.ContainsKey(config.ID))
 				{
 					Mod.Log.Debug("Trying to add a road that already exists: " + config.ID);
 
 					return null;
 				}
+
+				var roadPrefab = NetworkPrefabGenerationUtil.CreatePrefab(config);
 
 				var roadPrefabGeneration = new NetworkPrefabGenerationUtil(roadPrefab, roadGenerationDataSystem.RoadGenerationData);
 
@@ -291,7 +293,7 @@ namespace RoadBuilder.Systems
 
 		public void UpdateConfigurationList()
 		{
-			var roadBuilderConfigsQuery = SystemAPI.QueryBuilder().WithAll<RoadBuilderPrefabData>().Build();
+			var roadBuilderConfigsQuery = SystemAPI.QueryBuilder().WithAll<RoadBuilderPrefabData>().WithNone<DiscardedRoadBuilderPrefab>().Build();
 			var prefabs = roadBuilderConfigsQuery.ToEntityArray(Allocator.Temp);
 
 			Configurations.Clear();

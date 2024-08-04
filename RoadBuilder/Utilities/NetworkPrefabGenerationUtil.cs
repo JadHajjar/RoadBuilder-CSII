@@ -43,6 +43,8 @@ namespace RoadBuilder.Utilities
 			prefab.Prefab.m_EdgeStates = new NetEdgeStateInfo[0];
 			prefab.Prefab.m_NodeStates = new NetNodeStateInfo[0];
 
+			Mod.Log.DebugFormat("CreatePrefab: {0}", config.ID);
+
 			return prefab;
 		}
 

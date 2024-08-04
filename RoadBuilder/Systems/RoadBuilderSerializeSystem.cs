@@ -69,6 +69,8 @@ namespace RoadBuilder.Systems
 			}
 
 			_prefabsToUpdate.Clear();
+
+			roadBuilderSystem.UpdateConfigurationList();
 		}
 
 		private List<string> CreateNetworksList(in NativeArray<PrefabRef> prefabRefs)

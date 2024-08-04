@@ -179,6 +179,11 @@ namespace RoadBuilder.Systems
 				return false;
 			}
 
+			if (prefab.Has<Bridge>())
+			{
+				return false;
+			}
+
 			if (applyAction.WasPerformedThisFrame())
 			{
 				if (prefab is INetworkBuilderPrefab)

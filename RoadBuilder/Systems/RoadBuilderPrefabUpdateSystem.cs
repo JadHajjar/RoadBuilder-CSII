@@ -11,9 +11,12 @@ using Game.Tools;
 using RoadBuilder.Domain.Components;
 
 using System.Collections.Generic;
+using System.Reflection;
 
 using Unity.Collections;
 using Unity.Entities;
+
+using static Colossal.IO.AssetDatabase.AtlasFrame;
 
 namespace RoadBuilder.Systems
 {
@@ -23,12 +26,18 @@ namespace RoadBuilder.Systems
 		private EntityQuery queryUpdated;
 		private EntityQuery queryAll;
 		private EntityQuery prefabRefQuery;
+		private PrefabSystem prefabSystem;
+		private Dictionary<PrefabID, int> prefabSystem_PrefabIndices;
+		private List<PrefabBase> prefabSystem_Prefabs;
 
 		protected override void OnCreate()
 		{
 			base.OnCreate();
 
 			roadBuilderSystem = World.GetOrCreateSystemManaged<RoadBuilderSystem>();
+			prefabSystem = World.GetOrCreateSystemManaged<PrefabSystem>();
+			prefabSystem_PrefabIndices = typeof(PrefabSystem).GetField("m_PrefabIndices", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(prefabSystem) as Dictionary<PrefabID, int>;
+			prefabSystem_Prefabs = typeof(PrefabSystem).GetField("m_Prefabs", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(prefabSystem) as List<PrefabBase>;
 			queryUpdated = SystemAPI.QueryBuilder().WithAll<RoadBuilderPrefabData, Updated>().Build();
 			queryAll = SystemAPI.QueryBuilder().WithAll<RoadBuilderPrefabData>().WithAny<Created, Updated>().Build();
 			prefabRefQuery = SystemAPI.QueryBuilder()
@@ -61,12 +70,7 @@ namespace RoadBuilder.Systems
 
 			roadBuilderSystem.UpdateConfigurationList();
 
-			Update(in queryUpdated);
-		}
-
-		protected void Update(in EntityQuery prefabQuery)
-		{
-			var prefabs = prefabQuery.ToEntityArray(Allocator.Temp);
+			var prefabs = queryUpdated.ToEntityArray(Allocator.Temp);
 			var edgeEntities = prefabRefQuery.ToEntityArray(Allocator.Temp);
 
 			var edgeList = new HashSet<Entity>(edgeEntities);
@@ -82,6 +86,11 @@ namespace RoadBuilder.Systems
 							edgeList.Add(edge);
 						}
 					}
+				}
+
+				if (prefabSystem.TryGetPrefab<PrefabBase>(prefabs[j], out var prefab))
+				{
+					prefabSystem_PrefabIndices[prefab.GetPrefabID()] = prefabSystem_Prefabs.IndexOf(prefab);
 				}
 			}
 
