@@ -69,7 +69,7 @@ namespace RoadBuilder.Utilities
 			prefab.name = cfg.ID;
 			prefab.m_MaxSlopeSteepness = cfg.MaxSlopeSteepness;
 			prefab.m_InvertMode = CompositionInvertMode.FlipLefthandTraffic;
-			prefab.m_AggregateType = _roadGenerationData.AggregateNetPrefabs.TryGetValue(cfg.AggregateType ?? string.Empty, out var aggregate) ? aggregate : null;
+			prefab.m_AggregateType = _roadGenerationData.AggregateNetPrefabs.TryGetValue(GetAggregateName(), out var aggregate) ? aggregate : null;
 			prefab.m_Sections = Fix(GenerateSections()).ToArray();
 			prefab.m_NodeStates = GenerateNodeStates().ToArray();
 			prefab.m_EdgeStates = GenerateEdgeStates().ToArray();
@@ -89,7 +89,8 @@ namespace RoadBuilder.Utilities
 				trackPrefab.m_TrackType =
 					cfg.Category.HasFlag(RoadCategory.Train) ? Game.Net.TrackTypes.Train :
 					cfg.Category.HasFlag(RoadCategory.Subway) ? Game.Net.TrackTypes.Subway :
-					Game.Net.TrackTypes.Tram;
+					cfg.Category.HasFlag(RoadCategory.Tram) ? Game.Net.TrackTypes.Tram :
+					Game.Net.TrackTypes.None;
 			}
 
 			prefab.components.ForEach(UnityEngine.Object.Destroy);
@@ -120,6 +121,48 @@ namespace RoadBuilder.Utilities
 			{
 				prefab.GetComponent<UIObject>().m_Icon = thumbnail;
 			}
+		}
+
+		private string GetAggregateName()
+		{
+			var category = NetworkPrefab.Config.Category;
+
+			if (category.HasFlag(RoadCategory.Subway))
+			{
+				return "Subway Track";
+			}
+
+			if (category.HasFlag(RoadCategory.Train))
+			{
+				return "Train Track";
+			}
+
+			if (category.HasFlag(RoadCategory.Tram))
+			{
+				return "Tram Track";
+			}
+
+			if (category.HasFlag(RoadCategory.Pathway))
+			{
+				return "Pathway";
+			}
+
+			if (category.HasFlag(RoadCategory.Highway))
+			{
+				return "Highway";
+			}
+
+			if (category.HasFlag(RoadCategory.PublicTransport))
+			{
+				return "Public Transport Lane";
+			}
+
+			if (category.HasFlag(RoadCategory.RaisedSidewalk))
+			{
+				return "Street";
+			}
+
+			return "Alley";
 		}
 
 		private IEnumerable<NetNodeStateInfo> GenerateNodeStates()

@@ -12,6 +12,7 @@ using RoadBuilder.LaneGroups;
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using Unity.Collections;
 using Unity.Entities;
@@ -95,6 +96,8 @@ namespace RoadBuilder.Systems
 		{
 			//AddCustomSections();
 
+			ModifyVanillaSections();
+
 			AddCustomGroups();
 
 			AddCustomPrefabComponents();
@@ -143,6 +146,42 @@ namespace RoadBuilder.Systems
 			NetSections[twoWaySection.name] = twoWaySection;
 		}
 
+		private void ModifyVanillaSections()
+		{
+			var median5Pieces = new[]
+			{
+				NetPieces["Median Piece 5"],
+				NetPieces["Median Piece 5 - Grass"],
+				NetPieces["Median Piece 5 - Platform"],
+				NetPieces["Median Piece 5"],
+			};
+
+			foreach (var item in median5Pieces)
+			{
+				var objects = item.GetComponent<NetPieceObjects>();
+				var tree = objects.m_PieceObjects.FirstOrDefault(x => x.m_Object.name == "Road Tree Placeholder");
+
+				if (tree != null)
+				{
+					tree.m_RequireAll = tree.m_RequireAll.Where(x => x != NetPieceRequirements.Median).ToArray();
+				}
+			}
+
+			var subwayPlatformSections = new[]
+			{
+				NetSections["Subway Median 8"],
+				NetSections["Subway Median 8 - Plain"],
+			};
+
+			foreach (var item in subwayPlatformSections)
+			{
+				foreach (var piece in item.m_Pieces)
+				{
+					piece.m_RequireAll = piece.m_RequireAll.Where(x => x != NetPieceRequirements.Median).ToArray();
+				}
+			}
+		}
+
 		private void AddCustomPrefabComponents()
 		{
 			_blacklist.ForEach(x =>
@@ -179,9 +218,9 @@ namespace RoadBuilder.Systems
 					prefab.Initialize(NetSections);
 					prefab.name = type.FullName;
 
-                    prefabSystem.AddPrefab(prefab);
+					prefabSystem.AddPrefab(prefab);
 
-                    LaneGroups[prefab.name] = prefab;
+					LaneGroups[prefab.name] = prefab;
 				}
 			}
 		}
