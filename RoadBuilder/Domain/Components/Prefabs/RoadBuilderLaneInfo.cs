@@ -19,9 +19,9 @@ namespace RoadBuilder.Domain.Components.Prefabs
 		public RoadCategory RequiredCategories;
 		public RoadCategory AnyCategories;
 		public RoadCategory ExcludedCategories;
+		public Color LaneColor;
 		public string BackThumbnail;
 		public string FrontThumbnail;
-		public Color LaneColor;
 		public string[] LaneThumbnails;
 
 		public override void GetArchetypeComponents(HashSet<ComponentType> components)

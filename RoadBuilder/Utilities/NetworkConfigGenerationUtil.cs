@@ -262,6 +262,14 @@ namespace RoadBuilder.Utilities
 				}
 			}
 
+			foreach (var item in netSubObjects.m_SubObjects)
+			{
+				if (item.m_RequireElevated && item.m_Placement == NetObjectPlacement.Node)
+				{
+					return item.m_Object.name;
+				}
+			}
+
 			return null;
 		}
 

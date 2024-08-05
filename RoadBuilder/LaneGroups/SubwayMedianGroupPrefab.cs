@@ -38,12 +38,12 @@ namespace RoadBuilder.LaneGroups
 			};
 
 			AddComponent<RoadBuilderLaneInfo>()
-				.WithAny(RoadCategory.Train | RoadCategory.Subway | RoadCategory.Tram);
+				.WithExcluded(RoadCategory.Tiled | RoadCategory.Fence | RoadCategory.Pathway);
 
 			AddComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_CenterPlatform.svg";
 
 			SetUp(sections["Subway Median 8"], "Raised").WithThumbnail("coui://roadbuildericons/RB_CenterPlatform.svg").AddLaneThumbnail("coui://roadbuildericons/Thumb_Platform.svg");
-			SetUp(sections["Subway Median 8 - Plain"], "Flat").WithThumbnail("coui://roadbuildericons/RB_Empty.svg").AddLaneThumbnail("coui://roadbuildericons/Thumb_PlatformEmpty.svg");
+			SetUp(sections["Subway Median 8 - Plain"], "Flat").WithThumbnail("coui://roadbuildericons/RB_Empty.svg").AddLaneThumbnail("coui://roadbuildericons/Thumb_PlatformEmpty.svg").WithAny(RoadCategory.Train | RoadCategory.Subway);
 		}
 
 		private RoadBuilderLaneInfo SetUp(NetSectionPrefab prefab, string value)
