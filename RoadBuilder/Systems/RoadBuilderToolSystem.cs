@@ -41,7 +41,7 @@ namespace RoadBuilder.Systems
 			prefabSystem = World.GetOrCreateSystemManaged<PrefabSystem>();
 			roadBuilderUISystem = World.GetOrCreateSystemManaged<RoadBuilderUISystem>();
 
-			highlightedQuery = GetEntityQuery(ComponentType.ReadOnly<Highlighted>());
+			highlightedQuery = SystemAPI.QueryBuilder().WithAny<Highlighted, RoadBuilderUpdateFlagComponent>().Build();
 			roadBuilderNetworkQuery = GetEntityQuery(ComponentType.ReadOnly<RoadBuilderNetwork>());
 
 			applyAction = Mod.Settings.GetAction(nameof(RoadBuilder) + "Apply");
@@ -222,11 +222,7 @@ namespace RoadBuilder.Systems
 				else
 				{
 					EntityManager.RemoveComponent<Highlighted>(entity);
-
-					if (editing)
-					{
-						EntityManager.RemoveComponent<RoadBuilderUpdateFlagComponent>(entity);
-					}
+					EntityManager.RemoveComponent<RoadBuilderUpdateFlagComponent>(entity);
 				}
 
 				EntityManager.AddComponent<BatchesUpdated>(entity);
