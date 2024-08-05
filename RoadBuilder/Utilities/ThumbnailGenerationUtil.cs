@@ -60,7 +60,7 @@ namespace RoadBuilder.Utilities
 				var combinedSvg = new XElement(aw + "svg",
 					new XAttribute("width", "100%"),
 					new XAttribute("height", "100%"),
-					new XAttribute("viewBox", $"0 0 {totalSize} {totalSize}"),
+					new XAttribute("viewBox", $"0 0 {totalSize.ToString(CultureInfo.InvariantCulture)} {totalSize.ToString(CultureInfo.InvariantCulture)}"),
 					new XAttribute("version", "1.1"),
 					new XAttribute(XNamespace.Xmlns + "xlink", "http://www.w3.org/1999/xlink"),
 					new XAttribute(XNamespace.Xmlns + "serif", "http://www.serif.com/"),
