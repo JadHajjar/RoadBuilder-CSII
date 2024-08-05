@@ -53,8 +53,24 @@ namespace RoadBuilder.Systems.UI
 		private ProxyAction _toolKeyBinding;
 
 		public RoadBuilderToolMode Mode { get => RoadBuilderMode; set => RoadBuilderMode.Value = value; }
-		public string WorkingId => workingConfig?.ID ?? string.Empty;
 		public Entity WorkingEntity => workingEntity;
+		public string WorkingId
+		{
+			get
+			{
+				if (Mode == RoadBuilderToolMode.EditingNonExistent || workingEntity == Entity.Null)
+				{
+					return workingConfig?.ID ?? string.Empty;
+				}
+
+				if (prefabSystem.TryGetPrefab<PrefabBase>(EntityManager.GetComponentData<PrefabRef>(workingEntity), out var prefab) && prefab is INetworkBuilderPrefab builderPrefab)
+				{
+					return builderPrefab.Config.ID;
+				}
+
+				return string.Empty;
+			}
+		}
 
 		protected override void OnCreate()
 		{
@@ -216,14 +232,18 @@ namespace RoadBuilder.Systems.UI
 
 		private void UpdateRoad(Action<INetworkConfig> action)
 		{
-			var createNew = RoadBuilderMode.Value is RoadBuilderToolMode.EditingSingle;
-			var nonExistent = RoadBuilderMode.Value is RoadBuilderToolMode.EditingNonExistent;
+			var createNew = RoadBuilderMode == RoadBuilderToolMode.EditingSingle;
+			var nonExistent = RoadBuilderMode == RoadBuilderToolMode.EditingNonExistent;
 			var config = nonExistent ? workingConfig : createNew
 				? roadBuilderSystem.GenerateConfiguration(workingEntity)
 				: roadBuilderSystem.GetOrGenerateConfiguration(workingEntity);
 
+			Mod.Log.Debug("UpdateRoad > " + RoadBuilderMode.Value);
+
 			if (config == null)
 			{
+				Mod.Log.Warn("Failed to create configuration?");
+
 				return;
 			}
 
@@ -240,14 +260,6 @@ namespace RoadBuilder.Systems.UI
 				roadBuilderSystem.UpdateRoad(config, workingEntity, true);
 
 				RoadBuilderMode.Value = RoadBuilderToolMode.Editing;
-
-				GameManager.instance.RegisterUpdater(() =>
-				{
-					if (prefabSystem.TryGetPrefab<PrefabBase>(EntityManager.GetComponentData<PrefabRef>(workingEntity), out var prefab) && prefab is INetworkBuilderPrefab builderPrefab)
-					{
-						workingConfig = builderPrefab.Config;
-					}
-				});
 			}
 			else
 			{

@@ -146,6 +146,7 @@ namespace RoadBuilder.Utilities
 		private INetworkConfig JsonClone(INetworkConfig config)
 		{
 			config.Version = RoadBuilderSerializeSystem.CURRENT_VERSION;
+			config.ID = null;
 			config.OriginalID = null;
 			config.Type = config.GetType().Name;
 

@@ -115,7 +115,9 @@ namespace RoadBuilder.Systems
 				case RoadBuilderToolMode.Editing:
 				case RoadBuilderToolMode.EditingNonExistent:
 				{
-					HandleHighlight(roadBuilderNetworkQuery, IsWorkingPrefab);
+					var workingId = roadBuilderUISystem.WorkingId;
+
+					HandleHighlight(roadBuilderNetworkQuery, x => IsWorkingPrefab(x, workingId));
 
 					break;
 				}
@@ -142,14 +144,14 @@ namespace RoadBuilder.Systems
 			}
 		}
 
-		private bool IsWorkingPrefab(Entity entity)
+		private bool IsWorkingPrefab(Entity entity, string workingId)
 		{
 			if (!EntityManager.TryGetComponent<PrefabRef>(entity, out var prefabRef))
 			{
 				return false;
 			}
 
-			return roadBuilderUISystem.WorkingId == prefabSystem.GetPrefabName(prefabRef);
+			return workingId == prefabSystem.GetPrefabName(prefabRef);
 		}
 
 		private bool HandlePicker(out Entity entity)
@@ -242,8 +244,11 @@ namespace RoadBuilder.Systems
 
 			for (var i = 0; i < entities.Length; i++)
 			{
-				EntityManager.RemoveComponent<Highlighted>(entities[i]);
-				EntityManager.AddComponent<BatchesUpdated>(entities[i]);
+				var entity = entities[i];
+
+				EntityManager.RemoveComponent<RoadBuilderUpdateFlagComponent>(entity);
+				EntityManager.RemoveComponent<Highlighted>(entity);
+				EntityManager.AddComponent<BatchesUpdated>(entity);
 			}
 		}
 
