@@ -150,7 +150,7 @@ namespace RoadBuilder.Utilities
 			config = LocalSaveUtil.LoadFromJson(JSON.Dump(config));
 
 			config.Version = RoadBuilderSerializeSystem.CURRENT_VERSION;
-			config.ID = null;
+			config.ID = string.Empty;
 			config.OriginalID = null;
 
 			return config;
