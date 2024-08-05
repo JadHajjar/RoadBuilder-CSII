@@ -242,7 +242,7 @@ namespace RoadBuilder.Systems
 			}
 		}
 
-		public INetworkBuilderPrefab AddPrefab(INetworkConfig config, bool generateId = false, bool queueForUpdate = true)
+		public INetworkBuilderPrefab AddPrefab(INetworkConfig config, bool generateId = false)
 		{
 			try
 			{

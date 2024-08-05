@@ -145,12 +145,15 @@ namespace RoadBuilder.Utilities
 
 		private INetworkConfig JsonClone(INetworkConfig config)
 		{
+			config.Type = config.GetType().Name;
+
+			config = LocalSaveUtil.LoadFromJson(JSON.Dump(config));
+
 			config.Version = RoadBuilderSerializeSystem.CURRENT_VERSION;
 			config.ID = null;
 			config.OriginalID = null;
-			config.Type = config.GetType().Name;
 
-			return LocalSaveUtil.LoadFromJson(JSON.Dump(config));
+			return config;
 		}
 
 		private static LaneConfig GetLaneConfig(NetSectionInfo section)
