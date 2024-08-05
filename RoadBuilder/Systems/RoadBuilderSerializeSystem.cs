@@ -2,6 +2,7 @@
 
 using Game;
 using Game.Prefabs;
+using Game.SceneFlow;
 
 using RoadBuilder.Domain.Components;
 using RoadBuilder.Domain.Configurations;
@@ -70,7 +71,12 @@ namespace RoadBuilder.Systems
 				roadBuilderSystem.UpdatePrefab(item.Prefab);
 			}
 
-			_prefabsToUpdate.Clear();
+			if (_prefabsToUpdate.Count > 0)
+			{
+				GameManager.instance.localizationManager.ReloadActiveLocale();
+
+				_prefabsToUpdate.Clear();
+			}
 
 			roadBuilderSystem.UpdateConfigurationList();
 		}

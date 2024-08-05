@@ -60,8 +60,6 @@ namespace RoadBuilder.Systems
 			base.OnGameLoadingComplete(purpose, mode);
 
 			Enabled = true;
-
-			GameManager.instance.localizationManager.ReloadActiveLocale();
 		}
 
 		protected override void OnUpdate()
