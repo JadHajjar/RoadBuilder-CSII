@@ -1,7 +1,4 @@
-﻿using Colossal.Serialization.Entities;
-
-using Game;
-using Game.City;
+﻿using Game.City;
 using Game.Common;
 using Game.Prefabs;
 
@@ -13,7 +10,7 @@ using Unity.Entities;
 namespace RoadBuilder.Systems
 {
 	public partial class RoadBuilderGenerationDataSystem : RoadBuilderNetSectionsSystem
-    {
+	{
 		private PrefabSystem prefabSystem;
 		private CityConfigurationSystem cityConfigurationSystem;
 		private bool firstTimeRun;
@@ -113,6 +110,16 @@ namespace RoadBuilder.Systems
 				{
 					roadGenerationData.PillarPrefabs[prefab.name] = prefab;
 				}
+			}
+
+			if (prefabSystem.TryGetPrefab(new PrefabID(nameof(StaticObjectPrefab), "Train Pillar Placeholder"), out var trainPillar))
+			{
+				roadGenerationData.PillarPrefabs[trainPillar.name] = trainPillar as StaticObjectPrefab;
+			}
+
+			if (prefabSystem.TryGetPrefab(new PrefabID(nameof(StaticObjectPrefab), "Subway Pillar Placeholder"), out var subwayPillar))
+			{
+				roadGenerationData.PillarPrefabs[subwayPillar.name] = subwayPillar as StaticObjectPrefab;
 			}
 
 			var uIGroupElementQuery = SystemAPI.QueryBuilder().WithAll<UIGroupElement>().Build();

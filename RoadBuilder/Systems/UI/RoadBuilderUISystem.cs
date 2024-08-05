@@ -54,23 +54,6 @@ namespace RoadBuilder.Systems.UI
 
 		public RoadBuilderToolMode Mode { get => RoadBuilderMode; set => RoadBuilderMode.Value = value; }
 		public Entity WorkingEntity => workingEntity;
-		public string WorkingId
-		{
-			get
-			{
-				if (Mode == RoadBuilderToolMode.EditingNonExistent || workingEntity == Entity.Null)
-				{
-					return workingConfig?.ID ?? string.Empty;
-				}
-
-				if (prefabSystem.TryGetPrefab<PrefabBase>(EntityManager.GetComponentData<PrefabRef>(workingEntity), out var prefab) && prefab is INetworkBuilderPrefab builderPrefab)
-				{
-					return builderPrefab.Config.ID;
-				}
-
-				return string.Empty;
-			}
-		}
 
 		protected override void OnCreate()
 		{
@@ -161,10 +144,30 @@ namespace RoadBuilder.Systems.UI
 			toolSystem.activeTool = defaultToolSystem;
 		}
 
-		internal void ShowActionPopup(Entity entity, PrefabBase prefab)
+		public void ShowActionPopup(Entity entity, PrefabBase prefab)
 		{
 			IsCustomRoadSelected.Value = prefab is INetworkBuilderPrefab;
 			SetWorkingEntity(entity, RoadBuilderToolMode.ActionSelection);
+		}
+
+		public string GetWorkingId()
+		{
+			if (Mode < RoadBuilderToolMode.Editing)
+			{
+				return string.Empty;
+			}
+
+			if (Mode == RoadBuilderToolMode.EditingNonExistent || workingEntity == Entity.Null)
+			{
+				return workingConfig?.ID ?? string.Empty;
+			}
+
+			if (prefabSystem.TryGetPrefab<PrefabBase>(EntityManager.GetComponentData<PrefabRef>(workingEntity), out var prefab) && prefab is INetworkBuilderPrefab builderPrefab)
+			{
+				return builderPrefab.Config.ID;
+			}
+
+			return string.Empty;
 		}
 
 		public void CancelActionPopup()

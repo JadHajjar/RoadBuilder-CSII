@@ -75,7 +75,7 @@ namespace RoadBuilder.Systems.UI
 
 			foreach (var prefab in netSectionsSystem.LaneGroups.Values)
 			{
-				if (!prefab.MatchCategories(activeConfig))
+				if (!Mod.Settings.AdvancedUserMode && !prefab.MatchCategories(activeConfig))
 				{
 					continue;
 				}

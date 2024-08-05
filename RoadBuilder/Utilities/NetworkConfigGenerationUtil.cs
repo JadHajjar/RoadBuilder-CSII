@@ -145,12 +145,15 @@ namespace RoadBuilder.Utilities
 
 		private INetworkConfig JsonClone(INetworkConfig config)
 		{
-			config.Version = RoadBuilderSerializeSystem.CURRENT_VERSION;
-			config.ID = null;
-			config.OriginalID = null;
 			config.Type = config.GetType().Name;
 
-			return LocalSaveUtil.LoadFromJson(JSON.Dump(config));
+			config = LocalSaveUtil.LoadFromJson(JSON.Dump(config));
+
+			config.Version = RoadBuilderSerializeSystem.CURRENT_VERSION;
+			config.ID = string.Empty;
+			config.OriginalID = null;
+
+			return config;
 		}
 
 		private static LaneConfig GetLaneConfig(NetSectionInfo section)
@@ -257,6 +260,14 @@ namespace RoadBuilder.Utilities
 			foreach (var item in netSubObjects.m_SubObjects)
 			{
 				if (item.m_RequireElevated && item.m_Placement == NetObjectPlacement.Node && item.m_Object.Has<PillarObject>())
+				{
+					return item.m_Object.name;
+				}
+			}
+
+			foreach (var item in netSubObjects.m_SubObjects)
+			{
+				if (item.m_RequireElevated && item.m_Placement == NetObjectPlacement.Node)
 				{
 					return item.m_Object.name;
 				}

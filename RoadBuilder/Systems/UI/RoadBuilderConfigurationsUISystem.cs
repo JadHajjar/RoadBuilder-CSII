@@ -171,7 +171,7 @@ namespace RoadBuilder.Systems.UI
 
 			prefab.Deleted = true;
 
-			if (roadBuilderUISystem.WorkingId == prefab.Config.ID)
+			if (roadBuilderUISystem.GetWorkingId() == prefab.Config.ID)
 			{
 				roadBuilderUISystem.SetWorkingPrefab(null, RoadBuilderToolMode.Picker);
 			}

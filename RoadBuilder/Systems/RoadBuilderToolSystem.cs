@@ -115,7 +115,7 @@ namespace RoadBuilder.Systems
 				case RoadBuilderToolMode.Editing:
 				case RoadBuilderToolMode.EditingNonExistent:
 				{
-					var workingId = roadBuilderUISystem.WorkingId;
+					var workingId = roadBuilderUISystem.GetWorkingId();
 
 					HandleHighlight(roadBuilderNetworkQuery, x => IsWorkingPrefab(x, workingId));
 
