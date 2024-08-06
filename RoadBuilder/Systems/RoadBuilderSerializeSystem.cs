@@ -3,6 +3,7 @@
 using Game;
 using Game.Prefabs;
 using Game.SceneFlow;
+using Game.UI;
 
 using RoadBuilder.Domain.Components;
 using RoadBuilder.Domain.Configurations;
@@ -76,6 +77,8 @@ namespace RoadBuilder.Systems
 				GameManager.instance.localizationManager.ReloadActiveLocale();
 
 				_prefabsToUpdate.Clear();
+
+				GameManager.instance.userInterface.appBindings.ShowMessageDialog(new MessageDialog("Options.SECTION[RoadBuilder.RoadBuilder.Mod]", "RoadBuilder.DIALOG_MESSAGE[ReloadSave]", "RoadBuilder.DIALOG_MESSAGE[Ok]"), null);
 			}
 
 			roadBuilderSystem.UpdateConfigurationList();
