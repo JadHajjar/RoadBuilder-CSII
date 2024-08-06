@@ -167,7 +167,17 @@ namespace RoadBuilder.Utilities
 
 		private IEnumerable<NetNodeStateInfo> GenerateNodeStates()
 		{
-			if ((NetworkPrefab.Config.Category & RoadCategory.Gravel) != 0)
+			if ((NetworkPrefab.Config.Category & RoadCategory.Pathway) != 0)
+			{
+				yield return new NetNodeStateInfo
+				{
+					m_RequireAll = new NetPieceRequirements[0],
+					m_RequireAny = new NetPieceRequirements[0],
+					m_RequireNone = new NetPieceRequirements[0],
+					m_SetState = new[] { NetPieceRequirements.Sidewalk, NetPieceRequirements.OppositeSidewalk }
+				};
+			}
+			else if ((NetworkPrefab.Config.Category & RoadCategory.Gravel) != 0)
 			{
 				yield return new NetNodeStateInfo
 				{
