@@ -69,7 +69,7 @@ namespace RoadBuilder.Systems
 		{
 			base.InitializeRaycast();
 
-			m_ToolRaycastSystem.netLayerMask = Layer.Road | Layer.TrainTrack | Layer.TramTrack | Layer.SubwayTrack | Layer.Pathway | Layer.PublicTransportRoad /*| Layer.Fence*/ ;
+			m_ToolRaycastSystem.netLayerMask = Layer.All;// | Layer.Road | Layer.TrainTrack | Layer.TramTrack | Layer.SubwayTrack | Layer.Pathway | Layer.PublicTransportRoad /*| Layer.Fence*/ ;
 			m_ToolRaycastSystem.typeMask = TypeMask.Net;
 			m_ToolRaycastSystem.collisionMask = CollisionMask.OnGround | CollisionMask.Overground;
 		}
@@ -165,7 +165,7 @@ namespace RoadBuilder.Systems
 			{
 				return false;
 			}
-
+			
 			if (!prefabSystem.TryGetPrefab<NetGeometryPrefab>(prefabRef, out var prefab))
 			{
 				return false;
@@ -185,7 +185,7 @@ namespace RoadBuilder.Systems
 			{
 				return false;
 			}
-
+			
 			if (applyAction.WasPerformedThisFrame())
 			{
 				if (prefab is INetworkBuilderPrefab)
