@@ -94,16 +94,6 @@ namespace RoadBuilder.Systems
 			while (_updatedRoadPrefabsQueue.Count > 0);
 		}
 
-		protected override void OnGameLoadingComplete(Purpose purpose, GameMode mode)
-		{
-			base.OnGameLoadingComplete(purpose, mode);
-
-			if (mode == GameMode.Game)
-			{
-				GameManager.instance.localizationManager.ReloadActiveLocale();
-			}
-		}
-
 		public void UpdateRoad(INetworkConfig config, Entity entity, bool createNewPrefab)
 		{
 			INetworkBuilderPrefab networkBuilderPrefab;
@@ -252,7 +242,7 @@ namespace RoadBuilder.Systems
 			}
 		}
 
-		public INetworkBuilderPrefab AddPrefab(INetworkConfig config, bool generateId = false, bool queueForUpdate = true)
+		public INetworkBuilderPrefab AddPrefab(INetworkConfig config, bool generateId = false)
 		{
 			try
 			{

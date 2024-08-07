@@ -2,6 +2,7 @@
 
 using Game;
 using Game.Prefabs;
+using Game.SceneFlow;
 
 using RoadBuilder.Domain.Components;
 using RoadBuilder.Domain.Configurations;
@@ -18,7 +19,9 @@ namespace RoadBuilder.Systems
 {
 	public partial class RoadBuilderSerializeSystem : GameSystemBase
 	{
-		public const ushort CURRENT_VERSION = 1;
+		public const ushort CURRENT_VERSION = 2;
+		/* Version 2 > Removed aggregate type
+		 */ 
 
 		private static RoadBuilderSystem roadBuilderSystem;
 		private static PrefabSystem prefabSystem;
@@ -68,7 +71,12 @@ namespace RoadBuilder.Systems
 				roadBuilderSystem.UpdatePrefab(item.Prefab);
 			}
 
-			_prefabsToUpdate.Clear();
+			if (_prefabsToUpdate.Count > 0)
+			{
+				GameManager.instance.localizationManager.ReloadActiveLocale();
+
+				_prefabsToUpdate.Clear();
+			}
 
 			roadBuilderSystem.UpdateConfigurationList();
 		}
@@ -79,21 +87,21 @@ namespace RoadBuilder.Systems
 
 			for (var i = 0; i < prefabRefs.Length; i++)
 			{
-				if (prefabSystem.GetPrefab<PrefabBase>(prefabRefs[i]) is not INetworkBuilderPrefab prefab || prefab.Deleted)
+				if (!prefabSystem.TryGetPrefab<PrefabBase>(prefabRefs[i], out var prefab) || prefab is not INetworkBuilderPrefab builderPrefab || builderPrefab.Deleted)
 				{
 					continue;
 				}
 
-				if (prefab.Prefab.name != prefab.Config.ID)
+				if (builderPrefab.Prefab.name != builderPrefab.Config.ID)
 				{
-					Mod.Log.Warn($"ANOMALY - NAME <> ID: {prefab.Prefab.name} - {prefab.Config.ID}");
+					Mod.Log.Warn($"ANOMALY - NAME <> ID: {builderPrefab.Prefab.name} - {builderPrefab.Config.ID}");
 				}
 
-				if (!list.Contains(prefab.Prefab.name))
+				if (!list.Contains(builderPrefab.Prefab.name))
 				{
-					Mod.Log.Debug("Adding for save: " + prefab.Config.Name + " - " + prefab.Config.ID);
+					Mod.Log.Debug("Adding for save: " + builderPrefab.Config.Name + " - " + builderPrefab.Config.ID);
 
-					list.Add(prefab.Prefab.name);
+					list.Add(builderPrefab.Prefab.name);
 				}
 			}
 

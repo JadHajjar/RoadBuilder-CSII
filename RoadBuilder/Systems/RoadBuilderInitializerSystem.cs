@@ -34,7 +34,7 @@ namespace RoadBuilder.Systems
 			{
 				Mod.Log.Debug($"LoadLocalNetwork: {item.GetType().Name} {item.ID}");
 
-				roadBuilderSystem.AddPrefab(item, queueForUpdate: false);
+				roadBuilderSystem.AddPrefab(item);
 			}
 
 			roadBuilderSystem.UpdateConfigurationList();

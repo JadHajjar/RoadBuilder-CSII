@@ -101,6 +101,13 @@ namespace RoadBuilder.Utilities
 					{
 						new OptionItemUIEntry
 						{
+							Id = (int)RoadCategory.Tram,
+							Name = RoadCategory.Tram.ToString().FormatWords(),
+							Icon = "coui://roadbuildericons/RB_TramWhite.svg",
+							Selected = config.Category.HasFlag(RoadCategory.Tram)
+						},
+						new OptionItemUIEntry
+						{
 							Id = (int)RoadCategory.Train,
 							Name = RoadCategory.Train.ToString().FormatWords(),
 							Icon = "coui://roadbuildericons/RB_TrainWhite.svg",

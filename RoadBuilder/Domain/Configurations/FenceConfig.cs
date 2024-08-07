@@ -15,7 +15,6 @@ namespace RoadBuilder.Domain.Configurations
 		public string OriginalID { get; set; }
 		public string ID { get; set; }
 		public string Name { get; set; }
-		public string AggregateType { get; set; }
 		public string PillarPrefabName { get; set; }
 		public float MaxSlopeSteepness { get; set; }
 		public RoadCategory Category { get; set; }
@@ -26,7 +25,11 @@ namespace RoadBuilder.Domain.Configurations
 		{
 			reader.Read(out string iD);
 			reader.Read(out string name);
-			reader.Read(out string aggregateType);
+			if (Version < 2)
+			{
+				reader.Read(out string _);
+			}
+
 			reader.Read(out string pillarPrefabName);
 			reader.Read(out float maxSlopeSteepness);
 			reader.Read(out ulong category);
@@ -34,7 +37,6 @@ namespace RoadBuilder.Domain.Configurations
 
 			ID = iD;
 			Name = name;
-			AggregateType = aggregateType;
 			PillarPrefabName = pillarPrefabName;
 			MaxSlopeSteepness = maxSlopeSteepness;
 			Category = (RoadCategory)category;
@@ -58,7 +60,6 @@ namespace RoadBuilder.Domain.Configurations
 		{
 			writer.Write(ID);
 			writer.Write(Name);
-			writer.Write(AggregateType ?? string.Empty);
 			writer.Write(PillarPrefabName ?? string.Empty);
 			writer.Write(MaxSlopeSteepness);
 			writer.Write((ulong)Category);

@@ -69,7 +69,7 @@ namespace RoadBuilder.Utilities
 			prefab.name = cfg.ID;
 			prefab.m_MaxSlopeSteepness = cfg.MaxSlopeSteepness;
 			prefab.m_InvertMode = CompositionInvertMode.FlipLefthandTraffic;
-			prefab.m_AggregateType = _roadGenerationData.AggregateNetPrefabs.TryGetValue(cfg.AggregateType ?? string.Empty, out var aggregate) ? aggregate : null;
+			prefab.m_AggregateType = _roadGenerationData.AggregateNetPrefabs.TryGetValue(GetAggregateName(), out var aggregate) ? aggregate : null;
 			prefab.m_Sections = Fix(GenerateSections()).ToArray();
 			prefab.m_NodeStates = GenerateNodeStates().ToArray();
 			prefab.m_EdgeStates = GenerateEdgeStates().ToArray();
@@ -89,7 +89,8 @@ namespace RoadBuilder.Utilities
 				trackPrefab.m_TrackType =
 					cfg.Category.HasFlag(RoadCategory.Train) ? Game.Net.TrackTypes.Train :
 					cfg.Category.HasFlag(RoadCategory.Subway) ? Game.Net.TrackTypes.Subway :
-					Game.Net.TrackTypes.Tram;
+					cfg.Category.HasFlag(RoadCategory.Tram) ? Game.Net.TrackTypes.Tram :
+					Game.Net.TrackTypes.None;
 			}
 
 			prefab.components.ForEach(UnityEngine.Object.Destroy);
@@ -122,6 +123,48 @@ namespace RoadBuilder.Utilities
 			}
 		}
 
+		private string GetAggregateName()
+		{
+			var category = NetworkPrefab.Config.Category;
+
+			if (category.HasFlag(RoadCategory.Subway))
+			{
+				return "Subway Track";
+			}
+
+			if (category.HasFlag(RoadCategory.Train))
+			{
+				return "Train Track";
+			}
+
+			if (category.HasFlag(RoadCategory.Tram))
+			{
+				return "Tram Track";
+			}
+
+			if (category.HasFlag(RoadCategory.Pathway))
+			{
+				return "Pathway";
+			}
+
+			if (category.HasFlag(RoadCategory.Highway))
+			{
+				return "Highway";
+			}
+
+			if (category.HasFlag(RoadCategory.PublicTransport))
+			{
+				return "Public Transport Lane";
+			}
+
+			if (category.HasFlag(RoadCategory.RaisedSidewalk))
+			{
+				return "Street";
+			}
+
+			return "Alley";
+		}
+
 		private IEnumerable<NetNodeStateInfo> GenerateNodeStates()
 		{
 			if ((NetworkPrefab.Config.Category & RoadCategory.Gravel) != 0)
@@ -130,14 +173,9 @@ namespace RoadBuilder.Utilities
 				{
 					m_RequireAll = new NetPieceRequirements[0],
 					m_RequireAny = new NetPieceRequirements[0],
-					m_RequireNone = new NetPieceRequirements[0],
-					m_SetState = new[]
-					{
-						NetPieceRequirements.Gravel
-					}
+					m_RequireNone = new[] { NetPieceRequirements.Elevated, NetPieceRequirements.Tunnel },
+					m_SetState = new[] { NetPieceRequirements.Gravel }
 				};
-
-				yield break;
 			}
 			else if ((NetworkPrefab.Config.Category & RoadCategory.Tiled) != 0)
 			{
@@ -151,8 +189,6 @@ namespace RoadBuilder.Utilities
 						NetPieceRequirements.Tiles
 					}
 				};
-
-				yield break;
 			}
 			else if ((NetworkPrefab.Config.Category & (RoadCategory.Train | RoadCategory.Subway | RoadCategory.Gravel)) == 0)
 			{
@@ -173,8 +209,6 @@ namespace RoadBuilder.Utilities
 						NetPieceRequirements.Pavement
 					}
 				};
-
-				yield break;
 			}
 		}
 
@@ -182,20 +216,9 @@ namespace RoadBuilder.Utilities
 		{
 			var states = new List<NetPieceRequirements>();
 
-			if ((NetworkPrefab.Config.Category & (RoadCategory.Train | RoadCategory.Subway)) == 0)
+			if ((NetworkPrefab.Config.Category & (RoadCategory.Train | RoadCategory.Subway | RoadCategory.Gravel | RoadCategory.Tiled)) == 0)
 			{
-				if ((NetworkPrefab.Config.Category & RoadCategory.Gravel) != 0)
-				{
-					states.Add(NetPieceRequirements.Gravel);
-				}
-				else if ((NetworkPrefab.Config.Category & RoadCategory.Tiled) != 0)
-				{
-					states.Add(NetPieceRequirements.Tiles);
-				}
-				else
-				{
-					states.Add(NetPieceRequirements.Pavement);
-				}
+				states.Add(NetPieceRequirements.Pavement);
 			}
 
             var trackLanes = NetworkPrefab.Prefab.m_Sections.SelectMany(x => x.m_Section.FindLanes<TrackLane>()).ToList();
@@ -249,6 +272,44 @@ namespace RoadBuilder.Utilities
 					m_RequireAny = new NetPieceRequirements[0],
 					m_RequireNone = new NetPieceRequirements[0],
 					m_SetState = states.ToArray()
+				};
+			}
+
+			if (NetworkPrefab.Config.Category.HasFlag(RoadCategory.Gravel))
+			{
+				yield return new NetEdgeStateInfo
+				{
+					m_RequireAll = new NetPieceRequirements[0],
+					m_RequireAny = new NetPieceRequirements[0],
+					m_RequireNone = new[] { NetPieceRequirements.Pavement | NetPieceRequirements.Elevated | NetPieceRequirements.Tunnel },
+					m_SetState = new[] { NetPieceRequirements.Gravel }
+				};
+
+				yield return new NetEdgeStateInfo
+				{
+					m_RequireAll = new NetPieceRequirements[0],
+					m_RequireAny = new[] { NetPieceRequirements.Pavement | NetPieceRequirements.Elevated | NetPieceRequirements.Tunnel },
+					m_RequireNone = new NetPieceRequirements[0],
+					m_SetState = new[] { NetPieceRequirements.Pavement }
+				};
+			}
+
+			if (NetworkPrefab.Config.Category.HasFlag(RoadCategory.Tiled))
+			{
+				yield return new NetEdgeStateInfo
+				{
+					m_RequireAll = new NetPieceRequirements[0],
+					m_RequireAny = new NetPieceRequirements[0],
+					m_RequireNone = new[] { NetPieceRequirements.Pavement | NetPieceRequirements.Gravel },
+					m_SetState = new[] { NetPieceRequirements.Tiles }
+				};
+
+				yield return new NetEdgeStateInfo
+				{
+					m_RequireAll = new NetPieceRequirements[0],
+					m_RequireAny = new[] { NetPieceRequirements.Pavement | NetPieceRequirements.Gravel },
+					m_RequireNone = new NetPieceRequirements[0],
+					m_SetState = new[] { NetPieceRequirements.Pavement }
 				};
 			}
 		}
@@ -515,7 +576,7 @@ namespace RoadBuilder.Utilities
 			{
 				m_Object = isOneWay ? _roadGenerationData.OutsideConnectionOneWay : _roadGenerationData.OutsideConnectionTwoWay,
 				m_Position = new float3(0, 5, 0),
-				m_Rotation = new quaternion(isOneWay ? 1 : 0, 0, 0, 0),
+				m_Rotation = new quaternion(0, 0, 0, 0),
 				m_Placement = NetObjectPlacement.Node,
 				m_RequireOutsideConnection = true,
 			};
