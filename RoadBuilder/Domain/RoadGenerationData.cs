@@ -18,5 +18,6 @@ namespace RoadBuilder.Domain
 		public Dictionary<string, UIGroupPrefab> UIGroupPrefabs { get; set; } = new();
 		public Dictionary<string, LaneGroupPrefab> LaneGroupPrefabs { get; set; } = new();
 		public bool LeftHandTraffic { get; set; }
+		public bool YellowDivider { get; set; }
 	}
 }

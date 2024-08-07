@@ -45,6 +45,7 @@ namespace RoadBuilder.Systems.UI
 		private ValueBindingHelper<RoadBuilderToolMode> RoadBuilderMode;
 		private ValueBindingHelper<string> RoadId;
 		private ValueBindingHelper<string> RoadName;
+		private ValueBindingHelper<string> RoadTypeName;
 		private ValueBindingHelper<RoadLaneUIBinder[]> RoadLanes;
 		private ValueBindingHelper<OptionSectionUIEntry[]> RoadOptions;
 		private ValueBindingHelper<bool> RoadListView;
@@ -80,6 +81,7 @@ namespace RoadBuilder.Systems.UI
 			RoadBuilderMode = CreateBinding("RoadBuilderToolMode", RoadBuilderToolMode.None);
 			RoadId = CreateBinding("GetRoadId", string.Empty);
 			RoadName = CreateBinding("GetRoadName", "SetRoadName", string.Empty, name => UpdateRoad(x => x.Name = name));
+			RoadTypeName = CreateBinding("GetRoadTypeName", string.Empty);
 			RoadLanes = CreateBinding("GetRoadLanes", new RoadLaneUIBinder[0]);
 			RoadOptions = CreateBinding("GetRoadOptions", new OptionSectionUIEntry[0]);
 			IsPaused = CreateBinding("IsPaused", simulationSystem.selectedSpeed == 0f);
@@ -101,7 +103,7 @@ namespace RoadBuilder.Systems.UI
 		protected override void OnUpdate()
 		{
 			IsPaused.Value = simulationSystem.selectedSpeed == 0f;
-			RoadId.Value = workingConfig?.ID ?? string.Empty;
+			RoadId.Value = GetWorkingId();
 
 			if (_toolKeyBinding.WasPerformedThisFrame())
 			{
@@ -227,10 +229,7 @@ namespace RoadBuilder.Systems.UI
 			}
 
 			RoadListView.Value = false;
-			netSectionsUISystem.RefreshEntries(config);
-			RoadName.Value = config.Name;
-			RoadOptions.Value = RoadOptionsUtil.GetRoadOptions(config);
-			RoadLanes.Value = From(config);
+			SetBindings(config);
 		}
 
 		private void UpdateRoad(Action<INetworkConfig> action)
@@ -269,7 +268,13 @@ namespace RoadBuilder.Systems.UI
 				roadBuilderSystem.UpdateRoad(config, workingEntity, false);
 			}
 
+			SetBindings(config);
+		}
+
+		private void SetBindings(INetworkConfig config)
+		{
 			netSectionsUISystem.RefreshEntries(config);
+			RoadTypeName.Value = $"RoadBuilder.Config[{config.GetType().Name}]";
 			RoadName.Value = config.Name;
 			RoadOptions.Value = RoadOptionsUtil.GetRoadOptions(config);
 			RoadLanes.Value = From(config);
@@ -338,12 +343,15 @@ namespace RoadBuilder.Systems.UI
 		{
 			RoadOptionsUtil.OptionClicked(config, option, id, value);
 
-			config.Lanes.RemoveAll(x =>
+			if (!Mod.Settings.AdvancedUserMode)
+			{
+				config.Lanes.RemoveAll(x =>
 			{
 				NetworkPrefabGenerationUtil.GetNetSection(roadGenerationDataSystem.RoadGenerationData, config, x, out var section, out var group);
 
 				return !(section?.MatchCategories(config) ?? true) || !(group?.MatchCategories(config) ?? true);
 			});
+			}
 		}
 
 		private void LaneOptionClicked(INetworkConfig config, int index, int option, int id, int value)

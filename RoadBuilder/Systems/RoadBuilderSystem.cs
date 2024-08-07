@@ -293,7 +293,7 @@ namespace RoadBuilder.Systems
 				{
 					Configurations[prefab.Prefab.name] = prefab;
 
-					Mod.Log.Debug("Configuration Found: " + prefab.Prefab.name);
+					Mod.Log.Debug($"Configuration Found: {prefab.Prefab.name} - {prefab.Config.ID}");
 				}
 			}
 

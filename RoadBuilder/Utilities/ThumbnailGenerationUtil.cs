@@ -1,8 +1,11 @@
 ﻿using Colossal.UI;
 
+using Game.Prefabs;
+
 using RoadBuilder.Domain;
 using RoadBuilder.Domain.Components.Prefabs;
 using RoadBuilder.Domain.Configurations;
+using RoadBuilder.Domain.Enums;
 using RoadBuilder.Domain.Prefabs;
 
 using System;
@@ -18,14 +21,31 @@ namespace RoadBuilder.Utilities
 	public class ThumbnailGenerationUtil
 	{
 		private readonly RoadGenerationData _roadGenerationData;
+		private static SvgItem _arrowForward;
+		private static SvgItem _arrowBackward;
+		private static SvgItem _arrowBoth;
+		private static SvgItem _markingYellow;
+		private static SvgItem _markingWhite;
+		private static SvgItem _markingDashed;
+		private readonly List<(NetSectionPrefab section, LaneGroupPrefab groupPrefab)?> _sections;
 
 		public INetworkBuilderPrefab NetworkPrefab { get; }
 
+
 		public ThumbnailGenerationUtil(INetworkBuilderPrefab prefab, RoadGenerationData roadGenerationData)
 		{
+			NetworkPrefab = prefab;
+
 			_roadGenerationData = roadGenerationData;
 
-			NetworkPrefab = prefab;
+			_arrowForward ??= new SvgItem(GetFileName("coui://roadbuildericons/Thumb_ArrowForward.svg"));
+			_arrowBackward ??= new SvgItem(GetFileName("coui://roadbuildericons/Thumb_ArrowBackward.svg"));
+			_arrowBoth ??= new SvgItem(GetFileName("coui://roadbuildericons/Thumb_ArrowBoth.svg"));
+			_markingYellow ??= new SvgItem(GetFileName("coui://roadbuildericons/Thumb_LineYellowSolid.svg"));
+			_markingWhite ??= new SvgItem(GetFileName("coui://roadbuildericons/Thumb_LineWhiteSolid.svg"));
+			_markingDashed ??= new SvgItem(GetFileName("coui://roadbuildericons/Thumb_LineWhiteDotted.svg"));
+
+			_sections = prefab.Config.Lanes.Select<LaneConfig, (NetSectionPrefab section, LaneGroupPrefab groupPrefab)?>(lane => NetworkPrefabGenerationUtil.GetNetSection(_roadGenerationData, NetworkPrefab.Config, lane, out var section, out var groupPrefab) ? (section, groupPrefab) : null).ToList();
 		}
 
 		public string GenerateThumbnail()
@@ -39,22 +59,55 @@ namespace RoadBuilder.Utilities
 					return null;
 				}
 
-				var totalWidth = svgs[0].ExtentsRect.Width - svgs[0].PositionRect.Width + svgs.Sum(x => x.PositionRect.Width);
-				var totalHeight = svgs[svgs.Count - 1].ExtentsRect.Height - svgs[svgs.Count - 1].PositionRect.Height + svgs.Sum(x => x.PositionRect.Height);
-				var totalSize = Math.Max(totalWidth, totalHeight) + 10;
+				var first = svgs.First().Value.First();
+				var last = svgs.Last().Value.Last();
+				var totalWidth = first.ExtentsRect.Width /*- first.PositionRect.Width*/ + svgs.Sum(x => x.Value.Sum(y => y.PositionRect.Width));
+				var totalHeight = last.ExtentsRect.Height - last.PositionRect.Height + svgs.Sum(x => x.Value.Sum(y => y.PositionRect.Height));
+				var totalSize = Math.Max(totalWidth, totalHeight) /*+ 10*/;
 
 				var elements = new List<XElement>();
 
 				var currentX = (totalSize - totalWidth) / 4;
 				var currentY = ((totalSize - totalHeight) / 2) + totalHeight - 50;
+				var startingX = currentX;
+				var startingY = currentY;
 
-				foreach (var item in svgs)
+				foreach (var lane in svgs)
 				{
-					elements.Insert(0, item.SetBounds(currentX, currentY));
+					var bounds = (currentX, currentY);
 
-					currentX += item.PositionRect.Width;
-					currentY -= item.PositionRect.Height;
+					foreach (var svg in lane.Value)
+					{
+						elements.Insert(0, svg.SetBounds(currentX, currentY));
+
+						currentX += svg.PositionRect.Width;
+						currentY -= svg.PositionRect.Height;
+					}
+
+					if (GetArrowIcon(lane.Key, out var arrow))
+					{
+						elements.Insert(lane.Value.Count, arrow.SetBounds(bounds.currentX + ((currentX - bounds.currentX - arrow.PositionRect.Width) / 2), bounds.currentY - ((bounds.currentY - currentY - arrow.PositionRect.Height) / 2)));
+					}
+
+					if (GetMarkingIcon(lane.Key, out var marking))
+					{
+						elements.Add(marking.SetBounds(bounds.currentX - (marking.PositionRect.Width / 2), bounds.currentY + (marking.PositionRect.Height / 2)));
+					}
 				}
+
+				string pipesFile;
+				if (NetworkPrefab.Config.Addons.HasFlag(Domain.Enums.RoadAddons.HasUndergroundWaterPipes))
+				{
+					pipesFile = totalSize > 115 ? "Thumb_PipesPower" : "Thumb_PipesPowerSmall";
+				}
+				else
+				{
+					pipesFile = totalSize > 115 ? "Thumb_Power" : "Thumb_PowerSmall";
+				}
+
+				var pipe = new SvgItem(GetFileName($"coui://roadbuildericons/{pipesFile}.svg"));
+
+				elements.Insert(0, pipe.SetBounds((totalSize - 100) / 2, (totalSize - 100) / 2, false));
 
 				XNamespace aw = "http://www.w3.org/2000/svg";
 				var combinedSvg = new XElement(aw + "svg",
@@ -88,45 +141,109 @@ namespace RoadBuilder.Utilities
 			}
 		}
 
-		private List<SvgItem> GetSvgItems()
+		private Dictionary<int, List<SvgItem>> GetSvgItems()
 		{
-			var svgs = new List<SvgItem>();
+			var svgs = new Dictionary<int, List<SvgItem>>();
 
-			foreach (var lane in NetworkPrefab.Config.Lanes.SelectMany(GetLaneIcons))
+			for (var i = 0; i < NetworkPrefab.Config.Lanes.Count; i++)
 			{
-				var file = GetFileName(lane);
+				var laneConfig = NetworkPrefab.Config.Lanes[i];
+				var laneSvgs = new List<SvgItem>();
 
-				if (file is null)
+				foreach (var lane in GetLaneIcons(laneConfig, _sections[i]))
 				{
-					continue;
+					var file = GetFileName(lane);
+
+					if (file is null)
+					{
+						continue;
+					}
+
+					try
+					{
+						laneSvgs.Add(new SvgItem(file));
+					}
+					catch (Exception ex)
+					{
+						Mod.Log.Warn(ex, "Failed to get SVG info from file: " + file);
+					}
 				}
 
-				try
+				if (laneSvgs.Count > 0)
 				{
-					var xml = XDocument.Load(file);
-					var svg = xml.Root;
-					var positionRect = GetRectValues(xml, "Position");
-					var extentsRect = GetRectValues(xml, "Extents");
-
-					svgs.Add(new SvgItem(svg, positionRect, extentsRect));
-				}
-				catch (Exception ex)
-				{
-					Mod.Log.Warn(ex, "Failed to get SVG info from file: " + file);
+					svgs[i] = laneSvgs;
 				}
 			}
 
 			return svgs;
 		}
 
-		private IEnumerable<string> GetLaneIcons(LaneConfig lane)
+		private bool GetArrowIcon(int index, out SvgItem arrow)
 		{
-			if (!NetworkPrefabGenerationUtil.GetNetSection(_roadGenerationData, NetworkPrefab.Config, lane, out var section, out var groupPrefab))
+			if (_sections[index] is null || Mod.Settings.HideArrowsOnThumbnails)
+			{
+				arrow = null;
+				return false;
+			}
+
+			var section = _sections[index].Value;
+
+			if (!section.section.FindLanes<CarLane>().Any() && !section.section.FindLanes<TrackLane>().Any())
+			{
+				arrow = null;
+				return false;
+			}
+
+			if (section.section.SupportsTwoWay())
+			{
+				arrow = _arrowBoth;
+				return true;
+			}
+
+			arrow = NetworkPrefab.Config.Lanes[index].Invert ? _arrowBackward : _arrowForward;
+			return true;
+		}
+
+		private bool GetMarkingIcon(int index, out SvgItem arrow)
+		{
+			if (_sections[index] is null || (NetworkPrefab.Config.Category & (RoadCategory.Gravel | RoadCategory.Pathway | RoadCategory.Fence | RoadCategory.Tiled)) != 0)
+			{
+				arrow = null;
+				return false;
+			}
+
+			var section = _sections[index].Value;
+			var previous = index > 0 ? _sections[index - 1] : null;
+
+			var isCurrentCar = section.section.FindLanes<CarLane>().Any();
+			var isPreviousCar = previous.HasValue && previous.Value.section.FindLanes<CarLane>().Any();
+
+			if (isCurrentCar && isPreviousCar)
+			{
+				if (NetworkPrefab.Config.Lanes[index].Invert == NetworkPrefab.Config.Lanes[index - 1].Invert)
+				{
+					arrow = _markingDashed;
+				}
+				else
+				{
+					arrow = _roadGenerationData.YellowDivider ? _markingYellow : _markingWhite;
+				}
+
+				return true;
+			}
+
+			arrow = null;
+			return false;
+		}
+
+		private IEnumerable<string> GetLaneIcons(LaneConfig lane, (NetSectionPrefab section, LaneGroupPrefab groupPrefab)? sections)
+		{
+			if (sections is null)
 			{
 				yield break;
 			}
 
-			if (section.TryGet<RoadBuilderLaneDecorationInfo>(out var decorationInfo) && groupPrefab?.Options.FirstOrDefault(x => x.Type is LaneOptionType.Decoration) is RoadBuilderLaneOption decorationOption)
+			if (sections.Value.section.TryGet<RoadBuilderLaneDecorationInfo>(out var decorationInfo) && sections?.groupPrefab?.Options.FirstOrDefault(x => x.Type is LaneOptionType.Decoration) is RoadBuilderLaneOption decorationOption)
 			{
 				switch (LaneOptionsUtil.GetSelectedOptionValue(NetworkPrefab.Config, lane, decorationOption))
 				{
@@ -169,7 +286,7 @@ namespace RoadBuilder.Utilities
 				}
 			}
 
-			if (section.TryGet<RoadBuilderLaneInfo>(out var sectionInfo) && (sectionInfo.LaneThumbnails?.Any() ?? false))
+			if (sections.Value.section.TryGet<RoadBuilderLaneInfo>(out var sectionInfo) && (sectionInfo.LaneThumbnails?.Any() ?? false))
 			{
 				foreach (var item in lane.Invert ? sectionInfo.LaneThumbnails.Reverse() : sectionInfo.LaneThumbnails)
 				{
@@ -179,7 +296,7 @@ namespace RoadBuilder.Utilities
 				yield break;
 			}
 
-			if (groupPrefab != null && groupPrefab.TryGet<RoadBuilderLaneInfo>(out var groupInfo) && (groupInfo.LaneThumbnails?.Any() ?? false))
+			if (sections?.groupPrefab != null && sections.Value.groupPrefab.TryGet<RoadBuilderLaneInfo>(out var groupInfo) && (groupInfo.LaneThumbnails?.Any() ?? false))
 			{
 				foreach (var item in lane.Invert ? groupInfo.LaneThumbnails.Reverse() : groupInfo.LaneThumbnails)
 				{
@@ -222,25 +339,6 @@ namespace RoadBuilder.Utilities
 			return null;
 		}
 
-		private Rectangle GetRectValues(XDocument xmlDocument, string rectId)
-		{
-			var rectElement = xmlDocument
-				.Descendants()
-				.FirstOrDefault(e => e.Name.LocalName == "rect" && ((string)e.Attribute("id") == rectId || (string)e.Parent.Attribute("id") == rectId));
-
-			if (rectElement == null)
-			{
-				throw new Exception($"Rect element with id '{rectId}' not found.");
-			}
-
-			double.TryParse(rectElement.Attribute("x").Value, NumberStyles.Any, CultureInfo.InvariantCulture, out var x);
-			double.TryParse(rectElement.Attribute("y").Value, NumberStyles.Any, CultureInfo.InvariantCulture, out var y);
-			double.TryParse(rectElement.Attribute("width").Value, NumberStyles.Any, CultureInfo.InvariantCulture, out var width);
-			double.TryParse(rectElement.Attribute("height").Value, NumberStyles.Any, CultureInfo.InvariantCulture, out var height);
-
-			return new Rectangle(x, y, width, height);
-		}
-
 		public static void DeleteThumbnail(string id)
 		{
 			var path = Path.Combine(FoldersUtil.TempFolder, id + ".svg");
@@ -253,21 +351,29 @@ namespace RoadBuilder.Utilities
 
 		private class SvgItem
 		{
-			public SvgItem(XElement svg, Rectangle positionRect, Rectangle extentsRect)
+			public SvgItem(string file)
 			{
-				Svg = svg;
-				PositionRect = positionRect;
-				ExtentsRect = extentsRect;
+				var xml = XDocument.Load(file);
+
+				Svg = xml.Root;
+				PositionRect = GetRectValues(xml, "Position");
+				ExtentsRect = GetRectValues(xml, "Extents");
 			}
 
 			public XElement Svg { get; }
 			public Rectangle PositionRect { get; }
 			public Rectangle ExtentsRect { get; }
 
-			public XElement SetBounds(double offsetX, double offsetY)
+			public XElement SetBounds(double offsetX, double offsetY, bool center = true)
 			{
+				if (center)
+				{
+					offsetX -= PositionRect.X;
+					offsetY -= PositionRect.Y + PositionRect.Height;
+				}
+
 				return new XElement("g"
-					, new XAttribute("transform", $"matrix(1,0,0,1,{(offsetX - PositionRect.X).ToString(CultureInfo.InvariantCulture)},{(offsetY - PositionRect.Y - PositionRect.Height).ToString(CultureInfo.InvariantCulture)})")
+					, new XAttribute("transform", $"matrix(1,0,0,1,{offsetX.ToString(CultureInfo.InvariantCulture)},{offsetY.ToString(CultureInfo.InvariantCulture)})")
 					, Svg.Elements());
 			}
 
@@ -289,6 +395,25 @@ namespace RoadBuilder.Utilities
 				}
 
 				return new XElement(xmlDocument.Name.LocalName, xmlDocument.Elements().Select(el => RemoveAllNamespaces(el)));
+			}
+
+			private Rectangle GetRectValues(XDocument xmlDocument, string rectId)
+			{
+				var rectElement = xmlDocument
+					.Descendants()
+					.FirstOrDefault(e => e.Name.LocalName == "rect" && ((string)e.Attribute("id") == rectId || (string)e.Parent.Attribute("id") == rectId));
+
+				if (rectElement == null)
+				{
+					throw new Exception($"Rect element with id '{rectId}' not found.");
+				}
+
+				double.TryParse(rectElement.Attribute("x").Value, NumberStyles.Any, CultureInfo.InvariantCulture, out var x);
+				double.TryParse(rectElement.Attribute("y").Value, NumberStyles.Any, CultureInfo.InvariantCulture, out var y);
+				double.TryParse(rectElement.Attribute("width").Value, NumberStyles.Any, CultureInfo.InvariantCulture, out var width);
+				double.TryParse(rectElement.Attribute("height").Value, NumberStyles.Any, CultureInfo.InvariantCulture, out var height);
+
+				return new Rectangle(x, y, width, height);
 			}
 		}
 

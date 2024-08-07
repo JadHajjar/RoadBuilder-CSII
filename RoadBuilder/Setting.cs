@@ -36,6 +36,8 @@ namespace RoadBuilder
 
 		[SettingsUISection(MAIN_SECTION, MAIN_GROUP)]
 		public bool AdvancedUserMode { get; set; }
+		[SettingsUISection(MAIN_SECTION, MAIN_GROUP)]
+		public bool HideArrowsOnThumbnails { get; set; }
 
 		//[SettingsUISection(kSection, kButtonGroup)]
 		//public bool Button { set => Mod.Log.Info("Button clicked"); }
