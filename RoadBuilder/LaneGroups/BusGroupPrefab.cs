@@ -57,13 +57,13 @@ namespace RoadBuilder.LaneGroups
 
 			AddComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_Bus_Centered.svg";
 
-			SetUp(sections["Public Transport Lane Section 3 - Tram Option"], "3m", "Tram");
-			SetUp(sections["Public Transport Lane Section 4 - Tram Option"], "4m", "Tram");
+			SetUp(sections["Public Transport Lane Section 3 - Tram Option"], "3m", "Tram").AddComponent<RoadBuilderLaneInfo>().WithFrontThumbnail("coui://roadbuildericons/RB_BusTramFront.svg").WithBackThumbnail("coui://roadbuildericons/RB_BusTramRear.svg");
+			SetUp(sections["Public Transport Lane Section 4 - Tram Option"], "4m", "Tram").AddComponent<RoadBuilderLaneInfo>().WithFrontThumbnail("coui://roadbuildericons/RB_BusTramFront.svg").WithBackThumbnail("coui://roadbuildericons/RB_BusTramRear.svg");
 			SetUp(sections["RB Public Transport Lane Section 3"], "3m", "");
 			SetUp(sections["RB Public Transport Lane Section 4"], "4m", "");
 		}
 
-		private void SetUp(NetSectionPrefab prefab, string value, string value2)
+		private NetSectionPrefab SetUp(NetSectionPrefab prefab, string value, string value2)
 		{
 			var laneInfo = prefab.AddComponent<RoadBuilderLaneGroup>();
 			laneInfo.GroupPrefab = this;
@@ -82,6 +82,8 @@ namespace RoadBuilder.LaneGroups
 			};
 
 			LinkedSections.Add(prefab);
+
+			return prefab;
 		}
 	}
 }
