@@ -226,7 +226,7 @@ namespace RoadBuilder.Utilities
 				}
 				else
 				{
-					arrow = _markingYellow;
+					arrow = _roadGenerationData.YellowDivider ? _markingYellow : _markingWhite;
 				}
 
 				return true;
