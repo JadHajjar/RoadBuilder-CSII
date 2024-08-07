@@ -57,7 +57,7 @@ namespace RoadBuilder
 			}
 
 			AssetDatabase.global.LoadSettings(nameof(RoadBuilder), Settings, new Setting(this));
-			CreatePlatformUpgrade();
+			CreateMedianPlatformUpgrade();
 
 			updateSystem.UpdateAfter<RoadBuilderGenerationDataSystem, PrefabInitializeSystem>(SystemUpdatePhase.PrefabUpdate);
 			updateSystem.UpdateAfter<RoadBuilderPrefabUpdateSystem, PrefabInitializeSystem>(SystemUpdatePhase.PrefabUpdate);
@@ -74,7 +74,7 @@ namespace RoadBuilder
 			updateSystem.UpdateAt<RoadBuilderConfigurationsUISystem>(SystemUpdatePhase.UIUpdate);
 		}
 
-		public void CreatePlatformUpgrade()
+		public void CreateMedianPlatformUpgrade()
 		{
             var prefabSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystemManaged<PrefabSystem>();
             var prefabs = Traverse.Create(prefabSystem).Field<List<PrefabBase>>("m_Prefabs").Value;
@@ -87,7 +87,7 @@ namespace RoadBuilder
 			platformPrefab.Remove<UIObject>();
 
 			var nUIObject = Object.Instantiate(baseUIObject);
-			nUIObject.m_Icon = "coui://gameui/Media/Placeholder.svg";
+			nUIObject.m_Icon = "coui://roadbuildericons/Thumb_Upgrade_MedianPlatform.svg";
 			nUIObject.name = nUIObject.name.Replace("Grass", "RB_MedianPlatformUpgrade");
 			platformPrefab.AddComponentFrom(nUIObject);
 
