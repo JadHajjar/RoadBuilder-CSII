@@ -139,46 +139,14 @@ namespace RoadBuilder.Systems
 
 			prefabSystem.AddPrefab(newSection3);
 			prefabSystem.AddPrefab(newSection4);
-
-			//var twoWaySection = NetSections["Car Drive Section 3"].Clone("Car Drive Twoway Section 3") as NetSectionPrefab;
-			//var twoWayPiece = NetPieces["Car Drive Piece 3"].Clone("Car Drive Twoway Piece 3") as NetPiecePrefab;
-			//var twoWayPieceFlat = NetPieces["Car Drive Piece 3 - Flat"].Clone("Car Drive Twoway Piece 3 - Flat") as NetPiecePrefab;
-			//var twoWayLane = NetLanes["Car Drive Lane 3"].Clone("Car Drive Twoway Lane 3") as NetLanePrefab;
-
-			//var lanes = twoWayPiece.AddOrGetComponent<NetPieceLanes>();
-			//var lanesFlat = twoWayPieceFlat.AddOrGetComponent<NetPieceLanes>();
-
-			//lanes.m_Lanes[0].m_Lane = twoWayLane;
-			//lanesFlat.m_Lanes[0].m_Lane = twoWayLane;
-
-			//foreach (var item in twoWaySection.m_Pieces)
-			//{
-			//	if (item.m_Piece.name is "Car Drive Piece 3")
-			//	{
-			//		item.m_Piece = twoWayPiece;
-			//	}
-
-			//	if (item.m_Piece.name is "Car Drive Piece 3 - Flat")
-			//	{
-			//		item.m_Piece = twoWayPieceFlat;
-			//	}
-			//}
-
-			//twoWayLane.Remove<ObsoleteIdentifiers>();
-			//twoWayPieceFlat.Remove<ObsoleteIdentifiers>();
-			//twoWayPiece.Remove<ObsoleteIdentifiers>();
-			//twoWaySection.Remove<ObsoleteIdentifiers>();
-
-			//prefabSystem.AddPrefab(twoWayLane);
-			//prefabSystem.AddPrefab(twoWayPieceFlat);
-			//prefabSystem.AddPrefab(twoWayPiece);
-			//prefabSystem.AddPrefab(twoWaySection);
-
-			//NetSections[twoWaySection.name] = twoWaySection;
 		}
 
 		private void ModifyVanillaSections()
 		{
+			NetSections["Road Median 5"].m_Pieces[0].m_RequireAll = new[] { NetPieceRequirements.Edge };
+			NetSections["Road Median 5"].m_Pieces[2].m_RequireAll = new[] { NetPieceRequirements.Edge };
+			NetSections["Road Median 2"].m_Pieces[0].m_RequireAll = new[] { NetPieceRequirements.Edge };
+
 			var median5Pieces = new[]
 			{
 				NetPieces["Median Piece 5"],
