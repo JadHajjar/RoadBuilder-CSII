@@ -633,7 +633,7 @@ namespace RoadBuilder.Utilities
 				{
 					group = "RoadsLargeRoads";
 				}
-				else if (width > 22)
+				else if (width >= 18)
 				{
 					group = "RoadsMediumRoads";
 				}
