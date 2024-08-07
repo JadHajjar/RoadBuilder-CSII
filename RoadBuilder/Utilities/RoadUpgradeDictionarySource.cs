@@ -10,14 +10,14 @@ using System.Threading.Tasks;
 
 namespace RoadBuilder.Utilities
 {
-    public class UpgradeNameUtil : IDictionarySource
+    public class RoadUpgradeDictionarySource : IDictionarySource
     {
 
         private readonly PrefabUISystem _prefabUISystem;
         private PrefabBase[] _upgrades;
 
 
-        public UpgradeNameUtil(PrefabUISystem prefabUISystem, PrefabBase[] upgrades)
+        public RoadUpgradeDictionarySource(PrefabUISystem prefabUISystem, PrefabBase[] upgrades)
         {
             _prefabUISystem = prefabUISystem;
             _upgrades = upgrades;

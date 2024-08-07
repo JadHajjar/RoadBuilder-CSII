@@ -23,7 +23,7 @@ namespace RoadBuilder
 	public class Mod : IMod
 	{
 		public const string Id = nameof(RoadBuilder);
-        private UpgradeNameUtil _upgradeNameUtil;
+        private RoadUpgradeDictionarySource _upgradeNameUtil;
 
         public static ILog Log { get; } = LogManager.GetLogger(nameof(RoadBuilder)).SetShowsErrorsInUI(false);
 		public static Setting Settings { get; private set; }
@@ -107,7 +107,7 @@ namespace RoadBuilder
 				return;
 			}
 
-			_upgradeNameUtil = new UpgradeNameUtil(
+			_upgradeNameUtil = new RoadUpgradeDictionarySource(
 				World.DefaultGameObjectInjectionWorld.GetOrCreateSystemManaged<PrefabUISystem>(), 
 				new[] { platformPrefab }
 			);
