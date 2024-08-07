@@ -343,12 +343,15 @@ namespace RoadBuilder.Systems.UI
 		{
 			RoadOptionsUtil.OptionClicked(config, option, id, value);
 
-			config.Lanes.RemoveAll(x =>
+			if (!Mod.Settings.AdvancedUserMode)
+			{
+				config.Lanes.RemoveAll(x =>
 			{
 				NetworkPrefabGenerationUtil.GetNetSection(roadGenerationDataSystem.RoadGenerationData, config, x, out var section, out var group);
 
 				return !(section?.MatchCategories(config) ?? true) || !(group?.MatchCategories(config) ?? true);
 			});
+			}
 		}
 
 		private void LaneOptionClicked(INetworkConfig config, int index, int option, int id, int value)
