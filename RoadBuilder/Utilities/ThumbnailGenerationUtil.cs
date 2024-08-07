@@ -5,6 +5,7 @@ using Game.Prefabs;
 using RoadBuilder.Domain;
 using RoadBuilder.Domain.Components.Prefabs;
 using RoadBuilder.Domain.Configurations;
+using RoadBuilder.Domain.Enums;
 using RoadBuilder.Domain.Prefabs;
 
 using System;
@@ -60,7 +61,7 @@ namespace RoadBuilder.Utilities
 
 				var first = svgs.First().Value.First();
 				var last = svgs.Last().Value.Last();
-				var totalWidth = first.ExtentsRect.Width - first.PositionRect.Width + svgs.Sum(x => x.Value.Sum(y => y.PositionRect.Width));
+				var totalWidth = first.ExtentsRect.Width /*- first.PositionRect.Width*/ + svgs.Sum(x => x.Value.Sum(y => y.PositionRect.Width));
 				var totalHeight = last.ExtentsRect.Height - last.PositionRect.Height + svgs.Sum(x => x.Value.Sum(y => y.PositionRect.Height));
 				var totalSize = Math.Max(totalWidth, totalHeight) /*+ 10*/;
 
@@ -85,12 +86,12 @@ namespace RoadBuilder.Utilities
 
 					if (GetArrowIcon(lane.Key, out var arrow))
 					{
-						elements.Insert(lane.Value.Count, _arrowForward.SetBounds(bounds.currentX + ((currentX - bounds.currentX) / 2), bounds.currentY + ((currentY - bounds.currentY) / 2)));
+						elements.Insert(lane.Value.Count, arrow.SetBounds(bounds.currentX + ((currentX - bounds.currentX - arrow.PositionRect.Width) / 2), bounds.currentY - ((bounds.currentY - currentY - arrow.PositionRect.Height) / 2)));
 					}
 
 					if (GetMarkingIcon(lane.Key, out var marking))
 					{
-						elements.Insert(0, _arrowForward.SetBounds(bounds.currentX, bounds.currentY));
+						elements.Add(marking.SetBounds(bounds.currentX - (marking.PositionRect.Width / 2), bounds.currentY + (marking.PositionRect.Height / 2)));
 					}
 				}
 
@@ -179,7 +180,7 @@ namespace RoadBuilder.Utilities
 
 		private bool GetArrowIcon(int index, out SvgItem arrow)
 		{
-			if (_sections[index] is null)
+			if (_sections[index] is null || Mod.Settings.HideArrowsOnThumbnails)
 			{
 				arrow = null;
 				return false;
@@ -205,7 +206,7 @@ namespace RoadBuilder.Utilities
 
 		private bool GetMarkingIcon(int index, out SvgItem arrow)
 		{
-			if (_sections[index] is null)
+			if (_sections[index] is null || (NetworkPrefab.Config.Category & (RoadCategory.Gravel | RoadCategory.Pathway | RoadCategory.Fence | RoadCategory.Tiled)) != 0)
 			{
 				arrow = null;
 				return false;

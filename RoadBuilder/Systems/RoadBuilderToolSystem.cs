@@ -161,7 +161,7 @@ namespace RoadBuilder.Systems
 				return false;
 			}
 
-			if (!EntityManager.TryGetComponent<PrefabRef>(entity, out var prefabRef))
+			if (!EntityManager.TryGetComponent<PrefabRef>(entity, out var prefabRef) || EntityManager.HasComponent<Owner>(entity))
 			{
 				return false;
 			}
