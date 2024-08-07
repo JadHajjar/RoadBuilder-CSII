@@ -94,7 +94,7 @@ namespace RoadBuilder.Systems
 
 		private void DoCustomSectionSetup()
 		{
-			//AddCustomSections();
+			AddCustomSections();
 
 			ModifyVanillaSections();
 
@@ -109,45 +109,44 @@ namespace RoadBuilder.Systems
 
 		private void AddCustomSections()
 		{
-			var twoWaySection = NetSections["Car Drive Section 3"].Clone("Car Drive Twoway Section 3") as NetSectionPrefab;
-			var twoWayPiece = NetPieces["Car Drive Piece 3"].Clone("Car Drive Twoway Piece 3") as NetPiecePrefab;
-			var twoWayPieceFlat = NetPieces["Car Drive Piece 3 - Flat"].Clone("Car Drive Twoway Piece 3 - Flat") as NetPiecePrefab;
-			var twoWayLane = NetLanes["Car Drive Lane 3"].Clone("Car Drive Twoway Lane 3") as NetLanePrefab;
+			var newSection3 = NetSections["Public Transport Lane Section 3 - Tram Option"].Clone("RB Public Transport Lane Section 3") as NetSectionPrefab;
+			var newSection4 = NetSections["Public Transport Lane Section 4 - Tram Option"].Clone("RB Public Transport Lane Section 4") as NetSectionPrefab;
 
-			var lanes = twoWayPiece.AddOrGetComponent<NetPieceLanes>();
-			var lanesFlat = twoWayPieceFlat.AddOrGetComponent<NetPieceLanes>();
+			NetSections[newSection3.name] = newSection3;
+			NetSections[newSection4.name] = newSection4;
 
-			lanes.m_Lanes[0].m_Lane = twoWayLane;
-			lanesFlat.m_Lanes[0].m_Lane = twoWayLane;
-
-			foreach (var item in twoWaySection.m_Pieces)
+			foreach (var item in new[] { newSection3, newSection4 })
 			{
-				if (item.m_Piece.name is "Car Drive Piece 3")
+				var sections = new List<NetPieceInfo>();
+
+				foreach (var piece in item.m_Pieces)
 				{
-					item.m_Piece = twoWayPiece;
+					if (!piece.m_RequireAll.Contains(NetPieceRequirements.TramTrack) && !piece.m_RequireAny.Contains(NetPieceRequirements.TramTrack))
+					{
+						sections.Add(new NetPieceInfo
+						{
+							m_RequireAll = piece.m_RequireAll,
+							m_RequireAny = piece.m_RequireAny,
+							m_RequireNone = piece.m_RequireNone.Where(x => x != NetPieceRequirements.TramTrack).ToArray(),
+							m_Offset = piece.m_Offset,
+							m_Piece = piece.m_Piece,
+						});
+					}
 				}
 
-				if (item.m_Piece.name is "Car Drive Piece 3 - Flat")
-				{
-					item.m_Piece = twoWayPieceFlat;
-				}
+				item.m_Pieces = sections.ToArray();
 			}
 
-			twoWayLane.Remove<ObsoleteIdentifiers>();
-			twoWayPieceFlat.Remove<ObsoleteIdentifiers>();
-			twoWayPiece.Remove<ObsoleteIdentifiers>();
-			twoWaySection.Remove<ObsoleteIdentifiers>();
-
-			prefabSystem.AddPrefab(twoWayLane);
-			prefabSystem.AddPrefab(twoWayPieceFlat);
-			prefabSystem.AddPrefab(twoWayPiece);
-			prefabSystem.AddPrefab(twoWaySection);
-
-			NetSections[twoWaySection.name] = twoWaySection;
+			prefabSystem.AddPrefab(newSection3);
+			prefabSystem.AddPrefab(newSection4);
 		}
 
 		private void ModifyVanillaSections()
 		{
+			NetSections["Road Median 5"].m_Pieces[0].m_RequireAll = new[] { NetPieceRequirements.Edge };
+			NetSections["Road Median 5"].m_Pieces[2].m_RequireAll = new[] { NetPieceRequirements.Edge };
+			NetSections["Road Median 2"].m_Pieces[0].m_RequireAll = new[] { NetPieceRequirements.Edge };
+
 			var median5Pieces = new[]
 			{
 				NetPieces["Median Piece 5"],

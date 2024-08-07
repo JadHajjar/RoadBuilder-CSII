@@ -69,7 +69,11 @@ namespace RoadBuilder.Systems.UI
 			RoadConfigurations.Value = roadBuilderSystem.Configurations.Select(x => new RoadConfigurationUIBinder
 			{
 				ID = x.Key,
+#if DEBUG
+				Name = x.Value.Config.Name + " - " + x.Value.Config.ID,
+#else
 				Name = x.Value.Config.Name,
+#endif
 				Thumbnail = ImageSystem.GetIcon(x.Value.Prefab)
 			}).ToArray();
 		}
@@ -153,7 +157,7 @@ namespace RoadBuilder.Systems.UI
 
 		private void DeleteRoad(string id)
 		{
-			GameManager.instance.userInterface.appBindings.ShowConfirmationDialog(new ConfirmationDialog(null, "RoadBuilder.DIALOG_MESSAGE[DELETE]", "Common.DIALOG_ACTION[Yes]", "Common.DIALOG_ACTION[No]"), msg =>
+			GameManager.instance.userInterface.appBindings.ShowConfirmationDialog(new ConfirmationDialog("Options.SECTION[RoadBuilder.RoadBuilder.Mod]", "RoadBuilder.DIALOG_MESSAGE[DELETE]", "Common.DIALOG_ACTION[Yes]", "Common.DIALOG_ACTION[No]"), msg =>
 			{
 				if (msg == 0)
 				{

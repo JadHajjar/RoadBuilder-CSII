@@ -1,6 +1,6 @@
 import { useValue } from "cs2/api";
 import styles from "./RoadPropertiesPanel.module.scss";
-import { roadOptions$, getRoadName$, setRoadName, roadLanes$ } from "mods/bindings";
+import { roadOptions$, getRoadName$, setRoadName, roadLanes$, getRoadTypeName$ } from "mods/bindings";
 import { TextInput, TextInputTheme } from "mods/Components/TextInput/TextInput";
 import { FOCUS_DISABLED } from "cs2/ui";
 import { Theme } from "cs2/bindings";
@@ -10,11 +10,14 @@ import { OptionsPanelComponent } from "mods/Components/OptionsPanel/OptionsPanel
 import { roadOptionClicked } from "mods/bindings";
 import { KeyboardEvent, useState } from "react";
 import { VanillaComponentResolver } from "vanillacomponentresolver";
+import { useLocalization } from "cs2/l10n";
 
 const DropdownStyle: Theme | any = getModule("game-ui/menu/themes/dropdown.module.scss", "classes");
 
 export const RoadPropertiesPanel = () => {
+  const { translate } = useLocalization();
   let roadOptions = useValue(roadOptions$);
+  let getRoadTypeName = useValue(getRoadTypeName$);
   let roadName = useValue(getRoadName$);
   let roadLanes = useValue(roadLanes$);
   let roadWidth = 0;
@@ -41,7 +44,7 @@ export const RoadPropertiesPanel = () => {
   return (
     <div className={styles.panel}>
       <div className={styles.header}>
-        <div className={styles.title}>Road Properties</div>
+        <div className={styles.title}>{translate(getRoadTypeName)}</div>
         <div className={styles.roadWidth}>{`${roadWidth}m / ${roadUnits}U`}</div>
       </div>
 

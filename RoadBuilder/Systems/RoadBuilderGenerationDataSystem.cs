@@ -1,4 +1,7 @@
-﻿using Game.City;
+﻿using Colossal.Serialization.Entities;
+
+using Game;
+using Game.City;
 using Game.Common;
 using Game.Prefabs;
 
@@ -25,6 +28,13 @@ namespace RoadBuilder.Systems
 			cityConfigurationSystem = World.GetOrCreateSystemManaged<CityConfigurationSystem>();
 		}
 
+		protected override void OnGamePreload(Purpose purpose, GameMode mode)
+		{
+			base.OnGamePreload(purpose, mode);
+
+			OnUpdate();
+		}
+
 		protected override void OnUpdate()
 		{
 			base.OnUpdate();
@@ -35,6 +45,9 @@ namespace RoadBuilder.Systems
 			var zoneBlockDataEntities = zoneBlockDataQuery.ToEntityArray(Allocator.Temp);
 
 			roadGenerationData.LeftHandTraffic = cityConfigurationSystem.leftHandTraffic;
+			roadGenerationData.YellowDivider = !prefabSystem.TryGetPrefab<ThemePrefab>(cityConfigurationSystem.defaultTheme, out var theme) || theme.assetPrefix is not "EU";
+
+			Mod.Log.Debug("RoadBuilderGenerationDataSystem " + roadGenerationData.LeftHandTraffic);
 
 			for (var i = 0; i < zoneBlockDataEntities.Length; i++)
 			{
