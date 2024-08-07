@@ -33,7 +33,7 @@ namespace RoadBuilder.Utilities
             {
                 _prefabUISystem.GetTitleAndDescription(prefab, out var titleId, out var descriptionId);
                 yield return new(titleId, "Median Platforms");
-                yield return new(descriptionId, "Marks each 5m median on the road as a platform, allowing citizens to walk on and board transit from it.");
+                yield return new(descriptionId, "Marks each 5m median on the road as a platform, allowing citizens to walk on and board transit from it when a stop is placed.");
             }            
         }
 
