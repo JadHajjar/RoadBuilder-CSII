@@ -6,21 +6,26 @@ using Game;
 using Game.Modding;
 using Game.Prefabs;
 using Game.SceneFlow;
-
+using Game.UI.InGame;
 using HarmonyLib;
 
 using RoadBuilder.Systems;
 using RoadBuilder.Systems.UI;
 using RoadBuilder.Utilities;
-
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using Unity.Entities;
+using UnityEngine;
 
 namespace RoadBuilder
 {
 	public class Mod : IMod
 	{
 		public const string Id = nameof(RoadBuilder);
-		public static ILog Log { get; } = LogManager.GetLogger(nameof(RoadBuilder)).SetShowsErrorsInUI(false);
+        private RoadUpgradeDictionarySource _upgradeNameUtil;
+
+        public static ILog Log { get; } = LogManager.GetLogger(nameof(RoadBuilder)).SetShowsErrorsInUI(false);
 		public static Setting Settings { get; private set; }
 
 		public void OnLoad(UpdateSystem updateSystem)
@@ -52,6 +57,7 @@ namespace RoadBuilder
 			}
 
 			AssetDatabase.global.LoadSettings(nameof(RoadBuilder), Settings, new Setting(this));
+			CreateMedianPlatformUpgrade();
 
 			updateSystem.UpdateAfter<RoadBuilderGenerationDataSystem, PrefabInitializeSystem>(SystemUpdatePhase.PrefabUpdate);
 			updateSystem.UpdateAfter<RoadBuilderPrefabUpdateSystem, PrefabInitializeSystem>(SystemUpdatePhase.PrefabUpdate);
@@ -67,6 +73,45 @@ namespace RoadBuilder
 			updateSystem.UpdateAt<RoadBuilderNetSectionsUISystem>(SystemUpdatePhase.UIUpdate);
 			updateSystem.UpdateAt<RoadBuilderConfigurationsUISystem>(SystemUpdatePhase.UIUpdate);
 		}
+
+		public void CreateMedianPlatformUpgrade()
+		{
+            var prefabSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystemManaged<PrefabSystem>();
+            var prefabs = Traverse.Create(prefabSystem).Field<List<PrefabBase>>("m_Prefabs").Value;
+            var basePrefab = prefabs.FirstOrDefault(p => p.name == "Grass");
+			var baseUIObject = basePrefab.GetComponent<UIObject>();
+			var baseNetUpgrade = basePrefab.GetComponent<NetUpgrade>();
+			
+			var platformPrefab = Object.Instantiate(basePrefab);
+			platformPrefab.name = "RB_MedianPlatformUpgrade";
+			platformPrefab.Remove<UIObject>();
+
+			var nUIObject = Object.Instantiate(baseUIObject);
+			nUIObject.m_Icon = "coui://roadbuildericons/Thumb_Upgrade_MedianPlatform.svg";
+			nUIObject.name = nUIObject.name.Replace("Grass", "RB_MedianPlatformUpgrade");
+			platformPrefab.AddComponentFrom(nUIObject);
+
+			var netUpgrade = Object.Instantiate(baseNetUpgrade);
+			netUpgrade.m_SetState = new[]
+			{
+				NetPieceRequirements.MiddlePlatform
+			};
+			netUpgrade.m_UnsetState = new NetPieceRequirements[0];
+			platformPrefab.Remove<NetUpgrade>();
+			platformPrefab.AddComponentFrom(netUpgrade);
+
+
+            if (!prefabSystem.AddPrefab(platformPrefab))
+			{
+				Mod.Log.Warn("Unable to create platform upgrade prefab");
+				return;
+			}
+
+			_upgradeNameUtil = new RoadUpgradeDictionarySource(
+				World.DefaultGameObjectInjectionWorld.GetOrCreateSystemManaged<PrefabUISystem>(), 
+				new[] { platformPrefab }
+			);
+        }
 
 		public void OnDispose()
 		{
