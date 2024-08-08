@@ -4,26 +4,12 @@ import { RoadLane } from "domain/RoadLane";
 import { LaneListItemDrag } from "mods/Components/LaneListItem/LaneListItem";
 import { MouseButtons } from "mods/util";
 import { createContext, PropsWithChildren, Reducer, startTransition, useEffect, useMemo, useReducer, useRef, useState } from "react";
-
-interface DragContextReducerState {
-  netSectionItem?: NetSectionItem;
-  roadLane?: RoadLane;
-  mousePosition: Number2;
-  mouseReleased: boolean;
-  oldIndex?: number;
-}
+import { defaultDragCtxReducerState, DragContextAction, DragContextActionType, dragContextReducer, DragContextReducerState } from "../Reducers/DragContextReducer";
 
 export interface DragContextData extends DragContextReducerState {
   onNetSectionItemChange: (item?: NetSectionItem) => void;
   setRoadLane: (roadLane?: RoadLane, currentIndex?: number) => void;
   dragElement?: Element | null;
-}
-
-const defaultDragCtxReducerState : DragContextReducerState = {
-  netSectionItem: undefined,
-  roadLane: undefined,
-  mousePosition: { x: 0, y: 0 },
-  mouseReleased: false,
 }
 
 const defaultDragContextData : DragContextData = {
@@ -33,68 +19,6 @@ const defaultDragContextData : DragContextData = {
 };
 
 export const DragContext = createContext<DragContextData>(defaultDragContextData);
-
-enum DragContextActionType {
-  MouseReleased,
-  MouseMove,
-  SetNetSectionItem,
-  SetDragRoadLane,
-  UpdateFunctions
-}
-
-type DragContextAction = 
-  | {type: DragContextActionType.MouseReleased, button: number}
-  | {type: DragContextActionType.MouseMove, position: Number2}
-  | {type: DragContextActionType.SetNetSectionItem, item?: NetSectionItem}
-  | {type: DragContextActionType.SetDragRoadLane, lane?: RoadLane, currentIndex?: number}
-;
-
-let dragContextReducer : Reducer<DragContextReducerState, DragContextAction>= (prevState, action) => {
-  switch(action.type) {
-    case DragContextActionType.MouseMove: {      
-        return {
-          ...prevState,
-          mousePosition: action.position
-        };
-    }
-    case DragContextActionType.MouseReleased: {
-      let isDragging = prevState.netSectionItem != undefined || prevState.roadLane != undefined;
-      if (action.button == MouseButtons.Primary && isDragging) {
-        return {
-          ...prevState,
-          mouseReleased: true
-        };   
-      } else if (action.button == MouseButtons.Secondary && isDragging) {
-        return {
-          ...prevState,
-          netSectionItem: undefined,
-          roadLane: undefined,
-          oldIndex: undefined,
-          mouseReleased: false
-        };
-      }
-      break;
-    }
-    case DragContextActionType.SetNetSectionItem: {
-      return {
-        ...prevState,
-        netSectionItem: action.item,
-        mouseReleased: false
-      };
-    }
-    case DragContextActionType.SetDragRoadLane: {
-      return {
-        ...prevState,
-        oldIndex: action.currentIndex,
-        roadLane: action.lane,
-        mouseReleased: false
-      }
-    }
-    default:      
-      throw new Error("Unknown action type provided to dragContextReducer!");            
-  }
-  return prevState;
-}
 
 export const DragContextManager = ({ children }: PropsWithChildren) => {
   let [reducerState, dispatch] = useReducer(dragContextReducer, defaultDragContextData);
