@@ -36,7 +36,7 @@ namespace RoadBuilder.Utilities
 						new OptionItemUIEntry
 						{
 							IsValue = true,
-							Value = $"{(int)(roadConfig.SpeedLimit / (IsMetric() ? 1.8f : 2.8968192f) / 10) * 10} {(IsMetric() ? "km/h" : "mph")}"
+							Value = $"{(int)(roadConfig.SpeedLimit / (IsMetric() ? 2f : 3.218688f) / 10) * 5} {(IsMetric() ? "km/h" : "mph")}"
 						}
 					}
 				});
@@ -90,7 +90,7 @@ namespace RoadBuilder.Utilities
 						new OptionItemUIEntry
 						{
 							IsValue = true,
-							Value =  $"{(int)(trackConfig.SpeedLimit / (IsMetric() ? 1.8f : 2.8968192f) / 10) * 10} {(IsMetric() ? "km/h" : "mph")}"
+							Value =  $"{(int)(trackConfig.SpeedLimit / (IsMetric() ? 2f : 3.218688f) / 5) * 5} {(IsMetric() ? "km/h" : "mph")}"
 						}
 					}
 				});
@@ -202,7 +202,7 @@ namespace RoadBuilder.Utilities
 			switch ((ActionType)option)
 			{
 				case ActionType.SpeedLimit:
-					var multiplier = 10 * (IsMetric() ? 1.8f : 2.8968192f);
+					var multiplier = 5 * (IsMetric() ? 2f : 3.218688f);
 
 					if (config is RoadConfig roadConfig)
 					{
