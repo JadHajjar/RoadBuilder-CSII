@@ -35,7 +35,6 @@ const defaultDragContextData : DragContextData = {
 export const DragContext = createContext<DragContextData>(defaultDragContextData);
 
 enum DragContextActionType {
-  Init,
   MouseReleased,
   MouseMove,
   SetNetSectionItem,
