@@ -1,9 +1,8 @@
-import { useContext, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { BottomView } from "../BottomView/BottomView";
 import { SidePanel } from "mods/SidePanel/SidePanel";
 import { DragContextManager } from "mods/Contexts/DragContext";
 import { NetSectionItem } from "domain/NetSectionItem";
-import { Number2 } from "cs2/ui";
 import RB_ClickOnRoad from "images/RB_ClickOnRoad.svg";
 
 import styles from "./ModView.module.scss";
@@ -11,40 +10,15 @@ import { useValue } from "cs2/api";
 import { RoadBuilderToolModeEnum } from "domain/RoadBuilderToolMode";
 import { allNetSections$, roadBuilderToolMode$ } from "mods/bindings";
 import ActionPopup from "mods/Components/ActionPopup/ActionPopup";
-import { RoadLane } from "domain/RoadLane";
 import { NetSectionsStoreContext } from "mods/Contexts/NetSectionsStore";
 import { RoadPropertiesPanel } from "mods/RoadPropertiesPanel/RoadPropertiesPanel";
-import { LanePropertiesContext, LanePropertiesContextData } from "mods/Contexts/LanePropertiesContext";
+import { LanePropertiesContextManager } from "mods/Contexts/LanePropertiesContext";
 import { useLocalization } from "cs2/l10n";
 
 export const ModView = () => {
   const roadBuilderToolMode = useValue(roadBuilderToolMode$);
   let { translate } = useLocalization();
-  let allNetSections = useValue(allNetSections$);
-  let defaultLanePropCtx = useContext(LanePropertiesContext);
-  let [lanePropState, setLanePropState] = useState<LanePropertiesContextData>(defaultLanePropCtx);
-
-  let lanePropCtx = useMemo(
-    () => ({
-      ...lanePropState,
-      open(roadLane: RoadLane, index: number, position: Number2) {
-        setLanePropState({
-          ...lanePropState,
-          position,
-          index,
-          laneData: roadLane,
-          showPopup: true,
-        });
-      },
-      close() {
-        setLanePropState({
-          ...lanePropState,
-          showPopup: false,
-        });
-      },
-    }),
-    [lanePropState, setLanePropState]
-  );
+  let allNetSections = useValue(allNetSections$);    
 
   let nStore = useMemo(() => {
     let nStore = allNetSections.reduce<Record<string, NetSectionItem>>((record: Record<string, NetSectionItem>, cVal: NetSectionItem, cIdx) => {
@@ -93,9 +67,9 @@ export const ModView = () => {
   return (
     <DragContextManager>    
       <NetSectionsStoreContext.Provider value={nStore}>
-        <LanePropertiesContext.Provider value={lanePropCtx}>
+        <LanePropertiesContextManager>
           <div className={styles.view}>{content}</div>
-        </LanePropertiesContext.Provider>
+        </LanePropertiesContextManager>
       </NetSectionsStoreContext.Provider>    
     </DragContextManager>
   );
