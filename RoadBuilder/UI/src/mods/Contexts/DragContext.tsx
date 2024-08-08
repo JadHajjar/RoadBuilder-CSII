@@ -73,8 +73,7 @@ export const DragContextManager = ({ children }: PropsWithChildren) => {
   );
 
   return (
-    <DragContext.Provider value={dragData}>
-      <span style={{position: 'absolute', left: '20rem', top: '50%'}}>{dragData.mousePosition.x}, {dragData.mousePosition.y}</span>
+    <DragContext.Provider value={dragData}>      
       <LaneListItemDrag ref={dragItemRef} />
       {children}
     </DragContext.Provider>
