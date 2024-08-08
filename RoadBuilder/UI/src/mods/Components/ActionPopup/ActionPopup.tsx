@@ -8,18 +8,18 @@ import { cancelActionPopup, createNewPrefab, editPrefab, pickPrefab } from "mods
 import { DragContext } from "mods/Contexts/DragContext";
 
 export default () => {
-  const { translate } = useLocalization();  
+  const { translate } = useLocalization();
   let rem = useRem();
   let dragCtx = useContext(DragContext);
 
   let popupPosition = useMemo(() => {
     let halfPopupWidth = (rem * 500) / 2;
-    let halfPopupHeight = (rem * 120) / 2;
+    let halfPopupHeight = (rem * 200) / 2;
     let bodySize = document.body.getBoundingClientRect();
     let deltaRight = bodySize.width - (dragCtx.mousePosition.x + halfPopupWidth);
     let deltaLeft = dragCtx.mousePosition.x - halfPopupWidth;
     let deltaTop = dragCtx.mousePosition.y - halfPopupHeight;
-    let deltaBottom = bodySize.height - (dragCtx.mousePosition.y + halfPopupHeight);
+    let deltaBottom = bodySize.height - (dragCtx.mousePosition.y + halfPopupHeight + (120 * rem));
     let nPos = dragCtx.mousePosition;
     if (deltaRight < 0 || deltaLeft < 0) {
       nPos = { ...nPos, x: nPos.x + Math.min(deltaRight, deltaLeft < 0 ? -deltaLeft : 0) };
