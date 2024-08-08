@@ -1,9 +1,7 @@
-import { Number2 } from "cs2/ui";
 import { NetSectionItem } from "domain/NetSectionItem";
 import { RoadLane } from "domain/RoadLane";
 import { LaneListItemDrag } from "mods/Components/LaneListItem/LaneListItem";
-import { MouseButtons } from "mods/util";
-import { createContext, PropsWithChildren, Reducer, startTransition, useEffect, useMemo, useReducer, useRef, useState } from "react";
+import { createContext, PropsWithChildren, startTransition, useEffect, useMemo, useReducer, useRef } from "react";
 import { defaultDragCtxReducerState, DragContextAction, DragContextActionType, dragContextReducer, DragContextReducerState } from "../Reducers/DragContextReducer";
 
 export interface DragContextData extends DragContextReducerState {
