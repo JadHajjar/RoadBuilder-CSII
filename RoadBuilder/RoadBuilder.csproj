@@ -34,9 +34,11 @@
 	<Target Name="CopyFiles" AfterTargets="DeployWIP">
 		<ItemGroup>
 			<IconFiles Include=".\PrefabIcons\*.*" />
+			<BadgesFiles Include=".\Properties\Badges\*.*" />
 		</ItemGroup>
 
 		<Copy SourceFiles="@(IconFiles)" DestinationFiles="@(IconFiles->'$(DeployDir)\PrefabIcons\%(RecursiveDir)%(Filename)%(Extension)')" />
+		<Copy SourceFiles="@(BadgesFiles)" DestinationFiles="@(BadgesFiles->'$(DeployDir)\Badges\%(RecursiveDir)%(Filename)%(Extension)')" />
 	</Target>
 
 	<Target Name="UpdatePublishConfiguration" BeforeTargets="Publish" Condition="'$(ModPublisherCommand)'=='NewVersion'">

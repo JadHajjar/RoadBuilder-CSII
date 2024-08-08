@@ -3,11 +3,10 @@
 using Game.SceneFlow;
 using Game.UI.InGame;
 
-using RoadBuilder.Domain.Configurations;
+using RoadBuilder.Domain.Prefabs;
 using RoadBuilder.Systems;
 using RoadBuilder.Systems.UI;
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -40,7 +39,7 @@ namespace RoadBuilder.Utilities
 				_prefabUISystem.GetTitleAndDescription(item.Prefab, out var titleId, out var descriptionId);
 
 				yield return new(titleId, item.Config.Name);
-				yield return new(descriptionId, string.Join(", ", item.Config.Lanes.Select(x => _roadBuilderUISystem.GetLaneName(item.Config, x))));
+				yield return new(descriptionId, GetRoadDescription(item));
 			}
 
 			foreach (var item in _netSectionsSystem.LaneGroups.Where(x => x.Value.DisplayName is not null))
@@ -49,6 +48,47 @@ namespace RoadBuilder.Utilities
 
 				yield return new(titleId, item.Value.DisplayName);
 			}
+		}
+
+		private string GetRoadDescription(INetworkBuilderPrefab item)
+		{
+			var width = item.Prefab.m_Sections.Sum(x => x.m_Section.CalculateWidth());
+			var units = width / 8f;
+
+			return $"{(item.Config.IsOneWay() ? "One-Way" : "Two-Way")} {GetRoadTypeName(item)} - {width}m / {units:0.#}U\r\n" +
+				$"{string.Join(", ", EnumerateLaneNames(item))}" +
+				$"\r\nMade with Road Builder";
+		}
+
+		private IEnumerable<string> EnumerateLaneNames(INetworkBuilderPrefab item)
+		{
+			var lastName = string.Empty;
+			var lastDirection = 0;
+			var count = 0;
+
+			foreach (var lane in item.Config.Lanes)
+			{
+				var name = _roadBuilderUISystem.GetLaneName(item.Config, lane);
+				var direction = lane.Invert ? -1 : 1;
+
+				if (lastName != string.Empty && (lastName != name || lastDirection != direction))
+				{
+					yield return $"{count}{(lastDirection == 1 ? "F" : "B")} {lastName}";
+
+					count = 0;
+				}
+
+				lastName = name;
+				lastDirection = direction;
+				count++;
+			}
+
+			yield return $"{count}{(lastDirection == 1 ? "F" : "B")} {lastName}";
+		}
+
+		private string GetRoadTypeName(INetworkBuilderPrefab item)
+		{
+			return (item.Config.Category & ~Domain.Enums.RoadCategory.RaisedSidewalk).ToString();
 		}
 
 		public void Unload()

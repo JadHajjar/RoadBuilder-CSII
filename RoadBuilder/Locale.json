@@ -10,7 +10,7 @@
   "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.ToolToggle]": "Enable Tool Hotkey",
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.ToolToggle]": "Determines the hot-key to activate the Road Builder tool.",
   "RoadBuilder.DIALOG_MESSAGE[DELETE]": "Are you sure you want to delete this road? This will remove any placed segments in your city that uses it.",
-  "RoadBuilder.DIALOG_MESSAGE[ReloadSave]": "This city contains roads that you did not have already. It is recommended to load this save-game again immediately so your intersections' edits are not lost.",
+  "RoadBuilder.DIALOG_MESSAGE[ReloadSave]": "This city contains roads that you did not have already. Reload this save-game immediately, without closing the game, so your changes to intersections are not lost.",
   "RoadBuilder.DIALOG_MESSAGE[Ok]": "OK",
   "RoadBuilder.Config[RoadConfig]": "Road Properties",
   "RoadBuilder.Config[TrackConfig]": "Track Properties",

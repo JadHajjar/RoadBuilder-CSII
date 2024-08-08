@@ -1,6 +1,4 @@
-﻿using Colossal.IO.AssetDatabase.Internal;
-
-using Game;
+﻿using Game;
 using Game.Common;
 using Game.Prefabs;
 using Game.SceneFlow;
@@ -143,9 +141,26 @@ namespace RoadBuilder.Systems
 
 		private void ModifyVanillaSections()
 		{
-			NetSections["Road Median 5"].m_Pieces[0].m_RequireAll = new[] { NetPieceRequirements.Edge };
-			NetSections["Road Median 5"].m_Pieces[2].m_RequireAll = new[] { NetPieceRequirements.Edge };
-			NetSections["Road Median 2"].m_Pieces[0].m_RequireAll = new[] { NetPieceRequirements.Edge };
+			foreach (var prefab in new[] { NetSections["Road Median 1"], NetSections["Road Median 2"], NetSections["Road Median 5"] })
+			{
+				foreach (var item in prefab.m_Pieces)
+				{
+					replaceByNode(item.m_RequireAll);
+					replaceByNode(item.m_RequireAny);
+					replaceByNode(item.m_RequireNone);
+				}
+			}
+
+			static void replaceByNode(NetPieceRequirements[] array)
+			{
+				for (var i = 0; i < array.Length; i++)
+				{
+					if (array[i] == NetPieceRequirements.Intersection)
+					{
+						array[i] = NetPieceRequirements.Node;
+					}
+				}
+			}
 
 			var median5Pieces = new[]
 			{
