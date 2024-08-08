@@ -74,6 +74,7 @@ $dragReprDim: 95%;
     width: 80rem;
     height: 80rem;
     position: absolute;
+    z-index: 1;
     backdrop-filter: blur(2px);
 
     border: 2rem solid rgba(255, 255, 255, 0.2);

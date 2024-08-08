@@ -1,23 +1,37 @@
 import classNames from "classnames";
-import { Button, Tooltip, FOCUS_DISABLED, FOCUS_AUTO, Number2 } from "cs2/ui";
-import { trigger, useValue, bindValue } from "cs2/api";
-import mod from "mod.json";
+import { Button, FOCUS_DISABLED, FOCUS_AUTO } from "cs2/ui";
 import styles from "./ActionPopup.module.scss";
 import { useLocalization } from "cs2/l10n";
-import { CSSProperties } from "react";
+import { CSSProperties, useContext, useMemo } from "react";
 import { useRem } from "cs2/utils";
-import { cancelActionPopup, createNewPrefab, editPrefab, IsCustomRoadSelected$, pickPrefab } from "mods/bindings";
-import RB_EditAll from "images/RB_EditAll.svg";
-import RB_EditAll2 from "images/RB_EditAll2.svg";
-import RB_PlaceMore from "images/RB_PlaceMore.svg";
-import RB_UseTemplate from "images/RB_UseTemplate.svg";
+import { cancelActionPopup, createNewPrefab, editPrefab, pickPrefab } from "mods/bindings";
+import { DragContext } from "mods/Contexts/DragContext";
 
-export default (props: { popupPosition: Number2 }) => {
+export default () => {
   const { translate } = useLocalization();
-  //let isCustomRoadSelected = useValue(IsCustomRoadSelected$);
+  let rem = useRem();
+  let dragCtx = useContext(DragContext);
+
+  let popupPosition = useMemo(() => {
+    let halfPopupWidth = (rem * 500) / 2;
+    let halfPopupHeight = (rem * 200) / 2;
+    let bodySize = document.body.getBoundingClientRect();
+    let deltaRight = bodySize.width - (dragCtx.mousePosition.x + halfPopupWidth);
+    let deltaLeft = dragCtx.mousePosition.x - halfPopupWidth;
+    let deltaTop = dragCtx.mousePosition.y - halfPopupHeight;
+    let deltaBottom = bodySize.height - (dragCtx.mousePosition.y + halfPopupHeight + (120 * rem));
+    let nPos = dragCtx.mousePosition;
+    if (deltaRight < 0 || deltaLeft < 0) {
+      nPos = { ...nPos, x: nPos.x + Math.min(deltaRight, deltaLeft < 0 ? -deltaLeft : 0) };
+    }
+    if (deltaBottom < 0 || deltaTop < 0) {
+      nPos = { ...nPos, y: nPos.y + Math.min(deltaBottom, deltaTop < 0 ? -deltaTop : 0) };
+    }
+    return nPos;
+  }, []);
 
   let positionStyle: CSSProperties = {
-    transform: `translate(${props.popupPosition?.x}px, ${props.popupPosition?.y}px)`,
+    transform: `translate(${popupPosition.x}px, ${popupPosition.y}px)`,
   };
 
   return (
