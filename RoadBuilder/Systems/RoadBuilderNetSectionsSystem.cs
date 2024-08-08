@@ -24,8 +24,9 @@ namespace RoadBuilder.Systems
 		private PrefabSystem prefabSystem;
 		private EntityQuery prefabQuery;
 		private EntityQuery allPrefabQuery;
+		private int customSectionsPhase;
 		private bool customSectionsSetUp;
-		private bool initialSetupFinished;
+		protected bool initialSetupFinished;
 
 		public event Action SectionsAdded;
 
@@ -75,9 +76,12 @@ namespace RoadBuilder.Systems
 					DoCustomSectionSetup();
 				}
 
-				SectionsAdded?.Invoke();
+				if (customSectionsSetUp)
+				{
+					SectionsAdded?.Invoke();
+				}
 
-				if (!initialSetupFinished)
+				if (!initialSetupFinished && customSectionsSetUp)
 				{
 					initialSetupFinished = true;
 
@@ -92,17 +96,70 @@ namespace RoadBuilder.Systems
 
 		private void DoCustomSectionSetup()
 		{
-			AddCustomSections();
+			customSectionsPhase++;
 
-			ModifyVanillaSections();
+			if (customSectionsPhase == 1)
+			{
+				ModifyVanillaSections();
 
-			AddCustomGroups();
+				return;
+			}
+
+			if (customSectionsPhase == 2)
+			{
+				AddCustomSections();
+
+				return;
+			}
+
+			if (customSectionsPhase == 3)
+			{
+				AddCustomGroups();
+
+				return;
+			}
 
 			AddCustomPrefabComponents();
 
 			GameManager.instance.localizationManager.ReloadActiveLocale();
 
 			customSectionsSetUp = true;
+		}
+
+		private void ModifyVanillaSections()
+		{
+			var median5Pieces = new[]
+			{
+				NetPieces["Median Piece 5"],
+				NetPieces["Median Piece 5 - Grass"],
+				NetPieces["Median Piece 5 - Platform"],
+				NetPieces["Median Piece 5"],
+			};
+
+			foreach (var prefab in median5Pieces)
+			{
+				var objects = prefab.GetComponent<NetPieceObjects>();
+				var tree = objects.m_PieceObjects.FirstOrDefault(x => x.m_Object.name == "Road Tree Placeholder");
+
+				if (tree != null)
+				{
+					tree.m_RequireAll = tree.m_RequireAll.Where(x => x != NetPieceRequirements.Median).ToArray();
+				}
+			}
+
+			var subwayPlatformSections = new[]
+			{
+				NetSections["Subway Median 8"],
+				NetSections["Subway Median 8 - Plain"],
+			};
+
+			foreach (var prefab in subwayPlatformSections)
+			{
+				foreach (var piece in prefab.m_Pieces)
+				{
+					piece.m_RequireAll = piece.m_RequireAll.Where(x => x != NetPieceRequirements.Median).ToArray();
+				}
+			}
 		}
 
 		private void AddCustomSections()
@@ -137,21 +194,41 @@ namespace RoadBuilder.Systems
 
 			prefabSystem.AddPrefab(newSection3);
 			prefabSystem.AddPrefab(newSection4);
-		}
 
-		private void ModifyVanillaSections()
-		{
-			foreach (var prefab in new[] { NetSections["Road Median 1"], NetSections["Road Median 2"], NetSections["Road Median 5"] })
+			var median1 = NetSections["Road Median 1"].Clone("RB Median 1") as NetSectionPrefab;
+			var median2 = NetSections["Road Median 2"].Clone("RB Median 2") as NetSectionPrefab;
+			var median5 = NetSections["Road Median 5"].Clone("RB Median 5") as NetSectionPrefab;
+
+			median5.m_Pieces = median5.m_Pieces.Concat(new[]
+			{
+				new NetPieceInfo
+				{
+					m_Piece = median5.m_Pieces[6].m_Piece,
+					m_RequireAll = new[] { NetPieceRequirements.MiddleGrass, NetPieceRequirements.BusStop },
+					m_RequireAny = median5.m_Pieces[6].m_RequireAny,
+					m_RequireNone = median5.m_Pieces[6].m_RequireNone,
+				}, new NetPieceInfo
+				{
+					m_Piece = median5.m_Pieces[7].m_Piece,
+					m_RequireAll = new[] { NetPieceRequirements.MiddleGrass, NetPieceRequirements.OppositeBusStop },
+					m_RequireAny = median5.m_Pieces[7].m_RequireAny,
+					m_RequireNone = median5.m_Pieces[7].m_RequireNone,
+				}
+			}).ToArray();
+
+			foreach (var prefab in new[] { median1, median2, median5 })
 			{
 				foreach (var item in prefab.m_Pieces)
 				{
-					item.m_RequireAll = replaceByNode(item.m_RequireAll.ToList());
-					item.m_RequireAny = replaceByNode(item.m_RequireAny.ToList());
-					item.m_RequireNone = replaceByNode(item.m_RequireNone.ToList());
+					item.m_RequireAll = replaceByNode(item.m_RequireAll.ToList(), false);
+					item.m_RequireAny = replaceByNode(item.m_RequireAny.ToList(), true);
+					item.m_RequireNone = replaceByNode(item.m_RequireNone.ToList(), true);
 				}
+
+				prefabSystem.AddPrefab(prefab);
 			}
 
-			static NetPieceRequirements[] replaceByNode(List<NetPieceRequirements> array)
+			static NetPieceRequirements[] replaceByNode(List<NetPieceRequirements> array, bool addBus)
 			{
 				for (var i = 0; i < array.Count; i++)
 				{
@@ -161,50 +238,20 @@ namespace RoadBuilder.Systems
 					}
 				}
 
-				if (array.Contains(NetPieceRequirements.TramStop))
+				if (addBus)
 				{
-					array.Add(NetPieceRequirements.BusStop);
-				}
+					if (array.Contains(NetPieceRequirements.TramStop))
+					{
+						array.Add(NetPieceRequirements.BusStop);
+					}
 
-				if (array.Contains(NetPieceRequirements.OppositeTramStop))
-				{
-					array.Add(NetPieceRequirements.OppositeBusStop);
+					if (array.Contains(NetPieceRequirements.OppositeTramStop))
+					{
+						array.Add(NetPieceRequirements.OppositeBusStop);
+					}
 				}
 
 				return array.ToArray();
-			}
-
-			var median5Pieces = new[]
-			{
-				NetPieces["Median Piece 5"],
-				NetPieces["Median Piece 5 - Grass"],
-				NetPieces["Median Piece 5 - Platform"],
-				NetPieces["Median Piece 5"],
-			};
-
-			foreach (var item in median5Pieces)
-			{
-				var objects = item.GetComponent<NetPieceObjects>();
-				var tree = objects.m_PieceObjects.FirstOrDefault(x => x.m_Object.name == "Road Tree Placeholder");
-
-				if (tree != null)
-				{
-					tree.m_RequireAll = tree.m_RequireAll.Where(x => x != NetPieceRequirements.Median).ToArray();
-				}
-			}
-
-			var subwayPlatformSections = new[]
-			{
-				NetSections["Subway Median 8"],
-				NetSections["Subway Median 8 - Plain"],
-			};
-
-			foreach (var item in subwayPlatformSections)
-			{
-				foreach (var piece in item.m_Pieces)
-				{
-					piece.m_RequireAll = piece.m_RequireAll.Where(x => x != NetPieceRequirements.Median).ToArray();
-				}
 			}
 		}
 

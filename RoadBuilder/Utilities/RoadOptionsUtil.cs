@@ -6,6 +6,8 @@ using RoadBuilder.Domain.UI;
 
 using System.Collections.Generic;
 
+using UnityEngine;
+
 using static Game.Settings.InterfaceSettings;
 
 namespace RoadBuilder.Utilities
@@ -200,14 +202,16 @@ namespace RoadBuilder.Utilities
 			switch ((ActionType)option)
 			{
 				case ActionType.SpeedLimit:
+					var multiplier = 10 * (IsMetric() ? 1.8f : 2.8968192f);
+
 					if (config is RoadConfig roadConfig)
 					{
-						roadConfig.SpeedLimit += value * 10 * (IsMetric() ? 1.8f : 2.8968192f);
+						roadConfig.SpeedLimit = Mathf.Max(roadConfig.SpeedLimit + value * multiplier, multiplier);
 					}
 
 					if (config is TrackConfig trackConfig)
 					{
-						trackConfig.SpeedLimit += value * 10 * (IsMetric() ? 1.8f : 2.8968192f);
+						trackConfig.SpeedLimit = Mathf.Max(trackConfig.SpeedLimit + value * multiplier, multiplier);
 					}
 
 					break;

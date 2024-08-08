@@ -42,7 +42,7 @@ namespace RoadBuilder.LaneGroups
 
 			AddOrGetComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_Median_Centered.svg";
 
-			var decoInfo = sections["Road Median 5"].AddOrGetComponent<RoadBuilderLaneDecorationInfo>();
+			var decoInfo = sections["RB Median 5"].AddOrGetComponent<RoadBuilderLaneDecorationInfo>();
 			decoInfo.GrassThumbnail = "coui://roadbuildericons/RB_GrassMedian.svg";
 			decoInfo.TreeThumbnail = "coui://roadbuildericons/RB_TreeMedian.svg";
 			decoInfo.GrassAndTreeThumbnail = "coui://roadbuildericons/RB_TreeGrassMedian.svg";
@@ -50,12 +50,16 @@ namespace RoadBuilder.LaneGroups
 			decoInfo.LaneTreeThumbnail = new[] { "coui://roadbuildericons/Thumb_SidewalkTree.svg" };
 			decoInfo.LaneGrassAndTreeThumbnail = new[] { "coui://roadbuildericons/Thumb_SidewalkGrassTree.svg" };
 
-			SetUp(sections["Road Median 1"], "1m");
-			SetUp(sections["Road Median 2"], "2m");
-			SetUp(sections["Road Median 5"], "5m", true).AddOrGetComponent<RoadBuilderLaneInfo>().AddLaneThumbnail("coui://roadbuildericons/Thumb_MedianWide.svg");
+			SetUp(sections["RB Median 1"], true, "1m");
+			SetUp(sections["RB Median 2"], true, "2m");
+			SetUp(sections["RB Median 5"], true, "5m", true).AddOrGetComponent<RoadBuilderLaneInfo>().AddLaneThumbnail("coui://roadbuildericons/Thumb_MedianWide.svg");
+			
+			SetUp(sections["Road Median 1"], false, "1m");
+			SetUp(sections["Road Median 2"], false, "2m");
+			SetUp(sections["Road Median 5"], false, "5m", true);
 		}
 
-		private NetSectionPrefab SetUp(NetSectionPrefab prefab, string value, bool hasGrass = false)
+		private NetSectionPrefab SetUp(NetSectionPrefab prefab,bool link, string value, bool hasGrass = false)
 		{
 			var laneInfo = prefab.AddComponent<RoadBuilderLaneGroup>();
 			laneInfo.GroupPrefab = this;
@@ -82,6 +86,7 @@ namespace RoadBuilder.LaneGroups
 				}
 			};
 
+			if (link)
 			LinkedSections.Add(prefab);
 
 			return prefab;

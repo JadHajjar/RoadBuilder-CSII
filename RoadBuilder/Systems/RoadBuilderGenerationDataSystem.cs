@@ -39,6 +39,11 @@ namespace RoadBuilder.Systems
 		{
 			base.OnUpdate();
 
+			if (!initialSetupFinished)
+			{
+				return;
+			}
+
 			var roadGenerationData = new RoadGenerationData();
 
 			var zoneBlockDataQuery = SystemAPI.QueryBuilder().WithAll<ZoneBlockData>().Build();
