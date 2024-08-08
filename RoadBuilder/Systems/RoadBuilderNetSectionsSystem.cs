@@ -145,21 +145,33 @@ namespace RoadBuilder.Systems
 			{
 				foreach (var item in prefab.m_Pieces)
 				{
-					replaceByNode(item.m_RequireAll);
-					replaceByNode(item.m_RequireAny);
-					replaceByNode(item.m_RequireNone);
+					item.m_RequireAll = replaceByNode(item.m_RequireAll.ToList());
+					item.m_RequireAny = replaceByNode(item.m_RequireAny.ToList());
+					item.m_RequireNone = replaceByNode(item.m_RequireNone.ToList());
 				}
 			}
 
-			static void replaceByNode(NetPieceRequirements[] array)
+			static NetPieceRequirements[] replaceByNode(List<NetPieceRequirements> array)
 			{
-				for (var i = 0; i < array.Length; i++)
+				for (var i = 0; i < array.Count; i++)
 				{
 					if (array[i] == NetPieceRequirements.Intersection)
 					{
 						array[i] = NetPieceRequirements.Node;
 					}
 				}
+
+				if (array.Contains(NetPieceRequirements.TramStop))
+				{
+					array.Add(NetPieceRequirements.BusStop);
+				}
+
+				if (array.Contains(NetPieceRequirements.OppositeTramStop))
+				{
+					array.Add(NetPieceRequirements.OppositeBusStop);
+				}
+
+				return array.ToArray();
 			}
 
 			var median5Pieces = new[]

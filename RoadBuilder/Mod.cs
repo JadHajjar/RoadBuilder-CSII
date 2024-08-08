@@ -6,7 +6,6 @@ using Game;
 using Game.Modding;
 using Game.Prefabs;
 using Game.SceneFlow;
-using Game.UI.InGame;
 using HarmonyLib;
 
 using RoadBuilder.Systems;
@@ -20,10 +19,9 @@ using UnityEngine;
 
 namespace RoadBuilder
 {
-	public class Mod : IMod
+    public class Mod : IMod
 	{
 		public const string Id = nameof(RoadBuilder);
-        private RoadUpgradeDictionarySource _upgradeNameUtil;
 
         public static ILog Log { get; } = LogManager.GetLogger(nameof(RoadBuilder)).SetShowsErrorsInUI(false);
 		public static Setting Settings { get; private set; }
@@ -106,11 +104,6 @@ namespace RoadBuilder
 				Mod.Log.Warn("Unable to create platform upgrade prefab");
 				return;
 			}
-
-			_upgradeNameUtil = new RoadUpgradeDictionarySource(
-				World.DefaultGameObjectInjectionWorld.GetOrCreateSystemManaged<PrefabUISystem>(), 
-				new[] { platformPrefab }
-			);
         }
 
 		public void OnDispose()

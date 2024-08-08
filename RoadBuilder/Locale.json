@@ -21,5 +21,8 @@
   "Assets.NAME[Alley Drive Section 3]": "Rural Car",
   "Assets.NAME[Pavement Path Section 3]": "Pavement Pedestrian",
   "Assets.NAME[Tiled Section 3]": "Tiled Pedestrian",
-  "Assets.NAME[Tiled Median Pedestrian 2]": "Tiled Median"
+  "Assets.NAME[Tiled Median Pedestrian 2]": "Tiled Median",
+  "Assets.NAME[RB_MedianPlatformUpgrade]": "Median Platforms",
+  "Assets.DESCRIPTION[RB_MedianPlatformUpgrade]": "Marks each 5m median on the road as a platform, allowing citizens to walk on and board transit from it when a stop is placed."
+
 }
