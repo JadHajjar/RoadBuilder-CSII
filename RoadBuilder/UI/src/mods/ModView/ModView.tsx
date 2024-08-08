@@ -1,19 +1,16 @@
-import { startTransition, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import { BottomView } from "../BottomView/BottomView";
 import { SidePanel } from "mods/SidePanel/SidePanel";
-import { DragContext, DragContextData, DragContextManager } from "mods/Contexts/DragContext";
+import { DragContextManager } from "mods/Contexts/DragContext";
 import { NetSectionItem } from "domain/NetSectionItem";
 import { Number2 } from "cs2/ui";
-import { LaneListItemDrag } from "../Components/LaneListItem/LaneListItem";
 import RB_ClickOnRoad from "images/RB_ClickOnRoad.svg";
 
 import styles from "./ModView.module.scss";
-import { MouseButtons } from "mods/util";
 import { useValue } from "cs2/api";
 import { RoadBuilderToolModeEnum } from "domain/RoadBuilderToolMode";
 import { allNetSections$, roadBuilderToolMode$ } from "mods/bindings";
 import ActionPopup from "mods/Components/ActionPopup/ActionPopup";
-import { useRem } from "cs2/utils";
 import { RoadLane } from "domain/RoadLane";
 import { NetSectionsStoreContext } from "mods/Contexts/NetSectionsStore";
 import { RoadPropertiesPanel } from "mods/RoadPropertiesPanel/RoadPropertiesPanel";
