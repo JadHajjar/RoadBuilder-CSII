@@ -22,10 +22,7 @@ import { useLocalization } from "cs2/l10n";
 
 export const ModView = () => {
   const roadBuilderToolMode = useValue(roadBuilderToolMode$);
-  let rem = useRem();
   let { translate } = useLocalization();
-  let dragCtx = useContext(DragContext);
-  let [actionPopupPosition, setActionPopupPosition] = useState<Number2>({ x: 0, y: 0 });  
   let allNetSections = useValue(allNetSections$);
   let defaultLanePropCtx = useContext(LanePropertiesContext);
   let [lanePropState, setLanePropState] = useState<LanePropertiesContextData>(defaultLanePropCtx);
