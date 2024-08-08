@@ -44,7 +44,6 @@ enum DragContextActionType {
 }
 
 type DragContextAction = 
-  | {type: DragContextActionType.Init}
   | {type: DragContextActionType.MouseReleased, button: number}
   | {type: DragContextActionType.MouseMove, position: Number2}
   | {type: DragContextActionType.SetNetSectionItem, item?: NetSectionItem}
