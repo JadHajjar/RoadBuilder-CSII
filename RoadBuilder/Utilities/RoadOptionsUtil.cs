@@ -36,7 +36,7 @@ namespace RoadBuilder.Utilities
 						new OptionItemUIEntry
 						{
 							IsValue = true,
-							Value = $"{(int)(roadConfig.SpeedLimit / (IsMetric() ? 2f : 3.218688f) / 10) * 5} {(IsMetric() ? "km/h" : "mph")}"
+							Value = $"{(int)(roadConfig.SpeedLimit / (IsMetric() ? 2f : 3.218688f) / 5) * 5} {(IsMetric() ? "km/h" : "mph")}"
 						}
 					}
 				});
