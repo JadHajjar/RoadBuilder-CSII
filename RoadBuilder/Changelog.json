@@ -1,0 +1,14 @@
+[
+  {
+    "Beta": true,
+    "Version": "0.1.0",
+    "Date": "2024-08-09",
+    "ChangeGroups": [
+      {
+        "Name": "Release",
+        "Changes": [
+        ]
+      }
+    ]
+  }
+]
