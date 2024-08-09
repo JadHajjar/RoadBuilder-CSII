@@ -24,6 +24,10 @@ namespace RoadBuilder.Domain.Prefabs
 			{
 				components.Add(ComponentType.ReadWrite<RoadBuilderPrefabData>());
 			}
+			else
+			{
+				components.Add(ComponentType.ReadOnly<DiscardedRoadBuilderPrefab>());
+			}
 		}
 	}
 }
