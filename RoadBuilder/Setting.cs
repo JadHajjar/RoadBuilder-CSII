@@ -35,6 +35,9 @@ namespace RoadBuilder
 		public bool SaveUsedRoadsOnly { get; set; }
 
 		[SettingsUISection(MAIN_SECTION, MAIN_GROUP)]
+		public bool NoImitateLaneOptionsOnPlace { get; set; }
+
+		[SettingsUISection(MAIN_SECTION, MAIN_GROUP)]
 		public bool AdvancedUserMode { get; set; }
 		[SettingsUISection(MAIN_SECTION, MAIN_GROUP)]
 		public bool HideArrowsOnThumbnails { get; set; }

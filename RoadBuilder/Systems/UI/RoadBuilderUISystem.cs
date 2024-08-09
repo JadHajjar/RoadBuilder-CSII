@@ -298,6 +298,13 @@ namespace RoadBuilder.Systems.UI
 
 					if (lane.GroupPrefabName is not null && netSectionsSystem.LaneGroups.TryGetValue(lane.GroupPrefabName, out var group))
 					{
+						var similarLane = !Mod.Settings.NoImitateLaneOptionsOnPlace ? FindSimilarLane(config.Lanes, newLanes.Count - 1, lane.GroupPrefabName) : null;
+
+						if (similarLane != null)
+						{
+							lane.GroupOptions = new(similarLane.GroupOptions);
+						}
+
 						LaneOptionsUtil.FixGroupOptions(config, lane, group);
 					}
 
@@ -319,6 +326,41 @@ namespace RoadBuilder.Systems.UI
 			}
 
 			config.Lanes = newLanes;
+		}
+
+		private LaneConfig FindSimilarLane(List<LaneConfig> array, int startIndex, string groupPrefabName)
+		{
+			if (array.Count == 0 || startIndex < 0 || startIndex >= array.Count)
+			{
+				return null;
+			}
+
+			// Check the starting index first
+			if (array[startIndex].GroupPrefabName == groupPrefabName)
+			{
+				return array[startIndex];
+			}
+
+			var left = startIndex - 1;
+			var right = startIndex + 1;
+
+			while (left >= 0 || right < array.Count)
+			{
+				if (left >= 0 && array[left].GroupPrefabName == groupPrefabName)
+				{
+					return array[left];
+				}
+
+				if (right < array.Count && array[right].GroupPrefabName == groupPrefabName)
+				{
+					return array[right];
+				}
+
+				left--;
+				right++;
+			}
+
+			return null;
 		}
 
 		private void DuplicateLane(INetworkConfig config, int index)
