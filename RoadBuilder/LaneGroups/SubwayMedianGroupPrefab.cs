@@ -42,11 +42,14 @@ namespace RoadBuilder.LaneGroups
 
 			AddComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_CenterPlatform.svg";
 
-			SetUp(sections["Subway Median 8"], "Raised").WithThumbnail("coui://roadbuildericons/RB_CenterPlatform.svg").AddLaneThumbnail("coui://roadbuildericons/Thumb_Platform.svg");
-			SetUp(sections["Subway Median 8 - Plain"], "Flat").WithThumbnail("coui://roadbuildericons/RB_Empty.svg").AddLaneThumbnail("coui://roadbuildericons/Thumb_PlatformEmpty.svg").WithAny(RoadCategory.Train | RoadCategory.Subway);
+			SetUp(sections["RB Subway Median 8"], "Raised", true).WithThumbnail("coui://roadbuildericons/RB_CenterPlatform.svg").AddLaneThumbnail("coui://roadbuildericons/Thumb_Platform.svg");
+			SetUp(sections["RB Subway Median 8 - Plain"], "Flat", true).WithThumbnail("coui://roadbuildericons/RB_Empty.svg").AddLaneThumbnail("coui://roadbuildericons/Thumb_PlatformEmpty.svg").WithAny(RoadCategory.Train | RoadCategory.Subway);
+
+			SetUp(sections["Subway Median 8"], "Raised", false);
+			SetUp(sections["Subway Median 8 - Plain"], "Flat", false);
 		}
 
-		private RoadBuilderLaneInfo SetUp(NetSectionPrefab prefab, string value)
+		private RoadBuilderLaneInfo SetUp(NetSectionPrefab prefab, string value, bool link)
 		{
 			var laneInfo = prefab.AddComponent<RoadBuilderLaneGroup>();
 			laneInfo.GroupPrefab = this;
@@ -59,7 +62,10 @@ namespace RoadBuilder.LaneGroups
 				}
 			};
 
-			LinkedSections.Add(prefab);
+			if (link)
+			{
+				LinkedSections.Add(prefab);
+			}
 
 			return prefab.AddComponent<RoadBuilderLaneInfo>();
 		}

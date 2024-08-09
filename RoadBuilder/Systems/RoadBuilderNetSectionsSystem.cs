@@ -136,8 +136,9 @@ namespace RoadBuilder.Systems
 				NetPieces["Median Piece 5"],
 			};
 
-			foreach (var prefab in median5Pieces)
+			foreach (var oldPrefab in median5Pieces)
 			{
+				var prefab = oldPrefab.Clone("RB " + oldPrefab.name) as NetPiecePrefab;
 				var objects = prefab.GetComponent<NetPieceObjects>();
 				var tree = objects.m_PieceObjects.FirstOrDefault(x => x.m_Object.name == "Road Tree Placeholder");
 
@@ -146,7 +147,8 @@ namespace RoadBuilder.Systems
 					tree.m_RequireAll = tree.m_RequireAll.Where(x => x != NetPieceRequirements.Median).ToArray();
 				}
 
-				prefabSystem.UpdatePrefab(prefab);
+				prefabSystem.AddPrefab(prefab);
+				NetPieces[prefab.name] = prefab;
 			}
 
 			var subwayPlatformSections = new[]
@@ -155,14 +157,17 @@ namespace RoadBuilder.Systems
 				NetSections["Subway Median 8 - Plain"],
 			};
 
-			foreach (var prefab in subwayPlatformSections)
+			foreach (var oldPrefab in subwayPlatformSections)
 			{
+				var prefab = oldPrefab.Clone("RB " + oldPrefab.name) as NetSectionPrefab;
+
 				foreach (var piece in prefab.m_Pieces)
 				{
 					piece.m_RequireAll = piece.m_RequireAll.Where(x => x != NetPieceRequirements.Median).ToArray();
 				}
 
-				prefabSystem.UpdatePrefab(prefab);
+				prefabSystem.AddPrefab(prefab);
+				NetSections[prefab.name] = prefab;
 			}
 		}
 
@@ -202,6 +207,13 @@ namespace RoadBuilder.Systems
 			var median1 = NetSections["Road Median 1"].Clone("RB Median 1") as NetSectionPrefab;
 			var median2 = NetSections["Road Median 2"].Clone("RB Median 2") as NetSectionPrefab;
 			var median5 = NetSections["Road Median 5"].Clone("RB Median 5") as NetSectionPrefab;
+			var median5Pieces = new[]
+			{
+				"Median Piece 5",
+				"Median Piece 5 - Grass",
+				"Median Piece 5 - Platform",
+				"Median Piece 5",
+			};
 
 			median5.m_Pieces = median5.m_Pieces.Concat(new[]
 			{
@@ -227,6 +239,11 @@ namespace RoadBuilder.Systems
 					item.m_RequireAll = replaceByNode(item.m_RequireAll.ToList(), false);
 					item.m_RequireAny = replaceByNode(item.m_RequireAny.ToList(), true);
 					item.m_RequireNone = replaceByNode(item.m_RequireNone.ToList(), true);
+
+					if (median5Pieces.Contains(item.m_Piece.name))
+					{
+						item.m_Piece = NetPieces["RB " + item.m_Piece.name];
+					}
 				}
 
 				prefabSystem.AddPrefab(prefab);
