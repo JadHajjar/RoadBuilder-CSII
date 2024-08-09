@@ -152,6 +152,7 @@ namespace RoadBuilder.Utilities
 			config.Version = RoadBuilderSerializeSystem.CURRENT_VERSION;
 			config.ID = string.Empty;
 			config.OriginalID = null;
+			config.Name = $"Copy of {config.Name}";
 
 			return config;
 		}
