@@ -145,8 +145,6 @@ namespace RoadBuilder.Systems
 				{
 					tree.m_RequireAll = tree.m_RequireAll.Where(x => x != NetPieceRequirements.Median).ToArray();
 				}
-
-				prefabSystem.UpdatePrefab(prefab);
 			}
 
 			var subwayPlatformSections = new[]
@@ -161,8 +159,6 @@ namespace RoadBuilder.Systems
 				{
 					piece.m_RequireAll = piece.m_RequireAll.Where(x => x != NetPieceRequirements.Median).ToArray();
 				}
-
-				prefabSystem.UpdatePrefab(prefab);
 			}
 		}
 
