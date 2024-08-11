@@ -71,6 +71,8 @@ namespace RoadBuilder.Systems
 				return;
 			}
 
+			Mod.Log.Debug("RoadBuilderSystem.OnUpdate: " + _updatedRoadPrefabsQueue.Count);
+
 			do
 			{
 				if (roadGenerationDataSystem.RoadGenerationData is null)
@@ -269,6 +271,8 @@ namespace RoadBuilder.Systems
 				}
 
 				_updatedRoadPrefabsQueue.Enqueue((roadPrefab, false));
+
+				Mod.Log.Debug("Added Prefab: " + roadPrefab.Prefab.name);
 
 				return roadPrefab;
 			}

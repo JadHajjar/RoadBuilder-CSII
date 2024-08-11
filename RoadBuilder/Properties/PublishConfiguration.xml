@@ -1,5 +1,5 @@
 ﻿<Publish>
-	<ModId Value="" />
+	<ModId Value="87190" />
 	<DisplayName Value="Road Builder [BETA]" />
 	<ShortDescription Value="Create endless road combinations on the fly while you’re playing the game! With a slick and easy-to-use interface, you’ll be able to create the exact road that you need on the spot." />
 	<LongDescription>
@@ -17,6 +17,12 @@ With a slick and easy-to-use interface, you’ll be able to create the exact roa
 * Roads are generated in real time, guaranteeing future compatibility with updates to the game.
 * Roads are included in your save-game, allowing you to share it with anyone who has Road Builder with ease.
 * You can create asphalt roads, gravel roads, pedestrian roads, highways, all three types of tracks, and pedestrian paths.
+
+## Known Conflict
+Remove Traffic Lights Enhancement mod before using Road Builder to be safe.
+
+If you are crashing with both mods, unsubscribe from TLE and delete its folder from:
+C:\Users\%username%\AppData\LocalLow\Colossal Order\Cities Skylines II\.cache\Mods\mods_subscribed\78960_6
 
 ## Custom Lanes Support
 
@@ -147,5 +153,5 @@ This helps us better assist you and avoids your message from getting lost in the
 	<ExternalLink Type="github" Url="https://github.com/JadHajjar/RoadBuilder-CSII" />
 	<ExternalLink Type="buymeacoffee" Url="https://www.buymeacoffee.com/tdwsvillage" />
 	<ExternalLink Type="kofi" Url="https://ko-fi.com/trejak" />
-	<ExternalLink Type="buymeacoffee" Url="https://ko-fi.com/badpeanut" />
+	<ExternalLink Type="kofi2" Url="https://ko-fi.com/badpeanut" />
 </Publish>

@@ -157,6 +157,8 @@ namespace RoadBuilder.Systems
 
 			if (!firstTimeRun)
 			{
+				//AddStops();
+
 				Mod.Log.Debug("RoadGenerationData First Created");
 
 				firstTimeRun = true;
@@ -172,6 +174,28 @@ namespace RoadBuilder.Systems
 			}
 
 			Mod.Log.Info("Road Generation Data assembled");
+		}
+
+		private void AddStops()
+		{
+			var stopsQuery = SystemAPI.QueryBuilder().WithAll<PrefabData, TransportStopData>().Build();
+			var stops = stopsQuery.ToEntityArray(Allocator.Temp);
+
+			for (var i = 0; i < stops.Length; i++)
+			{
+				if (prefabSystem.TryGetPrefab<MarkerObjectPrefab>(stops[i], out var stop) && stop?.name is "Integrated Passenger Train Stop" or "Integrated Cargo Train Stop" or "Integrated Subway Stop - Side" or "Integrated Subway Stop - Middle")
+				{
+					var newStop = stop.Clone(stop.name.Substring(11)) as MarkerObjectPrefab;
+
+					newStop.AddComponent<ServiceObject>().m_Service = RoadGenerationData.ServicePrefabs["Transportation"];
+
+					newStop.AddOrGetComponent<UIObject>().m_Group = stop.name is "Integrated Passenger Train Stop" or "Integrated Cargo Train Stop"
+						? RoadGenerationData.UIGroupPrefabs["TransportationTrain"]
+						: RoadGenerationData.UIGroupPrefabs["TransportationSubway"];
+
+					prefabSystem.AddPrefab(newStop);
+				}
+			}
 		}
 	}
 }
