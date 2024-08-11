@@ -10,6 +10,7 @@ using Game.SceneFlow;
 using Game.Tools;
 using Game.UI.InGame;
 
+using RoadBuilder.Domain;
 using RoadBuilder.Domain.Components;
 using RoadBuilder.Domain.Configurations;
 using RoadBuilder.Domain.Prefabs;
@@ -284,7 +285,7 @@ namespace RoadBuilder.Systems
 			}
 		}
 
-		public void UpdateConfigurationList()
+		public void UpdateConfigurationList(bool generateNewThumbnails = false)
 		{
 			var roadBuilderConfigsQuery = SystemAPI.QueryBuilder().WithAll<RoadBuilderPrefabData>().WithNone<DiscardedRoadBuilderPrefab>().Build();
 			var prefabs = roadBuilderConfigsQuery.ToEntityArray(Allocator.Temp);
@@ -298,6 +299,16 @@ namespace RoadBuilder.Systems
 					Configurations[prefab.Prefab.name] = prefab;
 
 					Mod.Log.Debug($"Configuration Found: {prefab.Prefab.name} - {prefab.Config.ID}");
+
+					if (generateNewThumbnails)
+					{
+						var thumbnail = new ThumbnailGenerationUtil(prefab, roadGenerationDataSystem.RoadGenerationData).GenerateThumbnail();
+
+						if (thumbnail is not null and not "")
+						{
+							prefab.Prefab.GetComponent<UIObject>().m_Icon = thumbnail;
+						}
+					}
 				}
 			}
 

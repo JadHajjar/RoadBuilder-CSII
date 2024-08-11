@@ -135,9 +135,9 @@ namespace RoadBuilder.Utilities
 				return true;
 			}
 
-			var matchesRequired = (config.Category & info.RequiredCategories) == info.RequiredCategories;
-			var matchesAny = (config.Category & info.AnyCategories) != 0 || info.AnyCategories == 0;
-			var matchesExcluded = (config.Category & info.ExcludedCategories) != 0;
+			var matchesRequired = (config.Category & info.RequireAll) == info.RequireAll;
+			var matchesAny = (config.Category & info.RequireAny) != 0 || info.RequireAny == 0;
+			var matchesExcluded = (config.Category & info.RequireNone) != 0;
 
 			return matchesRequired && matchesAny && !matchesExcluded;
 		}
@@ -149,9 +149,9 @@ namespace RoadBuilder.Utilities
 				return true;
 			}
 
-			var matchesRequired = (config.Category & info.RequiredCategories) == info.RequiredCategories;
-			var matchesAny = (config.Category & info.AnyCategories) != 0 || info.AnyCategories == 0;
-			var matchesExcluded = (config.Category & info.ExcludedCategories) != 0;
+			var matchesRequired = (config.Category & info.RequireAll) == info.RequireAll;
+			var matchesAny = (config.Category & info.RequireAny) != 0 || info.RequireAny == 0;
+			var matchesExcluded = (config.Category & info.RequireNone) != 0;
 
 			return matchesRequired && matchesAny && !matchesExcluded;
 		}
