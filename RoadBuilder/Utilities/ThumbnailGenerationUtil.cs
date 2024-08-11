@@ -21,6 +21,7 @@ namespace RoadBuilder.Utilities
 	public class ThumbnailGenerationUtil
 	{
 		private readonly RoadGenerationData _roadGenerationData;
+		private readonly List<LaneConfig> _lanes;
 		private static SvgItem _arrowForward;
 		private static SvgItem _arrowBackward;
 		private static SvgItem _arrowBoth;
@@ -35,8 +36,13 @@ namespace RoadBuilder.Utilities
 		public ThumbnailGenerationUtil(INetworkBuilderPrefab prefab, RoadGenerationData roadGenerationData)
 		{
 			NetworkPrefab = prefab;
-
 			_roadGenerationData = roadGenerationData;
+			_lanes = prefab.Config.Lanes.ToList();
+
+			if (roadGenerationData.LeftHandTraffic)
+			{
+				_lanes.Reverse();
+			}
 
 			_arrowForward ??= new SvgItem(GetFileName("coui://roadbuildericons/Thumb_ArrowForward.svg"));
 			_arrowBackward ??= new SvgItem(GetFileName("coui://roadbuildericons/Thumb_ArrowBackward.svg"));
@@ -45,7 +51,7 @@ namespace RoadBuilder.Utilities
 			_markingWhite ??= new SvgItem(GetFileName("coui://roadbuildericons/Thumb_LineWhiteSolid.svg"));
 			_markingDashed ??= new SvgItem(GetFileName("coui://roadbuildericons/Thumb_LineWhiteDotted.svg"));
 
-			_sections = prefab.Config.Lanes.Select<LaneConfig, (NetSectionPrefab section, LaneGroupPrefab groupPrefab)?>(lane => NetworkPrefabGenerationUtil.GetNetSection(_roadGenerationData, NetworkPrefab.Config, lane, out var section, out var groupPrefab) ? (section, groupPrefab) : null).ToList();
+			_sections = _lanes.Select<LaneConfig, (NetSectionPrefab section, LaneGroupPrefab groupPrefab)?>(lane => NetworkPrefabGenerationUtil.GetNetSection(_roadGenerationData, NetworkPrefab.Config, lane, out var section, out var groupPrefab) ? (section, groupPrefab) : null).ToList();
 		}
 
 		public string GenerateThumbnail()
@@ -145,9 +151,9 @@ namespace RoadBuilder.Utilities
 		{
 			var svgs = new Dictionary<int, List<SvgItem>>();
 
-			for (var i = 0; i < NetworkPrefab.Config.Lanes.Count; i++)
+			for (var i = 0; i < _lanes.Count; i++)
 			{
-				var laneConfig = NetworkPrefab.Config.Lanes[i];
+				var laneConfig = _lanes[i];
 				var laneSvgs = new List<SvgItem>();
 
 				foreach (var lane in GetLaneIcons(laneConfig, _sections[i]))
@@ -200,7 +206,7 @@ namespace RoadBuilder.Utilities
 				return true;
 			}
 
-			arrow = NetworkPrefab.Config.Lanes[index].Invert ? _arrowBackward : _arrowForward;
+			arrow = _lanes[index].Invert ? _arrowBackward : _arrowForward;
 			return true;
 		}
 
@@ -220,7 +226,7 @@ namespace RoadBuilder.Utilities
 
 			if (isCurrentCar && isPreviousCar)
 			{
-				if (NetworkPrefab.Config.Lanes[index].Invert == NetworkPrefab.Config.Lanes[index - 1].Invert)
+				if (_lanes[index].Invert == _lanes[index - 1].Invert)
 				{
 					arrow = _markingDashed;
 				}

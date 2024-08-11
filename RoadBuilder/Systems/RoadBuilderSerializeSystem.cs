@@ -81,7 +81,7 @@ namespace RoadBuilder.Systems
 				GameManager.instance.userInterface.appBindings.ShowMessageDialog(new MessageDialog("Options.SECTION[RoadBuilder.RoadBuilder.Mod]", "RoadBuilder.DIALOG_MESSAGE[ReloadSave]", "RoadBuilder.DIALOG_MESSAGE[Ok]"), null);
 			}
 
-			roadBuilderSystem.UpdateConfigurationList();
+			roadBuilderSystem.UpdateConfigurationList(true);
 		}
 
 		private List<string> CreateNetworksList(in NativeArray<PrefabRef> prefabRefs)

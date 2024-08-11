@@ -284,7 +284,7 @@ namespace RoadBuilder.Systems.UI
 		{
 			var newLanes = new List<LaneConfig>();
 
-			foreach (var item in roadLanes)
+			foreach (var item in (roadGenerationDataSystem.RoadGenerationData.LeftHandTraffic ? roadLanes.Reverse() : roadLanes))
 			{
 				var existingLane = config.Lanes.ElementAtOrDefault(item.Index);
 
@@ -414,15 +414,15 @@ namespace RoadBuilder.Systems.UI
 			{
 				var lane = config.Lanes[i];
 				var validSection = NetworkPrefabGenerationUtil.GetNetSection(roadGenerationDataSystem.RoadGenerationData, config, lane, out var section, out var groupPrefab);
-				var isBackward = cityConfigurationSystem.leftHandTraffic ? !lane.Invert : lane.Invert;
+				var isBackward = cityConfigurationSystem.leftHandTraffic && (i == 0 || i == config.Lanes.Count - 1) ? !lane.Invert : lane.Invert;
 
 				GetThumbnailAndColor(config, lane, section, groupPrefab, isBackward, out var thumbnail, out var color, out var texture);
 
-				binders[i] = new RoadLaneUIBinder
+				binders[cityConfigurationSystem.leftHandTraffic ? (binders.Length - i - 1) : i] = new RoadLaneUIBinder
 				{
 					Index = i,
-					Invert = isBackward,
-					InvertImage = lane.Invert,
+					Invert = lane.Invert,
+					InvertImage = isBackward,
 					TwoWay = validSection && section.SupportsTwoWay(),
 					SectionPrefabName = string.IsNullOrEmpty(lane.GroupPrefabName) ? lane.SectionPrefabName : lane.GroupPrefabName,
 					IsGroup = !string.IsNullOrEmpty(lane.GroupPrefabName),

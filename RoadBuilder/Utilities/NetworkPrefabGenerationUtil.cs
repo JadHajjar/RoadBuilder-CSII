@@ -68,7 +68,7 @@ namespace RoadBuilder.Utilities
 			prefab.isDirty = true;
 			prefab.name = cfg.ID;
 			prefab.m_MaxSlopeSteepness = cfg.MaxSlopeSteepness;
-			prefab.m_InvertMode = CompositionInvertMode.FlipLefthandTraffic;
+			prefab.m_InvertMode = CompositionInvertMode.InvertLefthandTraffic;
 			prefab.m_AggregateType = _roadGenerationData.AggregateNetPrefabs.TryGetValue(GetAggregateName(), out var aggregate) ? aggregate : null;
 			prefab.m_Sections = Fix(GenerateSections()).ToArray();
 			prefab.m_NodeStates = GenerateNodeStates().ToArray();
