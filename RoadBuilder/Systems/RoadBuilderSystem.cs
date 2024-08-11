@@ -249,7 +249,7 @@ namespace RoadBuilder.Systems
 		{
 			try
 			{
-				if (config.ID is not null && Configurations.ContainsKey(config.ID))
+				if (config.ID is not null and not "" && Configurations.ContainsKey(config.ID))
 				{
 					Mod.Log.Debug("Trying to add a road that already exists: " + config.ID);
 
