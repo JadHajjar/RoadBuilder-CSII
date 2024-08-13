@@ -84,8 +84,10 @@ namespace RoadBuilder.Utilities
 				roadPrefab.m_ZoneBlock = roadConfig.Addons.HasFlag(RoadAddons.GeneratesZoningBlocks) ? _roadGenerationData.ZoneBlockPrefab : null;
 			}
 
-			if (prefab is TrackBuilderPrefab trackPrefab)
+			if (cfg is TrackConfig trackConfig)
 			{
+				var trackPrefab = NetworkPrefab as TrackBuilderPrefab;
+				trackPrefab.m_SpeedLimit = trackConfig.SpeedLimit;
 				trackPrefab.m_TrackType =
 					cfg.Category.HasFlag(RoadCategory.Train) ? Game.Net.TrackTypes.Train :
 					cfg.Category.HasFlag(RoadCategory.Subway) ? Game.Net.TrackTypes.Subway :
