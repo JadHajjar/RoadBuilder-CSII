@@ -1,6 +1,19 @@
 [
   {
     "Beta": true,
+    "Version": "0.1.1.1",
+    "Date": "2024-08-13",
+    "ChangeGroups": [
+      {
+        "Name": "Hotfix",
+        "Changes": [
+          "Fixed track networks not using the selected speed limit."
+        ]
+      }
+    ]
+  },
+  {
+    "Beta": true,
     "Version": "0.1.1",
     "Date": "2024-08-12",
     "ChangeGroups": [
