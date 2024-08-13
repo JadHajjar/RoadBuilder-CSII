@@ -148,7 +148,7 @@ namespace RoadBuilder.Utilities
 		{
 			var config = new RoadConfig
 			{
-				SpeedLimit = roadPrefab.m_SpeedLimit,
+				SpeedLimit = roadPrefab.m_SpeedLimit
 			};
 
 			if (roadPrefab.m_HighwayRules)
