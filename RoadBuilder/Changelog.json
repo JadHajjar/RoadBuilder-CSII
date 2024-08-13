@@ -1,6 +1,20 @@
 [
   {
     "Beta": true,
+    "Version": "0.1.1",
+    "Date": "2024-08-12",
+    "ChangeGroups": [
+      {
+        "Name": "Left-Hand Traffic Changes",
+        "Changes": [
+          "Fixed the invert mode of networks created with Road Builder. This also fixes the bug related to the Traffic mod. This change however will make your created configurations under LHT reverse, your saves will be unaffected but you might have to flip networks to get them to be the same again.",
+          "Thumbnails are now updated when loading into a LHT city to reflect the proper way that the network faces."
+        ]
+      }
+    ]
+  },
+  {
+    "Beta": true,
     "Version": "0.1.0",
     "Date": "2024-08-09",
     "ChangeGroups": [

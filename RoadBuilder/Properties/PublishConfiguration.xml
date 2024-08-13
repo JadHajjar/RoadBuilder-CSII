@@ -1,8 +1,9 @@
-﻿<Publish>
-	<ModId Value="87190" />
-	<DisplayName Value="Road Builder [BETA]" />
-	<ShortDescription Value="Create endless road combinations on the fly while you’re playing the game! With a slick and easy-to-use interface, you’ll be able to create the exact road that you need on the spot." />
-	<LongDescription>
+<?xml version="1.0" encoding="utf-8"?>
+<Publish>
+  <ModId Value="87190" />
+  <DisplayName Value="Road Builder [BETA]" />
+  <ShortDescription Value="Create endless road combinations on the fly while you’re playing the game! With a slick and easy-to-use interface, you’ll be able to create the exact road that you need on the spot." />
+  <LongDescription>
 # Road Builder
 **In collaboration with Trejak and BadPeanut**
 
@@ -17,12 +18,6 @@ With a slick and easy-to-use interface, you’ll be able to create the exact roa
 * Roads are generated in real time, guaranteeing future compatibility with updates to the game.
 * Roads are included in your save-game, allowing you to share it with anyone who has Road Builder with ease.
 * You can create asphalt roads, gravel roads, pedestrian roads, highways, all three types of tracks, and pedestrian paths.
-
-## Known Conflict
-Remove Traffic Lights Enhancement mod before using Road Builder to be safe.
-
-If you are crashing with both mods, unsubscribe from TLE and delete its folder from:
-C:\Users\%username%\AppData\LocalLow\Colossal Order\Cities Skylines II\.cache\Mods\mods_subscribed\78960_6
 
 ## Custom Lanes Support
 
@@ -71,7 +66,6 @@ The **Addons** section toggles some extra options available for the road, like h
 
 ## Advanced User Mode
 Found in the game options panel, under “Road Builder” the Advanced User Mode exposes more lanes available in the Road Builder Panel. Some of the lanes may work in unexpected or unsupported ways, so player discretion is advised.
-It also exposes the usually hidden “Integrated Train” and “Integrated Subway” stops to their respective transport menus.
 
 
 # FAQ
@@ -121,37 +115,28 @@ The save should load, though all custom roads will load in as default grey netwo
 # Help and Support
 If you're facing any issues with the mod, please use the discord linked on the right.
 This helps us better assist you and avoids your message from getting lost in the comments.
-	</LongDescription>
-	<!--Thumbnail-->
-	<Thumbnail Value="Properties/Thumbnail.png" />
-	<!--Screenshot, can be set multiple times-->
-	<Screenshot Value="Properties/Screenshot_01.png" />
-	<Screenshot Value="Properties/Screenshot_02.png" />
-	<Screenshot Value="Properties/Screenshot_03.png" />
-	<Screenshot Value="Properties/Screenshot_04.png" />
-	<Screenshot Value="Properties/Screenshot_05.png" />
-	<Screenshot Value="Properties/Screenshot_06.png" />
-	<Screenshot Value="Properties/Screenshot_07.png" />
-	<!--Tag, can be set multiple times-->
-	<Tag Value="Code Mod" />
-	<!--Link to the forum post where the mod can be discussed-->
-	<ForumLink Value="https://forum.paradoxplaza.com/forum/threads/road-builder.1698661/" />
-	<!--Version of the mod-->
-	<ModVersion Value="0.1" />
-	<!--Recommended version of the base game to use the mod-->
-	<GameVersion Value="1.1.*" />
-	<!--Dependency for the mod, can be set multiple times-->
-	<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
-	<ChangeLog>
-		Release
-	</ChangeLog>
-	<!--ChangeLog>
-	</ChangeLog-->
-	<!--External link. supported types are discord, github, youtube, twitch, x, paypal, patreon, buymeacoffee, kofi, crowdin, gitlab-->
-	<ExternalLink Type="discord" Url="https://discord.gg/E4k8ZEtRxd" />
-	<ExternalLink Type="github" Url="https://github.com/JadHajjar/RoadBuilder-CSII" />
-	<ExternalLink Type="github" Url="https://github.com/JadHajjar/RoadBuilder-CSII" />
-	<ExternalLink Type="buymeacoffee" Url="https://www.buymeacoffee.com/tdwsvillage" />
-	<ExternalLink Type="kofi" Url="https://ko-fi.com/trejak" />
-	<ExternalLink Type="kofi2" Url="https://ko-fi.com/badpeanut" />
+</LongDescription>
+  <Thumbnail Value="Properties/Thumbnail.png" />
+  <Screenshot Value="Properties/Screenshot_01.png" />
+  <Screenshot Value="Properties/Screenshot_02.png" />
+  <Screenshot Value="Properties/Screenshot_03.png" />
+  <Screenshot Value="Properties/Screenshot_04.png" />
+  <Screenshot Value="Properties/Screenshot_05.png" />
+  <Screenshot Value="Properties/Screenshot_06.png" />
+  <Screenshot Value="Properties/Screenshot_07.png" />
+  <Tag Value="Code Mod" />
+  <ForumLink Value="https://forum.paradoxplaza.com/forum/threads/road-builder.1698661/" />
+  <ModVersion Value="0.1.1" />
+  <GameVersion Value="1.1.*" />
+  <ChangeLog>
+# v0.1.1
+## Left-Hand Traffic Changes
+* Fixed the invert mode of networks created with Road Builder. This also fixes the bug related to the Traffic mod. This change however will make your created configurations under LHT reverse, your saves will be unaffected but you might have to flip networks to get them to be the same again.
+* Thumbnails are now updated when loading into a LHT city to reflect the proper way that the network faces.
+</ChangeLog>
+  <ExternalLink Type="discord" Url="https://discord.gg/E4k8ZEtRxd" />
+  <ExternalLink Type="github" Url="https://github.com/JadHajjar/RoadBuilder-CSII" />
+  <ExternalLink Type="github" Url="https://github.com/JadHajjar/RoadBuilder-CSII" />
+  <ExternalLink Type="buymeacoffee" Url="https://www.buymeacoffee.com/tdwsvillage" />
+  <ExternalLink Type="kofi" Url="https://ko-fi.com/trejak" />
 </Publish>
