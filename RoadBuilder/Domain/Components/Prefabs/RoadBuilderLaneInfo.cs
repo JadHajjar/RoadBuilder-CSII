@@ -16,9 +16,9 @@ namespace RoadBuilder.Domain.Components.Prefabs
 	[ComponentMenu("RoadBuilder/", new Type[] { typeof(NetSectionPrefab), typeof(LaneGroupPrefab) })]
 	public class RoadBuilderLaneInfo : ComponentBase
 	{
-		public RoadCategory RequiredCategories;
-		public RoadCategory AnyCategories;
-		public RoadCategory ExcludedCategories;
+		public RoadCategory RequireAll;
+		public RoadCategory RequireAny;
+		public RoadCategory RequireNone;
 		public Color LaneColor;
 		public string BackThumbnail;
 		public string FrontThumbnail;
@@ -32,19 +32,19 @@ namespace RoadBuilder.Domain.Components.Prefabs
 
 		public RoadBuilderLaneInfo WithRequired(RoadCategory roadCategory)
 		{
-			RequiredCategories = roadCategory;
+			RequireAll = roadCategory;
 			return this;
 		}
 
 		public RoadBuilderLaneInfo WithAny(RoadCategory roadCategory)
 		{
-			AnyCategories = roadCategory;
+			RequireAny = roadCategory;
 			return this;
 		}
 
 		public RoadBuilderLaneInfo WithExcluded(RoadCategory roadCategory)
 		{
-			ExcludedCategories = roadCategory;
+			RequireNone = roadCategory;
 			return this;
 		}
 

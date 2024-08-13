@@ -108,39 +108,7 @@ namespace RoadBuilder.Utilities
 				config.Lanes.RemoveAt((config.Lanes.Count - 1) / 2);
 			}
 
-			FixTrafficDirection(config);
-
 			return config;
-		}
-
-		private void FixTrafficDirection(INetworkConfig config)
-		{
-			if (_roadGenerationData.LeftHandTraffic)
-			{
-				switch (NetworkPrefab.m_InvertMode)
-				{
-					case CompositionInvertMode.InvertLefthandTraffic:
-						config.Lanes.ForEach(x => x.Invert = !x.Invert);
-						config.Lanes.Reverse();
-						break;
-					case CompositionInvertMode.FlipLefthandTraffic:
-						config.Lanes.Reverse();
-						break;
-				}
-			}
-			else
-			{
-				switch (NetworkPrefab.m_InvertMode)
-				{
-					case CompositionInvertMode.InvertRighthandTraffic:
-						config.Lanes.ForEach(x => x.Invert = !x.Invert);
-						config.Lanes.Reverse();
-						break;
-					case CompositionInvertMode.FlipRighthandTraffic:
-						config.Lanes.Reverse();
-						break;
-				}
-			}
 		}
 
 		private INetworkConfig JsonClone(INetworkConfig config)
@@ -180,7 +148,7 @@ namespace RoadBuilder.Utilities
 		{
 			var config = new RoadConfig
 			{
-				SpeedLimit = roadPrefab.m_SpeedLimit,
+				SpeedLimit = roadPrefab.m_SpeedLimit
 			};
 
 			if (roadPrefab.m_HighwayRules)

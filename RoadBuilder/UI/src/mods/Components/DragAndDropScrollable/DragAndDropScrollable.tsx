@@ -31,7 +31,6 @@ export const DragAndDropScrollable = (props: _Props) => {
         }
         let dx = baseScrollSpeed * (dir == 'left'? -1 : 1);        
         setScrollRoutine(setInterval(() => {         
-            console.log(scrollRef.current?.scrollLeft);   
             scrollController.scrollBy(dx, 0);            
         }, Math.round(1000/30)));                
     }

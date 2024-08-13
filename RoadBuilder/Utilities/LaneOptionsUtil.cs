@@ -154,15 +154,15 @@ namespace RoadBuilder.Utilities
 					{
 						Name = "Backward",
 						Icon = "coui://roadbuildericons/RB_ArrowDown.svg",
-						Selected = !isTwoWaySelected && (roadGenerationData.LeftHandTraffic ? !lane.Invert : lane.Invert),
-						Id = roadGenerationData.LeftHandTraffic ? 1 : 0,
+						Selected = !isTwoWaySelected && lane.Invert,
+						Id = 0,
 					},
 					new()
 					{
 						Name = "Forward",
 						Icon = "coui://roadbuildericons/RB_Arrow.svg",
-						Selected = !isTwoWaySelected && !(roadGenerationData.LeftHandTraffic ? !lane.Invert : lane.Invert),
-						Id = roadGenerationData.LeftHandTraffic ? 0 :  1,
+						Selected = !isTwoWaySelected && !lane.Invert,
+						Id = 1,
 					},
 					new()
 					{

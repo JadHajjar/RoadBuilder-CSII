@@ -5,7 +5,7 @@
 		<LangVersion>9</LangVersion>
 		<TargetFramework>net472</TargetFramework>
 		<Configurations>Debug;Release</Configurations>
-		<Version>0.1.0</Version>
+		<Version>0.1.1.1</Version>
 		<FileVersion>$(Version)</FileVersion>
 		<AssemblyVersion>$(Version)</AssemblyVersion>
 		<Company>T. D. W. and Trejak</Company>
@@ -47,7 +47,7 @@
 			<PublishConfigurationFile>"$(ProjectDir)AutoPublishConfiguration.json"</PublishConfigurationFile>
 		</PropertyGroup>
 
-		<Exec Command="$(PdxPublishConfiguration) $(Version) $(PublishConfigurationFile)" />
+		<Exec Command="$(PdxPublishConfiguration) $(Version) $(PublishConfigurationFile) BETA" />
 	</Target>
 
 	<ItemGroup>

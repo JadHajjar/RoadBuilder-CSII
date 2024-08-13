@@ -2,6 +2,7 @@
 
 using RoadBuilder.Domain.Enums;
 using RoadBuilder.Domain.Prefabs;
+using RoadBuilder.Systems;
 
 using System;
 using System.Collections.Generic;
@@ -27,7 +28,7 @@ namespace RoadBuilder.Domain.Configurations
 			reader.Read(out string iD);
 			reader.Read(out string name);
 
-			if (Version < 2)
+			if (Version < RoadBuilderSerializeSystem.VER_REMOVE_AGGREGATE_TYPE)
 			{
 				reader.Read(out string _);
 			}
