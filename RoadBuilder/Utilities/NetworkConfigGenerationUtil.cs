@@ -173,7 +173,37 @@ namespace RoadBuilder.Utilities
 					break;
 			}
 
+			FixTrafficDirection(config);
+
 			return config;
+		}
+
+		private void FixTrafficDirection(INetworkConfig config)
+		{
+			if (_roadGenerationData.LeftHandTraffic)
+			{
+				switch (NetworkPrefab.m_InvertMode)
+				{
+					case CompositionInvertMode.InvertLefthandTraffic:
+						config.Lanes.Reverse();
+						break;
+					case CompositionInvertMode.FlipLefthandTraffic:
+						config.Lanes.ForEach(x => x.Invert = !x.Invert);
+						break;
+				}
+			}
+			else
+			{
+				switch (NetworkPrefab.m_InvertMode)
+				{
+					case CompositionInvertMode.InvertRighthandTraffic:
+						config.Lanes.Reverse();
+						break;
+					case CompositionInvertMode.FlipRighthandTraffic:
+						config.Lanes.ForEach(x => x.Invert = !x.Invert);
+						break;
+				}
+			}
 		}
 
 		private INetworkConfig GenerateTrackConfig(TrackPrefab trackPrefab)

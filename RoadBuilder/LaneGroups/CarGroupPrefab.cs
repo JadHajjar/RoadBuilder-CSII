@@ -15,7 +15,6 @@ namespace RoadBuilder.LaneGroups
 
 		public override void Initialize(Dictionary<string, NetSectionPrefab> sections)
 		{
-			DisplayName = "Car";
 			Options = new RoadBuilderLaneOption[]
 			{
 				new()
@@ -66,7 +65,7 @@ namespace RoadBuilder.LaneGroups
 						},
 						new()
 						{
-							Value = "1" ,
+							Value = "1",
 							ThumbnailUrl = "coui://roadbuildericons/RB_NoMarkingsWhite.svg"
 						}
 					}

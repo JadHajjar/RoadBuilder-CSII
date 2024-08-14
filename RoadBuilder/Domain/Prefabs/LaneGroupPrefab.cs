@@ -14,7 +14,6 @@ namespace RoadBuilder.Domain.Prefabs
 		public RoadBuilderLaneOption[] Options;
 
 		public List<NetSectionPrefab> LinkedSections { get; set; } = new();
-		public string DisplayName { get; set; }
 
 		public override void GetPrefabComponents(HashSet<ComponentType> components)
 		{

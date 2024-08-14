@@ -42,8 +42,8 @@ export const SidePanel = () => {
       <div className={styles.header}>
         {toolMode == RoadBuilderToolModeEnum.Picker && (
           <div className={styles.subHeader}>
-            <div className={styles.title}>Created Roads</div>
-            <div className={styles.roadCount}>{roadConfigurations.length + " roads"}</div>
+            <div className={styles.title}>{translate("RoadBuilder.CreatedRoads")}</div>
+            <div className={styles.roadCount}>{translate("RoadBuilder.RoadCount")?.replace("{0}", roadConfigurations.length.toString())}</div>
           </div>
         )}
         {toolMode != RoadBuilderToolModeEnum.Picker && (
@@ -55,7 +55,7 @@ export const SidePanel = () => {
                 setSearchQuery("");
               }}
             >
-              Available Lanes
+              {translate("RoadBuilder.AvailableLanes")}
             </div>
             <div
               className={roadListView && styles.selected}
@@ -64,7 +64,7 @@ export const SidePanel = () => {
                 setSearchQuery("");
               }}
             >
-              Created Roads
+              {translate("RoadBuilder.CreatedRoads")}
             </div>
           </div>
         )}

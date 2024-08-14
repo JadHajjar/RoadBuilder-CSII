@@ -13,7 +13,6 @@ namespace RoadBuilder.LaneGroups
 
 		public override void Initialize(Dictionary<string, NetSectionPrefab> sections)
 		{
-			DisplayName = "Platform";
 			Options = new RoadBuilderLaneOption[]
 			{
 				new()

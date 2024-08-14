@@ -1,6 +1,22 @@
 [
   {
     "Beta": true,
+    "Version": "0.1.2",
+    "Date": "2024-08-14",
+    "ChangeGroups": [
+      {
+        "Name": "Hotfix",
+        "Changes": [
+          "Fixed lanes being inverted when creating a new road in Left-Hand Traffic mode.",
+          "Added new tooltips to UI elements that had none.",
+          "Fixed and Improved tooltips for lane options.",
+          "Added support for localization for future updates."
+        ]
+      }
+    ]
+  },
+  {
+    "Beta": true,
     "Version": "0.1.1.1",
     "Date": "2024-08-13",
     "ChangeGroups": [

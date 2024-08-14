@@ -11,7 +11,6 @@ namespace RoadBuilder.LaneGroups
 	{
 		public override void Initialize(Dictionary<string, NetSectionPrefab> sections)
 		{
-			DisplayName = "Tram Track";
 			Options = new RoadBuilderLaneOption[0];
 
 			AddComponent<RoadBuilderLaneInfo>()
