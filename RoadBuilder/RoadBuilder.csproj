@@ -5,7 +5,7 @@
 		<LangVersion>9</LangVersion>
 		<TargetFramework>net472</TargetFramework>
 		<Configurations>Debug;Release</Configurations>
-		<Version>0.1.1.1</Version>
+		<Version>0.1.2</Version>
 		<FileVersion>$(Version)</FileVersion>
 		<AssemblyVersion>$(Version)</AssemblyVersion>
 		<Company>T. D. W. and Trejak</Company>
@@ -21,10 +21,14 @@
 	<Import Project="$([System.Environment]::GetEnvironmentVariable('CSII_TOOLPATH', 'EnvironmentVariableTarget.User'))\Mod.targets" />
 
 	<ItemGroup>
+		<EmbeddedResource Include="LocaleCustomAssets.json" />
 		<EmbeddedResource Include="Locale.json" />
 		<EmbeddedResource Include="Locale\*.json" />
+		<EmbeddedResource Include="LocaleCustomAssets\*.json" />
 		<None Remove="Locale.json" />
+		<None Remove="LocaleCustomAssets.json" />
 		<None Remove="Locale\*.json" />
+		<None Remove="LocaleCustomAssets\*.json" />
 	</ItemGroup>
 
 	<Target Name="BuildUI" AfterTargets="AfterBuild">

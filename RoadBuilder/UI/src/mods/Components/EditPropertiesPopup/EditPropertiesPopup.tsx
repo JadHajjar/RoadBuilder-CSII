@@ -8,12 +8,15 @@ import { duplicateLane, roadLanes$, setRoadLanes } from "mods/bindings";
 import { removeAt } from "mods/util";
 import { laneOptionClicked } from "mods/bindings";
 import { DragContext } from "mods/Contexts/DragContext";
+import { useLocalization } from "cs2/l10n";
+import { Tooltip } from "cs2/ui";
 
 export const EditPropertiesPopup = () => {
   let rem = useRem();
   let dragCtx = useContext(DragContext);
   let laneCtx = useContext(LanePropertiesContext);
   let roadLanes = useValue(roadLanes$);
+  const { translate } = useLocalization();
 
   if (!laneCtx.showPopup || laneCtx.laneData == undefined) {
     return <></>;
@@ -39,31 +42,35 @@ export const EditPropertiesPopup = () => {
   if (!currentLane || isDragging) return <></>;
 
   return (
-    <div className={styles.viewContainer} style={inlineStyle}  onMouseLeave={laneCtx.close}>
+    <div className={styles.viewContainer} style={inlineStyle} onMouseLeave={laneCtx.close}>
       <div className={styles.view}>
         <div className={styles.topBar}>
           <div className={styles.title}>{laneCtx.laneData.NetSection?.DisplayName}</div>
-          <div className={styles.copyButton} onClick={onCopy}>
-            <img />
-          </div>
-          <div className={styles.deleteButton} onClick={onDelete}>
-            <img />
-          </div>
+          <Tooltip tooltip={translate("RoadBuilder.CopyLane")}>
+            <div className={styles.copyButton} onClick={onCopy}>
+              <img />
+            </div>
+          </Tooltip>
+          <Tooltip tooltip={translate("RoadBuilder.DeleteLane")}>
+            <div className={styles.deleteButton} onClick={onDelete}>
+              <img />
+            </div>
+          </Tooltip>
         </div>
         <div className={styles.content}>
           <div className={styles.options}>
             {currentLane?.Options != undefined && currentLane?.Options?.length !== 0 ? (
               <OptionsPanelComponent
-                OnChange={(x, y, z) =>laneOptionClicked(currentLane.Index, x, y, z)}
+                OnChange={(x, y, z) => laneOptionClicked(currentLane.Index, x, y, z)}
                 options={currentLane?.Options ?? new Array()}
               ></OptionsPanelComponent>
             ) : (
-              <span> No Options Available</span>
+              <span>{translate("RoadBuilder.NoOptions")}</span>
             )}
           </div>
           <div className={styles.caret}></div>
         </div>
-      </div>      
+      </div>
     </div>
   );
 };
