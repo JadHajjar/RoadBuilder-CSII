@@ -22,7 +22,7 @@ export const Router = () => {
           <div className={styles.pickerHint}>
             <span>
               <img src={RB_ClickOnRoad} />
-              {translate("Prompt[PickerHint]", "Click On A Road")}
+              {translate("RoadBuilder.PickerHint", "Click On A Road")}
             </span>
           </div>
           <SidePanel />

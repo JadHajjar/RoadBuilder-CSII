@@ -6,7 +6,17 @@ import { NetSectionItem } from "domain/NetSectionItem";
 import { CSSProperties, useContext, useEffect, useRef } from "react";
 import { DragContext } from "mods/Contexts/DragContext";
 import { useValue } from "cs2/api";
-import { clearTool, createNewPrefab, setRoadLanes, roadBuilderToolMode$, roadLanes$, isPaused$, toggleTool, deleteRoad, getRoadId$ } from "mods/bindings";
+import {
+  clearTool,
+  createNewPrefab,
+  setRoadLanes,
+  roadBuilderToolMode$,
+  roadLanes$,
+  isPaused$,
+  toggleTool,
+  deleteRoad,
+  getRoadId$,
+} from "mods/bindings";
 import { RoadBuilderToolModeEnum } from "domain/RoadBuilderToolMode";
 import { RoadLane } from "domain/RoadLane";
 import { VanillaComponentResolver } from "vanillacomponentresolver";
@@ -99,7 +109,7 @@ export const BottomView = () => {
       <DragAndDropScrollable className={styles.view} trackVisibility="always" horizontal controller={scrollController}>
         <div className={styles.scrollBuffer}></div>
         {items}
-        {roadLanes.length == 0 && !dragContext.netSectionItem ? <div className={styles.hint}>Drag Lanes Here</div> : <></>}
+        {roadLanes.length == 0 && !dragContext.netSectionItem ? <div className={styles.hint}>{translate("RoadBuilder.DragHere")}</div> : <></>}
         <div className={styles.scrollBuffer}></div>
       </DragAndDropScrollable>
       <div className={styles.bottomBG + " " + (isPaused && styles.paused)}>
@@ -108,7 +118,7 @@ export const BottomView = () => {
         ) : (
           <>
             <div className={styles.bottomLeftButtonBar}>
-              <Tooltip tooltip={"Pick a different road"}>
+              <Tooltip tooltip={translate("RoadBuilder.PickOther")}>
                 <Button
                   className={styles.backButton}
                   variant="flat"
@@ -122,21 +132,23 @@ export const BottomView = () => {
               </Tooltip>
               <Button style={copyButtonStyle} className={styles.copyButton} variant="flat" onSelect={createNewPrefab}>
                 <img />
-                {translate("Prompt[UseAsTemplate]", "Use As Template")}
+                {translate("RoadBuilder.UseAsTemplate", "Use As Template")}
               </Button>
             </div>
             <div className={styles.bottomRightButtonBar}>
               <Button style={copyButtonStyle} className={styles.deleteRoadButton} variant="flat" onSelect={() => deleteRoad(roadId)}>
-                  <img />
-                  {translate("Prompt[Delete]", "Delete Road")}
-                </Button>
-              <Button className={styles.closeButton} variant="flat" onSelect={clearTool}>
                 <img />
+                {translate("RoadBuilder.DeleteRoad", "Delete Road")}
               </Button>
+              <Tooltip tooltip={translate("RoadBuilder.CloseRoadBuilder")}>
+                <Button className={styles.closeButton} variant="flat" onSelect={clearTool}>
+                  <img />
+                </Button>
+              </Tooltip>
             </div>
           </>
         )}
-      </div>      
+      </div>
       <DeleteAreaDnD onRemove={deleteLane} />
     </div>
   );

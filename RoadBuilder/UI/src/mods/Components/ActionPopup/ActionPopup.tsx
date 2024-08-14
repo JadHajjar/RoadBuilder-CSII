@@ -19,7 +19,7 @@ export default () => {
     let deltaRight = bodySize.width - (dragCtx.mousePosition.x + halfPopupWidth);
     let deltaLeft = dragCtx.mousePosition.x - halfPopupWidth;
     let deltaTop = dragCtx.mousePosition.y - halfPopupHeight;
-    let deltaBottom = bodySize.height - (dragCtx.mousePosition.y + halfPopupHeight + (120 * rem));
+    let deltaBottom = bodySize.height - (dragCtx.mousePosition.y + halfPopupHeight + 120 * rem);
     let nPos = dragCtx.mousePosition;
     if (deltaRight < 0 || deltaLeft < 0) {
       nPos = { ...nPos, x: nPos.x + Math.min(deltaRight, deltaLeft < 0 ? -deltaLeft : 0) };
@@ -40,21 +40,21 @@ export default () => {
         {/* Pick Prefab */}
         <Button className={classNames(styles.pickerButton, styles.button)} onSelect={pickPrefab} variant="flat" focusKey={FOCUS_AUTO}>
           <img />
-          {translate("Prompt[Picker]", "Place More")}
+          {translate("RoadBuilder.Picker", "Place More")}
         </Button>
         {/* Use as Template */}
         <Button className={classNames(styles.templateButton, styles.button)} variant="flat" onSelect={createNewPrefab} focusKey={FOCUS_AUTO}>
           <img />
-          {translate("Prompt[UseAsTemplate]", "Use As Template")}
+          {translate("RoadBuilder.UseAsTemplate", "Use As Template")}
         </Button>
         {/* Edit Prefab */}
         <Button className={classNames(styles.editButton, styles.button)} onSelect={editPrefab} variant="flat" focusKey={FOCUS_AUTO}>
           <img />
-          {translate("Prompt[EditAllInstances]", "Edit All Instances")}
+          {translate("RoadBuilder.EditAllInstances", "Edit All Instances")}
         </Button>
         {/* Cancel Button */}
         <Button className={classNames(styles.cancelButton, styles.button)} onSelect={cancelActionPopup} variant="flat" focusKey={FOCUS_DISABLED}>
-          {translate("Common.ACTION[Cancel]", "Cancel")}
+          {translate("RoadBuilder.Cancel", "Cancel")}
         </Button>
       </div>
     </div>

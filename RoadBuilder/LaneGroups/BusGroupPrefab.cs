@@ -14,7 +14,6 @@ namespace RoadBuilder.LaneGroups
 
 		public override void Initialize(Dictionary<string, NetSectionPrefab> sections)
 		{
-			DisplayName = "Bus";
 			Options = new RoadBuilderLaneOption[]
 			{
 				new()

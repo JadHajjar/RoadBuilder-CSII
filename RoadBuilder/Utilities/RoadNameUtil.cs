@@ -41,13 +41,6 @@ namespace RoadBuilder.Utilities
 				yield return new(titleId, item.Config.Name);
 				yield return new(descriptionId, GetRoadDescription(item));
 			}
-
-			foreach (var item in _netSectionsSystem.LaneGroups.Where(x => x.Value.DisplayName is not null))
-			{
-				_prefabUISystem.GetTitleAndDescription(item.Value, out var titleId, out var descriptionId);
-
-				yield return new(titleId, item.Value.DisplayName);
-			}
 		}
 
 		private string GetRoadDescription(INetworkBuilderPrefab item)

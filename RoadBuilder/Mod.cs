@@ -54,6 +54,11 @@ namespace RoadBuilder
 				GameManager.instance.localizationManager.AddSource(item.LocaleId, item);
 			}
 
+			foreach (var item in new LocaleHelper("RoadBuilder.LocaleCustomAssets.json").GetAvailableLanguages())
+			{
+				GameManager.instance.localizationManager.AddSource(item.LocaleId, item);
+			}
+
 			AssetDatabase.global.LoadSettings(nameof(RoadBuilder), Settings, new Setting(this));
 
 			updateSystem.UpdateAfter<RoadBuilderGenerationDataSystem, PrefabInitializeSystem>(SystemUpdatePhase.PrefabUpdate);

@@ -76,6 +76,7 @@ namespace RoadBuilder.Utilities
 					entries[0] = new()
 					{
 						Id = 1,
+						Name = "RoadBuilder.Grass",
 						Icon = "coui://roadbuildericons/RB_GrassWhite.svg",
 						Selected = value is "GT" or "G",
 						Disabled = !available,
@@ -83,6 +84,7 @@ namespace RoadBuilder.Utilities
 					entries[1] = new()
 					{
 						Id = 2,
+						Name = "RoadBuilder.Trees",
 						Icon = "coui://roadbuildericons/RB_TreeWhite.svg",
 						Selected = value is "GT" or "T",
 						Disabled = !available,
@@ -99,7 +101,7 @@ namespace RoadBuilder.Utilities
 					entries[0] = new()
 					{
 						IsValue = option.Type is LaneOptionType.ValueUpDown,
-						Value = value,
+						Value = LocaleHelper.Translate($"{group.name}.Options[{option.Name}][{value}]", value),
 					};
 				}
 				else
@@ -109,7 +111,7 @@ namespace RoadBuilder.Utilities
 						entries[i] = new OptionItemUIEntry
 						{
 							Id = i,
-							Name = option.Options[i].Value,
+							Name = LocaleHelper.Translate($"{group.name}.Options[{option.Name}][{option.Options[i].Value}]", option.Options[i].Value),
 							Icon = option.Options[i].ThumbnailUrl,
 							Selected = option.Options[i].Value == value,
 							Disabled = !remainingSections.Any(x => x.GetComponent<RoadBuilderLaneGroup>().Combination.Any(x => x.OptionName == option.Name && x.Value == option.Options[i].Value))
@@ -120,7 +122,7 @@ namespace RoadBuilder.Utilities
 				yield return new OptionSectionUIEntry
 				{
 					Id = --index,
-					Name = option.Name,
+					Name = LocaleHelper.Translate($"{group.name}.Options[{option.Name}]", option.Name),
 					Options = entries
 				};
 
@@ -152,21 +154,21 @@ namespace RoadBuilder.Utilities
 				{
 					new()
 					{
-						Name = "Backward",
+						Name = "RoadBuilder.Backward",
 						Icon = "coui://roadbuildericons/RB_ArrowDown.svg",
 						Selected = !isTwoWaySelected && lane.Invert,
 						Id = 0,
 					},
 					new()
 					{
-						Name = "Forward",
+						Name = "RoadBuilder.Forward",
 						Icon = "coui://roadbuildericons/RB_Arrow.svg",
 						Selected = !isTwoWaySelected && !lane.Invert,
 						Id = 1,
 					},
 					new()
 					{
-						Name = "Two-way",
+						Name = "RoadBuilder.TwoWay",
 						Icon = "coui://roadbuildericons/RB_ArrowBoth.svg",
 						Selected = isTwoWaySelected,
 						Id = 2,

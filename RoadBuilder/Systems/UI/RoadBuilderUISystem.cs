@@ -563,11 +563,6 @@ namespace RoadBuilder.Systems.UI
 				return name;
 			}
 
-			if (prefab is LaneGroupPrefab laneGroup && !string.IsNullOrEmpty(laneGroup.DisplayName))
-			{
-				return laneGroup.DisplayName;
-			}
-
 			return prefab.name.Replace('_', ' ').FormatWords();
 		}
 	}
