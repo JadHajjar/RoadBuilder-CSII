@@ -81,7 +81,23 @@ namespace RoadBuilder.Domain.Configurations
 
 		public void ApplyVersionChanges()
 		{
+			if (Version <= RoadBuilderSerializeSystem.VER_FIX_PEDESTRIAN_ROADS)
+			{
+				Addons |= RoadAddons.HasUndergroundElectricityCable;
 
+				foreach (var lane in Lanes)
+				{
+					if (lane.SectionPrefabName is "Tiled Section 3")
+					{
+						lane.SectionPrefabName = "Tiled Pedestrian Section 3";
+					}
+
+					if (lane.SectionPrefabName is "Tiled Median Pedestrian 2" or "Tiled Median 2")
+					{
+						lane.SectionPrefabName = "RB Tiled Median 2";
+					}
+				}
+			}
 		}
 
 		public Type GetPrefabType()

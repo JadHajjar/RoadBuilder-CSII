@@ -1,11 +1,35 @@
 [
   {
     "Beta": true,
+    "Version": "0.2.0",
+    "Date": "2024-08-14",
+    "ChangeGroups": [
+      {
+        "Name": "Pedestrian Streets Changes",
+        "Changes": [
+          "Removed the 2m that was getting added to the center of pedestrian roads.",
+          "Fixed tiled medians curving on nodes.",
+          "Fixed inconsistency with the median and pedestrian lanes in pedestrian roads.",
+          "Fixed incorrect flags being set to pedestrian roads."
+        ]
+      },
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Fixed Copy Lane not working correctly in Left-Hand Traffic mode.",
+          "Split up the electricity wires addons. Now you can completely remove electricity from a road in addition to existing options.",
+          "Standardised electricity flags. This should fix roads losing electricity wires."
+        ]
+      }
+    ]
+  },
+  {
+    "Beta": true,
     "Version": "0.1.2",
     "Date": "2024-08-14",
     "ChangeGroups": [
       {
-        "Name": "Hotfix",
+        "Name": "Changes",
         "Changes": [
           "Fixed lanes being inverted when creating a new road in Left-Hand Traffic mode.",
           "Added new tooltips to UI elements that had none.",

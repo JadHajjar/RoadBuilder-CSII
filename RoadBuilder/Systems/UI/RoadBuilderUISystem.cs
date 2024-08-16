@@ -284,7 +284,7 @@ namespace RoadBuilder.Systems.UI
 		{
 			var newLanes = new List<LaneConfig>();
 
-			foreach (var item in (roadGenerationDataSystem.RoadGenerationData.LeftHandTraffic ? roadLanes.Reverse() : roadLanes))
+			foreach (var item in roadGenerationDataSystem.RoadGenerationData.LeftHandTraffic ? roadLanes.Reverse() : roadLanes)
 			{
 				var existingLane = config.Lanes.ElementAtOrDefault(item.Index);
 
@@ -388,11 +388,11 @@ namespace RoadBuilder.Systems.UI
 			if (!Mod.Settings.AdvancedUserMode)
 			{
 				config.Lanes.RemoveAll(x =>
-			{
-				NetworkPrefabGenerationUtil.GetNetSection(roadGenerationDataSystem.RoadGenerationData, config, x, out var section, out var group);
+				{
+					NetworkPrefabGenerationUtil.GetNetSection(roadGenerationDataSystem.RoadGenerationData, config, x, out var section, out var group);
 
-				return !(section?.MatchCategories(config) ?? true) || !(group?.MatchCategories(config) ?? true);
-			});
+					return !(section?.MatchCategories(config) ?? true) || !(group?.MatchCategories(config) ?? true);
+				});
 			}
 		}
 
