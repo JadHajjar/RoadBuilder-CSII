@@ -101,11 +101,6 @@ namespace RoadBuilder.Systems.UI
 				return true;
 			}
 
-			if (prefab.FindLanes<UtilityLane>().Any(x => x.m_UtilityType is not Game.Net.UtilityTypes.Fence))
-			{
-				return true;
-			}
-
 			return false;
 		}
 

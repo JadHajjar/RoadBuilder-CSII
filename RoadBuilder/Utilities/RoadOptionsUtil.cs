@@ -177,19 +177,19 @@ namespace RoadBuilder.Utilities
 						Icon = "coui://roadbuildericons/RB_PipesWhite.svg",
 						Selected = config.Addons.HasFlag(RoadAddons.HasUndergroundWaterPipes)
 					},
-					//new OptionItemUIEntry
-					//{
-					//	Id = (int)RoadAddons.HasUndergroundElectricityCable,
-					//	Name = $"RoadBuilder.RoadAddon[{RoadAddons.HasUndergroundElectricityCable}]",
-					//	Icon = "coui://roadbuildericons/RB_UndergroundElectricityWhite.svg",
-					//	Selected = config.Addons.HasFlag(RoadAddons.HasUndergroundElectricityCable)
-					//},
+					new OptionItemUIEntry
+					{
+						Id = (int)RoadAddons.HasUndergroundElectricityCable,
+						Name = $"RoadBuilder.RoadAddon[{RoadAddons.HasUndergroundElectricityCable}]",
+						Icon = "coui://roadbuildericons/RB_UndergroundElectricityWhite.svg",
+						Selected = config.Addons.HasFlag(RoadAddons.HasUndergroundElectricityCable)
+					},
 					new OptionItemUIEntry
 					{
 						Id = (int)RoadAddons.RequiresUpgradeForElectricity,
 						Name = $"RoadBuilder.RoadAddon[{RoadAddons.RequiresUpgradeForElectricity}]",
-						Icon = "coui://roadbuildericons/RB_UndergroundElectricityWhite.svg",
-						//Disabled = !config.Addons.HasFlag(RoadAddons.HasUndergroundElectricityCable),
+						Icon = "coui://roadbuildericons/RB_UpgradeElectricityWhite.svg",
+						Disabled = !config.Addons.HasFlag(RoadAddons.HasUndergroundElectricityCable),
 						Selected = config.Addons.HasFlag(RoadAddons.RequiresUpgradeForElectricity)
 					}
 				}

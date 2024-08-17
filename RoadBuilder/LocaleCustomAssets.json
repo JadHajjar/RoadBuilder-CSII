@@ -3,6 +3,7 @@
   "Assets.NAME[RoadBuilder.LaneGroups.CarGroupPrefab]": "Car",
   "Assets.NAME[RoadBuilder.LaneGroups.MedianGroupPrefab]": "Median",
   "Assets.NAME[RoadBuilder.LaneGroups.ShoulderGroupPrefab]": "Shoulder",
+  "Assets.NAME[RoadBuilder.LaneGroups.EmptyGroupPrefab]": "Empty Lane",
   "Assets.NAME[RoadBuilder.LaneGroups.SidewalkGroupPrefab]": "Sidewalk",
   "Assets.NAME[RoadBuilder.LaneGroups.SubwayGroupPrefab]": "Subway Track",
   "Assets.NAME[RoadBuilder.LaneGroups.SubwayMedianGroupPrefab]": "Platform",
@@ -17,6 +18,8 @@
   "RoadBuilder.LaneGroups.MedianGroupPrefab.Options[Median Width]": "Median Width",
   "RoadBuilder.LaneGroups.ShoulderGroupPrefab.Options[Lane Width]": "Lane Width",
   "RoadBuilder.LaneGroups.ShoulderGroupPrefab.Options[Ground Type]": "Ground Type",
+  "RoadBuilder.LaneGroups.EmptyGroupPrefab.Options[Lane Width]": "Lane Width",
+  "RoadBuilder.LaneGroups.EmptyGroupPrefab.Options[Ground Type]": "Ground Type",
   "RoadBuilder.LaneGroups.SidewalkGroupPrefab.Options[Transport]": "Option",
   "RoadBuilder.LaneGroups.SidewalkGroupPrefab.Options[Width]": "Lane Width",
   "RoadBuilder.LaneGroups.SidewalkGroupPrefab.Options[Parking]": "Parking",
@@ -38,6 +41,6 @@
   "Assets.NAME[Sound Barrier 1]": "Sound Barrier",
   "Assets.NAME[Alley Drive Section 3]": "Rural Car",
   "Assets.NAME[Pavement Path Section 3]": "Pavement Pedestrian",
-  "Assets.NAME[Tiled Section 3]": "Tiled Pedestrian",
-  "Assets.NAME[Tiled Median Pedestrian 2]": "Tiled Median"
+  "Assets.NAME[Tiled Pedestrian Section 3]": "Tiled Pedestrian",
+  "Assets.NAME[RB Tiled Median 2]": "Tiled Median"
 }

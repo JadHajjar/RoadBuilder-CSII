@@ -1,12 +1,11 @@
-$dragReprDim: 95%;
-
 .gridThumbnail {
-  width: 75%;
-  height: 75%;
-  transition: width 0.25s, height 0.25s;
+  width: 70rem;
+  height: 70rem;
+  transition: width 0.25s, height 0.25s, margin-bottom 0.25s;
   overflow: hidden;
   display: flex;
   align-items: center;
+  margin-bottom: 20rem;
 
   & > img {
     width: 100%;
@@ -21,8 +20,8 @@ $dragReprDim: 95%;
   bottom: 2.5rem;
   font-size: 13rem;
   padding: 3rem;
-  text-align: center;
   overflow: hidden;
+  text-align: center;
   text-overflow: ellipsis;
   background-color: rgba(50, 50, 50, 0.6);
   backdrop-filter: var(--panelBlur);
@@ -31,12 +30,16 @@ $dragReprDim: 95%;
   border-bottom-right-radius: var(--panelRadius);
   border-top-left-radius: var(--panelRadius);
   border-top-right-radius: var(--panelRadius);
+
+  p {
+    text-align: center;
+  }
 }
 
 .gridItem {
   margin: 4rem;
   width: 94rem;
-  height: 94rem;
+  height: 114rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -46,8 +49,9 @@ $dragReprDim: 95%;
 
   &:hover {
     .gridThumbnail {
-      width: $dragReprDim;
-      height: $dragReprDim;
+      width: 90rem;
+      height: 90rem;
+      margin-bottom: 0rem;
     }
     .gridItemText {
       opacity: 0;
@@ -58,14 +62,17 @@ $dragReprDim: 95%;
     background: rgba(0, 0, 0, 0.25);
 
     .gridThumbnail {
-      width: 75%;
-      height: 75%;
+      width: 70rem;
+      height: 70rem;
       filter: grayscale(0.85);
       opacity: 0.25;
+      margin-bottom: 20rem;
     }
 
     .gridItemText {
-      opacity: 0;
+      opacity: 0.6;
+      background: none;
+      backdrop-filter: none;
     }
   }
 
@@ -92,8 +99,9 @@ $dragReprDim: 95%;
     }
 
     .gridThumbnail {
-      width: $dragReprDim;
-      height: $dragReprDim;
+      width: 75rem;
+      height: 75rem;
+      margin-bottom: 0rem;
     }
   }
 }

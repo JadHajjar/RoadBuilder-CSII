@@ -1,11 +1,45 @@
 [
   {
     "Beta": true,
+    "Version": "0.2.0",
+    "Date": "2024-08-17",
+    "ChangeGroups": [
+      {
+        "Name": "New Empty Lanes",
+        "Changes": [
+          "Added empty lanes with granular widths going from 0.5m to 4m.",
+          "Empty lanes for now only have custom widths when used on their own ground type (asphalt on asphalt, gravel on gravel, etc.).",
+          "Shoulders are to be used on the edges of the road, Empty lanes can be used anywhere."
+        ]
+      },
+      {
+        "Name": "Pedestrian Streets Changes",
+        "Changes": [
+          "Removed the 2m that was getting added to the center of pedestrian roads.",
+          "Fixed tiled medians curving on nodes.",
+          "Fixed inconsistency with the median and pedestrian lanes in pedestrian roads.",
+          "Fixed incorrect flags being set to pedestrian roads."
+        ]
+      },
+      {
+        "Name": "Other Changes",
+        "Changes": [
+          "Added new thumbnails for Shoulder lanes.",
+          "Split up the electricity wires addons. Now you can completely remove electricity from a road in addition to existing options.",
+          "Standardised electricity flags. This should fix roads losing electricity wires.",
+          "Fixed 'Copy Lane' not working correctly in Left-Hand Traffic mode.",
+          "Improved the lane list UI to have less overlap between the text and icon."
+        ]
+      }
+    ]
+  },
+  {
+    "Beta": true,
     "Version": "0.1.2",
     "Date": "2024-08-14",
     "ChangeGroups": [
       {
-        "Name": "Hotfix",
+        "Name": "Changes",
         "Changes": [
           "Fixed lanes being inverted when creating a new road in Left-Hand Traffic mode.",
           "Added new tooltips to UI elements that had none.",
