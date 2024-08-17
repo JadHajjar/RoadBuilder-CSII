@@ -188,7 +188,7 @@ namespace RoadBuilder.Utilities
 					{
 						Id = (int)RoadAddons.RequiresUpgradeForElectricity,
 						Name = $"RoadBuilder.RoadAddon[{RoadAddons.RequiresUpgradeForElectricity}]",
-						Icon = "coui://roadbuildericons/RB_UndergroundElectricityWhite.svg",
+						Icon = "coui://roadbuildericons/RB_UpgradeElectricityWhite.svg",
 						Disabled = !config.Addons.HasFlag(RoadAddons.HasUndergroundElectricityCable),
 						Selected = config.Addons.HasFlag(RoadAddons.RequiresUpgradeForElectricity)
 					}

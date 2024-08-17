@@ -2,8 +2,16 @@
   {
     "Beta": true,
     "Version": "0.2.0",
-    "Date": "2024-08-14",
+    "Date": "2024-08-17",
     "ChangeGroups": [
+      {
+        "Name": "New Empty Lanes",
+        "Changes": [
+          "Added empty lanes with granular widths going from 0.5m to 4m.",
+          "Empty lanes for now only have custom widths when used on their own ground type (asphalt on asphalt, gravel on gravel, etc.).",
+          "Shoulders are to be used on the edges of the road, Empty lanes can be used anywhere."
+        ]
+      },
       {
         "Name": "Pedestrian Streets Changes",
         "Changes": [
@@ -14,11 +22,13 @@
         ]
       },
       {
-        "Name": "Changes",
+        "Name": "Other Changes",
         "Changes": [
-          "Fixed Copy Lane not working correctly in Left-Hand Traffic mode.",
+          "Added new thumbnails for Shoulder lanes.",
           "Split up the electricity wires addons. Now you can completely remove electricity from a road in addition to existing options.",
-          "Standardised electricity flags. This should fix roads losing electricity wires."
+          "Standardised electricity flags. This should fix roads losing electricity wires.",
+          "Fixed 'Copy Lane' not working correctly in Left-Hand Traffic mode.",
+          "Improved the lane list UI to have less overlap between the text and icon."
         ]
       }
     ]
