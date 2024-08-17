@@ -42,53 +42,8 @@ namespace RoadBuilder
 		[SettingsUISection(MAIN_SECTION, MAIN_GROUP)]
 		public bool HideArrowsOnThumbnails { get; set; }
 
-		//[SettingsUISection(kSection, kButtonGroup)]
-		//public bool Button { set => Mod.Log.Info("Button clicked"); }
-
-		//[SettingsUIButton]
-		//[SettingsUIConfirmation]
-		//[SettingsUISection(kSection, kButtonGroup)]
-		//public bool ButtonWithConfirmation { set => Mod.Log.Info("ButtonWithConfirmation clicked"); }
-
-		//[SettingsUISection(kSection, kToggleGroup)]
-		//public bool Toggle { get; set; }
-
-		//[SettingsUISlider(min = 0, max = 100, step = 1, scalarMultiplier = 1, unit = Unit.kDataMegabytes)]
-		//[SettingsUISection(kSection, kSliderGroup)]
-		//public int IntSlider { get; set; }
-
-		//[SettingsUIDropdown(typeof(Setting), nameof(GetIntDropdownItems))]
-		//[SettingsUISection(kSection, kDropdownGroup)]
-		//public int IntDropdown { get; set; }
-
-		//[SettingsUISection(kSection, kDropdownGroup)]
-		//public SomeEnum EnumDropdown { get; set; } = SomeEnum.Value1;
-
-		//public DropdownItem<int>[] GetIntDropdownItems()
-		//{
-		//	var items = new List<DropdownItem<int>>();
-
-		//	for (var i = 0; i < 3; i += 1)
-		//	{
-		//		items.Add(new DropdownItem<int>()
-		//		{
-		//			value = i,
-		//			displayName = i.ToString(),
-		//		});
-		//	}
-
-		//	return items.ToArray();
-		//}
-
 		public override void SetDefaults()
 		{
-		}
-
-		public enum SomeEnum
-		{
-			Value1,
-			Value2,
-			Value3,
 		}
 	}
 }

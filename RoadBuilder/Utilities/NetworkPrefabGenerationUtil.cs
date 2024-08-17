@@ -195,10 +195,29 @@ namespace RoadBuilder.Utilities
 				{
 					m_RequireAll = new NetPieceRequirements[0],
 					m_RequireAny = new NetPieceRequirements[0],
-					m_RequireNone = new NetPieceRequirements[0],
+					m_RequireNone = new[]
+					{
+						NetPieceRequirements.Pavement,
+						NetPieceRequirements.Gravel,
+					},
 					m_SetState = new[]
 					{
 						NetPieceRequirements.Tiles
+					}
+				};
+
+				yield return new NetNodeStateInfo
+				{
+					m_RequireAll = new NetPieceRequirements[0],
+					m_RequireAny = new[]
+					{
+						NetPieceRequirements.Pavement,
+						NetPieceRequirements.Gravel,
+					},
+					m_RequireNone = new NetPieceRequirements[0],
+					m_SetState = new[]
+					{
+						NetPieceRequirements.Pavement
 					}
 				};
 			}
@@ -271,11 +290,6 @@ namespace RoadBuilder.Utilities
 				states.Add(NetPieceRequirements.MiddleTrees);
 			}
 
-			if ((NetworkPrefab.Config.Addons & (RoadAddons.HasUndergroundElectricityCable | RoadAddons.RequiresUpgradeForElectricity)) == RoadAddons.HasUndergroundElectricityCable)
-			{
-				states.Add(NetPieceRequirements.Lighting);
-			}
-
 			if (states.Count != 0)
 			{
 				yield return new NetEdgeStateInfo
@@ -312,16 +326,8 @@ namespace RoadBuilder.Utilities
 				{
 					m_RequireAll = new NetPieceRequirements[0],
 					m_RequireAny = new NetPieceRequirements[0],
-					m_RequireNone = new[] { NetPieceRequirements.Pavement | NetPieceRequirements.Gravel },
-					m_SetState = new[] { NetPieceRequirements.Tiles }
-				};
-
-				yield return new NetEdgeStateInfo
-				{
-					m_RequireAll = new NetPieceRequirements[0],
-					m_RequireAny = new[] { NetPieceRequirements.Pavement | NetPieceRequirements.Gravel },
 					m_RequireNone = new NetPieceRequirements[0],
-					m_SetState = new[] { NetPieceRequirements.Pavement }
+					m_SetState = new[] { NetPieceRequirements.Tiles }
 				};
 			}
 		}
@@ -442,29 +448,19 @@ namespace RoadBuilder.Utilities
 			var undergroundNetSections = ScriptableObject.CreateInstance<UndergroundNetSections>();
 			var netSubObjects = ScriptableObject.CreateInstance<NetSubObjects>();
 			var placeableNet = ScriptableObject.CreateInstance<PlaceableNet>();
+			var unlockable = ScriptableObject.CreateInstance<Unlockable>();
 
-			GetUIGroup(out var service, out var group);
+			netSubObjects.m_SubObjects = GenerateSubObjects().ToArray();
+			yield return netSubObjects;
 
-			if (service != null)
+			placeableNet.m_AllowParallelMode = true;
+			placeableNet.m_XPReward = 2;
+			placeableNet.m_ElevationRange = new Colossal.Mathematics.Bounds1
 			{
-				var serviceObject = ScriptableObject.CreateInstance<ServiceObject>();
-				serviceObject.m_Service = _roadGenerationData.ServicePrefabs[service];
-				yield return serviceObject;
-			}
-
-			if (group != null)
-			{
-				var uIObject = ScriptableObject.CreateInstance<UIObject>();
-				uIObject.m_Group = _roadGenerationData.UIGroupPrefabs[group];
-				uIObject.m_Icon = _roadGenerationData.UIGroupPrefabs[group].GetComponent<UIObject>().m_Icon;
-				uIObject.m_Priority = 999999;
-				yield return uIObject;
-			}
-
-			if (NetworkPrefab.Config.Addons.HasFlag(RoadAddons.HasUndergroundWaterPipes))
-			{
-				yield return ScriptableObject.CreateInstance<WaterPipeConnection>();
-			}
+				min = -100,
+				max = 100
+			};
+			yield return placeableNet;
 
 			if (NetworkPrefab.Config.Addons.HasFlag(RoadAddons.HasUndergroundElectricityCable))
 			{
@@ -480,22 +476,37 @@ namespace RoadBuilder.Utilities
 				yield return electricityConnection;
 			}
 
-			placeableNet.m_AllowParallelMode = true;
-			placeableNet.m_XPReward = 3;
-			placeableNet.m_ElevationRange = new Colossal.Mathematics.Bounds1
+			GetUIGroup(out var service, out var group);
+
+			if (service != null)
 			{
-				min = -100,
-				max = 100
-			};
-
-			netSubObjects.m_SubObjects = GenerateSubObjects().ToArray();
-
-			undergroundNetSections.m_Sections = Fix(GenerateUndergroundNetSections()).ToArray();
+				var serviceObject = ScriptableObject.CreateInstance<ServiceObject>();
+				serviceObject.m_Service = _roadGenerationData.ServicePrefabs[service];
+				yield return serviceObject;
+			}
 
 			yield return netPollution;
+
+			undergroundNetSections.m_Sections = Fix(GenerateUndergroundNetSections()).ToArray();
 			yield return undergroundNetSections;
-			yield return netSubObjects;
-			yield return placeableNet;
+
+			if (group != null)
+			{
+				var uIObject = ScriptableObject.CreateInstance<UIObject>();
+				uIObject.m_Group = _roadGenerationData.UIGroupPrefabs[group];
+				uIObject.m_Icon = _roadGenerationData.UIGroupPrefabs[group].GetComponent<UIObject>().m_Icon;
+				uIObject.m_Priority = 999999;
+				yield return uIObject;
+			}
+
+			if (NetworkPrefab.Config.Addons.HasFlag(RoadAddons.HasUndergroundWaterPipes))
+			{
+				yield return ScriptableObject.CreateInstance<WaterPipeConnection>();
+			}
+
+			unlockable.m_RequireAll = new PrefabBase[0];
+			unlockable.m_RequireAny = new PrefabBase[0];
+			yield return unlockable;
 		}
 
 		private IEnumerable<NetSectionInfo> GenerateUndergroundNetSections()
@@ -578,6 +589,7 @@ namespace RoadBuilder.Utilities
 				{
 					m_Object = pillar,
 					m_Position = new float3(0, -3, 0),
+					m_Rotation = new quaternion(0, 0, 0, 1),
 					m_Placement = NetObjectPlacement.Node,
 					m_RequireElevated = true,
 				};
@@ -588,7 +600,7 @@ namespace RoadBuilder.Utilities
 			{
 				m_Object = isOneWay ? _roadGenerationData.OutsideConnectionOneWay : _roadGenerationData.OutsideConnectionTwoWay,
 				m_Position = new float3(0, 5, 0),
-				m_Rotation = new quaternion(0, 0, 0, 0),
+				m_Rotation = new quaternion(0, 0, 0, 1),
 				m_Placement = NetObjectPlacement.Node,
 				m_RequireOutsideConnection = true,
 			};
@@ -725,7 +737,7 @@ namespace RoadBuilder.Utilities
 
 			if (NetworkPrefab.Config.Category.HasFlag(RoadCategory.Tiled))
 			{
-				return "Tiled Median 2";
+				return "RB Tiled Median 0";
 			}
 
 			if (NetworkPrefab.Config.Category.HasFlag(RoadCategory.PublicTransport))

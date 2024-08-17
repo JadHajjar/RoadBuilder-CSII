@@ -61,7 +61,6 @@ The **Addons** section toggles some extra options available for the road, like h
 
 ## Advanced User Mode
 Found in the game options panel, under “Road Builder” the Advanced User Mode exposes more lanes available in the Road Builder Panel. Some of the lanes may work in unexpected or unsupported ways, so player discretion is advised.
-It also exposes the usually hidden “Integrated Train” and “Integrated Subway” stops to their respective transport menus.
 
 
 # FAQ

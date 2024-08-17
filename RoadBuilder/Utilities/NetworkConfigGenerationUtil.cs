@@ -125,7 +125,7 @@ namespace RoadBuilder.Utilities
 			return config;
 		}
 
-		private static LaneConfig GetLaneConfig(NetSectionInfo section)
+		private LaneConfig GetLaneConfig(NetSectionInfo section)
 		{
 			if (section.m_Section.TryGet<RoadBuilderLaneGroup>(out var groupItem))
 			{
@@ -137,11 +137,23 @@ namespace RoadBuilder.Utilities
 				};
 			}
 
-			return new LaneConfig
+			var config = new LaneConfig
 			{
 				SectionPrefabName = section.m_Section.name,
 				Invert = section.m_Invert
 			};
+
+			if (NetworkPrefab.name is "Pedestrian Street" && config.SectionPrefabName == "Tiled Section 3")
+			{
+				config.SectionPrefabName = "Tiled Pedestrian Section 3";
+			}
+
+			if (NetworkPrefab.name is "Pedestrian Street" && config.SectionPrefabName == "Tiled Median Pedestrian 2")
+			{
+				config.SectionPrefabName = "RB Tiled Median 2";
+			}
+
+			return config;
 		}
 
 		private INetworkConfig GenerateRoadConfig(RoadPrefab roadPrefab)

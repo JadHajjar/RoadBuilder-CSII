@@ -47,14 +47,14 @@ namespace RoadBuilder.LaneGroups
 			AddComponent<RoadBuilderLaneInfo>()
 				.AddLaneThumbnail("coui://roadbuildericons/Thumb_Shoulder.svg");
 
-			AddComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_Empty.svg";
+			AddComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_Shoulder.svg";
 
-			SetUp(sections["Alley Shoulder 1"], "1m", "Asphalt");
-			SetUp(sections["Highway Shoulder 2"], "2m", "Asphalt");
-			SetUp(sections["Public Transport Shoulder 1"], "1m", "Bus");
-			SetUp(sections["Gravel Shoulder 1"], "1m", "Gravel").AddLaneThumbnail("coui://roadbuildericons/Thumb_ShoulderGravel.svg");
-			SetUp(sections["Tiled Shoulder 1"], "1m", "Tiled").AddLaneThumbnail("coui://roadbuildericons/Thumb_ShoulderPedestrian.svg");
-			SetUp(sections["Subway Shoulder 2"], "2m", "Subway").AddLaneThumbnail("coui://roadbuildericons/Thumb_ShoulderTrack.svg");
+			SetUp(sections["Alley Shoulder 1"], "1m", "Asphalt").WithThumbnail("coui://roadbuildericons/RB_ShoulderLight.svg");
+			SetUp(sections["Highway Shoulder 2"], "2m", "Asphalt").WithThumbnail("coui://roadbuildericons/RB_ShoulderLight.svg");
+			SetUp(sections["Public Transport Shoulder 1"], "1m", "Bus").WithThumbnail("coui://roadbuildericons/RB_ShoulderLight.svg");
+			SetUp(sections["Gravel Shoulder 1"], "1m", "Gravel").WithThumbnail("coui://roadbuildericons/RB_Empty.svg").AddLaneThumbnail("coui://roadbuildericons/Thumb_ShoulderGravel.svg");
+			SetUp(sections["Tiled Shoulder 1"], "1m", "Tiled").WithThumbnail("coui://roadbuildericons/RB_Empty.svg").AddLaneThumbnail("coui://roadbuildericons/Thumb_ShoulderPedestrian.svg");
+			SetUp(sections["Subway Shoulder 2"], "2m", "Subway").WithThumbnail("coui://roadbuildericons/RB_Empty.svg").AddLaneThumbnail("coui://roadbuildericons/Thumb_ShoulderTrack.svg");
 			SetUp(sections["Train Shoulder 2"], "2m", "Train").WithThumbnail("coui://roadbuildericons/RB_TrainShoulder.svg").AddLaneThumbnail("coui://roadbuildericons/Thumb_ShoulderTrack.svg");
 			SetUp(sections["Tram Shoulder 1"], "1m", "Tram").WithThumbnail("coui://roadbuildericons/RB_TramShoulder.svg").AddLaneThumbnail("coui://roadbuildericons/Thumb_ShoulderTrack.svg");
 		}

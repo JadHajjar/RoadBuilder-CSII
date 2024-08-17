@@ -126,16 +126,15 @@ This helps us better assist you and avoids your message from getting lost in the
   <Screenshot Value="Properties/Screenshot_07.png" />
   <Tag Value="Code Mod" />
   <ForumLink Value="https://forum.paradoxplaza.com/forum/threads/road-builder.1698661/" />
-  <ModVersion Value="0.1.1.1" />
+  <ModVersion Value="0.1.2" />
   <GameVersion Value="1.1.*" />
   <ChangeLog>
-# v0.1.1.1
+# v0.1.2
 ## Hotfix
-* Fixed track networks not using the selected speed limit.
-
-## From v0.1.1: Left-Hand Traffic Changes
-* Fixed the invert mode of networks created with Road Builder. This also fixes the bug related to the Traffic mod. This change however will make your created configurations under LHT reverse, your saves will be unaffected but you might have to flip networks to get them to be the same again.
-* Thumbnails are now updated when loading into a LHT city to reflect the proper way that the network faces.
+* Fixed lanes being inverted when creating a new road in Left-Hand Traffic mode.
+* Added new tooltips to UI elements that had none.
+* Fixed and Improved tooltips for lane options.
+* Added support for localization for future updates.
 </ChangeLog>
   <ExternalLink Type="discord" Url="https://discord.gg/E4k8ZEtRxd" />
   <ExternalLink Type="github" Url="https://github.com/JadHajjar/RoadBuilder-CSII" />

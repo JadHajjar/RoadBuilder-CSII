@@ -27,7 +27,7 @@ export const EditPropertiesPopup = () => {
   };
 
   let onCopy = () => {
-    duplicateLane(laneCtx.index);
+    duplicateLane(laneCtx.laneData?.Index ?? -1);
   };
 
   let onDelete = () => {
