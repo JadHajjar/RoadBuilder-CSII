@@ -121,7 +121,7 @@ namespace RoadBuilder.Utilities
 
 			if (thumbnail is not null and not "")
 			{
-				prefab.GetComponent<UIObject>().m_Icon = thumbnail;
+				prefab.AddOrGetComponent<UIObject>().m_Icon = thumbnail;
 			}
 		}
 

@@ -49,7 +49,7 @@ namespace RoadBuilder.Utilities
 				}
 				catch (Exception ex)
 				{
-					Mod.Log.Error(ex, "Failed to load the configuration file: " + item);
+					Mod.Log.Warn(ex, "Failed to load the configuration file: " + item);
 
 					continue;
 				}
