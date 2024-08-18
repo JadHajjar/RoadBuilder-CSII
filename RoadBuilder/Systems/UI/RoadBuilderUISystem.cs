@@ -303,6 +303,11 @@ namespace RoadBuilder.Systems.UI
 						if (similarLane != null)
 						{
 							lane.GroupOptions = new(similarLane.GroupOptions);
+
+							foreach (var option in group.Options.Where(x => x.IgnoreForSimilarDuplicate))
+							{
+								lane.GroupOptions[option.Name] = option.DefaultValue;
+							}
 						}
 
 						LaneOptionsUtil.FixGroupOptions(config, lane, group);
@@ -493,6 +498,11 @@ namespace RoadBuilder.Systems.UI
 				{
 					color = sectionInfo.LaneColor;
 				}
+
+				if (sectionInfo.GroundTexture != default)
+				{
+					texture = sectionInfo.GroundTexture.ToString().ToLower();
+				}
 			}
 
 			if (thumbnail is null && ImageSystem.GetIcon(section) is string sectionIcon)
@@ -511,6 +521,11 @@ namespace RoadBuilder.Systems.UI
 				{
 					color = groupInfo.LaneColor;
 				}
+
+				if (groupInfo.GroundTexture != default && texture is null)
+				{
+					texture = groupInfo.GroundTexture.ToString().ToLower();
+				}
 			}
 
 			if (thumbnail is null && groupPrefab is not null)
@@ -522,23 +537,23 @@ namespace RoadBuilder.Systems.UI
 			{
 				if (config.Category.HasFlag(RoadCategory.Gravel))
 				{
-					texture = "gravel";
+					texture ??= "gravel";
 					color = new(143 / 255f, 131 / 255f, 97 / 255f);
 				}
 				else if (config.Category.HasFlag(RoadCategory.Tiled))
 				{
-					texture = "tiled";
+					texture ??= "tiled";
 					color = new(76 / 255f, 78 / 255f, 83 / 255f);
 				}
 			}
 
 			if (section.IsTrainOrSubway())
 			{
-				texture = "train";
+				texture ??= "train";
 			}
 			else if (section.IsBus())
 			{
-				texture = "bus";
+				texture ??= "paintedasphalt";
 			}
 		}
 

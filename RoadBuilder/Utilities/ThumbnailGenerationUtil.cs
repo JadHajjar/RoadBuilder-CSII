@@ -141,7 +141,7 @@ namespace RoadBuilder.Utilities
 			}
 			catch (Exception ex)
 			{
-				Mod.Log.Error(ex, "Error during thumbnail generation");
+				Mod.Log.Warn(ex, "Error during thumbnail generation");
 
 				return null;
 			}

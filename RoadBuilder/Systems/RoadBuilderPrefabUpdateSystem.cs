@@ -16,8 +16,6 @@ using System.Reflection;
 using Unity.Collections;
 using Unity.Entities;
 
-using static Colossal.IO.AssetDatabase.AtlasFrame;
-
 namespace RoadBuilder.Systems
 {
 	public partial class RoadBuilderPrefabUpdateSystem : GameSystemBase

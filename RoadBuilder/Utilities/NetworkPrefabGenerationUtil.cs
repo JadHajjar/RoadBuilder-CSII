@@ -121,7 +121,7 @@ namespace RoadBuilder.Utilities
 
 			if (thumbnail is not null and not "")
 			{
-				prefab.GetComponent<UIObject>().m_Icon = thumbnail;
+				prefab.AddOrGetComponent<UIObject>().m_Icon = thumbnail;
 			}
 		}
 
@@ -252,9 +252,9 @@ namespace RoadBuilder.Utilities
 				states.Add(NetPieceRequirements.Pavement);
 			}
 
-            var trackLanes = NetworkPrefab.Prefab.m_Sections.SelectMany(x => x.m_Section.FindLanes<TrackLane>()).ToList();
+			var trackLanes = NetworkPrefab.Prefab.m_Sections.SelectMany(x => x.m_Section.FindLanes<TrackLane>()).ToList();
 
-            if (trackLanes.Any(x => x.m_TrackType is Game.Net.TrackTypes.Tram))
+			if (trackLanes.Any(x => x.m_TrackType is Game.Net.TrackTypes.Tram))
 			{
 				states.Add(NetPieceRequirements.TramTrack);
 				states.Add(NetPieceRequirements.OppositeTramTrack);

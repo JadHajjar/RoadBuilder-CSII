@@ -192,35 +192,17 @@ namespace RoadBuilder.Systems.UI
 
 				if (EntityManager.TryGetComponent<PrefabRef>(entity, out var prefabRef) && prefabRef.m_Prefab == prefabEntity)
 				{
+					EntityManager.RemoveComponent<RoadBuilderNetwork>(entity);
+
 					if (EntityManager.HasComponent<Edge>(entity))
 					{
 						EntityManager.AddComponent<Deleted>(entity);
-
-						foreach (var edge in roadBuilderUpdateSystem.GetEdges(entity))
-						{
-							edgeList.Add(edge);
-						}
-					}
-					else if (EntityManager.TryGetBuffer<ConnectedEdge>(entity, true, out var connectedEdges1))
-					{
-						if (connectedEdges1.Length <= 1)
-						{
-							EntityManager.AddComponent<Deleted>(entity);
-						}
-						else
-						{
-							EntityManager.SetComponentData(entity, new PrefabRef
-							{
-								m_Prefab = EntityManager.GetComponentData<PrefabRef>(connectedEdges1[0].m_Edge).m_Prefab
-							});
-						}
 					}
 					else
 					{
-						EntityManager.AddComponent<Deleted>(entity);
+						EntityManager.AddComponent<RoadBuilderToBeDeletedComponent>(entity);
+						EntityManager.AddComponent<Updated>(entity);
 					}
-
-					EntityManager.RemoveComponent<RoadBuilderNetwork>(entity);
 				}
 			}
 

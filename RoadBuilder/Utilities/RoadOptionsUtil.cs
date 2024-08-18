@@ -207,12 +207,12 @@ namespace RoadBuilder.Utilities
 
 					if (config is RoadConfig roadConfig)
 					{
-						roadConfig.SpeedLimit = Mathf.Max(roadConfig.SpeedLimit + value * multiplier, multiplier);
+						roadConfig.SpeedLimit = Mathf.Max(roadConfig.SpeedLimit + (value * multiplier), multiplier);
 					}
 
 					if (config is TrackConfig trackConfig)
 					{
-						trackConfig.SpeedLimit = Mathf.Max(trackConfig.SpeedLimit + value * multiplier, multiplier);
+						trackConfig.SpeedLimit = Mathf.Max(trackConfig.SpeedLimit + (value * multiplier), multiplier);
 					}
 
 					break;
