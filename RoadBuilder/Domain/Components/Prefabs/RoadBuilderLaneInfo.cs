@@ -19,6 +19,7 @@ namespace RoadBuilder.Domain.Components.Prefabs
 		public RoadCategory RequireAll;
 		public RoadCategory RequireAny;
 		public RoadCategory RequireNone;
+		public LaneGroundType GroundTexture;
 		public Color LaneColor;
 		public string BackThumbnail;
 		public string FrontThumbnail;
@@ -30,19 +31,19 @@ namespace RoadBuilder.Domain.Components.Prefabs
 		public override void GetPrefabComponents(HashSet<ComponentType> components)
 		{ }
 
-		public RoadBuilderLaneInfo WithRequired(RoadCategory roadCategory)
+		public RoadBuilderLaneInfo WithRequireAll(RoadCategory roadCategory)
 		{
 			RequireAll = roadCategory;
 			return this;
 		}
 
-		public RoadBuilderLaneInfo WithAny(RoadCategory roadCategory)
+		public RoadBuilderLaneInfo WithRequireAny(RoadCategory roadCategory)
 		{
 			RequireAny = roadCategory;
 			return this;
 		}
 
-		public RoadBuilderLaneInfo WithExcluded(RoadCategory roadCategory)
+		public RoadBuilderLaneInfo WithRequireNone(RoadCategory roadCategory)
 		{
 			RequireNone = roadCategory;
 			return this;
@@ -83,6 +84,12 @@ namespace RoadBuilder.Domain.Components.Prefabs
 		public RoadBuilderLaneInfo WithColor(byte r, byte g, byte b, byte a = 255)
 		{
 			LaneColor = new Color(r / 255f, g / 255f, b / 255f, a / 255f);
+			return this;
+		}
+
+		public RoadBuilderLaneInfo WithGroundTexture(LaneGroundType groundType)
+		{
+			GroundTexture = groundType;
 			return this;
 		}
 	}

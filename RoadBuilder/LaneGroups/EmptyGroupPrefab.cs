@@ -3,6 +3,7 @@
 using Game.Prefabs;
 
 using RoadBuilder.Domain.Components.Prefabs;
+using RoadBuilder.Domain.Enums;
 
 using System.Collections.Generic;
 
@@ -34,6 +35,7 @@ namespace RoadBuilder.LaneGroups
 				{
 					DefaultValue = "1m",
 					Type = LaneOptionType.ValueUpDown,
+					IgnoreForSimilarDuplicate = true,
 					Name = OptionName1,
 					Options = new RoadBuilderLaneOptionValue[]
 					{
@@ -51,13 +53,13 @@ namespace RoadBuilder.LaneGroups
 
 			AddComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_Empty.svg";
 
-			SetUp(sections, "RB Empty Section {0}", 4, "Asphalt", "Thumb_CarLane", "Thumb_CarLaneSmall").ForEach(x => x.WithExcluded(Domain.Enums.RoadCategory.NonAsphalt));
-			SetUp(sections, "RB Train Empty Section {0}", 4, "Train", "Thumb_TracklessLane", "Thumb_TracklessLaneSmall").ForEach(x => x.WithAny(Domain.Enums.RoadCategory.Train | Domain.Enums.RoadCategory.Subway));
-			SetUp(sections, "RB Gravel Empty Section {0}", 3, "Gravel", "Thumb_GravelLane", "Thumb_GravelLaneSmall").ForEach(x => x.WithAny(Domain.Enums.RoadCategory.Gravel));
-			SetUp(sections, "RB Tiled Empty Section {0}", 3, "Tiled", "Thumb_TiledWide", "Thumb_TiledSmall").ForEach(x => x.WithAny(Domain.Enums.RoadCategory.Tiled));
+			SetUp(sections, "RB Empty Section {0}", 4, "Asphalt", "Thumb_CarLane", "Thumb_CarLaneSmall").ForEach(x => x.Item2.WithRequireNone(x.Item1 == 4 ? default : RoadCategory.NonAsphalt).WithGroundTexture(LaneGroundType.Asphalt));
+			SetUp(sections, "RB Train Empty Section {0}", 4, "Train", "Thumb_TracklessLane", "Thumb_TracklessLaneSmall").ForEach(x => x.Item2.WithRequireAny(x.Item1 == 4 ? default : RoadCategory.Train | RoadCategory.Subway).WithGroundTexture(LaneGroundType.Train).WithColor(82, 62, 51));
+			SetUp(sections, "RB Gravel Empty Section {0}", 3, "Gravel", "Thumb_GravelLane", "Thumb_GravelLaneSmall").ForEach(x => x.Item2.WithRequireAny(x.Item1 == 3 ? default : RoadCategory.Gravel).WithGroundTexture(LaneGroundType.Gravel).WithColor(143, 131, 97));
+			SetUp(sections, "RB Tiled Empty Section {0}", 3, "Tiled", "Thumb_TiledWide", "Thumb_TiledSmall").ForEach(x => x.Item2.WithRequireAny(x.Item1 == 3 ? default : RoadCategory.Tiled).WithGroundTexture(LaneGroundType.Tiled).WithColor(76, 78, 83));
 		}
 
-		private IEnumerable<RoadBuilderLaneInfo> SetUp(Dictionary<string, NetSectionPrefab> sections, string name, float maxWidth, string value2, string largeThumb, string smallThumb)
+		private IEnumerable<(float, RoadBuilderLaneInfo)> SetUp(Dictionary<string, NetSectionPrefab> sections, string name, float maxWidth, string value2, string largeThumb, string smallThumb)
 		{
 			for (var width = 0.5f; width <= maxWidth; width += 0.5f)
 			{
@@ -91,10 +93,7 @@ namespace RoadBuilder.LaneGroups
 					laneInfo.AddLaneThumbnail($"coui://roadbuildericons/{largeThumb}.svg");
 				}
 
-				if (width != maxWidth)
-				{
-					yield return laneInfo;
-				}
+				yield return (width, laneInfo);
 			}
 		}
 	}

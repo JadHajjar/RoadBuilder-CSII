@@ -57,7 +57,7 @@ namespace RoadBuilder.LaneGroups
 			};
 
 			AddComponent<RoadBuilderLaneInfo>()
-				.WithRequired(RoadCategory.RaisedSidewalk)
+				.WithRequireAll(RoadCategory.RaisedSidewalk)
 				.AddLaneThumbnail("coui://roadbuildericons/Thumb_SidewalkWide.svg");
 
 			AddComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_WideSidewalkRight.svg";

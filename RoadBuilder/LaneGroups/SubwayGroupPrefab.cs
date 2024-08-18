@@ -23,7 +23,7 @@ namespace RoadBuilder.LaneGroups
 			};
 
 			AddComponent<RoadBuilderLaneInfo>()
-				.WithRequired(RoadCategory.Subway)
+				.WithRequireAll(RoadCategory.Subway)
 				.WithColor(66, 60, 51)
 				.WithFrontThumbnail("coui://roadbuildericons/RB_SubwayFront.svg")
 				.WithBackThumbnail("coui://roadbuildericons/RB_SubwayRear.svg")

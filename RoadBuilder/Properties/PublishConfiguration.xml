@@ -126,15 +126,20 @@ This helps us better assist you and avoids your message from getting lost in the
   <Screenshot Value="Properties/Screenshot_07.png" />
   <Tag Value="Code Mod" />
   <ForumLink Value="https://forum.paradoxplaza.com/forum/threads/road-builder.1698661/" />
-  <ModVersion Value="0.1.2" />
+  <ModVersion Value="0.2.1" />
   <GameVersion Value="1.1.*" />
   <ChangeLog>
-# v0.1.2
-## Hotfix
-* Fixed lanes being inverted when creating a new road in Left-Hand Traffic mode.
-* Added new tooltips to UI elements that had none.
-* Fixed and Improved tooltips for lane options.
-* Added support for localization for future updates.
+# v0.2.1
+## Changes
+* Added a Car Only / Shared Tram option to car lanes on the pedestrian roads.
+* Changed the Tram lane on pedestrian roads' ground texture from Asphalt to Tiled.
+* Added lane-specific ground textures to the UI. For example, adding a train empty lane to asphalt roads will show the correct gravel texture of the empty lane in the Road Builder UI.
+* Added a flag for some lane options to not let them get copied when placing a similar lane to the road.
+
+## Fixes
+* Fixed pillars not being deletable with Better Bulldozer.
+* Fixed pillars and outside connection arrows not having the correct rotation [Potentially].
+* Fixed empty lanes not having elevated and tunnel meshes.
 </ChangeLog>
   <ExternalLink Type="discord" Url="https://discord.gg/E4k8ZEtRxd" />
   <ExternalLink Type="github" Url="https://github.com/JadHajjar/RoadBuilder-CSII" />

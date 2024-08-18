@@ -1,6 +1,30 @@
 [
   {
     "Beta": true,
+    "Version": "0.2.1",
+    "Date": "2024-08-18",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Added a Car Only / Shared Tram option to car lanes on the pedestrian roads.",
+          "Changed the Tram lane on pedestrian roads' ground texture from Asphalt to Tiled.",
+          "Added lane-specific ground textures to the UI. For example, adding a train empty lane to asphalt roads will show the correct gravel texture of the empty lane in the Road Builder UI.",
+          "Added a flag for some lane options to not let them get copied when placing a similar lane to the road."
+        ]
+      },
+      {
+        "Name": "Fixes",
+        "Changes": [
+          "Fixed pillars not being deletable with Better Bulldozer.",
+          "Fixed pillars and outside connection arrows not having the correct rotation [Potentially].",
+          "Fixed empty lanes not having elevated and tunnel meshes."
+        ]
+      }
+    ]
+  },
+  {
+    "Beta": true,
     "Version": "0.2.0",
     "Date": "2024-08-17",
     "ChangeGroups": [

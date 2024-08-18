@@ -6,24 +6,20 @@ using Game;
 using Game.Modding;
 using Game.Prefabs;
 using Game.SceneFlow;
-using HarmonyLib;
 
 using RoadBuilder.Systems;
 using RoadBuilder.Systems.UI;
 using RoadBuilder.Utilities;
-using System.Collections.Generic;
+
 using System.IO;
-using System.Linq;
-using Unity.Entities;
-using UnityEngine;
 
 namespace RoadBuilder
 {
-    public class Mod : IMod
+	public class Mod : IMod
 	{
 		public const string Id = nameof(RoadBuilder);
 
-        public static ILog Log { get; } = LogManager.GetLogger(nameof(RoadBuilder)).SetShowsErrorsInUI(false);
+		public static ILog Log { get; } = LogManager.GetLogger(nameof(RoadBuilder)).SetShowsErrorsInUI(true);
 		public static Setting Settings { get; private set; }
 
 		public void OnLoad(UpdateSystem updateSystem)
@@ -66,6 +62,7 @@ namespace RoadBuilder
 			updateSystem.UpdateAt<RoadBuilderInitializerSystem>(SystemUpdatePhase.MainLoop);
 			updateSystem.UpdateAt<RoadBuilderInfoViewFixSystem>(SystemUpdatePhase.PrefabUpdate);
 			updateSystem.UpdateBefore<RoadBuilderSerializeSystem>(SystemUpdatePhase.Serialize);
+			updateSystem.UpdateAt<RoadBuilderNodeCleanupSystem>(SystemUpdatePhase.Modification1);
 			updateSystem.UpdateAt<RoadBuilderSystem>(SystemUpdatePhase.Modification1);
 			updateSystem.UpdateAt<RoadBuilderApplyTagSystem>(SystemUpdatePhase.Modification2);
 			updateSystem.UpdateAt<RoadBuilderClearTagSystem>(SystemUpdatePhase.Modification2);

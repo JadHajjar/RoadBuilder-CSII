@@ -39,7 +39,7 @@ namespace RoadBuilder.Systems
 		{
 			base.OnUpdate();
 
-			if (!initialSetupFinished)
+			if (!InitialSetupFinished)
 			{
 				return;
 			}
