@@ -1,5 +1,4 @@
 ﻿using Colossal.Entities;
-using Colossal.Serialization.Entities;
 
 using Game;
 using Game.City;
@@ -10,7 +9,6 @@ using Game.SceneFlow;
 using Game.Tools;
 using Game.UI.InGame;
 
-using RoadBuilder.Domain;
 using RoadBuilder.Domain.Components;
 using RoadBuilder.Domain.Configurations;
 using RoadBuilder.Domain.Prefabs;
@@ -50,7 +48,7 @@ namespace RoadBuilder.Systems
 
 			prefabSystem = World.GetOrCreateSystemManaged<PrefabSystem>();
 			prefabUISystem = World.GetOrCreateSystemManaged<PrefabUISystem>();
-            netSectionsSystem = World.GetOrCreateSystemManaged<RoadBuilderNetSectionsSystem>();
+			netSectionsSystem = World.GetOrCreateSystemManaged<RoadBuilderNetSectionsSystem>();
 			roadBuilderSerializeSystem = World.GetOrCreateSystemManaged<RoadBuilderSerializeSystem>();
 			cityConfigurationSystem = World.GetOrCreateSystemManaged<CityConfigurationSystem>();
 			roadGenerationDataSystem = World.GetOrCreateSystemManaged<RoadBuilderGenerationDataSystem>();

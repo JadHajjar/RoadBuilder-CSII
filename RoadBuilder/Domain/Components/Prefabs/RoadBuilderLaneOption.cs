@@ -1,4 +1,6 @@
-﻿using System;
+﻿using RoadBuilder.Domain.Enums;
+
+using System;
 
 namespace RoadBuilder.Domain.Components.Prefabs
 {

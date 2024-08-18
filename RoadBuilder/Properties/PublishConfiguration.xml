@@ -126,15 +126,27 @@ This helps us better assist you and avoids your message from getting lost in the
   <Screenshot Value="Properties/Screenshot_07.png" />
   <Tag Value="Code Mod" />
   <ForumLink Value="https://forum.paradoxplaza.com/forum/threads/road-builder.1698661/" />
-  <ModVersion Value="0.1.2" />
+  <ModVersion Value="0.2.0" />
   <GameVersion Value="1.1.*" />
   <ChangeLog>
-# v0.1.2
-## Hotfix
-* Fixed lanes being inverted when creating a new road in Left-Hand Traffic mode.
-* Added new tooltips to UI elements that had none.
-* Fixed and Improved tooltips for lane options.
-* Added support for localization for future updates.
+# v0.2.0
+## New Empty Lanes
+* Added empty lanes with granular widths going from 0.5m to 4m.
+* Empty lanes for now only have custom widths when used on their own ground type (asphalt on asphalt, gravel on gravel, etc.).
+* Shoulders are to be used on the edges of the road, Empty lanes can be used anywhere.
+
+## Pedestrian Streets Changes
+* Removed the 2m that was getting added to the center of pedestrian roads.
+* Fixed tiled medians curving on nodes.
+* Fixed inconsistency with the median and pedestrian lanes in pedestrian roads.
+* Fixed incorrect flags being set to pedestrian roads.
+
+## Other Changes
+* Added new thumbnails for Shoulder lanes.
+* Split up the electricity wires addons. Now you can completely remove electricity from a road in addition to existing options.
+* Standardised electricity flags. This should fix roads losing electricity wires.
+* Fixed 'Copy Lane' not working correctly in Left-Hand Traffic mode.
+* Improved the lane list UI to have less overlap between the text and icon.
 </ChangeLog>
   <ExternalLink Type="discord" Url="https://discord.gg/E4k8ZEtRxd" />
   <ExternalLink Type="github" Url="https://github.com/JadHajjar/RoadBuilder-CSII" />

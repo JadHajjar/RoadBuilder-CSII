@@ -6,24 +6,20 @@ using Game;
 using Game.Modding;
 using Game.Prefabs;
 using Game.SceneFlow;
-using HarmonyLib;
 
 using RoadBuilder.Systems;
 using RoadBuilder.Systems.UI;
 using RoadBuilder.Utilities;
-using System.Collections.Generic;
+
 using System.IO;
-using System.Linq;
-using Unity.Entities;
-using UnityEngine;
 
 namespace RoadBuilder
 {
-    public class Mod : IMod
+	public class Mod : IMod
 	{
 		public const string Id = nameof(RoadBuilder);
 
-        public static ILog Log { get; } = LogManager.GetLogger(nameof(RoadBuilder)).SetShowsErrorsInUI(false);
+		public static ILog Log { get; } = LogManager.GetLogger(nameof(RoadBuilder)).SetShowsErrorsInUI(false);
 		public static Setting Settings { get; private set; }
 
 		public void OnLoad(UpdateSystem updateSystem)

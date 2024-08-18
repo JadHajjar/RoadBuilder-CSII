@@ -165,7 +165,7 @@ namespace RoadBuilder.Systems
 			{
 				return false;
 			}
-			
+
 			if (!prefabSystem.TryGetPrefab<NetGeometryPrefab>(prefabRef, out var prefab))
 			{
 				return false;
@@ -185,7 +185,7 @@ namespace RoadBuilder.Systems
 			{
 				return false;
 			}
-			
+
 			if (applyAction.WasPerformedThisFrame())
 			{
 				if (prefab is INetworkBuilderPrefab)

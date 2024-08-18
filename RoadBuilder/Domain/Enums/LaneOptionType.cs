@@ -1,4 +1,4 @@
-﻿namespace RoadBuilder.Domain.Components.Prefabs
+﻿namespace RoadBuilder.Domain.Enums
 {
 	public enum LaneOptionType
 	{

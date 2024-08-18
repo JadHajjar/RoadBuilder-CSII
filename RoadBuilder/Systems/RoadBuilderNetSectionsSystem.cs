@@ -126,19 +126,67 @@ namespace RoadBuilder.Systems
 
 		private void DoNetPieceCreation()
 		{
-			var medianTiledIntersectionPiece0 = NetPieces["Median Intersection Piece 0"].Clone("RB Tiled Median Intersection Piece 0") as NetPiecePrefab;
-			var medianTiledIntersectionPiece0Flat = NetPieces["Median Intersection Piece 0 - Flat"].Clone("RB Tiled Median Intersection Piece 0 - Flat") as NetPiecePrefab;
+			CreateTiledMedian0Piece();
 
-			medianTiledIntersectionPiece0.geometryAsset = AssetDatabase.game.GetAsset<GeometryAsset>("6a5ebd30da0e34986c320b4cdc2014df"); // TiledMedianIntersection2
-			medianTiledIntersectionPiece0.surfaceAssets = new[] { AssetDatabase.game.GetAsset<SurfaceAsset>("40dd255c63eb8f65f96c5333d7d28afb") }; // TiledRoad
-			medianTiledIntersectionPiece0Flat.geometryAsset = AssetDatabase.game.GetAsset<GeometryAsset>("2549026d2a35f5fce401702b40c90258"); // TiledMedianIntersectionFlat2
-			medianTiledIntersectionPiece0Flat.surfaceAssets = new[] { AssetDatabase.game.GetAsset<SurfaceAsset>("40dd255c63eb8f65f96c5333d7d28afb") }; // TiledRoad
+			CreateCustomMedian5Pieces();
 
-			prefabSystem.AddPrefab(NetPieces[medianTiledIntersectionPiece0.name] = medianTiledIntersectionPiece0);
-			prefabSystem.AddPrefab(NetPieces[medianTiledIntersectionPiece0Flat.name] = medianTiledIntersectionPiece0Flat);
+			CreateAndAddEmptyPieces("Highway Drive Piece 4", "RB Empty Piece {0}", 4);
+			CreateAndAddEmptyPieces("Highway Drive Piece 4 - Flat", "RB Empty Piece Flat {0}", 4);
+			CreateAndAddEmptyPieces("Highway Middle Piece 4", "RB Empty Piece Middle {0}", 4);
+			CreateAndAddEmptyPieces("Highway Middle Piece 4 - Flat", "RB Empty Piece Middle Flat {0}", 4);
 
+			CreateAndAddEmptyPieces("Gravel Drive Piece 3", "RB Gravel Empty Piece {0}", 3);
+			CreateAndAddEmptyPieces("Gravel Drive Piece 3 - Flat", "RB Gravel Empty Piece Flat {0}", 3);
+			CreateAndAddEmptyPieces("Gravel Middle Piece 3", "RB Gravel Empty Piece Middle {0}", 3);
+			CreateAndAddEmptyPieces("Gravel Middle Piece 3 - Flat", "RB Gravel Empty Piece Middle Flat {0}", 3);
+
+			CreateAndAddEmptyPieces("Tiled Drive Piece 3", "RB Tiled Empty Piece {0}", 3);
+			CreateAndAddEmptyPieces("Tiled Drive Piece 3 - Flat", "RB Tiled Empty Piece Flat {0}", 3);
+			CreateAndAddEmptyPieces("Tiled Drive Piece 3", "RB Tiled Empty Piece Middle {0}", 3);
+			CreateAndAddEmptyPieces("Tiled Drive Piece 3 - Flat", "RB Tiled Empty Piece Middle Flat {0}", 3);
+
+			CreateAndAddEmptyPieces("Train Track Piece 4", "RB Train Empty Piece {0}", 4);
+			CreateAndAddEmptyPieces("Train Track Piece 4", "RB Train Empty Piece Flat {0}", 4);
+			CreateAndAddEmptyPieces("Train Track Middle Piece 4", "RB Train Empty Piece Middle {0}", 4);
+			CreateAndAddEmptyPieces("Train Track Middle Piece 4", "RB Train Empty Piece Middle Flat {0}", 4);
+
+			CreateAndAddEmptyTunnelAndBridgePieces("Elevated Bottom Piece 1", "Elevated Bottom Piece {0}", 0.5f);
+			CreateAndAddEmptyTunnelAndBridgePieces("Elevated Bottom Piece 1 - Ending", "Elevated Bottom Piece {0} - Ending", 0.5f);
+			CreateAndAddEmptyTunnelAndBridgePieces("Elevated Bottom Piece 1 - Intersection Middle", "Elevated Bottom Piece {0} - Intersection Middle", 0.5f);
+
+			CreateAndAddEmptyTunnelAndBridgePieces("Elevated Bottom Piece 2", "Elevated Bottom Piece {0}", 1.5f);
+			CreateAndAddEmptyTunnelAndBridgePieces("Elevated Bottom Piece 2 - Ending", "Elevated Bottom Piece {0} - Ending", 1.5f);
+			CreateAndAddEmptyTunnelAndBridgePieces("Elevated Bottom Piece 2 - Intersection Middle", "Elevated Bottom Piece {0} - Intersection Middle", 1.5f);
+
+			CreateAndAddEmptyTunnelAndBridgePieces("Elevated Bottom Piece 3", "Elevated Bottom Piece {0}", 2.5f);
+			CreateAndAddEmptyTunnelAndBridgePieces("Elevated Bottom Piece 3 - Ending", "Elevated Bottom Piece {0} - Ending", 2.5f);
+			CreateAndAddEmptyTunnelAndBridgePieces("Elevated Bottom Piece 3 - Intersection Middle", "Elevated Bottom Piece {0} - Intersection Middle", 2.5f);
+
+			CreateAndAddEmptyTunnelAndBridgePieces("Elevated Bottom Piece 4", "Elevated Bottom Piece {0}", 3.5f);
+			CreateAndAddEmptyTunnelAndBridgePieces("Elevated Bottom Piece 4 - Ending", "Elevated Bottom Piece {0} - Ending", 3.5f);
+			CreateAndAddEmptyTunnelAndBridgePieces("Elevated Bottom Piece 4 - Intersection Middle", "Elevated Bottom Piece {0} - Intersection Middle", 3.5f);
+
+			CreateAndAddEmptyTunnelAndBridgePieces("Tunnel Top Piece 1", "Tunnel Top Piece {0}", 0.5f);
+			CreateAndAddEmptyTunnelAndBridgePieces("Tunnel Top Piece 1 - Ending", "Tunnel Top Piece {0} - Ending", 0.5f);
+			CreateAndAddEmptyTunnelAndBridgePieces("Tunnel Top Piece 1 - Intersection Middle", "Tunnel Top Piece {0} - Intersection Middle", 0.5f);
+
+			CreateAndAddEmptyTunnelAndBridgePieces("Tunnel Top Piece 2", "Tunnel Top Piece {0}", 1.5f);
+			CreateAndAddEmptyTunnelAndBridgePieces("Tunnel Top Piece 2 - Ending", "Tunnel Top Piece {0} - Ending", 1.5f);
+			CreateAndAddEmptyTunnelAndBridgePieces("Tunnel Top Piece 2 - Intersection Middle", "Tunnel Top Piece {0} - Intersection Middle", 1.5f);
+
+			CreateAndAddEmptyTunnelAndBridgePieces("Tunnel Top Piece 3", "Tunnel Top Piece {0}", 2.5f);
+			CreateAndAddEmptyTunnelAndBridgePieces("Tunnel Top Piece 3 - Ending", "Tunnel Top Piece {0} - Ending", 2.5f);
+			CreateAndAddEmptyTunnelAndBridgePieces("Tunnel Top Piece 3 - Intersection Middle", "Tunnel Top Piece {0} - Intersection Middle", 2.5f);
+
+			CreateAndAddEmptyTunnelAndBridgePieces("Tunnel Top Piece 4", "Tunnel Top Piece {0}", 3.5f);
+			CreateAndAddEmptyTunnelAndBridgePieces("Tunnel Top Piece 4 - Ending", "Tunnel Top Piece {0} - Ending", 3.5f);
+			CreateAndAddEmptyTunnelAndBridgePieces("Tunnel Top Piece 4 - Intersection Middle", "Tunnel Top Piece {0} - Intersection Middle", 3.5f);
+		}
+
+		private void CreateCustomMedian5Pieces()
+		{
 			var median5Pieces = new[]
-			{
+						{
 				NetPieces["Median Piece 5"],
 				NetPieces["Median Piece 5 - Grass"],
 				NetPieces["Median Piece 5 - Platform"],
@@ -157,29 +205,23 @@ namespace RoadBuilder.Systems
 
 				prefabSystem.AddPrefab(NetPieces[prefab.name] = prefab);
 			}
-
-			CreateAndAddEmptyPiece("Highway Drive Piece 4", "RB Empty Piece {0}", 4);
-			CreateAndAddEmptyPiece("Highway Drive Piece 4 - Flat", "RB Empty Piece Flat {0}", 4);
-			CreateAndAddEmptyPiece("Highway Middle Piece 4", "RB Empty Piece Middle {0}", 4);
-			CreateAndAddEmptyPiece("Highway Middle Piece 4 - Flat", "RB Empty Piece Middle Flat {0}", 4);
-
-			CreateAndAddEmptyPiece("Gravel Drive Piece 3", "RB Gravel Empty Piece {0}", 3);
-			CreateAndAddEmptyPiece("Gravel Drive Piece 3 - Flat", "RB Gravel Empty Piece Flat {0}", 3);
-			CreateAndAddEmptyPiece("Gravel Middle Piece 3", "RB Gravel Empty Piece Middle {0}", 3);
-			CreateAndAddEmptyPiece("Gravel Middle Piece 3 - Flat", "RB Gravel Empty Piece Middle Flat {0}", 3);
-
-			CreateAndAddEmptyPiece("Tiled Drive Piece 3", "RB Tiled Empty Piece {0}", 3);
-			CreateAndAddEmptyPiece("Tiled Drive Piece 3 - Flat", "RB Tiled Empty Piece Flat {0}", 3);
-			CreateAndAddEmptyPiece("Tiled Drive Piece 3", "RB Tiled Empty Piece Middle {0}", 3);
-			CreateAndAddEmptyPiece("Tiled Drive Piece 3 - Flat", "RB Tiled Empty Piece Middle Flat {0}", 3);
-
-			CreateAndAddEmptyPiece("Train Track Piece 4", "RB Train Empty Piece {0}", 4);
-			CreateAndAddEmptyPiece("Train Track Piece 4", "RB Train Empty Piece Flat {0}", 4);
-			CreateAndAddEmptyPiece("Train Track Middle Piece 4", "RB Train Empty Piece Middle {0}", 4);
-			CreateAndAddEmptyPiece("Train Track Middle Piece 4", "RB Train Empty Piece Middle Flat {0}", 4);
 		}
 
-		private void CreateAndAddEmptyPiece(string name, string newName, float maxWidth)
+		private void CreateTiledMedian0Piece()
+		{
+			var medianTiledIntersectionPiece0 = NetPieces["Median Intersection Piece 0"].Clone("RB Tiled Median Intersection Piece 0") as NetPiecePrefab;
+			var medianTiledIntersectionPiece0Flat = NetPieces["Median Intersection Piece 0 - Flat"].Clone("RB Tiled Median Intersection Piece 0 - Flat") as NetPiecePrefab;
+
+			medianTiledIntersectionPiece0.geometryAsset = AssetDatabase.game.GetAsset<GeometryAsset>("6a5ebd30da0e34986c320b4cdc2014df"); // TiledMedianIntersection2
+			medianTiledIntersectionPiece0.surfaceAssets = new[] { AssetDatabase.game.GetAsset<SurfaceAsset>("40dd255c63eb8f65f96c5333d7d28afb") }; // TiledRoad
+			medianTiledIntersectionPiece0Flat.geometryAsset = AssetDatabase.game.GetAsset<GeometryAsset>("2549026d2a35f5fce401702b40c90258"); // TiledMedianIntersectionFlat2
+			medianTiledIntersectionPiece0Flat.surfaceAssets = new[] { AssetDatabase.game.GetAsset<SurfaceAsset>("40dd255c63eb8f65f96c5333d7d28afb") }; // TiledRoad
+
+			prefabSystem.AddPrefab(NetPieces[medianTiledIntersectionPiece0.name] = medianTiledIntersectionPiece0);
+			prefabSystem.AddPrefab(NetPieces[medianTiledIntersectionPiece0Flat.name] = medianTiledIntersectionPiece0Flat);
+		}
+
+		private void CreateAndAddEmptyPieces(string name, string newName, float maxWidth)
 		{
 			for (var width = 0.5f; width <= maxWidth; width += 0.5f)
 			{
@@ -193,6 +235,17 @@ namespace RoadBuilder.Systems
 
 				prefabSystem.AddPrefab(NetPieces[newPiece.name] = newPiece);
 			}
+		}
+
+		private void CreateAndAddEmptyTunnelAndBridgePieces(string name, string newName, float width)
+		{
+			var newPiece = NetPieces[name].Clone(string.Format(newName, width)) as NetPiecePrefab;
+
+			newPiece.m_Width = width;
+
+			newPiece.Remove<PlaceableNetPiece>();
+
+			prefabSystem.AddPrefab(NetPieces[newPiece.name] = newPiece);
 		}
 
 		private void DoNetSectionCreation()
@@ -394,6 +447,62 @@ namespace RoadBuilder.Systems
 						m_RequireAny = new[] { NetPieceRequirements.Intersection, NetPieceRequirements.DeadEnd },
 						m_RequireNone = new NetPieceRequirements[0],
 					},
+					new NetPieceInfo
+					{
+						m_Piece = NetPieces[string.Format("Elevated Bottom Piece {0}", width)],
+						m_RequireAll = new[] { NetPieceRequirements.Elevated },
+						m_RequireAny = new NetPieceRequirements[0] ,
+						m_RequireNone = new[] { NetPieceRequirements.Intersection, NetPieceRequirements.HighTransition, NetPieceRequirements.LowTransition },
+					},
+					new NetPieceInfo
+					{
+						m_Piece = NetPieces[string.Format("Elevated Bottom Piece {0} - Ending", width)],
+						m_RequireAll = new[] { NetPieceRequirements.Elevated },
+						m_RequireAny = new[] { NetPieceRequirements.HighTransition, NetPieceRequirements.LowTransition },
+						m_RequireNone = new NetPieceRequirements[0],
+					},
+					new NetPieceInfo
+					{
+						m_Piece = NetPieces[string.Format("Elevated Bottom Piece {0}", width)],
+						m_RequireAll = new[] { NetPieceRequirements.Elevated, NetPieceRequirements.Intersection },
+						m_RequireAny = new NetPieceRequirements[0] ,
+						m_RequireNone = new[] { NetPieceRequirements.Median, NetPieceRequirements.HighTransition, NetPieceRequirements.LowTransition },
+					},
+					new NetPieceInfo
+					{
+						m_Piece = NetPieces[string.Format("Elevated Bottom Piece {0} - Intersection Middle", width)],
+						m_RequireAll = new[] { NetPieceRequirements.Elevated, NetPieceRequirements.Intersection, NetPieceRequirements.Median },
+						m_RequireAny = new NetPieceRequirements[0] ,
+						m_RequireNone = new[] { NetPieceRequirements.HighTransition, NetPieceRequirements.LowTransition },
+					},
+					new NetPieceInfo
+					{
+						m_Piece = NetPieces[string.Format("Tunnel Top Piece {0}", width)],
+						m_RequireAll = new[] { NetPieceRequirements.Tunnel },
+						m_RequireAny = new NetPieceRequirements[0] ,
+						m_RequireNone = new[] { NetPieceRequirements.Intersection, NetPieceRequirements.HighTransition, NetPieceRequirements.LowTransition },
+					},
+					new NetPieceInfo
+					{
+						m_Piece = NetPieces[string.Format("Tunnel Top Piece {0} - Ending", width)],
+						m_RequireAll = new[] { NetPieceRequirements.Tunnel },
+						m_RequireAny = new[] { NetPieceRequirements.HighTransition, NetPieceRequirements.LowTransition },
+						m_RequireNone = new NetPieceRequirements[0],
+					},
+					new NetPieceInfo
+					{
+						m_Piece = NetPieces[string.Format("Tunnel Top Piece {0}", width)],
+						m_RequireAll = new[] { NetPieceRequirements.Tunnel, NetPieceRequirements.Intersection },
+						m_RequireAny = new NetPieceRequirements[0] ,
+						m_RequireNone = new[] { NetPieceRequirements.Median, NetPieceRequirements.HighTransition, NetPieceRequirements.LowTransition },
+					},
+					new NetPieceInfo
+					{
+						m_Piece = NetPieces[string.Format("Tunnel Top Piece {0} - Intersection Middle", width)],
+						m_RequireAll = new[] { NetPieceRequirements.Tunnel, NetPieceRequirements.Intersection, NetPieceRequirements.Median },
+						m_RequireAny = new NetPieceRequirements[0] ,
+						m_RequireNone = new[] { NetPieceRequirements.HighTransition, NetPieceRequirements.LowTransition },
+					},
 				};
 
 				prefabSystem.AddPrefab(NetSections[section.name] = section);
@@ -402,10 +511,10 @@ namespace RoadBuilder.Systems
 
 		private void AddCustomPrefabComponents()
 		{
-			SetUp("Pavement Path Section 3", "coui://roadbuildericons/RB_PedestrianLane.svg").WithRequired(RoadCategory.Pathway).AddLaneThumbnail("coui://roadbuildericons/Thumb_PedestrianLaneWide.svg");
-			SetUp("Tiled Pedestrian Section 3", "coui://roadbuildericons/RB_PedestrianOnly.svg").WithRequired(RoadCategory.Tiled).AddLaneThumbnail("coui://roadbuildericons/Thumb_TiledSmall.svg");
-			SetUp("RB Tiled Median 2", "coui://roadbuildericons/RB_TiledMedian_Centered.svg").WithRequired(RoadCategory.Tiled).WithThumbnail("coui://roadbuildericons/RB_TiledMedian.svg").AddLaneThumbnail("coui://roadbuildericons/Thumb_PedestrianLaneSmall.svg");
-			SetUp("Sound Barrier 1", "coui://roadbuildericons/RB_SoundBarrier.svg").WithExcluded(RoadCategory.RaisedSidewalk).AddLaneThumbnail("coui://roadbuildericons/Thumb_SoundBarrier.svg");
+			SetUp("Pavement Path Section 3", "coui://roadbuildericons/RB_PedestrianLane.svg").WithRequireAll(RoadCategory.Pathway).AddLaneThumbnail("coui://roadbuildericons/Thumb_PedestrianLaneWide.svg");
+			SetUp("Tiled Pedestrian Section 3", "coui://roadbuildericons/RB_PedestrianOnly.svg").WithRequireAll(RoadCategory.Tiled).AddLaneThumbnail("coui://roadbuildericons/Thumb_TiledSmall.svg");
+			SetUp("RB Tiled Median 2", "coui://roadbuildericons/RB_TiledMedian_Centered.svg").WithRequireAll(RoadCategory.Tiled).WithThumbnail("coui://roadbuildericons/RB_TiledMedian.svg").AddLaneThumbnail("coui://roadbuildericons/Thumb_PedestrianLaneSmall.svg");
+			SetUp("Sound Barrier 1", "coui://roadbuildericons/RB_SoundBarrier.svg").WithRequireNone(RoadCategory.RaisedSidewalk).AddLaneThumbnail("coui://roadbuildericons/Thumb_SoundBarrier.svg");
 		}
 
 		private RoadBuilderLaneInfo SetUp(string prefabName, string thumbnail)
