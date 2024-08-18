@@ -10,6 +10,7 @@ namespace RoadBuilder.Domain.Components.Prefabs
 		public LaneOptionType Type;
 		public string Name;
 		public string DefaultValue;
+		public bool IgnoreForSimilarDuplicate;
 		public RoadBuilderLaneOptionValue[] Options;
 	}
 }

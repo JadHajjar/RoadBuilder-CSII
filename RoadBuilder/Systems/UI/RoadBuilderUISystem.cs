@@ -303,6 +303,11 @@ namespace RoadBuilder.Systems.UI
 						if (similarLane != null)
 						{
 							lane.GroupOptions = new(similarLane.GroupOptions);
+
+							foreach (var option in group.Options.Where(x => x.IgnoreForSimilarDuplicate))
+							{
+								lane.GroupOptions[option.Name] = option.DefaultValue;
+							}
 						}
 
 						LaneOptionsUtil.FixGroupOptions(config, lane, group);
