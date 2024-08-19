@@ -19,7 +19,7 @@
   "RoadBuilder.LaneGroups.ShoulderGroupPrefab.Options[Ground Type]": "地面类型",
   "RoadBuilder.LaneGroups.EmptyGroupPrefab.Options[Lane Width]": "车道宽度",
   "RoadBuilder.LaneGroups.EmptyGroupPrefab.Options[Ground Type]": "地面类型",
-  "RoadBuilder.LaneGroups.SidewalkGroupPrefab.Options[Transport]": "选项",
+  "RoadBuilder.LaneGroups.SidewalkGroupPrefab.Options[Transport]": "交通种类选项",
   "RoadBuilder.LaneGroups.SidewalkGroupPrefab.Options[Width]": "车道宽度",
   "RoadBuilder.LaneGroups.SidewalkGroupPrefab.Options[Parking]": "停车位",
   "RoadBuilder.LaneGroups.SubwayMedianGroupPrefab.Options[Style]": "高度",
@@ -34,9 +34,7 @@
   "RoadBuilder.LaneGroups.SidewalkGroupPrefab.Options[Parking][P]": "包含停车位",
   "RoadBuilder.LaneGroups.SubwayMedianGroupPrefab.Options[Style][Raised]": "抬高的站台",
   "RoadBuilder.LaneGroups.SubwayMedianGroupPrefab.Options[Style][Flat]": "平地站台",
-  "Assets.NAME[Gravel Drive Section 3]": "砾石车",
   "Assets.NAME[Sound Barrier 1]": "音障",
-  "Assets.NAME[Alley Drive Section 3]": "农村车",
   "Assets.NAME[Pavement Path Section 3]": "人行道",
   "Assets.NAME[Tiled Pedestrian Section 3]": "平地人行道",
   "Assets.NAME[RB Tiled Median 2]": "平地分隔带"
