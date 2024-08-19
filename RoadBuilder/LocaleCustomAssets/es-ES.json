@@ -19,7 +19,7 @@
   "RoadBuilder.LaneGroups.ShoulderGroupPrefab.Options[Ground Type]": "Tipo de Suelo",
   "RoadBuilder.LaneGroups.EmptyGroupPrefab.Options[Lane Width]": "Ancho de Carril",
   "RoadBuilder.LaneGroups.EmptyGroupPrefab.Options[Ground Type]": "Tipo de Suelo",
-  "RoadBuilder.LaneGroups.SidewalkGroupPrefab.Options[Transport]": "Opción",
+  "RoadBuilder.LaneGroups.SidewalkGroupPrefab.Options[Transport]": "Opciones de Transporte",
   "RoadBuilder.LaneGroups.SidewalkGroupPrefab.Options[Width]": "Ancho de Carril",
   "RoadBuilder.LaneGroups.SidewalkGroupPrefab.Options[Parking]": "Aparcamiento",
   "RoadBuilder.LaneGroups.SubwayMedianGroupPrefab.Options[Style]": "Elevación",
@@ -34,9 +34,7 @@
   "RoadBuilder.LaneGroups.SidewalkGroupPrefab.Options[Parking][P]": "Con Aparcamiento",
   "RoadBuilder.LaneGroups.SubwayMedianGroupPrefab.Options[Style][Raised]": "Plataforma Elevada",
   "RoadBuilder.LaneGroups.SubwayMedianGroupPrefab.Options[Style][Flat]": "Plataforma a Nivel",
-  "Assets.NAME[Gravel Drive Section 3]": "Carril de Gravilla",
   "Assets.NAME[Sound Barrier 1]": "Barrera Acústica",
-  "Assets.NAME[Alley Drive Section 3]": "Calleja",
   "Assets.NAME[Pavement Path Section 3]": "Camino Peatonal",
   "Assets.NAME[Tiled Pedestrian Section 3]": "Camino Peatonal de Mosaicos",
   "Assets.NAME[RB Tiled Median 2]": "Mediana de Mosaicos"
