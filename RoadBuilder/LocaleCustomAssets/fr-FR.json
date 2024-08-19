@@ -19,7 +19,7 @@
   "RoadBuilder.LaneGroups.ShoulderGroupPrefab.Options[Ground Type]": "Ground Type",
   "RoadBuilder.LaneGroups.EmptyGroupPrefab.Options[Lane Width]": "Lane Width",
   "RoadBuilder.LaneGroups.EmptyGroupPrefab.Options[Ground Type]": "Ground Type",
-  "RoadBuilder.LaneGroups.SidewalkGroupPrefab.Options[Transport]": "Option",
+  "RoadBuilder.LaneGroups.SidewalkGroupPrefab.Options[Transport]": "Transport Option",
   "RoadBuilder.LaneGroups.SidewalkGroupPrefab.Options[Width]": "Lane Width",
   "RoadBuilder.LaneGroups.SidewalkGroupPrefab.Options[Parking]": "Parking",
   "RoadBuilder.LaneGroups.SubwayMedianGroupPrefab.Options[Style]": "Elevation",
@@ -34,9 +34,7 @@
   "RoadBuilder.LaneGroups.SidewalkGroupPrefab.Options[Parking][P]": "Avec parking",
   "RoadBuilder.LaneGroups.SubwayMedianGroupPrefab.Options[Style][Raised]": "Raised Platform",
   "RoadBuilder.LaneGroups.SubwayMedianGroupPrefab.Options[Style][Flat]": "Flat Platform",
-  "Assets.NAME[Gravel Drive Section 3]": "Gravel Car",
   "Assets.NAME[Sound Barrier 1]": "Sound Barrier",
-  "Assets.NAME[Alley Drive Section 3]": "Rural Car",
   "Assets.NAME[Pavement Path Section 3]": "Pavement Pedestrian",
   "Assets.NAME[Tiled Pedestrian Section 3]": "Tiled Pedestrian",
   "Assets.NAME[RB Tiled Median 2]": "Tiled Median"
