@@ -19,7 +19,7 @@
   "RoadBuilder.LaneGroups.ShoulderGroupPrefab.Options[Ground Type]": "Zemin Türü",
   "RoadBuilder.LaneGroups.EmptyGroupPrefab.Options[Lane Width]": "Şerit Genişliği",
   "RoadBuilder.LaneGroups.EmptyGroupPrefab.Options[Ground Type]": "Zemin Türü",
-  "RoadBuilder.LaneGroups.SidewalkGroupPrefab.Options[Transport]": "Seçenek",
+  "RoadBuilder.LaneGroups.SidewalkGroupPrefab.Options[Transport]": "Ulaşım Seçenekleri",
   "RoadBuilder.LaneGroups.SidewalkGroupPrefab.Options[Width]": "Şerit Genişliği",
   "RoadBuilder.LaneGroups.SidewalkGroupPrefab.Options[Parking]": "Park Etme",
   "RoadBuilder.LaneGroups.SubwayMedianGroupPrefab.Options[Style]": "Yükseklik",
@@ -34,9 +34,7 @@
   "RoadBuilder.LaneGroups.SidewalkGroupPrefab.Options[Parking][P]": "Yolkenarı park etmeye izin ver",
   "RoadBuilder.LaneGroups.SubwayMedianGroupPrefab.Options[Style][Raised]": "Yüksek peron",
   "RoadBuilder.LaneGroups.SubwayMedianGroupPrefab.Options[Style][Flat]": "Alçak Peron",
-  "Assets.NAME[Gravel Drive Section 3]": "Çakıl Yol",
   "Assets.NAME[Sound Barrier 1]": "Ses Bariyeri",
-  "Assets.NAME[Alley Drive Section 3]": "Kırsal Yol",
   "Assets.NAME[Pavement Path Section 3]": "Yaya Kaldırımı",
   "Assets.NAME[Tiled Pedestrian Section 3]": "Döşenmiş Yaya Yolu",
   "Assets.NAME[RB Tiled Median 2]": "Döşenmiş Refüj"
