@@ -48,7 +48,7 @@
   "RoadBuilder.CopyLane": "Copy Lane",
   "RoadBuilder.DeleteLane": "Delete Lane",
   "RoadBuilder.AvailableLanes": "Available Lanes",
-  "RoadBuilder.CreatedRoads": "Created Roads",
+  "RoadBuilder.CreatedRoads": "已創建道路",
   "RoadBuilder.RoadCount": "{0} Roads",
   "RoadBuilder.Edit": "Edit",
   "RoadBuilder.Find": "Find",
