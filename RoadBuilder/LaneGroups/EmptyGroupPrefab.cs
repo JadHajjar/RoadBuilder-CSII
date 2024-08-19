@@ -6,6 +6,7 @@ using RoadBuilder.Domain.Components.Prefabs;
 using RoadBuilder.Domain.Enums;
 
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace RoadBuilder.LaneGroups
 {
@@ -63,7 +64,7 @@ namespace RoadBuilder.LaneGroups
 		{
 			for (var width = 0.5f; width <= maxWidth; width += 0.5f)
 			{
-				var prefab = sections[string.Format(name, width)];
+				var prefab = sections[string.Format(name, width.ToString(CultureInfo.InvariantCulture))];
 				var laneGroup = prefab.AddComponent<RoadBuilderLaneGroup>();
 				laneGroup.GroupPrefab = this;
 				laneGroup.Combination = new LaneOptionCombination[]

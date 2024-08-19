@@ -12,6 +12,7 @@ using RoadBuilder.LaneGroups;
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 using Unity.Collections;
@@ -276,7 +277,7 @@ namespace RoadBuilder.Systems
 		{
 			for (var width = 0.5f; width <= maxWidth; width += 0.5f)
 			{
-				var newPiece = NetPieces[name].Clone(string.Format(newName, width)) as NetPiecePrefab;
+				var newPiece = NetPieces[name].Clone(string.Format(newName, width.ToString(CultureInfo.InvariantCulture))) as NetPiecePrefab;
 
 				newPiece.m_Width = width;
 
@@ -290,7 +291,7 @@ namespace RoadBuilder.Systems
 
 		private void CreateAndAddEmptyTunnelAndBridgePieces(string name, string newName, float width)
 		{
-			var newPiece = NetPieces[name].Clone(string.Format(newName, width)) as NetPiecePrefab;
+			var newPiece = NetPieces[name].Clone(string.Format(newName, width.ToString(CultureInfo.InvariantCulture))) as NetPiecePrefab;
 
 			newPiece.m_Width = width;
 
@@ -499,8 +500,9 @@ namespace RoadBuilder.Systems
 
 		private void CreateEmptyNetSection(string sectionName, string pieceBaseName, float maxWidth)
 		{
-			for (var width = 0.5f; width <= maxWidth; width += 0.5f)
+			for (var widthVal = 0.5f; widthVal <= maxWidth; widthVal += 0.5f)
 			{
+				var width = widthVal.ToString(CultureInfo.InvariantCulture);
 				var section = ScriptableObject.CreateInstance<NetSectionPrefab>();
 
 				section.name = string.Format(sectionName, width);
