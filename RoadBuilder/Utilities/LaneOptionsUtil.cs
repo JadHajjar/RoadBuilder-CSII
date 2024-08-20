@@ -30,7 +30,7 @@ namespace RoadBuilder.Utilities
 
 			if (NetworkPrefabGenerationUtil.GetNetSection(roadGenerationData, config, lane, out var section, out var group)) // if lane supports invert
 			{
-				if (group is not null || !(section?.SupportsTwoWay() ?? false))
+				if ((group is not null || !(section?.SupportsTwoWay() ?? false)) && !(section.TryGet<RoadBuilderLaneInfo>(out var laneInfo) && laneInfo.NoDirection) && !((group?.TryGet<RoadBuilderLaneInfo>(out var groupInfo) ?? false) && groupInfo.NoDirection))
 				{
 					options.Add(GetInvertOption(roadGenerationData, config, lane, group?.Options?.FirstOrDefault(x => x.Type is LaneOptionType.TwoWay)));
 				}

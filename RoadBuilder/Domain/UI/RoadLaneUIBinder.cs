@@ -11,6 +11,7 @@ namespace RoadBuilder.Domain.UI
 		public string SectionPrefabName;
 		public bool IsGroup;
 		public int Index;
+		public bool NoDirection;
 		public bool Invert;
 		public bool InvertImage;
 		public bool TwoWay;

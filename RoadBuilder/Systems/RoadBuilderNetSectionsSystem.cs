@@ -20,6 +20,8 @@ using Unity.Entities;
 
 using UnityEngine;
 
+using static Game.UI.NameSystem;
+
 namespace RoadBuilder.Systems
 {
 	public partial class RoadBuilderNetSectionsSystem : GameSystemBase
@@ -133,6 +135,8 @@ namespace RoadBuilder.Systems
 			CreateAllEmptyPieces();
 
 			CreateTiledTramPiece();
+
+			CreateParkingPieces();
 		}
 
 		private void DoNetSectionCreation()
@@ -146,6 +150,8 @@ namespace RoadBuilder.Systems
 			FixMedianSections();
 
 			FixSubwayMedianSections();
+
+			AddParkingNetSections();
 
 			CreateEmptyNetSection("RB Empty Section {0}", "RB Empty Piece", 4);
 			CreateEmptyNetSection("RB Gravel Empty Section {0}", "RB Gravel Empty Piece", 3);
@@ -271,6 +277,45 @@ namespace RoadBuilder.Systems
 			newPiece.GetComponent<NetPieceLanes>().m_Lanes[0].m_Lane = NetLanes["Oneway Tram Lane 3"];
 
 			prefabSystem.AddPrefab(NetPieces[newPiece.name] = newPiece);
+		}
+
+		private void CreateParkingPieces()
+		{
+			var pieces = new[]
+			{
+				("RB Parking Piece Parallel", "Parking Lane 2", 2f, "Car Drive Piece 3"),
+				("RB Parking Piece Angled", "Invisible Parking Lane - Angled67 2.9x5.9", 4f, "Highway Drive Piece 4"),
+				("RB Parking Piece Perpendicular", "Invisible Parking Lane - Perpendicular 4.7x5.9", 4f, "Highway Drive Piece 4"),
+			};
+
+			foreach (var item in pieces)
+			{
+				var newPiece = NetPieces[item.Item4].Clone(item.Item1) as NetPiecePrefab;
+				newPiece.m_Width = item.Item3;
+				newPiece.Remove<NetPieceObjects>();
+				newPiece.AddOrGetComponent<NetPieceLanes>().m_Lanes = new[]
+				{
+					new NetLaneInfo
+					{
+						m_Lane = NetLanes[item.Item2]
+					}
+				};
+
+				prefabSystem.AddPrefab(NetPieces[newPiece.name] = newPiece);
+
+				newPiece = NetPieces[item.Item4 + " - Flat"].Clone(item.Item1 + " - Flat") as NetPiecePrefab;
+				newPiece.m_Width = item.Item3;
+				newPiece.Remove<NetPieceObjects>();
+				newPiece.AddOrGetComponent<NetPieceLanes>().m_Lanes = new[]
+				{
+					new NetLaneInfo
+					{
+						m_Lane = NetLanes[item.Item2]
+					}
+				};
+
+				prefabSystem.AddPrefab(NetPieces[newPiece.name] = newPiece);
+			}
 		}
 
 		private void CreateAndAddEmptyPieces(string name, string newName, float maxWidth)
@@ -547,6 +592,128 @@ namespace RoadBuilder.Systems
 					new NetPieceInfo
 					{
 						m_Piece = NetPieces[string.Format(pieceBaseName + " Middle Flat {0}", width)],
+						m_RequireAll = new[] { NetPieceRequirements.Median, NetPieceRequirements.LevelCrossing },
+						m_RequireAny = new[] { NetPieceRequirements.Intersection, NetPieceRequirements.DeadEnd },
+						m_RequireNone = new NetPieceRequirements[0],
+					},
+					new NetPieceInfo
+					{
+						m_Piece = NetPieces[string.Format("Elevated Bottom Piece {0}", width)],
+						m_RequireAll = new[] { NetPieceRequirements.Elevated },
+						m_RequireAny = new NetPieceRequirements[0] ,
+						m_RequireNone = new[] { NetPieceRequirements.Intersection, NetPieceRequirements.HighTransition, NetPieceRequirements.LowTransition },
+					},
+					new NetPieceInfo
+					{
+						m_Piece = NetPieces[string.Format("Elevated Bottom Piece {0} - Ending", width)],
+						m_RequireAll = new[] { NetPieceRequirements.Elevated },
+						m_RequireAny = new[] { NetPieceRequirements.HighTransition, NetPieceRequirements.LowTransition },
+						m_RequireNone = new NetPieceRequirements[0],
+					},
+					new NetPieceInfo
+					{
+						m_Piece = NetPieces[string.Format("Elevated Bottom Piece {0}", width)],
+						m_RequireAll = new[] { NetPieceRequirements.Elevated, NetPieceRequirements.Intersection },
+						m_RequireAny = new NetPieceRequirements[0] ,
+						m_RequireNone = new[] { NetPieceRequirements.Median, NetPieceRequirements.HighTransition, NetPieceRequirements.LowTransition },
+					},
+					new NetPieceInfo
+					{
+						m_Piece = NetPieces[string.Format("Elevated Bottom Piece {0} - Intersection Middle", width)],
+						m_RequireAll = new[] { NetPieceRequirements.Elevated, NetPieceRequirements.Intersection, NetPieceRequirements.Median },
+						m_RequireAny = new NetPieceRequirements[0] ,
+						m_RequireNone = new[] { NetPieceRequirements.HighTransition, NetPieceRequirements.LowTransition },
+					},
+					new NetPieceInfo
+					{
+						m_Piece = NetPieces[string.Format("Tunnel Top Piece {0}", width)],
+						m_RequireAll = new[] { NetPieceRequirements.Tunnel },
+						m_RequireAny = new NetPieceRequirements[0] ,
+						m_RequireNone = new[] { NetPieceRequirements.Intersection, NetPieceRequirements.HighTransition, NetPieceRequirements.LowTransition },
+					},
+					new NetPieceInfo
+					{
+						m_Piece = NetPieces[string.Format("Tunnel Top Piece {0} - Ending", width)],
+						m_RequireAll = new[] { NetPieceRequirements.Tunnel },
+						m_RequireAny = new[] { NetPieceRequirements.HighTransition, NetPieceRequirements.LowTransition },
+						m_RequireNone = new NetPieceRequirements[0],
+					},
+					new NetPieceInfo
+					{
+						m_Piece = NetPieces[string.Format("Tunnel Top Piece {0}", width)],
+						m_RequireAll = new[] { NetPieceRequirements.Tunnel, NetPieceRequirements.Intersection },
+						m_RequireAny = new NetPieceRequirements[0] ,
+						m_RequireNone = new[] { NetPieceRequirements.Median, NetPieceRequirements.HighTransition, NetPieceRequirements.LowTransition },
+					},
+					new NetPieceInfo
+					{
+						m_Piece = NetPieces[string.Format("Tunnel Top Piece {0} - Intersection Middle", width)],
+						m_RequireAll = new[] { NetPieceRequirements.Tunnel, NetPieceRequirements.Intersection, NetPieceRequirements.Median },
+						m_RequireAny = new NetPieceRequirements[0] ,
+						m_RequireNone = new[] { NetPieceRequirements.HighTransition, NetPieceRequirements.LowTransition },
+					},
+				};
+
+				prefabSystem.AddPrefab(NetSections[section.name] = section);
+			}
+		}
+
+		private void AddParkingNetSections()
+		{
+			var sections = new[]
+			{
+				("RB Parking Piece Parallel", "RB Parking Section Parallel", "3"),
+				("RB Parking Piece Angled", "RB Parking Section Angled", "4"),
+				("RB Parking Piece Perpendicular", "RB Parking Section Perpendicular", "4"),
+			};
+
+			foreach (var item in sections)
+			{
+				var section = ScriptableObject.CreateInstance<NetSectionPrefab>();
+				var width = item.Item3;
+
+				section.name = item.Item2;
+				section.m_SubSections = new NetSubSectionInfo[0];
+				section.m_Pieces = new[]
+				{
+					new NetPieceInfo
+					{
+						m_Piece = NetPieces[item.Item1],
+						m_RequireAll = new NetPieceRequirements[0],
+						m_RequireAny = new NetPieceRequirements[0],
+						m_RequireNone = new[] { NetPieceRequirements.LevelCrossing, NetPieceRequirements.Median }
+					},
+					new NetPieceInfo
+					{
+						m_Piece = NetPieces[item.Item1],
+						m_RequireAll = new[] { NetPieceRequirements.Median },
+						m_RequireAny = new NetPieceRequirements[0],
+						m_RequireNone = new[] { NetPieceRequirements.LevelCrossing, NetPieceRequirements.Intersection, NetPieceRequirements.DeadEnd }
+					},
+					new NetPieceInfo
+					{
+						m_Piece = NetPieces[item.Item1 + " - Flat"],
+						m_RequireAll = new[] { NetPieceRequirements.LevelCrossing },
+						m_RequireAny = new NetPieceRequirements[0],
+						m_RequireNone = new[] { NetPieceRequirements.Median }
+					},
+					new NetPieceInfo
+					{
+						m_Piece = NetPieces[item.Item1 + " - Flat"],
+						m_RequireAll = new[] { NetPieceRequirements.LevelCrossing, NetPieceRequirements.Median },
+						m_RequireAny = new NetPieceRequirements[0],
+						m_RequireNone = new[] { NetPieceRequirements.Intersection, NetPieceRequirements.DeadEnd }
+					},
+					new NetPieceInfo
+					{
+						m_Piece = NetPieces[item.Item1],
+						m_RequireAll = new[] { NetPieceRequirements.Median },
+						m_RequireAny = new[] { NetPieceRequirements.Intersection, NetPieceRequirements.DeadEnd },
+						m_RequireNone = new[] { NetPieceRequirements.LevelCrossing }
+					},
+					new NetPieceInfo
+					{
+						m_Piece = NetPieces[item.Item1 + " - Flat"],
 						m_RequireAll = new[] { NetPieceRequirements.Median, NetPieceRequirements.LevelCrossing },
 						m_RequireAny = new[] { NetPieceRequirements.Intersection, NetPieceRequirements.DeadEnd },
 						m_RequireNone = new NetPieceRequirements[0],

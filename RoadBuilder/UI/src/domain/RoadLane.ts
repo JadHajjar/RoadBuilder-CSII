@@ -4,6 +4,7 @@ import { OptionSection } from "./Options";
 export interface RoadLane {
   SectionPrefabName: string;
   Index: number;
+  NoDirection?: boolean;
   Invert?: boolean;
   InvertImage?: boolean;
   TwoWay?: boolean;

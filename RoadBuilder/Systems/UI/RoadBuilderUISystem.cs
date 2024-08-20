@@ -419,7 +419,8 @@ namespace RoadBuilder.Systems.UI
 			{
 				var lane = config.Lanes[i];
 				var validSection = NetworkPrefabGenerationUtil.GetNetSection(roadGenerationDataSystem.RoadGenerationData, config, lane, out var section, out var groupPrefab);
-				var isBackward = cityConfigurationSystem.leftHandTraffic && (i == 0 || i == config.Lanes.Count - 1) ? !lane.Invert : lane.Invert;
+				var noDirection = validSection && ((section.TryGet<RoadBuilderLaneInfo>(out var laneInfo) && laneInfo.NoDirection) || ((groupPrefab?.TryGet<RoadBuilderLaneInfo>(out var groupInfo) ?? false) && groupInfo.NoDirection));
+				var isBackward = noDirection ? FindDirection(config, i) : (cityConfigurationSystem.leftHandTraffic && (i == 0 || i == config.Lanes.Count - 1) ? !lane.Invert : lane.Invert);
 
 				GetThumbnailAndColor(config, lane, section, groupPrefab, isBackward, out var thumbnail, out var color, out var texture);
 
@@ -427,6 +428,7 @@ namespace RoadBuilder.Systems.UI
 				{
 					Index = i,
 					Invert = lane.Invert,
+					NoDirection = noDirection,
 					InvertImage = isBackward,
 					TwoWay = validSection && section.SupportsTwoWay(),
 					SectionPrefabName = string.IsNullOrEmpty(lane.GroupPrefabName) ? lane.SectionPrefabName : lane.GroupPrefabName,
@@ -446,6 +448,23 @@ namespace RoadBuilder.Systems.UI
 			}
 
 			return binders;
+		}
+
+		private bool FindDirection(INetworkConfig config, int i)
+		{
+			if (config.Lanes.Count <= 3)
+			{
+				return false;
+			}
+
+			if (i < config.Lanes.Count / 2)
+			{
+				return config.Lanes[i + 1].Invert;
+			}
+			else
+			{
+				return config.Lanes[i - 1].Invert;
+			}
 		}
 
 		private static void GetThumbnailAndColor(INetworkConfig config, LaneConfig lane, NetSectionPrefab section, LaneGroupPrefab groupPrefab, bool invert, out string thumbnail, out Color? color, out string texture)

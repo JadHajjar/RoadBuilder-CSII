@@ -21,6 +21,7 @@ namespace RoadBuilder.Domain.Components.Prefabs
 		public RoadCategory RequireNone;
 		public LaneGroundType GroundTexture;
 		public Color LaneColor;
+		public bool NoDirection;
 		public string BackThumbnail;
 		public string FrontThumbnail;
 		public string[] LaneThumbnails;
@@ -90,6 +91,12 @@ namespace RoadBuilder.Domain.Components.Prefabs
 		public RoadBuilderLaneInfo WithGroundTexture(LaneGroundType groundType)
 		{
 			GroundTexture = groundType;
+			return this;
+		}
+
+		public RoadBuilderLaneInfo WithNoDirection()
+		{
+			NoDirection = true;
 			return this;
 		}
 	}
