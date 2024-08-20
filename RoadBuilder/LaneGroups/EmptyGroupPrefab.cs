@@ -72,7 +72,7 @@ namespace RoadBuilder.LaneGroups
 					new()
 					{
 						OptionName = OptionName1,
-						Value = $"{width}m"
+						Value = $"{width.ToString(CultureInfo.InvariantCulture)}m"
 					},
 					new()
 					{

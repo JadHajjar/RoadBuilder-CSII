@@ -35,6 +35,11 @@ namespace RoadBuilder.Systems
 					if (connectedEdges.Length == 0)
 					{
 						EntityManager.AddComponent<Deleted>(entity);
+
+						foreach (var item in EntityManager.GetBuffer<Game.Objects.SubObject>(entity))
+						{
+							EntityManager.AddComponent<Deleted>(item.m_SubObject);
+						}
 					}
 					else
 					{
