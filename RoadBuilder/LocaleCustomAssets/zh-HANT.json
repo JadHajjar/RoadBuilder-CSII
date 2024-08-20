@@ -33,7 +33,7 @@
   "RoadBuilder.LaneGroups.SidewalkGroupPrefab.Options[Parking][]": "禁止停車",
   "RoadBuilder.LaneGroups.SidewalkGroupPrefab.Options[Parking][P]": "附帶停車位",
   "RoadBuilder.LaneGroups.SubwayMedianGroupPrefab.Options[Style][Raised]": "加高月台",
-  "RoadBuilder.LaneGroups.SubwayMedianGroupPrefab.Options[Style][Flat]": "平坦月台",
+  "RoadBuilder.LaneGroups.SubwayMedianGroupPrefab.Options[Style][Flat]": "平面月台",
   "Assets.NAME[Sound Barrier 1]": "隔音板",
   "Assets.NAME[Pavement Path Section 3]": "人行道",
   "Assets.NAME[Tiled Pedestrian Section 3]": "鋪面人行道",
