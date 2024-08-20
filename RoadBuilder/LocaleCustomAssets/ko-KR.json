@@ -1,8 +1,8 @@
 {
-  "Assets.NAME[RoadBuilder.LaneGroups.BusGroupPrefab]": "Bus",
-  "Assets.NAME[RoadBuilder.LaneGroups.CarGroupPrefab]": "Car",
+  "Assets.NAME[RoadBuilder.LaneGroups.BusGroupPrefab]": "버스",
+  "Assets.NAME[RoadBuilder.LaneGroups.CarGroupPrefab]": "자동차",
   "Assets.NAME[RoadBuilder.LaneGroups.MedianGroupPrefab]": "Median",
-  "Assets.NAME[RoadBuilder.LaneGroups.ShoulderGroupPrefab]": "Shoulder",
+  "Assets.NAME[RoadBuilder.LaneGroups.ShoulderGroupPrefab]": "경계석",
   "Assets.NAME[RoadBuilder.LaneGroups.EmptyGroupPrefab]": "Empty Lane",
   "Assets.NAME[RoadBuilder.LaneGroups.SidewalkGroupPrefab]": "Sidewalk",
   "Assets.NAME[RoadBuilder.LaneGroups.SubwayGroupPrefab]": "Subway Track",
