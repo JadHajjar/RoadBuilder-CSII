@@ -56,5 +56,13 @@
   "RoadBuilder.EditTooltip": "編輯此道路設定",
   "RoadBuilder.FindTooltip": "在地圖上尋找此道路的位置",
   "RoadBuilder.DeleteTooltip": "刪除此道路設定並移除地圖上所有使用本設定的路段",
-  "RoadBuilder.NoOptions": "無可用選項"
+  "RoadBuilder.NoOptions": "無可用選項",
+  "RoadBuilder.Direction": "Direction",
+  "RoadBuilder.Decoration": "Decoration",
+  "RoadBuilder.SpeedLimit": "Speed Limit",
+  "RoadBuilder.Category": "Category",
+  "RoadBuilder.Addons": "Addons",
+  "RoadBuilder.Name": "Name",
+  "RoadBuilder.RoadName": "Road Name",
+  "RoadBuilder.RoadWidth": "Total Road Width"
 }
