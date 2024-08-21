@@ -25,7 +25,6 @@
   "RoadBuilder.RoadCategory[Tram]": "트램 선로",
   "RoadBuilder.RoadCategory[Train]": "기차 선로",
   "RoadBuilder.RoadCategory[Subway]": "지하철 선로",
-  "RoadBuilder.RoadAddon[RaisedSidewalk]": "인도 높임",
   "RoadBuilder.RoadAddon[GeneratesTrafficLights]": "교차로에 신호등 추가",
   "RoadBuilder.RoadAddon[GeneratesZoningBlocks]": "구역 지원",
   "RoadBuilder.RoadAddon[HasUndergroundWaterPipes]": "지하 상하수도관 지원",
