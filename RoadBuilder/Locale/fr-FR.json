@@ -56,5 +56,13 @@
   "RoadBuilder.EditTooltip": "Modifier la configuration de cette route",
   "RoadBuilder.FindTooltip": "Trouver où cette route est utilisé sur la carte",
   "RoadBuilder.DeleteTooltip": "Supprimer cette configuration de route, et tous les segments qui l'utilisent sur la carte",
-  "RoadBuilder.NoOptions": "Aucune option disponible"
+  "RoadBuilder.NoOptions": "Aucune option disponible",
+  "RoadBuilder.Direction": "Direction",
+  "RoadBuilder.Decoration": "Decoration",
+  "RoadBuilder.SpeedLimit": "Speed Limit",
+  "RoadBuilder.Category": "Category",
+  "RoadBuilder.Addons": "Addons",
+  "RoadBuilder.Name": "Name",
+  "RoadBuilder.RoadName": "Road Name",
+  "RoadBuilder.RoadWidth": "Total Road Width"
 }
