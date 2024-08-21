@@ -56,5 +56,13 @@
   "RoadBuilder.EditTooltip": "Bu yol yapılandırmasını düzenle",
   "RoadBuilder.FindTooltip": "Bu yolun haritada nerede kullanıldığını bul",
   "RoadBuilder.DeleteTooltip": "Bu yol yapılandırmasını sil ve bunu kullanan tüm yolları kaldır",
-  "RoadBuilder.NoOptions": "Kullanılabilir Seçenek Yok"
+  "RoadBuilder.NoOptions": "Kullanılabilir Seçenek Yok",
+  "RoadBuilder.Direction": "Direction",
+  "RoadBuilder.Decoration": "Decoration",
+  "RoadBuilder.SpeedLimit": "Speed Limit",
+  "RoadBuilder.Category": "Category",
+  "RoadBuilder.Addons": "Addons",
+  "RoadBuilder.Name": "Name",
+  "RoadBuilder.RoadName": "Road Name",
+  "RoadBuilder.RoadWidth": "Total Road Width"
 }
