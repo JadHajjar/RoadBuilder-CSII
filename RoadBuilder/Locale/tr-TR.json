@@ -25,7 +25,6 @@
   "RoadBuilder.RoadCategory[Tram]": "Tramvay Rayları",
   "RoadBuilder.RoadCategory[Train]": "Tren Rayları",
   "RoadBuilder.RoadCategory[Subway]": "Metro Rayları",
-  "RoadBuilder.RoadAddon[RaisedSidewalk]": "Yükseltilmiş Kaldırımlar",
   "RoadBuilder.RoadAddon[GeneratesTrafficLights]": "Kavşaklarda Trafik Işıkları Oluşturur",
   "RoadBuilder.RoadAddon[GeneratesZoningBlocks]": "İmar Bloklarını Destekler",
   "RoadBuilder.RoadAddon[HasUndergroundWaterPipes]": "Yeraltı Su ve Atıksu Borularını Destekler",
