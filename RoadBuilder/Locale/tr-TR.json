@@ -57,12 +57,12 @@
   "RoadBuilder.FindTooltip": "Bu yolun haritada nerede kullanıldığını bul",
   "RoadBuilder.DeleteTooltip": "Bu yol yapılandırmasını sil ve bunu kullanan tüm yolları kaldır",
   "RoadBuilder.NoOptions": "Kullanılabilir Seçenek Yok",
-  "RoadBuilder.Direction": "Direction",
-  "RoadBuilder.Decoration": "Decoration",
-  "RoadBuilder.SpeedLimit": "Speed Limit",
-  "RoadBuilder.Category": "Category",
-  "RoadBuilder.Addons": "Addons",
-  "RoadBuilder.Name": "Name",
-  "RoadBuilder.RoadName": "Road Name",
-  "RoadBuilder.RoadWidth": "Total Road Width"
+  "RoadBuilder.Direction": "Yön",
+  "RoadBuilder.Decoration": "Dekorasyon",
+  "RoadBuilder.SpeedLimit": "Hız Sınırı",
+  "RoadBuilder.Category": "Kategori",
+  "RoadBuilder.Addons": "Eklentiler",
+  "RoadBuilder.Name": "İsim",
+  "RoadBuilder.RoadName": "Yol İsmi",
+  "RoadBuilder.RoadWidth": "Toplam Yol Genişliği"
 }
