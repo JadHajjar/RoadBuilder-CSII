@@ -39,6 +39,8 @@
   "RoadBuilder.LaneGroups.ParkingGroupPrefab.Options[Parking Angle][Parallel]": "Parallèle",
   "RoadBuilder.LaneGroups.ParkingGroupPrefab.Options[Parking Angle][Angled]": "En épi",
   "RoadBuilder.LaneGroups.ParkingGroupPrefab.Options[Parking Angle][Perpendicular]": "Perpendiculaire",
+  "RoadBuilder.LaneGroups.ParkingGroupPrefab.Options[Markings][1]": "Avec marquages",
+  "RoadBuilder.LaneGroups.ParkingGroupPrefab.Options[Markings][]": "Sans marquages",
   "Assets.NAME[Sound Barrier 1]": "Barrière sonore",
   "Assets.NAME[Pavement Path Section 3]": "Pavement Pedestrian",
   "Assets.NAME[Tiled Pedestrian Section 3]": "Piéton carrelé",
