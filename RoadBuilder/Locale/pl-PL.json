@@ -25,7 +25,6 @@
   "RoadBuilder.RoadCategory[Tram]": "Tory tramwajowe",
   "RoadBuilder.RoadCategory[Train]": "Tory kolejowe",
   "RoadBuilder.RoadCategory[Subway]": "Tory metra",
-  "RoadBuilder.RoadAddon[RaisedSidewalk]": "Podwyższone chodniki",
   "RoadBuilder.RoadAddon[GeneratesTrafficLights]": "Dodaje sygnalizację świetlną na skrzyżowaniach",
   "RoadBuilder.RoadAddon[GeneratesZoningBlocks]": "Posiada strefy",
   "RoadBuilder.RoadAddon[HasUndergroundWaterPipes]": "Posiada podziemne rury wodne i kanalizacje",
