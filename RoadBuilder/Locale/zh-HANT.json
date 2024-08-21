@@ -25,7 +25,6 @@
   "RoadBuilder.RoadCategory[Tram]": "有軌電車軌道",
   "RoadBuilder.RoadCategory[Train]": "火車軌道",
   "RoadBuilder.RoadCategory[Subway]": "捷運軌道",
-  "RoadBuilder.RoadAddon[RaisedSidewalk]": "擡高人行道",
   "RoadBuilder.RoadAddon[GeneratesTrafficLights]": "在交叉路口添加紅綠燈",
   "RoadBuilder.RoadAddon[GeneratesZoningBlocks]": "啟用分區",
   "RoadBuilder.RoadAddon[HasUndergroundWaterPipes]": "啟用地下水管/污水管",
