@@ -25,7 +25,6 @@
   "RoadBuilder.RoadCategory[Tram]": "Vías de Tranvía",
   "RoadBuilder.RoadCategory[Train]": "Vías de Tren",
   "RoadBuilder.RoadCategory[Subway]": "Vías de Metro",
-  "RoadBuilder.RoadAddon[RaisedSidewalk]": "Acera Elevada",
   "RoadBuilder.RoadAddon[GeneratesTrafficLights]": "Añade Semáforos en las Intersecciones",
   "RoadBuilder.RoadAddon[GeneratesZoningBlocks]": "Zonificación",
   "RoadBuilder.RoadAddon[HasUndergroundWaterPipes]": "Tuberías de Agua Corriente y Aguas Residuales",
@@ -57,12 +56,12 @@
   "RoadBuilder.FindTooltip": "Encontrar dónde está colocada esta carretera en el mapa",
   "RoadBuilder.DeleteTooltip": "Eliminar esta configuración de carretera y cualquier segmento en el mapa que la use",
   "RoadBuilder.NoOptions": "Sin Opciones Disponibles",
-  "RoadBuilder.Direction": "Direction",
-  "RoadBuilder.Decoration": "Decoration",
-  "RoadBuilder.SpeedLimit": "Speed Limit",
-  "RoadBuilder.Category": "Category",
-  "RoadBuilder.Addons": "Addons",
-  "RoadBuilder.Name": "Name",
-  "RoadBuilder.RoadName": "Road Name",
-  "RoadBuilder.RoadWidth": "Total Road Width"
+  "RoadBuilder.Direction": "Dirección",
+  "RoadBuilder.Decoration": "Decoraciones",
+  "RoadBuilder.SpeedLimit": "Límite de Velocidad",
+  "RoadBuilder.Category": "Categoría",
+  "RoadBuilder.Addons": "Agregados",
+  "RoadBuilder.Name": "Nombre",
+  "RoadBuilder.RoadName": "Nombre de la Carretera",
+  "RoadBuilder.RoadWidth": "Ancho Total de la Carretera"
 }
