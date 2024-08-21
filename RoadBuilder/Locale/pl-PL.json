@@ -56,5 +56,13 @@
   "RoadBuilder.EditTooltip": "Edytuj konfigurację tej drogi",
   "RoadBuilder.FindTooltip": "Znajdź miejsce umieszczenia tej drogi na mapie",
   "RoadBuilder.DeleteTooltip": "Usuń tę konfigurację drogi i wszystkie umieszczone segmenty tej drogi na mapie",
-  "RoadBuilder.NoOptions": "Brak dostępnych opcji"
+  "RoadBuilder.NoOptions": "Brak dostępnych opcji",
+  "RoadBuilder.Direction": "Direction",
+  "RoadBuilder.Decoration": "Decoration",
+  "RoadBuilder.SpeedLimit": "Speed Limit",
+  "RoadBuilder.Category": "Category",
+  "RoadBuilder.Addons": "Addons",
+  "RoadBuilder.Name": "Name",
+  "RoadBuilder.RoadName": "Road Name",
+  "RoadBuilder.RoadWidth": "Total Road Width"
 }
