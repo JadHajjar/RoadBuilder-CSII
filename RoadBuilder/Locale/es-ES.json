@@ -28,7 +28,7 @@
   "RoadBuilder.RoadAddon[RaisedSidewalk]": "Acera Elevada",
   "RoadBuilder.RoadAddon[GeneratesTrafficLights]": "Añade Semáforos en las Intersecciones",
   "RoadBuilder.RoadAddon[GeneratesZoningBlocks]": "Zonificación",
-  "RoadBuilder.RoadAddon[HasUndergroundWaterPipes]": "Tuberías de Agua y Aguas Residuales",
+  "RoadBuilder.RoadAddon[HasUndergroundWaterPipes]": "Tuberías de Agua Corriente y Aguas Residuales",
   "RoadBuilder.RoadAddon[HasUndergroundElectricityCable]": "Cables Eléctricos Subterráneos",
   "RoadBuilder.RoadAddon[RequiresUpgradeForElectricity]": "Requiere Mejora Eléctrica para Conducir Electricidad",
   "RoadBuilder.UseAsTemplate": "Usar Como Plantilla",
@@ -56,5 +56,13 @@
   "RoadBuilder.EditTooltip": "Editar esta configuración de carretera",
   "RoadBuilder.FindTooltip": "Encontrar dónde está colocada esta carretera en el mapa",
   "RoadBuilder.DeleteTooltip": "Eliminar esta configuración de carretera y cualquier segmento en el mapa que la use",
-  "RoadBuilder.NoOptions": "Sin Opciones Disponibles"
+  "RoadBuilder.NoOptions": "Sin Opciones Disponibles",
+  "RoadBuilder.Direction": "Direction",
+  "RoadBuilder.Decoration": "Decoration",
+  "RoadBuilder.SpeedLimit": "Speed Limit",
+  "RoadBuilder.Category": "Category",
+  "RoadBuilder.Addons": "Addons",
+  "RoadBuilder.Name": "Name",
+  "RoadBuilder.RoadName": "Road Name",
+  "RoadBuilder.RoadWidth": "Total Road Width"
 }
