@@ -58,11 +58,11 @@
   "RoadBuilder.DeleteTooltip": "Supprimer cette configuration de route, et tous les segments qui l'utilisent sur la carte",
   "RoadBuilder.NoOptions": "Aucune option disponible",
   "RoadBuilder.Direction": "Direction",
-  "RoadBuilder.Decoration": "Decoration",
-  "RoadBuilder.SpeedLimit": "Speed Limit",
-  "RoadBuilder.Category": "Category",
+  "RoadBuilder.Decoration": "Décoration",
+  "RoadBuilder.SpeedLimit": "Limite de vitesse",
+  "RoadBuilder.Category": "Catégorie",
   "RoadBuilder.Addons": "Addons",
-  "RoadBuilder.Name": "Name",
-  "RoadBuilder.RoadName": "Road Name",
-  "RoadBuilder.RoadWidth": "Total Road Width"
+  "RoadBuilder.Name": "Nom",
+  "RoadBuilder.RoadName": "Nom de la route",
+  "RoadBuilder.RoadWidth": "Largeur totale de la route"
 }
