@@ -30,7 +30,7 @@ namespace RoadBuilder.Utilities
 				options.Add(new()
 				{
 					Id = (int)ActionType.SpeedLimit,
-					Name = "Speed Limit",
+					Name = LocaleHelper.Translate("RoadBuilder.SpeedLimit", "Speed Limit"),
 					Options = new[]
 					{
 						new OptionItemUIEntry
@@ -44,7 +44,7 @@ namespace RoadBuilder.Utilities
 				options.Add(new()
 				{
 					Id = (int)ActionType.RoadCategory,
-					Name = "Category",
+					Name = LocaleHelper.Translate("RoadBuilder.Category", "Category"),
 					Options = new[]
 					{
 						new OptionItemUIEntry
@@ -84,7 +84,7 @@ namespace RoadBuilder.Utilities
 				options.Add(new()
 				{
 					Id = (int)ActionType.SpeedLimit,
-					Name = "Speed Limit",
+					Name = LocaleHelper.Translate("RoadBuilder.SpeedLimit", "Speed Limit"),
 					Options = new[]
 					{
 						new OptionItemUIEntry
@@ -98,7 +98,7 @@ namespace RoadBuilder.Utilities
 				options.Add(new()
 				{
 					Id = (int)ActionType.RoadCategory,
-					Name = "Category",
+					Name = LocaleHelper.Translate("RoadBuilder.Category", "Category"),
 					Options = new[]
 					{
 						new OptionItemUIEntry
@@ -143,7 +143,7 @@ namespace RoadBuilder.Utilities
 			options.Add(new()
 			{
 				Id = (int)ActionType.Addons,
-				Name = "Addons",
+				Name = LocaleHelper.Translate("RoadBuilder.Addons", "Addons"),
 				Options = new[]
 				{
 					new OptionItemUIEntry

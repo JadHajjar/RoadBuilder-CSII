@@ -122,8 +122,10 @@ namespace RoadBuilder.Utilities
 				yield return new OptionSectionUIEntry
 				{
 					Id = --index,
-					Name = LocaleHelper.Translate($"{group.name}.Options[{option.Name}]", option.Name),
-					Options = entries
+					Options = entries,
+					Name = option.Type is LaneOptionType.Decoration
+					? LocaleHelper.Translate("RoadBuilder.Decoration", "Decoration")
+					: LocaleHelper.Translate($"{group.name}.Options[{option.Name}]", option.Name)
 				};
 
 				remainingSections.RemoveAll(x => !MatchesOptionValue(x, option, value));
@@ -149,7 +151,7 @@ namespace RoadBuilder.Utilities
 			return new OptionSectionUIEntry
 			{
 				Id = (int)ActionType.Invert,
-				Name = "Direction",
+				Name = LocaleHelper.Translate("RoadBuilder.Direction", "Direction"),
 				Options = new OptionItemUIEntry[]
 				{
 					new()

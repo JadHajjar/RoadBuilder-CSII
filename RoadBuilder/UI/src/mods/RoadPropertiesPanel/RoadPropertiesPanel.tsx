@@ -2,7 +2,7 @@ import { useValue } from "cs2/api";
 import styles from "./RoadPropertiesPanel.module.scss";
 import { roadOptions$, getRoadName$, setRoadName, roadLanes$, getRoadTypeName$ } from "mods/bindings";
 import { TextInput, TextInputTheme } from "mods/Components/TextInput/TextInput";
-import { FOCUS_DISABLED } from "cs2/ui";
+import { FOCUS_DISABLED, Tooltip } from "cs2/ui";
 import { Theme } from "cs2/bindings";
 import { getModule } from "cs2/modding";
 import { OptionsSection } from "mods/Components/OptionsPanel/OptionsSection";
@@ -45,13 +45,15 @@ export const RoadPropertiesPanel = () => {
     <div className={styles.panel}>
       <div className={styles.header}>
         <div className={styles.title}>{translate(getRoadTypeName)}</div>
-        <div className={styles.roadWidth}>{`${roadWidth}m / ${roadUnits}U`}</div>
+        <Tooltip tooltip={translate("RoadBuilder.RoadWidth", "Road Width")}>
+          <div className={styles.roadWidth}>{`${roadWidth}m / ${roadUnits}U`}</div>
+        </Tooltip>
       </div>
 
-      <OptionsSection name="Name">
+      <OptionsSection name={translate("RoadBuilder.Name", "Name")!}>
         <VanillaComponentResolver.instance.EllipsisTextInput
           onChange={({ target }) => setNewRoadName(target.value)}
-          placeholder={"Road Name"}
+          placeholder={translate("RoadBuilder.RoadName", "Road Name")!}
           value={isEditingName ? newRoadName : roadName}
           className={styles.textInput}
           onBlur={onFinishEditRoadName}
