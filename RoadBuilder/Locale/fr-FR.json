@@ -25,7 +25,6 @@
   "RoadBuilder.RoadCategory[Tram]": "Rails de tram",
   "RoadBuilder.RoadCategory[Train]": "Rails de Train",
   "RoadBuilder.RoadCategory[Subway]": "Rails de métro",
-  "RoadBuilder.RoadAddon[RaisedSidewalk]": "Passage piéton surélevé",
   "RoadBuilder.RoadAddon[GeneratesTrafficLights]": "Ajouter des feux de circulation aux intersections",
   "RoadBuilder.RoadAddon[GeneratesZoningBlocks]": "Supporte le zonage",
   "RoadBuilder.RoadAddon[HasUndergroundWaterPipes]": "Supporte les conduites d'eau et égouts",
