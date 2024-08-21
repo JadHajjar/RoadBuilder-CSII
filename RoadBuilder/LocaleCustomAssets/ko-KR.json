@@ -39,6 +39,8 @@
   "RoadBuilder.LaneGroups.ParkingGroupPrefab.Options[Parking Angle][Parallel]": "평행",
   "RoadBuilder.LaneGroups.ParkingGroupPrefab.Options[Parking Angle][Angled]": "각진",
   "RoadBuilder.LaneGroups.ParkingGroupPrefab.Options[Parking Angle][Perpendicular]": "수직",
+  "RoadBuilder.LaneGroups.ParkingGroupPrefab.Options[Markings][1]": "차선 있음",
+  "RoadBuilder.LaneGroups.ParkingGroupPrefab.Options[Markings][]": "차선 없음",
   "Assets.NAME[Sound Barrier 1]": "방음벽",
   "Assets.NAME[Pavement Path Section 3]": "포장된 보도",
   "Assets.NAME[Tiled Pedestrian Section 3]": "타일된 보도",
