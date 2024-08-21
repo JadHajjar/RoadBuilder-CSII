@@ -25,7 +25,6 @@
   "RoadBuilder.RoadCategory[Tram]": "有轨电车轨道",
   "RoadBuilder.RoadCategory[Train]": "火车轨道",
   "RoadBuilder.RoadCategory[Subway]": "地铁轨道",
-  "RoadBuilder.RoadAddon[RaisedSidewalk]": "抬高人行道",
   "RoadBuilder.RoadAddon[GeneratesTrafficLights]": "在路口添加红绿灯",
   "RoadBuilder.RoadAddon[GeneratesZoningBlocks]": "启用功能区",
   "RoadBuilder.RoadAddon[HasUndergroundWaterPipes]": "启用地下水管/污水管",
