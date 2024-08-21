@@ -26,9 +26,9 @@ namespace RoadBuilder
 		{
 			Log.Info(nameof(OnLoad));
 
-#if DEBUG
+//#if DEBUG
 			Log.SetEffectiveness(Level.Debug);
-#endif
+//#endif
 
 			UIManager.defaultUISystem.AddHostLocation("roadbuilderthumbnails", FoldersUtil.TempFolder, true);
 

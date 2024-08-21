@@ -3,6 +3,7 @@
 using RoadBuilder.Domain.Components.Prefabs;
 using RoadBuilder.Domain.Enums;
 
+using System;
 using System.Collections.Generic;
 
 namespace RoadBuilder.LaneGroups
@@ -36,7 +37,7 @@ namespace RoadBuilder.LaneGroups
 			};
 
 			AddOrGetComponent<RoadBuilderLaneInfo>()
-				.WithRequireNone(RoadCategory.NoRaisedSidewalkSupport)
+				.WithRequireNone(RoadCategory.Train | RoadCategory.Subway | RoadCategory.Gravel | RoadCategory.Fence | RoadCategory.Pathway)
 				.WithThumbnail("coui://roadbuildericons/RB_Median.svg")
 				.AddLaneThumbnail("coui://roadbuildericons/Thumb_MedianSmall.svg");
 

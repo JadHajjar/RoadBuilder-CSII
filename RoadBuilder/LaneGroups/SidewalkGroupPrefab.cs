@@ -57,10 +57,13 @@ namespace RoadBuilder.LaneGroups
 			};
 
 			AddComponent<RoadBuilderLaneInfo>()
-				.WithRequireAll(RoadCategory.RaisedSidewalk)
 				.AddLaneThumbnail("coui://roadbuildericons/Thumb_SidewalkWide.svg");
 
 			AddComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_WideSidewalkRight.svg";
+
+			var edgeInfo = AddComponent<RoadBuilderEdgeLaneInfo>();
+			edgeInfo.AddSidewalkStateOnNode = true;
+			edgeInfo.SidePrefab = sections["Road Side 0"];
 
 			SetUp(sections["Sidewalk With Parking 5"], "P", "5m");
 			SetUp(sections["Sidewalk 3.5"], "", "3.5m", false);

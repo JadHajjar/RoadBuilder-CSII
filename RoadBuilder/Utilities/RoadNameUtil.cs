@@ -81,7 +81,7 @@ namespace RoadBuilder.Utilities
 
 		private string GetRoadTypeName(INetworkBuilderPrefab item)
 		{
-			return (item.Config.Category & ~Domain.Enums.RoadCategory.RaisedSidewalk).ToString();
+			return item.Config.Category.ToString();
 		}
 
 		public void Unload()
