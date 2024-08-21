@@ -39,6 +39,8 @@
   "RoadBuilder.LaneGroups.ParkingGroupPrefab.Options[Parking Angle][Parallel]": "Paralelo",
   "RoadBuilder.LaneGroups.ParkingGroupPrefab.Options[Parking Angle][Angled]": "En Ángulo",
   "RoadBuilder.LaneGroups.ParkingGroupPrefab.Options[Parking Angle][Perpendicular]": "Perpendicular",
+  "RoadBuilder.LaneGroups.ParkingGroupPrefab.Options[Markings][1]": "Con Marcas",
+  "RoadBuilder.LaneGroups.ParkingGroupPrefab.Options[Markings][]": "Eliminar Marcas",
   "Assets.NAME[Sound Barrier 1]": "Barrera Acústica",
   "Assets.NAME[Pavement Path Section 3]": "Camino Peatonal",
   "Assets.NAME[Tiled Pedestrian Section 3]": "Camino Peatonal de Mosaicos",
