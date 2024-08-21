@@ -283,14 +283,18 @@ namespace RoadBuilder.Systems
 		{
 			var pieces = new[]
 			{
-				("RB Parking Piece Parallel", "Parking Lane 2", 2f, "Car Drive Piece 3"),
-				("RB Parking Piece Angled", "Invisible Parking Lane - Angled67 2.9x5.9", 4f, "Highway Drive Piece 4"),
-				("RB Parking Piece Perpendicular", "Invisible Parking Lane - Perpendicular 4.7x5.9", 4f, "Highway Drive Piece 4"),
+				("RB Parking Piece Parallel", "Parking Lane 2", 2f, "Car Drive Piece 3", "Car Drive Piece 3"),
+				("RB Parking Piece Angled", "Invisible Parking Lane - Angled67 2.9x5.9", 6f, "Subway Middle Piece 8", "Highway Drive Piece 4"),
+				("RB Parking Piece Angled NoMarking", "Invisible Parking Lane - Angled67 2.9x5.9", 6f, "Subway Middle Piece 8", "Highway Drive Piece 4"),
+				("RB Parking Piece Perpendicular", "Invisible Parking Lane - Perpendicular 3x5.5", 6f, "Subway Middle Piece 8", "Highway Drive Piece 4"),
+				("RB Parking Piece Perpendicular NoMarking", "Invisible Parking Lane - Perpendicular 4.7x5.9", 6f, "Subway Middle Piece 8", "Highway Drive Piece 4"),
 			};
 
 			foreach (var item in pieces)
 			{
-				var newPiece = NetPieces[item.Item4].Clone(item.Item1) as NetPiecePrefab;
+				var newPiece = NetPieces["Car Drive Piece 3"].Clone(item.Item1) as NetPiecePrefab;
+				newPiece.geometryAsset = NetPieces[item.Item4].geometryAsset;
+				newPiece.surfaceAssets = NetPieces[item.Item5].surfaceAssets;
 				newPiece.m_Width = item.Item3;
 				newPiece.Remove<NetPieceObjects>();
 				newPiece.AddOrGetComponent<NetPieceLanes>().m_Lanes = new[]
@@ -300,10 +304,30 @@ namespace RoadBuilder.Systems
 						m_Lane = NetLanes[item.Item2]
 					}
 				};
+
+				if (item.Item1 == "RB Parking Piece Angled")
+				{
+					newPiece.AddOrGetComponent<NetPieceObjects>().m_PieceObjects = new[] {
+						new NetPieceObjectInfo
+						{
+							m_Object = prefabSystem.TryGetPrefab(new PrefabID(nameof(StaticObjectPrefab), "ParkingLotDiagonalDecal01"), out var prefab)?prefab as ObjectPrefab : default,
+							m_RequireAll = new []{NetPieceRequirements.Edge},
+							m_RequireAny = new NetPieceRequirements[0],
+							m_RequireNone = new NetPieceRequirements[0],
+							m_Probability = 100,
+							m_FlipWhenInverted = true,
+							m_Rotation = Quaternion.Euler(0, 90, 0),
+							m_Offset = new Unity.Mathematics.float3(-3.1f/2, 0, 0),
+							m_Spacing = new Unity.Mathematics.float3(5.9f, 0f, 3.1f)
+						}
+					};
+				}
 
 				prefabSystem.AddPrefab(NetPieces[newPiece.name] = newPiece);
 
-				newPiece = NetPieces[item.Item4 + " - Flat"].Clone(item.Item1 + " - Flat") as NetPiecePrefab;
+				newPiece = NetPieces["Car Drive Piece 3 - Flat"].Clone(item.Item1 + " - Flat") as NetPiecePrefab;
+				newPiece.geometryAsset = NetPieces[item.Item4].geometryAsset;
+				newPiece.surfaceAssets = NetPieces[item.Item5].surfaceAssets;
 				newPiece.m_Width = item.Item3;
 				newPiece.Remove<NetPieceObjects>();
 				newPiece.AddOrGetComponent<NetPieceLanes>().m_Lanes = new[]
@@ -313,6 +337,23 @@ namespace RoadBuilder.Systems
 						m_Lane = NetLanes[item.Item2]
 					}
 				};
+
+				if (item.Item1 == "RB Parking Piece Angled")
+				{
+					newPiece.AddOrGetComponent<NetPieceObjects>().m_PieceObjects = new[] {
+						new NetPieceObjectInfo
+						{
+							m_Object = prefabSystem.TryGetPrefab(new PrefabID(nameof(StaticObjectPrefab), "ParkingLotDiagonalDecal01"), out var prefab)?prefab as ObjectPrefab : default,
+							m_RequireAll = new []{NetPieceRequirements.Edge},
+							m_RequireAny = new NetPieceRequirements[0],
+							m_RequireNone = new NetPieceRequirements[0],
+							m_Probability = 100,
+							m_FlipWhenInverted = true,
+							m_Rotation = Quaternion.Euler(0, 90, 0),
+							m_Spacing = new Unity.Mathematics.float3(5.9f, 0f, 3.1f)
+						}
+					};
+				}
 
 				prefabSystem.AddPrefab(NetPieces[newPiece.name] = newPiece);
 			}
@@ -664,7 +705,9 @@ namespace RoadBuilder.Systems
 			{
 				("RB Parking Piece Parallel", "RB Parking Section Parallel", "3"),
 				("RB Parking Piece Angled", "RB Parking Section Angled", "4"),
+				("RB Parking Piece Angled NoMarking", "RB Parking Section Angled NoMarking", "4"),
 				("RB Parking Piece Perpendicular", "RB Parking Section Perpendicular", "4"),
+				("RB Parking Piece Perpendicular NoMarking", "RB Parking Section Perpendicular NoMarking", "4"),
 			};
 
 			foreach (var item in sections)
