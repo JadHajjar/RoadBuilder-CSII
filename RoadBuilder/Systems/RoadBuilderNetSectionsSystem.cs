@@ -17,6 +17,7 @@ using System.Linq;
 
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Mathematics;
 
 using UnityEngine;
 
@@ -148,6 +149,8 @@ namespace RoadBuilder.Systems
 			CreateTiledTramPiece();
 
 			CreateParkingPieces();
+
+			CreateSidewalkPieces();
 		}
 
 		private void DoNetSectionCreation()
@@ -168,6 +171,8 @@ namespace RoadBuilder.Systems
 			CreateEmptyNetSection("RB Gravel Empty Section {0}", "RB Gravel Empty Piece", 3);
 			CreateEmptyNetSection("RB Tiled Empty Section {0}", "RB Tiled Empty Piece", 3);
 			CreateEmptyNetSection("RB Train Empty Section {0}", "RB Train Empty Piece", 4);
+
+			GenerateSidewalkSections();
 		}
 
 		private void DoNetGroupsCreation()
@@ -264,6 +269,13 @@ namespace RoadBuilder.Systems
 			CreateAndAddEmptyTunnelAndBridgePieces("Elevated Bottom Piece 4 - Ending", "Elevated Bottom Piece {0} - Ending", 3.5f);
 			CreateAndAddEmptyTunnelAndBridgePieces("Elevated Bottom Piece 4 - Intersection Middle", "Elevated Bottom Piece {0} - Intersection Middle", 3.5f);
 
+			CreateAndAddEmptyTunnelAndBridgePieces("Elevated Bottom Piece 3.5 - Edge", "Elevated Bottom Piece {0} - Edge", 3f);
+			CreateAndAddEmptyTunnelAndBridgePieces("Elevated Bottom Piece 3.5 - Edge Ending", "Elevated Bottom Piece {0} - Edge Ending", 3f);
+			CreateAndAddEmptyTunnelAndBridgePieces("Elevated Bottom Piece 3.5 - Edge", "Elevated Bottom Piece {0} - Edge", 2.5f);
+			CreateAndAddEmptyTunnelAndBridgePieces("Elevated Bottom Piece 3.5 - Edge Ending", "Elevated Bottom Piece {0} - Edge Ending", 2.5f);
+			CreateAndAddEmptyTunnelAndBridgePieces("Elevated Bottom Piece 2 - Edge", "Elevated Bottom Piece {0} - Edge", 1.5f);
+			CreateAndAddEmptyTunnelAndBridgePieces("Elevated Bottom Piece 2 - Edge Ending", "Elevated Bottom Piece {0} - Edge Ending", 1.5f);
+
 			CreateAndAddEmptyTunnelAndBridgePieces("Tunnel Top Piece 1", "Tunnel Top Piece {0}", 0.5f);
 			CreateAndAddEmptyTunnelAndBridgePieces("Tunnel Top Piece 1 - Ending", "Tunnel Top Piece {0} - Ending", 0.5f);
 			CreateAndAddEmptyTunnelAndBridgePieces("Tunnel Top Piece 1 - Intersection Middle", "Tunnel Top Piece {0} - Intersection Middle", 0.5f);
@@ -276,9 +288,17 @@ namespace RoadBuilder.Systems
 			CreateAndAddEmptyTunnelAndBridgePieces("Tunnel Top Piece 3 - Ending", "Tunnel Top Piece {0} - Ending", 2.5f);
 			CreateAndAddEmptyTunnelAndBridgePieces("Tunnel Top Piece 3 - Intersection Middle", "Tunnel Top Piece {0} - Intersection Middle", 2.5f);
 
-			CreateAndAddEmptyTunnelAndBridgePieces("Tunnel Top Piece 4", "Tunnel Top Piece {0}", 3.5f);
+			//CreateAndAddEmptyTunnelAndBridgePieces("Tunnel Top Piece 4", "Tunnel Top Piece {0}", 3.5f);
 			CreateAndAddEmptyTunnelAndBridgePieces("Tunnel Top Piece 4 - Ending", "Tunnel Top Piece {0} - Ending", 3.5f);
 			CreateAndAddEmptyTunnelAndBridgePieces("Tunnel Top Piece 4 - Intersection Middle", "Tunnel Top Piece {0} - Intersection Middle", 3.5f);
+
+			CreateAndAddEmptyTunnelAndBridgePieces("Subway Tunnel Top Piece 8", "Tunnel Top Piece {0}", 6f);
+			CreateAndAddEmptyTunnelAndBridgePieces("Subway Tunnel Top Piece 8 - Ending", "Tunnel Top Piece {0} - Ending", 6f);
+			CreateAndAddEmptyTunnelAndBridgePieces("Subway Tunnel Top Piece 8 - Intersection Middle", "Tunnel Top Piece {0} - Intersection Middle", 6f);
+
+			CreateAndAddEmptyTunnelAndBridgePieces("Tunnel Top Piece 3.5 - Edge Ending", "Tunnel Top Piece {0} - Edge Ending", 3f);
+			CreateAndAddEmptyTunnelAndBridgePieces("Tunnel Top Piece 3.5 - Edge Ending", "Tunnel Top Piece {0} - Edge Ending", 2.5f);
+			CreateAndAddEmptyTunnelAndBridgePieces("Tunnel Top Piece 2 - Edge Ending", "Tunnel Top Piece {0} - Edge Ending", 1.5f);
 		}
 
 		private void CreateTiledTramPiece()
@@ -328,7 +348,7 @@ namespace RoadBuilder.Systems
 							m_Probability = 100,
 							m_FlipWhenInverted = true,
 							m_Rotation = Quaternion.Euler(0, 90, 0),
-							m_Offset = new Unity.Mathematics.float3(-3.1f/2, 0, 0),
+							m_Offset = new Unity.Mathematics.float3(-3.1f / 2f, 0, 0),
 							m_Spacing = new Unity.Mathematics.float3(5.9f, 0f, 3.1f)
 						}
 					};
@@ -361,12 +381,57 @@ namespace RoadBuilder.Systems
 							m_Probability = 100,
 							m_FlipWhenInverted = true,
 							m_Rotation = Quaternion.Euler(0, 90, 0),
+							m_Offset = new Unity.Mathematics.float3(-3.1f / 2f, 0, 0),
 							m_Spacing = new Unity.Mathematics.float3(5.9f, 0f, 3.1f)
 						}
 					};
 				}
 
 				prefabSystem.AddPrefab(NetPieces[newPiece.name] = newPiece);
+			}
+		}
+
+		private void CreateSidewalkPieces()
+		{
+			foreach (var width in new float[] { 3, 2.5f, 2, 1.5f, 1 })
+			{
+				setUpSidewalk(NetPieces["Sidewalk Piece 3.5"].Clone("Sidewalk Piece " + width.ToString(CultureInfo.InvariantCulture)) as NetPiecePrefab, width);
+				setUpSidewalk(NetPieces["Sidewalk Piece 3.5 - Flat"].Clone($"Sidewalk Piece {width.ToString(CultureInfo.InvariantCulture)} - Flat") as NetPiecePrefab, width);
+			}
+
+			void setUpSidewalk(NetPiecePrefab sidewalk, float width)
+			{
+				sidewalk.m_Width = width;
+
+				var matchPieceVertices = sidewalk.GetComponent<MatchPieceVertices>();
+				matchPieceVertices.m_Offsets[0] = sidewalk.m_Width / -2;
+				matchPieceVertices.m_Offsets[1] = (sidewalk.m_Width / -2) + 0.4f;
+				matchPieceVertices.m_Offsets[2] = sidewalk.m_Width / 2;
+
+				if (sidewalk.TryGet<NetPieceLanes>(out var netPieceLanes))
+				{
+					netPieceLanes.m_Lanes[0].m_Position = new(sidewalk.m_Width / -2, -0.2f, 0f);
+					netPieceLanes.m_Lanes[1].m_Lane = NetLanes["Alley Pedestrian Lane 1"];
+					netPieceLanes.m_Lanes[1].m_Position = new((sidewalk.m_Width - 1f) / 2f, 0f, 0f);
+				}
+
+				var netPieceCrosswalk = sidewalk.GetComponent<NetPieceCrosswalk>();
+				netPieceCrosswalk.m_Start = new(matchPieceVertices.m_Offsets[0], -0.2f, 1.3f);
+				netPieceCrosswalk.m_End = new(matchPieceVertices.m_Offsets[1], -0.2f, 1.3f);
+
+				foreach (var item in sidewalk.GetComponent<NetPieceObjects>().m_PieceObjects)
+				{
+					if (item.m_Position.x > 0)
+					{
+						item.m_Position = new(math.min(0, item.m_Position.x - ((3.5f - sidewalk.m_Width) / 2f)), item.m_Position.y, item.m_Position.z);
+					}
+					else if (item.m_Position.x < 0)
+					{
+						item.m_Position = new(math.max(0, item.m_Position.x + ((3.5f - sidewalk.m_Width) / 2f)), item.m_Position.y, item.m_Position.z);
+					}
+				}
+
+				prefabSystem.AddPrefab(sidewalk);
 			}
 		}
 
@@ -710,15 +775,31 @@ namespace RoadBuilder.Systems
 			}
 		}
 
+		private void GenerateSidewalkSections()
+		{
+			foreach (var width in new float[] { 3, 2.5f, 2, 1.5f, 1 })
+			{
+				var sidewalk = NetSections["Sidewalk 3.5"].Clone("Sidewalk " + width.ToString(CultureInfo.InvariantCulture)) as NetSectionPrefab;
+
+				foreach (var item in sidewalk.m_Pieces)
+				{
+					item.m_Piece = NetPieces[item.m_Piece.name.Replace("3.5", width.ToString(CultureInfo.InvariantCulture))];
+					//item.m_Offset = new((3.5f - width) / 2, 0, 0);
+				}
+
+				prefabSystem.AddPrefab(sidewalk);
+			}
+		}
+
 		private void AddParkingNetSections()
 		{
 			var sections = new[]
 			{
 				("RB Parking Piece Parallel", "RB Parking Section Parallel", "3"),
-				("RB Parking Piece Angled", "RB Parking Section Angled", "4"),
-				("RB Parking Piece Angled NoMarking", "RB Parking Section Angled NoMarking", "4"),
-				("RB Parking Piece Perpendicular", "RB Parking Section Perpendicular", "4"),
-				("RB Parking Piece Perpendicular NoMarking", "RB Parking Section Perpendicular NoMarking", "4"),
+				("RB Parking Piece Angled", "RB Parking Section Angled", "5"),
+				("RB Parking Piece Angled NoMarking", "RB Parking Section Angled NoMarking", "5"),
+				("RB Parking Piece Perpendicular", "RB Parking Section Perpendicular", "5"),
+				("RB Parking Piece Perpendicular NoMarking", "RB Parking Section Perpendicular NoMarking", "5"),
 			};
 
 			foreach (var item in sections)

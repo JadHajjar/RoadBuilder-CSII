@@ -135,7 +135,7 @@ This helps us better assist you and avoids your message from getting lost in the
 </ChangeLog>
   <ExternalLink Type="discord" Url="https://discord.gg/E4k8ZEtRxd" />
   <ExternalLink Type="github" Url="https://github.com/JadHajjar/RoadBuilder-CSII" />
-  <ExternalLink Type="github" Url="https://github.com/JadHajjar/RoadBuilder-CSII" />
+  <ExternalLink Type="crowdin" Url="https://crowdin.com/project/road-builder-cs-ii" />
   <ExternalLink Type="buymeacoffee" Url="https://www.buymeacoffee.com/tdwsvillage" />
   <ExternalLink Type="kofi" Url="https://ko-fi.com/trejak" />
 </Publish>

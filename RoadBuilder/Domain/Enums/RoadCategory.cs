@@ -13,7 +13,7 @@ namespace RoadBuilder.Domain.Enums
 		Subway = 16,
 		Gravel = 32,
 		Tiled = 64,
-		//RaisedSidewalk = 128,
+		[Obsolete] RaisedSidewalk = 128,
 		Fence = 256,
 		Pathway = 512,
 		NonAsphalt = Train | Subway | Gravel | Tiled | Fence | Pathway,
