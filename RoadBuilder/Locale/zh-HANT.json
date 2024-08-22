@@ -1,5 +1,5 @@
 {
-  "Options.SECTION[RoadBuilder.RoadBuilder.Mod]": "道路製造者",
+  "Options.SECTION[RoadBuilder.RoadBuilder.Mod]": "Road Builder",
   "Options.GROUP[RoadBuilder.RoadBuilder.Mod.Main]": "一般設定",
   "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.SaveUsedRoadsOnly]": "保存已使用的道路",
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.SaveUsedRoadsOnly]": "將存檔中已使用的道路儲存至本機資料夾",
@@ -9,8 +9,8 @@
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.HideArrowsOnThumbnails]": "禁用道路資產縮圖上產生的箭頭圖示",
   "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.NoImitateLaneOptionsOnPlace]": "建立新車道時始終套用預設的車道設定",
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.NoImitateLaneOptionsOnPlace]": "拖移新增的車道時始終套用預設車道設定，而非複製鄰近車道的車道設定",
-  "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.ToolToggle]": "啟用工具的快捷鍵。",
-  "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.ToolToggle]": "啟用道路製造者工具的快捷鍵。",
+  "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.ToolToggle]": "啟用工具快捷鍵",
+  "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.ToolToggle]": "啟用Road Builder的工具快捷鍵",
   "RoadBuilder.DIALOG_MESSAGE[DELETE]": "您確定要刪除此道路嗎？這將使存檔中任何使用此道路的路段都被移除。",
   "RoadBuilder.DIALOG_MESSAGE[ReloadSave]": "此存檔包含您尚未建立的道路。請立即重新載入此存檔（請勿關閉遊戲，否則您將遺失所有交叉路口的變更）",
   "RoadBuilder.DIALOG_MESSAGE[Ok]": "確定",
@@ -34,7 +34,7 @@
   "RoadBuilder.DeleteRoad": "移除道路",
   "RoadBuilder.PickOther": "選擇另一條道路",
   "RoadBuilder.DragHere": "拖移車道至此處",
-  "RoadBuilder.CloseRoadBuilder": "退出道路製造者",
+  "RoadBuilder.CloseRoadBuilder": "退出Road Builder",
   "RoadBuilder.Picker": "放置更多",
   "RoadBuilder.EditAllInstances": "編輯所有實例",
   "RoadBuilder.PickerHint": "點擊一條道路",
@@ -63,5 +63,5 @@
   "RoadBuilder.Addons": "附加元件",
   "RoadBuilder.Name": "名稱",
   "RoadBuilder.RoadName": "道路名稱",
-  "RoadBuilder.RoadWidth": "路寬"
+  "RoadBuilder.RoadWidth": "道路總寬度"
 }
