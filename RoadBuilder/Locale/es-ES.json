@@ -1,6 +1,8 @@
 {
   "Options.SECTION[RoadBuilder.RoadBuilder.Mod]": "Road Builder",
+  "Options.GROUP[RoadBuilder.RoadBuilder.Mod.Hotkey]": "Hot-key Settings",
   "Options.GROUP[RoadBuilder.RoadBuilder.Mod.Main]": "Ajustes Generales",
+  "Options.GROUP[RoadBuilder.RoadBuilder.Mod.Advanced]": "Advanced Settings",
   "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.SaveUsedRoadsOnly]": "Guardar solo carreteras utilizadas",
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.SaveUsedRoadsOnly]": "Solo guarda las carreteras que fueron utilizadas dentro de la partida guardada, en la carpeta local de tu ordenador.",
   "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.AdvancedUserMode]": "Modo de Usuario Avanzado",
@@ -11,6 +13,8 @@
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.NoImitateLaneOptionsOnPlace]": "Al agregar nuevos carriles, siempre tendrán las opciones del carril por defecto en lugar de copiar la configuración del carril más cercano.",
   "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.ToolToggle]": "Asignación para Activar Herramienta",
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.ToolToggle]": "Determina la asignación tecla para activar la herramienta de Road Builder.",
+  "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.PlaceToggle]": "Place Road Hotkey",
+  "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.PlaceToggle]": "Determines the hot-key to start placing the road you are currently editing.",
   "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.DoNotAddSides]": "Do not always add sides to roads.",
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.DoNotAddSides]": "Allows creating roads without tunnel & bridge sides if you do not add a shoulder or sidewalk to an edge.",
   "RoadBuilder.DIALOG_MESSAGE[DELETE]": "¿Seguro que quieres eliminar esta carretera? Esto eliminará cualquier segmento colocado en tu ciudad que la utilice.",
