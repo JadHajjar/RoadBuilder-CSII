@@ -11,6 +11,8 @@
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.NoImitateLaneOptionsOnPlace]": "Dodanie nowych pasów ruchu zawsze będzie miało domyślne opcje pasa zamiast kopiowania ustawień najbliższego pasa ruchu.",
   "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.ToolToggle]": "Skrót do włączenia narzędzia",
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.ToolToggle]": "Określa jaki klawisz aktywuje narzędzie Road Builder.",
+  "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.DoNotAddSides]": "Do not always add sides to roads.",
+  "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.DoNotAddSides]": "Allows creating roads without tunnel & bridge sides if you do not add a shoulder or sidewalk to an edge.",
   "RoadBuilder.DIALOG_MESSAGE[DELETE]": "Czy na pewno chcesz usunąć tę drogę? To usunie wszystkie umieszczone segmenty tej drogi w twoim mieście.",
   "RoadBuilder.DIALOG_MESSAGE[ReloadSave]": "To miasto zawiera drogi, których jeszcze nie posiadasz. Przeładuj ten zapis natychmiast, bez zamykania gry, żeby Twoje zmiany w skrzyżowaniach nie zostały utracone.",
   "RoadBuilder.DIALOG_MESSAGE[Ok]": "OK",
