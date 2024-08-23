@@ -360,11 +360,11 @@ namespace RoadBuilder.Utilities
 					continue;
 				}
 
-				if (i == 0)
+				if (i == 0 && (GetEdgeLaneInfo(section, groupPrefab, out leftSectionEdgeInfo) | Mod.Settings.DoNotAddSides))
 				{
 					yield return new NetSectionInfo
 					{
-						m_Section = GetEdgeLaneInfo(section, groupPrefab, out leftSectionEdgeInfo) ? leftSectionEdgeInfo.SidePrefab : _roadGenerationData.NetSectionPrefabs[GetSideName()],
+						m_Section = leftSectionEdgeInfo?.SidePrefab ?? _roadGenerationData.NetSectionPrefabs[GetSideName()],
 						m_Invert = lane.Invert
 					};
 				}
@@ -383,11 +383,11 @@ namespace RoadBuilder.Utilities
 					m_Invert = lane.Invert,
 				};
 
-				if (i == NetworkPrefab.Config.Lanes.Count - 1)
+				if (i == NetworkPrefab.Config.Lanes.Count - 1 && (GetEdgeLaneInfo(section, groupPrefab, out rightSectionEdgeInfo) | Mod.Settings.DoNotAddSides))
 				{
 					yield return new NetSectionInfo
 					{
-						m_Section = GetEdgeLaneInfo(section, groupPrefab, out rightSectionEdgeInfo) ? rightSectionEdgeInfo.SidePrefab : _roadGenerationData.NetSectionPrefabs[GetSideName()],
+						m_Section = rightSectionEdgeInfo?.SidePrefab ?? _roadGenerationData.NetSectionPrefabs[GetSideName()],
 						m_Invert = lane.Invert
 					};
 				}

@@ -41,6 +41,8 @@ namespace RoadBuilder
 		public bool AdvancedUserMode { get; set; }
 		[SettingsUISection(MAIN_SECTION, MAIN_GROUP)]
 		public bool HideArrowsOnThumbnails { get; set; }
+		[SettingsUISection(MAIN_SECTION, MAIN_GROUP)]
+		public bool DoNotAddSides { get; set; }
 
 		public override void SetDefaults()
 		{
