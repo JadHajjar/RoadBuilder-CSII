@@ -1,6 +1,8 @@
 {
   "Options.SECTION[RoadBuilder.RoadBuilder.Mod]": "Road Builder",
+  "Options.GROUP[RoadBuilder.RoadBuilder.Mod.Hotkey]": "Hot-key Settings",
   "Options.GROUP[RoadBuilder.RoadBuilder.Mod.Main]": "Paramètres généraux",
+  "Options.GROUP[RoadBuilder.RoadBuilder.Mod.Advanced]": "Advanced Settings",
   "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.SaveUsedRoadsOnly]": "Enregistrer les routes utilisées uniquement",
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.SaveUsedRoadsOnly]": "Enregistre uniquement les routes qui sont utilisées dans cette partie dans le dossier local de votre ordinateur.",
   "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.AdvancedUserMode]": "Mode utilisateur avancé",
@@ -11,6 +13,8 @@
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.NoImitateLaneOptionsOnPlace]": "Glisser une nouvelle voie définira toujours ses réglages à ceux par défaut, au lieu de copier les réglages de la voie la plus proche.",
   "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.ToolToggle]": "Raccourci d'activation de l'outil",
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.ToolToggle]": "Définis la touche de raccourci pour activer l'outil Road Builder.",
+  "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.PlaceToggle]": "Place Road Hotkey",
+  "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.PlaceToggle]": "Determines the hot-key to start placing the road you are currently editing.",
   "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.DoNotAddSides]": "Do not always add sides to roads.",
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.DoNotAddSides]": "Allows creating roads without tunnel & bridge sides if you do not add a shoulder or sidewalk to an edge.",
   "RoadBuilder.DIALOG_MESSAGE[DELETE]": "Êtes-vous sûr de vouloir supprimer cette route ? Cela supprimera également tous les segments qui utilisent ce modèle dans votre ville.",
