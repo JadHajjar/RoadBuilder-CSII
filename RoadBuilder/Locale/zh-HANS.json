@@ -1,6 +1,8 @@
 {
   "Options.SECTION[RoadBuilder.RoadBuilder.Mod]": "道路制造者",
+  "Options.GROUP[RoadBuilder.RoadBuilder.Mod.Hotkey]": "Hot-key Settings",
   "Options.GROUP[RoadBuilder.RoadBuilder.Mod.Main]": "常规设置",
+  "Options.GROUP[RoadBuilder.RoadBuilder.Mod.Advanced]": "Advanced Settings",
   "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.SaveUsedRoadsOnly]": "仅保存已使用的道路",
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.SaveUsedRoadsOnly]": "仅将存档中已使用的道路保存到本地文件夹。",
   "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.AdvancedUserMode]": "高级用户模式",
@@ -11,6 +13,8 @@
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.NoImitateLaneOptionsOnPlace]": "拖动添加的新车道始终应用其默认的参数，而不是复制距离最近的车道参数设置。",
   "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.ToolToggle]": "启用工具快捷键",
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.ToolToggle]": "激活道路制造者工具的快捷键。",
+  "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.PlaceToggle]": "Place Road Hotkey",
+  "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.PlaceToggle]": "Determines the hot-key to start placing the road you are currently editing.",
   "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.DoNotAddSides]": "Do not always add sides to roads.",
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.DoNotAddSides]": "Allows creating roads without tunnel & bridge sides if you do not add a shoulder or sidewalk to an edge.",
   "RoadBuilder.DIALOG_MESSAGE[DELETE]": "您确定要删除这条道路吗？这将删除存档中任何使用此道路的路段。",
