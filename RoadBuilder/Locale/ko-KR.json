@@ -1,6 +1,8 @@
 {
   "Options.SECTION[RoadBuilder.RoadBuilder.Mod]": "도로 빌더(Road Builder)",
+  "Options.GROUP[RoadBuilder.RoadBuilder.Mod.Hotkey]": "Hot-key Settings",
   "Options.GROUP[RoadBuilder.RoadBuilder.Mod.Main]": "일반 설정",
+  "Options.GROUP[RoadBuilder.RoadBuilder.Mod.Advanced]": "Advanced Settings",
   "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.SaveUsedRoadsOnly]": "사용된 도로만 저장함",
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.SaveUsedRoadsOnly]": "저장된 게임에서 사용된 도로만 로컬 폴더에 저장합니다.",
   "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.AdvancedUserMode]": "고급 사용자 모드",
@@ -11,6 +13,8 @@
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.NoImitateLaneOptionsOnPlace]": "새로운 차로를 드래그로 연결하면 가장 가까운 차로 설정을 복사하는 대신 항상 기본 옵션으로 적용됩니다.",
   "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.ToolToggle]": "도구 활성화 단축키",
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.ToolToggle]": "Road Builder 도구를 활성화하는 단축키를 설정합니다.",
+  "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.PlaceToggle]": "Place Road Hotkey",
+  "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.PlaceToggle]": "Determines the hot-key to start placing the road you are currently editing.",
   "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.DoNotAddSides]": "Do not always add sides to roads.",
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.DoNotAddSides]": "Allows creating roads without tunnel & bridge sides if you do not add a shoulder or sidewalk to an edge.",
   "RoadBuilder.DIALOG_MESSAGE[DELETE]": "정말로 도로를 삭제하시겠습니까? 기존에 배치되었던 도로들이 전부 삭제됩니다.",
