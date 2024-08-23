@@ -11,6 +11,8 @@
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.NoImitateLaneOptionsOnPlace]": "Glisser une nouvelle voie définira toujours ses réglages à ceux par défaut, au lieu de copier les réglages de la voie la plus proche.",
   "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.ToolToggle]": "Raccourci d'activation de l'outil",
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.ToolToggle]": "Définis la touche de raccourci pour activer l'outil Road Builder.",
+  "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.DoNotAddSides]": "Do not always add sides to roads.",
+  "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.DoNotAddSides]": "Allows creating roads without tunnel & bridge sides if you do not add a shoulder or sidewalk to an edge.",
   "RoadBuilder.DIALOG_MESSAGE[DELETE]": "Êtes-vous sûr de vouloir supprimer cette route ? Cela supprimera également tous les segments qui utilisent ce modèle dans votre ville.",
   "RoadBuilder.DIALOG_MESSAGE[ReloadSave]": "Cette ville contient des routes que vous n'aviez pas encore. Rechargez cette sauvegarde immédiatement, sans fermer le jeu, pour que vos modifications apportées aux intersections ne soient pas perdues.",
   "RoadBuilder.DIALOG_MESSAGE[Ok]": "OK",
