@@ -11,6 +11,8 @@
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.NoImitateLaneOptionsOnPlace]": "拖动添加的新车道始终应用其默认的参数，而不是复制距离最近的车道参数设置。",
   "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.ToolToggle]": "启用工具快捷键",
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.ToolToggle]": "激活道路制造者工具的快捷键。",
+  "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.DoNotAddSides]": "Do not always add sides to roads.",
+  "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.DoNotAddSides]": "Allows creating roads without tunnel & bridge sides if you do not add a shoulder or sidewalk to an edge.",
   "RoadBuilder.DIALOG_MESSAGE[DELETE]": "您确定要删除这条道路吗？这将删除存档中任何使用此道路的路段。",
   "RoadBuilder.DIALOG_MESSAGE[ReloadSave]": "此存档包含您之前没有创建的道路。请立即重新加载此存档（不要关闭游戏，否则路口的变更将会丢失）。",
   "RoadBuilder.DIALOG_MESSAGE[Ok]": "确定",
