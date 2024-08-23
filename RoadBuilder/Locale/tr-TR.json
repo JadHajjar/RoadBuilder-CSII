@@ -11,6 +11,8 @@
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.NoImitateLaneOptionsOnPlace]": "Yeni şeritler eklendiğinde en yakın şeritin özelliklerini kopyalamak yerine varsayılan şerit özelliklerini kullanacaktır.",
   "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.ToolToggle]": "Araç Klavye Kısayolunu Etkinleştir",
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.ToolToggle]": "Road Builder aracını etkinleştirmek için kullanılacak klavye Kısayolunu ayarlar.",
+  "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.DoNotAddSides]": "Do not always add sides to roads.",
+  "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.DoNotAddSides]": "Allows creating roads without tunnel & bridge sides if you do not add a shoulder or sidewalk to an edge.",
   "RoadBuilder.DIALOG_MESSAGE[DELETE]": "Bu yolu silmek istediğinizden emin misiniz? Şehrinizde bu yolun kullanıldığı tüm kısımlar kaldırılacaktır.",
   "RoadBuilder.DIALOG_MESSAGE[ReloadSave]": "Bu şehirde sizde mevcut olmayan yollar bulunuyor. Bu kayıt dosyasını oyunu kapatmadan şimdi yeniden yükleyin, aksi takdirde kavşaklarda yaptığınız değişiklikler kaybolabilir.",
   "RoadBuilder.DIALOG_MESSAGE[Ok]": "Tamam",
