@@ -40,6 +40,7 @@
   "RoadBuilder.RoadAddon[HasUndergroundWaterPipes]": "Tuberías de Agua Corriente y Aguas Residuales",
   "RoadBuilder.RoadAddon[HasUndergroundElectricityCable]": "Cables Eléctricos Subterráneos",
   "RoadBuilder.RoadAddon[RequiresUpgradeForElectricity]": "Requiere Mejora Eléctrica para Conducir Electricidad",
+  "RoadBuilder.Warning[MissingEdgeLane]": "Not having a Shoulder or Sidewalk lane at the edge may result in unexpected behaviour.",
   "RoadBuilder.UseAsTemplate": "Usar Como Plantilla",
   "RoadBuilder.DeleteRoad": "Eliminar Carretera",
   "RoadBuilder.PickOther": "Elige una carretera diferente",
