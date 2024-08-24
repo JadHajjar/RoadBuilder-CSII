@@ -17,6 +17,7 @@ namespace RoadBuilder.Domain
 		public Dictionary<string, StaticObjectPrefab> PillarPrefabs { get; set; } = new();
 		public Dictionary<string, UIGroupPrefab> UIGroupPrefabs { get; set; } = new();
 		public Dictionary<string, LaneGroupPrefab> LaneGroupPrefabs { get; set; } = new();
+		public Dictionary<string, PrefabBase> UnlocksPrefabs { get; set; } = new();
 		public bool LeftHandTraffic { get; set; }
 		public bool YellowDivider { get; set; }
 	}

@@ -177,7 +177,12 @@ namespace RoadBuilder.Systems
 				return false;
 			}
 
-			if (!EntityManager.TryGetComponent<PrefabRef>(entity, out var prefabRef) || EntityManager.HasComponent<Owner>(entity))
+			if (!EntityManager.TryGetComponent<PrefabRef>(entity, out var prefabRef) || EntityManager.HasComponent<Owner>(entity) || !EntityManager.HasComponent<Edge>(entity))
+			{
+				return false;
+			}
+
+			if (!Mod.Settings.RemoveLockRequirements && EntityManager.HasEnabledComponent<Locked>(prefabRef.m_Prefab))
 			{
 				return false;
 			}

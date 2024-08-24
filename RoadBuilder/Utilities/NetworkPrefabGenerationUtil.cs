@@ -471,6 +471,7 @@ namespace RoadBuilder.Utilities
 			var netSubObjects = ScriptableObject.CreateInstance<NetSubObjects>();
 			var placeableNet = ScriptableObject.CreateInstance<PlaceableNet>();
 			var unlockable = ScriptableObject.CreateInstance<Unlockable>();
+			var unlockOnBuild = ScriptableObject.CreateInstance<UnlockOnBuild>();
 
 			netSubObjects.m_SubObjects = GenerateSubObjects().ToArray();
 			yield return netSubObjects;
@@ -498,7 +499,7 @@ namespace RoadBuilder.Utilities
 				yield return electricityConnection;
 			}
 
-			GetUIGroup(out var service, out var group);
+			GetUIGroupAndRequirement(out var service, out var group, out var requirements, out var unlocks);
 
 			if (service != null)
 			{
@@ -526,9 +527,20 @@ namespace RoadBuilder.Utilities
 				yield return ScriptableObject.CreateInstance<WaterPipeConnection>();
 			}
 
-			unlockable.m_RequireAll = new PrefabBase[0];
+			if (!Mod.Settings.RemoveLockRequirements)
+			{
+				unlockable.m_RequireAll = requirements.Select(x => _roadGenerationData.UnlocksPrefabs[x]).ToArray();
+				unlockOnBuild.m_Unlocks = unlocks.Select(x => _roadGenerationData.UnlocksPrefabs[x] as ObjectBuiltRequirementPrefab).ToArray();
+			}
+			else
+			{
+				unlockable.m_RequireAll = new PrefabBase[0];
+				unlockOnBuild.m_Unlocks = new ObjectBuiltRequirementPrefab[0];
+			}
+
 			unlockable.m_RequireAny = new PrefabBase[0];
 			yield return unlockable;
+			yield return unlockOnBuild;
 		}
 
 		private IEnumerable<NetSectionInfo> GenerateUndergroundNetSections()
@@ -628,37 +640,49 @@ namespace RoadBuilder.Utilities
 			};
 		}
 
-		private void GetUIGroup(out string service, out string group)
+		private void GetUIGroupAndRequirement(out string service, out string group, out string[] requirements, out string[] unlocks)
 		{
 			if (NetworkPrefab.Config.Category.HasFlag(RoadCategory.Train))
 			{
 				service = "Transportation";
 				group = "TransportationTrain";
+				requirements = new[] { "TransportationTrain" };
+				unlocks = new[] { "Train Track Built Req" };
 			}
 			else if (NetworkPrefab.Config.Category.HasFlag(RoadCategory.Tram))
 			{
 				service = "Transportation";
 				group = "TransportationTram";
+				requirements = new[] { "TransportationTram" };
+				unlocks = new[] { "Tram Track Built Req" };
 			}
 			else if (NetworkPrefab.Config.Category.HasFlag(RoadCategory.Subway))
 			{
 				service = "Transportation";
 				group = "TransportationSubway";
+				requirements = new[] { "TransportationSubway" };
+				unlocks = new[] { "Subway Track Built Req" };
 			}
 			else if (NetworkPrefab.Config.Category.HasFlag(RoadCategory.PublicTransport))
 			{
 				service = "Transportation";
 				group = "TransportationRoad";
+				requirements = new[] { "TransportationRoad" };
+				unlocks = new string[0];
 			}
 			else if (NetworkPrefab.Config.Category.HasFlag(RoadCategory.Highway))
 			{
 				service = "Roads";
 				group = "RoadsHighways";
+				requirements = new[] { "RoadsHighways" };
+				unlocks = new string[0];
 			}
 			else if (NetworkPrefab.Config.Category.HasFlag(RoadCategory.Pathway))
 			{
 				service = "Landscaping";
 				group = "Pathways";
+				requirements = new string[0];
+				unlocks = new string[0];
 			}
 			else if (NetworkPrefab is RoadPrefab)
 			{
@@ -668,20 +692,27 @@ namespace RoadBuilder.Utilities
 				if (width >= 32)
 				{
 					group = "RoadsLargeRoads";
+					requirements = new[] { "RoadsLargeRoads", "BasicRoadServiceNode" };
 				}
 				else if (width >= 18)
 				{
 					group = "RoadsMediumRoads";
+					requirements = new[] { "RoadsMediumRoads", "BasicRoadServiceNode" };
 				}
 				else
 				{
 					group = "RoadsSmallRoads";
+					requirements = new[] { "RoadsSmallRoads", "BasicRoadServiceNode" };
 				}
+
+				unlocks = new string[0];
 			}
 			else
 			{
 				service = null;
 				group = null;
+				requirements = new string[0];
+				unlocks = new string[0];
 			}
 		}
 

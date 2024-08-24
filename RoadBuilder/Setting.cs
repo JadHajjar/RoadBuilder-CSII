@@ -49,6 +49,9 @@ namespace RoadBuilder
 		public bool AdvancedUserMode { set => UnrestrictedLanes = value; }
 
 		[SettingsUISection(MAIN_SECTION, ADVANCED_GROUP)]
+		public bool RemoveLockRequirements { get; set; }
+
+		[SettingsUISection(MAIN_SECTION, ADVANCED_GROUP)]
 		public bool UnrestrictedLanes { get; set; }
 
 		[SettingsUISection(MAIN_SECTION, ADVANCED_GROUP)]
