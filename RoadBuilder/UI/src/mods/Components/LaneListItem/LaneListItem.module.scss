@@ -118,9 +118,14 @@
   display: flex;
   flex-direction: column;
 }
+
 .rightSideContainer > img {
   width: 1.15em;
   height: 1.15em;
   margin-bottom: 0.375em;
   filter: drop-shadow(0px 0px 1rem rgba(0, 0, 0, 0.5));
+}
+
+.inverted {
+  transform: scale(-1, 1);
 }
