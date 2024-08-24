@@ -1,8 +1,6 @@
-import { NetSectionItem } from "domain/NetSectionItem";
 import styles from "./RoadButtonSmall.module.scss";
-import { Button, Number2, Tooltip } from "cs2/ui";
-import { EditPropertiesPopup } from "../EditPropertiesPopup/EditPropertiesPopup";
-import { MouseEvent, MouseEventHandler, forwardRef, useCallback, useContext, useRef, useState } from "react";
+import { Number2, Tooltip } from "cs2/ui";
+import { MouseEvent, MouseEventHandler, useCallback, useContext, useRef } from "react";
 import { DragContext } from "mods/Contexts/DragContext";
 import classNames from "classnames";
 import { RoadLane } from "domain/RoadLane";
@@ -10,6 +8,7 @@ import { NetSectionsStoreContext } from "mods/Contexts/NetSectionsStore";
 import { MouseButtons } from "mods/util";
 import { LanePropertiesContext } from "mods/Contexts/LanePropertiesContext";
 import { useRem } from "cs2/utils";
+import { useLocalization } from "cs2/l10n";
 
 type _Props = {
   roadLane: RoadLane;
@@ -23,6 +22,7 @@ export const RoadButtonSmall = (props: _Props) => {
   let netSectionStore = useContext(NetSectionsStoreContext);
   let containerRef = useRef<HTMLDivElement>(null);
   let rem = useRem();
+  let { translate } = useLocalization();
 
   let dragging = dragState.oldIndex == props.index;
   let onMouseEnter = useCallback(() => {
@@ -53,17 +53,19 @@ export const RoadButtonSmall = (props: _Props) => {
 
   if (props.roadLane.IsEdgePlaceholder) {
     return (
-      <div ref={containerRef} className={classNames(styles.container, styles.edgePlaceholder)}>
-        <div className={styles.button}>
-          <div className={styles.imageContainer}>
-            <img
-              src={props.roadLane.NetSection?.Thumbnail ?? "coui://roadbuildericons/RB_Unknown.svg"}
-              className={props.roadLane.InvertImage && styles.inverted}
-            />
+      <Tooltip tooltip={translate("RoadBuilder.Warning[MissingEdgeLane]")}>
+        <div ref={containerRef} className={classNames(styles.container)}>
+          <div className={styles.button}>
+            <div className={styles.imageContainer}>
+              <img
+                src={props.roadLane.NetSection?.Thumbnail ?? "coui://roadbuildericons/RB_Unknown.svg"}
+                className={props.roadLane.InvertImage && styles.inverted}
+              />
+            </div>
           </div>
+          <div className={styles.informationBar}></div>
         </div>
-        <div className={styles.informationBar}></div>
-      </div>
+      </Tooltip>
     );
   }
 
