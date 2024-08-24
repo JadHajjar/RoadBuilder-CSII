@@ -40,6 +40,7 @@
   "RoadBuilder.RoadAddon[HasUndergroundWaterPipes]": "Supporte les conduites d'eau et égouts",
   "RoadBuilder.RoadAddon[HasUndergroundElectricityCable]": "Supporte les câbles d'électricité souterrains",
   "RoadBuilder.RoadAddon[RequiresUpgradeForElectricity]": "Nécessite l'amélioration d'éclairage pour transporter l'électricité",
+  "RoadBuilder.Warning[MissingEdgeLane]": "Not having a Shoulder or Sidewalk lane at the edge may result in unexpected behaviour.",
   "RoadBuilder.UseAsTemplate": "Utiliser comme modèle",
   "RoadBuilder.DeleteRoad": "Supprimer la route",
   "RoadBuilder.PickOther": "Sélectionner une route différente",
