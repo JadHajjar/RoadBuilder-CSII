@@ -15,6 +15,8 @@
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.NoImitateLaneOptionsOnPlace]": "Das Ziehen neuer Fahrspuren verwendet immer die Standardoptionen für Fahrspuren, anstatt die Einstellungen der nächstgelegenen Fahrspur zu übernehmen.",
   "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.ToolToggle]": "Hotkey zum Aktivieren der Mod",
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.ToolToggle]": "Bestimmt die Tastenkombination, um den Road Builder zu aktivieren.",
+  "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.RemoveLockRequirements]": "Remove Lock Restrictions",
+  "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.RemoveLockRequirements]": "Allows editing and using roads that are currently locked in your city's development tree.",
   "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.PlaceToggle]": "Hotkey zum Platzieren von Straßen",
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.PlaceToggle]": "Bestimmt die Tastenkombination, mit der das Platzieren der Straße gestartet wird, die du gerade bearbeitest.",
   "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.DoNotAddSides]": "Remove automatic sides on tunnels and bridges.",
