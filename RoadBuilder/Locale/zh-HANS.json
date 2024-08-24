@@ -15,6 +15,8 @@
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.NoImitateLaneOptionsOnPlace]": "拖动添加的新车道始终应用其默认的参数，而不是复制距离最近的车道参数设置。",
   "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.ToolToggle]": "启用工具快捷键",
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.ToolToggle]": "激活道路制造者工具的快捷键。",
+  "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.RemoveLockRequirements]": "Remove Lock Restrictions",
+  "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.RemoveLockRequirements]": "Allows editing and using roads that are currently locked in your city's development tree.",
   "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.PlaceToggle]": "Place Road Hotkey",
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.PlaceToggle]": "Determines the hot-key to start placing the road you are currently editing.",
   "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.DoNotAddSides]": "Remove automatic sides on tunnels and bridges.",
