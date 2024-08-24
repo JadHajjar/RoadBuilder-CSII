@@ -360,7 +360,7 @@ namespace RoadBuilder.Utilities
 					continue;
 				}
 
-				if (i == 0 && (GetEdgeLaneInfo(section, groupPrefab, out leftSectionEdgeInfo) | Mod.Settings.DoNotAddSides))
+				if (i == 0 && (NetworkConfigExtensionsUtil.GetEdgeLaneInfo(section, groupPrefab, out leftSectionEdgeInfo) | !Mod.Settings.DoNotAddSides))
 				{
 					yield return new NetSectionInfo
 					{
@@ -383,7 +383,7 @@ namespace RoadBuilder.Utilities
 					m_Invert = lane.Invert,
 				};
 
-				if (i == NetworkPrefab.Config.Lanes.Count - 1 && (GetEdgeLaneInfo(section, groupPrefab, out rightSectionEdgeInfo) | Mod.Settings.DoNotAddSides))
+				if (i == NetworkPrefab.Config.Lanes.Count - 1 && (NetworkConfigExtensionsUtil.GetEdgeLaneInfo(section, groupPrefab, out rightSectionEdgeInfo) | !Mod.Settings.DoNotAddSides))
 				{
 					yield return new NetSectionInfo
 					{
@@ -392,21 +392,6 @@ namespace RoadBuilder.Utilities
 					};
 				}
 			}
-		}
-
-		private bool GetEdgeLaneInfo(NetSectionPrefab section, LaneGroupPrefab groupPrefab, out RoadBuilderEdgeLaneInfo sectionEdgeInfo)
-		{
-			if (section.TryGet(out sectionEdgeInfo))
-			{
-				return true;
-			}
-
-			if (groupPrefab != null && groupPrefab.TryGet(out sectionEdgeInfo))
-			{
-				return true;
-			}
-
-			return false;
 		}
 
 		public static bool GetNetSection(RoadGenerationData roadGenerationData, INetworkConfig config, LaneConfig item, out NetSectionPrefab section, out LaneGroupPrefab groupPrefab)

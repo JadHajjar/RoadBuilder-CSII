@@ -54,7 +54,7 @@ namespace RoadBuilder.Systems.UI
 					continue;
 				}
 
-				if (!Mod.Settings.AdvancedUserMode && (!prefab.Has<RoadBuilderLaneInfo>() || !prefab.MatchCategories(activeConfig)))
+				if (!Mod.Settings.UnrestrictedLanes && (!prefab.Has<RoadBuilderLaneInfo>() || !prefab.MatchCategories(activeConfig)))
 				{
 					continue;
 				}
@@ -75,7 +75,7 @@ namespace RoadBuilder.Systems.UI
 
 			foreach (var prefab in netSectionsSystem.LaneGroups.Values)
 			{
-				if (!Mod.Settings.AdvancedUserMode && !prefab.MatchCategories(activeConfig))
+				if (!Mod.Settings.UnrestrictedLanes && !prefab.MatchCategories(activeConfig))
 				{
 					continue;
 				}

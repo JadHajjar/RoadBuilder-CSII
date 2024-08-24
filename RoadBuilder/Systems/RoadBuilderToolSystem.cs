@@ -49,7 +49,7 @@ namespace RoadBuilder.Systems
 			highlightedQuery = SystemAPI.QueryBuilder().WithAny<Highlighted, RoadBuilderUpdateFlagComponent>().Build();
 			roadBuilderNetworkQuery = GetEntityQuery(ComponentType.ReadOnly<RoadBuilderNetwork>());
 
-			placeAction = Mod.Settings.GetAction(nameof(Setting.ToolToggle));
+			placeAction = Mod.Settings.GetAction(nameof(Setting.PlaceToggle));
 			applyAction = Mod.Settings.GetAction(nameof(RoadBuilder) + "Apply");
 			cancelAction = Mod.Settings.GetAction(nameof(RoadBuilder) + "Cancel");
 

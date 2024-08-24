@@ -330,6 +330,63 @@ namespace RoadBuilder.Systems.UI
 				}
 			}
 
+			if (!Mod.Settings.RemoveSafetyMeasures)
+			{
+				var lastEdgeIndex = -1;
+
+				for (var i = 0; i < newLanes.Count / 2; i++)
+				{
+					var lane = newLanes[i];
+
+					if (!NetworkPrefabGenerationUtil.GetNetSection(roadGenerationDataSystem.RoadGenerationData, config, lane, out var section, out var groupPrefab))
+					{
+						continue;
+					}
+
+					if (NetworkConfigExtensionsUtil.GetEdgeLaneInfo(section, groupPrefab, out var edgeInfo))
+					{
+						if (lastEdgeIndex != i - 1)
+						{
+							newLanes.RemoveAt(i);
+							newLanes.Insert(lastEdgeIndex + 1, lane);
+							i = lastEdgeIndex = -1;
+							continue;
+						}
+
+						lane.Invert = !cityConfigurationSystem.leftHandTraffic;
+
+						lastEdgeIndex = i;
+					}
+				}
+
+				lastEdgeIndex = newLanes.Count;
+
+				for (var i = newLanes.Count - 1; i >= newLanes.Count / 2; i--)
+				{
+					var lane = newLanes[i];
+
+					if (!NetworkPrefabGenerationUtil.GetNetSection(roadGenerationDataSystem.RoadGenerationData, config, lane, out var section, out var groupPrefab))
+					{
+						continue;
+					}
+
+					if (NetworkConfigExtensionsUtil.GetEdgeLaneInfo(section, groupPrefab, out var edgeInfo))
+					{
+						if (lastEdgeIndex != i + 1)
+						{
+							newLanes.RemoveAt(i);
+							newLanes.Insert(lastEdgeIndex - 1, lane);
+							i = lastEdgeIndex = newLanes.Count;
+							continue;
+						}
+
+						lane.Invert = cityConfigurationSystem.leftHandTraffic;
+
+						lastEdgeIndex = i;
+					}
+				}
+			}
+
 			config.Lanes = newLanes;
 		}
 
@@ -390,7 +447,7 @@ namespace RoadBuilder.Systems.UI
 		{
 			RoadOptionsUtil.OptionClicked(config, option, id, value);
 
-			if (!Mod.Settings.AdvancedUserMode)
+			if (!Mod.Settings.UnrestrictedLanes)
 			{
 				config.Lanes.RemoveAll(x =>
 				{

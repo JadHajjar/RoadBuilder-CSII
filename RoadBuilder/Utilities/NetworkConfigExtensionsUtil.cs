@@ -2,6 +2,7 @@
 
 using RoadBuilder.Domain.Components.Prefabs;
 using RoadBuilder.Domain.Configurations;
+using RoadBuilder.Domain.Prefabs;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,21 @@ namespace RoadBuilder.Utilities
 {
 	public static class NetworkConfigExtensionsUtil
 	{
+		public static bool GetEdgeLaneInfo(NetSectionPrefab section, LaneGroupPrefab groupPrefab, out RoadBuilderEdgeLaneInfo sectionEdgeInfo)
+		{
+			if (section.TryGet(out sectionEdgeInfo))
+			{
+				return true;
+			}
+
+			if (groupPrefab != null && groupPrefab.TryGet(out sectionEdgeInfo))
+			{
+				return true;
+			}
+
+			return false;
+		}
+
 		public static bool IsOneWay(this INetworkConfig config)
 		{
 			if (config.Lanes.Count < 2)

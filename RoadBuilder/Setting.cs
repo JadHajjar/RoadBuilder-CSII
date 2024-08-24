@@ -7,8 +7,8 @@ using Game.Settings;
 namespace RoadBuilder
 {
 	[FileLocation("ModsSettings/" + nameof(RoadBuilder) + "/" + nameof(RoadBuilder))]
-	[SettingsUIGroupOrder(MAIN_GROUP)]
-	[SettingsUIShowGroupName(MAIN_GROUP)]
+	[SettingsUIGroupOrder(HOTKEY_GROUP, MAIN_GROUP, ADVANCED_GROUP)]
+	[SettingsUIShowGroupName(HOTKEY_GROUP, MAIN_GROUP, ADVANCED_GROUP)]
 	[SettingsUIMouseAction(nameof(RoadBuilder) + "Apply", "CustomUsage")]
 	[SettingsUIMouseAction(nameof(RoadBuilder) + "Cancel", "CustomUsage")]
 	public class Setting : ModSetting
@@ -45,8 +45,14 @@ namespace RoadBuilder
 		[SettingsUISection(MAIN_SECTION, MAIN_GROUP)]
 		public bool NoImitateLaneOptionsOnPlace { get; set; }
 
+		[SettingsUIHidden]
+		public bool AdvancedUserMode { set => UnrestrictedLanes = value; }
+
 		[SettingsUISection(MAIN_SECTION, ADVANCED_GROUP)]
-		public bool AdvancedUserMode { get; set; }
+		public bool UnrestrictedLanes { get; set; }
+
+		[SettingsUISection(MAIN_SECTION, ADVANCED_GROUP)]
+		public bool RemoveSafetyMeasures { get; set; }
 
 		[SettingsUISection(MAIN_SECTION, ADVANCED_GROUP)]
 		public bool DoNotAddSides { get; set; }
