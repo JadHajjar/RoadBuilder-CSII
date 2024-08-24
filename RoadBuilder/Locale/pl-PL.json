@@ -40,7 +40,7 @@
   "RoadBuilder.RoadAddon[HasUndergroundWaterPipes]": "Posiada podziemne rury wodne i kanalizacje",
   "RoadBuilder.RoadAddon[HasUndergroundElectricityCable]": "Posiada podziemne przewody elektryczne",
   "RoadBuilder.RoadAddon[RequiresUpgradeForElectricity]": "Wymaga ulepszenia o elektryczność, aby przewodzić elektryczność",
-  "RoadBuilder.Warning[MissingEdgeLane]": "Not having a Shoulder or Sidewalk lane at the edge may result in unexpected behaviour.",
+  "RoadBuilder.Warning[MissingEdgeLane]": "Brak pobocza lub chodnika przy krawędziach może prowadzić do nieoczekiwanego zachowania.",
   "RoadBuilder.UseAsTemplate": "Użyj jako szablonu",
   "RoadBuilder.DeleteRoad": "Usuń drogę",
   "RoadBuilder.PickOther": "Wybierz inną drogę",
