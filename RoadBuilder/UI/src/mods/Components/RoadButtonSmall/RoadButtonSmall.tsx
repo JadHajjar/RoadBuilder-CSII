@@ -74,7 +74,7 @@ export const RoadButtonSmall = (props: _Props) => {
             )}
           </div>
         </div>
-        <div className={styles.laneName}>{props.roadLane.NetSection!.Width! > 0 && props.roadLane.NetSection?.Width + " m"}</div>
+        <div className={styles.laneName}>{props.roadLane.NetSection?.WidthText}</div>
       </div>
     </div>
   );

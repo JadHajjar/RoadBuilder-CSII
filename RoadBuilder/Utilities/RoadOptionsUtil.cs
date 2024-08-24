@@ -263,7 +263,7 @@ namespace RoadBuilder.Utilities
 			}
 		}
 
-		private static bool IsMetric()
+		public static bool IsMetric()
 		{
 			return GameManager.instance?.settings?.userInterface?.unitSystem is null or UnitSystem.Metric;
 		}

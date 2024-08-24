@@ -7,5 +7,6 @@
 		public string Thumbnail;
 		public bool IsGroup;
 		public float Width;
+		public string WidthText;
 	}
 }

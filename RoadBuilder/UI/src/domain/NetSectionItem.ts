@@ -6,4 +6,5 @@ export interface NetSectionItem {
   Thumbnail: string;
   IsGroup: boolean;
   Width?: number;
+  WidthText?: string;
 }

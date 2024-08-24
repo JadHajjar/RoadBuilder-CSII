@@ -13,6 +13,7 @@ export const roadBuilderToolMode$ = bindValue(mod.id, "RoadBuilderToolMode", Roa
 export const roadLanes$ = bindValue<RoadLane[]>(mod.id, "GetRoadLanes", []);
 export const roadOptions$ = bindValue<OptionSection[]>(mod.id, "GetRoadOptions");
 export const getRoadName$ = bindValue<string>(mod.id, "GetRoadName");
+export const getRoadSize$ = bindValue<string>(mod.id, "GetRoadSize");
 export const getRoadTypeName$ = bindValue<string>(mod.id, "GetRoadTypeName");
 export const getRoadId$ = bindValue<string>(mod.id, "GetRoadId");
 export const isPaused$ = bindValue<boolean>(mod.id, "IsPaused");
