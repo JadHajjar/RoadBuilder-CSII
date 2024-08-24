@@ -30,7 +30,7 @@ namespace RoadBuilder.LaneGroups
 				},
 				new()
 				{
-					DefaultValue = "1",
+					DefaultValue = "",
 					Name = OptionName2,
 					Type = LaneOptionType.Toggle,
 					Options = new RoadBuilderLaneOptionValue[]
@@ -57,7 +57,8 @@ namespace RoadBuilder.LaneGroups
 
 			AddComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_Car_Centered.svg";
 
-			SetUp(sections["RB Parking Section Parallel"], "Parallel", "").AddOrGetComponent<RoadBuilderLaneInfo>().WithNoDirection();
+			SetUp(sections["RB Parking Section Parallel"], "Parallel", "1");
+			SetUp(sections["RB Parking Section Parallel NoMarking"], "Parallel", "").AddOrGetComponent<RoadBuilderLaneInfo>().WithNoDirection();
 			SetUp(sections["RB Parking Section Angled"], "Angled", "1");
 			SetUp(sections["RB Parking Section Angled NoMarking"], "Angled", "").AddOrGetComponent<RoadBuilderLaneInfo>().WithNoDirection();
 			SetUp(sections["RB Parking Section Perpendicular"], "Perpendicular", "1").AddOrGetComponent<RoadBuilderLaneInfo>().WithNoDirection();
