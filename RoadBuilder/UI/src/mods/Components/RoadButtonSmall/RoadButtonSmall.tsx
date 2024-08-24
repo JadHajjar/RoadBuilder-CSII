@@ -51,11 +51,30 @@ export const RoadButtonSmall = (props: _Props) => {
     }
   };
 
+  if (props.roadLane.IsEdgePlaceholder) {
+    return (
+      <div ref={containerRef} className={classNames(styles.container, styles.edgePlaceholder)}>
+        <div className={styles.button}>
+          <div className={styles.imageContainer}>
+            <img
+              src={props.roadLane.NetSection?.Thumbnail ?? "coui://roadbuildericons/RB_Unknown.svg"}
+              className={props.roadLane.InvertImage && styles.inverted}
+            />
+          </div>
+        </div>
+        <div className={styles.informationBar}></div>
+      </div>
+    );
+  }
+
   return (
     <div ref={containerRef} className={styles.container} onMouseEnter={onMouseEnter}>
       <div className={classNames(styles.button, { [styles.dragging]: dragging })} onMouseDown={onMouseDown}>
         <div className={styles.imageContainer}>
-          <img src={props.roadLane.NetSection?.Thumbnail ?? "coui://roadbuildericons/RB_Unknown.svg"} className={props.roadLane.InvertImage && styles.inverted} />
+          <img
+            src={props.roadLane.NetSection?.Thumbnail ?? "coui://roadbuildericons/RB_Unknown.svg"}
+            className={props.roadLane.InvertImage && styles.inverted}
+          />
         </div>
       </div>
       <div className={styles.informationBar}>
@@ -66,10 +85,12 @@ export const RoadButtonSmall = (props: _Props) => {
               backgroundColor: props.roadLane.Color,
             }}
           >
-            <img className={classNames(styles.arrow, props.roadLane.TwoWay ? styles.twoway : props.roadLane.Invert ? styles.down : styles.up)} />
+            {!(props.roadLane.NoDirection ?? false) && (
+              <img className={classNames(styles.arrow, props.roadLane.TwoWay ? styles.twoway : props.roadLane.Invert ? styles.down : styles.up)} />
+            )}
           </div>
         </div>
-        <div className={styles.laneName}>{props.roadLane.NetSection!.Width! > 0 && props.roadLane.NetSection?.Width + " m"}</div>
+        <div className={styles.laneName}>{props.roadLane.NetSection?.WidthText}</div>
       </div>
     </div>
   );

@@ -307,6 +307,15 @@ namespace RoadBuilder.Systems
 							prefab.Prefab.GetComponent<UIObject>().m_Icon = thumbnail;
 						}
 					}
+
+					if (prefab.Prefab.name != prefab.Config.ID)
+					{
+						Mod.Log.Warn($"Configuration Mismatch: {prefab.Prefab.name} - {prefab.Config.ID}");
+
+						prefab.Prefab.name = prefab.Config.ID;
+
+						UpdatePrefab(prefab.Prefab);
+					}
 				}
 			}
 

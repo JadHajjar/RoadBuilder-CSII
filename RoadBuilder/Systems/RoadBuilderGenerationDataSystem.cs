@@ -151,6 +151,17 @@ namespace RoadBuilder.Systems
 				}
 			}
 
+			var featureDataQuery = SystemAPI.QueryBuilder().WithAny<FeatureData, DevTreeNodeData, ObjectBuiltRequirementData, StrictObjectBuiltRequirementData, ZoneBuiltRequirementData>().Build();
+			var featureDataEntities = featureDataQuery.ToEntityArray(Allocator.Temp);
+
+			for (var i = 0; i < featureDataEntities.Length; i++)
+			{
+				if (prefabSystem.TryGetPrefab<PrefabBase>(featureDataEntities[i], out var prefab))
+				{
+					roadGenerationData.UnlocksPrefabs[prefab.name] = prefab;
+				}
+			}
+
 			roadGenerationData.LaneGroupPrefabs = LaneGroups;
 
 			RoadGenerationData = roadGenerationData;

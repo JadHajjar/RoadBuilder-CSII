@@ -80,11 +80,6 @@ namespace RoadBuilder.Utilities
 				config.Addons |= RoadAddons.RequiresUpgradeForElectricity;
 			}
 
-			if (NetworkPrefab.m_Sections.Any(x => x.m_Section?.name == "Road Side 0"))
-			{
-				config.Category |= RoadCategory.RaisedSidewalk;
-			}
-
 			if (NetworkPrefab.m_EdgeStates.Any(x => x.m_SetState.Any(y => y == NetPieceRequirements.Gravel) && x.m_RequireAny.Length == 0 && x.m_RequireAll.Length == 0))
 			{
 				config.Category |= RoadCategory.Gravel;

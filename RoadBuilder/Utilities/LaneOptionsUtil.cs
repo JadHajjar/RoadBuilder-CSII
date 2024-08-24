@@ -30,7 +30,7 @@ namespace RoadBuilder.Utilities
 
 			if (NetworkPrefabGenerationUtil.GetNetSection(roadGenerationData, config, lane, out var section, out var group)) // if lane supports invert
 			{
-				if (group is not null || !(section?.SupportsTwoWay() ?? false))
+				if ((group is not null || !(section?.SupportsTwoWay() ?? false)) && !(section.TryGet<RoadBuilderLaneInfo>(out var laneInfo) && laneInfo.NoDirection) && !((group?.TryGet<RoadBuilderLaneInfo>(out var groupInfo) ?? false) && groupInfo.NoDirection))
 				{
 					options.Add(GetInvertOption(roadGenerationData, config, lane, group?.Options?.FirstOrDefault(x => x.Type is LaneOptionType.TwoWay)));
 				}
@@ -122,8 +122,10 @@ namespace RoadBuilder.Utilities
 				yield return new OptionSectionUIEntry
 				{
 					Id = --index,
-					Name = LocaleHelper.Translate($"{group.name}.Options[{option.Name}]", option.Name),
-					Options = entries
+					Options = entries,
+					Name = option.Type is LaneOptionType.Decoration
+					? LocaleHelper.Translate("RoadBuilder.Decoration", "Decoration")
+					: LocaleHelper.Translate($"{group.name}.Options[{option.Name}]", option.Name)
 				};
 
 				remainingSections.RemoveAll(x => !MatchesOptionValue(x, option, value));
@@ -149,7 +151,7 @@ namespace RoadBuilder.Utilities
 			return new OptionSectionUIEntry
 			{
 				Id = (int)ActionType.Invert,
-				Name = "Direction",
+				Name = LocaleHelper.Translate("RoadBuilder.Direction", "Direction"),
 				Options = new OptionItemUIEntry[]
 				{
 					new()

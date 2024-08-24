@@ -30,7 +30,7 @@ namespace RoadBuilder.Utilities
 				options.Add(new()
 				{
 					Id = (int)ActionType.SpeedLimit,
-					Name = "Speed Limit",
+					Name = LocaleHelper.Translate("RoadBuilder.SpeedLimit", "Speed Limit"),
 					Options = new[]
 					{
 						new OptionItemUIEntry
@@ -44,7 +44,7 @@ namespace RoadBuilder.Utilities
 				options.Add(new()
 				{
 					Id = (int)ActionType.RoadCategory,
-					Name = "Category",
+					Name = LocaleHelper.Translate("RoadBuilder.Category", "Category"),
 					Options = new[]
 					{
 						new OptionItemUIEntry
@@ -84,7 +84,7 @@ namespace RoadBuilder.Utilities
 				options.Add(new()
 				{
 					Id = (int)ActionType.SpeedLimit,
-					Name = "Speed Limit",
+					Name = LocaleHelper.Translate("RoadBuilder.SpeedLimit", "Speed Limit"),
 					Options = new[]
 					{
 						new OptionItemUIEntry
@@ -98,7 +98,7 @@ namespace RoadBuilder.Utilities
 				options.Add(new()
 				{
 					Id = (int)ActionType.RoadCategory,
-					Name = "Category",
+					Name = LocaleHelper.Translate("RoadBuilder.Category", "Category"),
 					Options = new[]
 					{
 						new OptionItemUIEntry
@@ -143,17 +143,17 @@ namespace RoadBuilder.Utilities
 			options.Add(new()
 			{
 				Id = (int)ActionType.Addons,
-				Name = "Addons",
+				Name = LocaleHelper.Translate("RoadBuilder.Addons", "Addons"),
 				Options = new[]
 				{
-					new OptionItemUIEntry
-					{
-						Id = -(int)RoadCategory.RaisedSidewalk,
-						Name = $"RoadBuilder.RoadAddon[{RoadCategory.RaisedSidewalk}]",
-						Icon = "coui://roadbuildericons/RB_RaisedSidewalks.svg",
-						Selected = config.Category.HasFlag(RoadCategory.RaisedSidewalk),
-						Hidden = (config.Category & RoadCategory.NoRaisedSidewalkSupport) != 0
-					},
+					//new OptionItemUIEntry
+					//{
+					//	Id = -(int)RoadCategory.RaisedSidewalk,
+					//	Name = $"RoadBuilder.RoadAddon[{RoadCategory.RaisedSidewalk}]",
+					//	Icon = "coui://roadbuildericons/RB_RaisedSidewalks.svg",
+					//	Selected = config.Category.HasFlag(RoadCategory.RaisedSidewalk),
+					//	Hidden = (config.Category & RoadCategory.NoRaisedSidewalkSupport) != 0
+					//},
 					new OptionItemUIEntry
 					{
 						Id = (int)RoadAddons.GeneratesTrafficLights,
@@ -217,19 +217,19 @@ namespace RoadBuilder.Utilities
 
 					break;
 
-				case ActionType.RoadCategory:
-					var nonTypes = RoadCategory.RaisedSidewalk;
+				//case ActionType.RoadCategory:
+				//	var nonTypes = RoadCategory.RaisedSidewalk;
 
-					if (config.Category.HasFlag((RoadCategory)id))
-					{
-						config.Category &= nonTypes;
-					}
-					else
-					{
-						config.Category = (RoadCategory)id | (config.Category & nonTypes);
-					}
+				//	if (config.Category.HasFlag((RoadCategory)id))
+				//	{
+				//		config.Category &= nonTypes;
+				//	}
+				//	else
+				//	{
+				//		config.Category = (RoadCategory)id | (config.Category & nonTypes);
+				//	}
 
-					break;
+				//	break;
 
 				case ActionType.Addons:
 					if (id < 0)
@@ -263,7 +263,7 @@ namespace RoadBuilder.Utilities
 			}
 		}
 
-		private static bool IsMetric()
+		public static bool IsMetric()
 		{
 			return GameManager.instance?.settings?.userInterface?.unitSystem is null or UnitSystem.Metric;
 		}

@@ -85,7 +85,13 @@ export const LaneListItemDrag = forwardRef<HTMLDivElement>((props, ref) => {
 
   return (
     <div style={offsetStyle} className={containerClasses} ref={ref}>
-      <div className={classNames(VanillaComponentResolver.instance.assetGridTheme.thumbnail, styles.gridThumbnail)}>
+      <div
+        className={classNames(
+          VanillaComponentResolver.instance.assetGridTheme.thumbnail,
+          styles.gridThumbnail,
+          dragData.roadLane?.InvertImage && styles.inverted
+        )}
+      >
         <img src={netSection.Thumbnail ?? "coui://roadbuildericons/RB_Unknown.svg"} />
       </div>
     </div>

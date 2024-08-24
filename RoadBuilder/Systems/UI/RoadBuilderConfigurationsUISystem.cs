@@ -192,17 +192,27 @@ namespace RoadBuilder.Systems.UI
 
 				if (EntityManager.TryGetComponent<PrefabRef>(entity, out var prefabRef) && prefabRef.m_Prefab == prefabEntity)
 				{
-					EntityManager.RemoveComponent<RoadBuilderNetwork>(entity);
-
 					if (EntityManager.HasComponent<Edge>(entity))
 					{
 						EntityManager.AddComponent<Deleted>(entity);
+
+						foreach (var item in EntityManager.GetBuffer<Game.Objects.SubObject>(entity))
+						{
+							EntityManager.AddComponent<Deleted>(item.m_SubObject);
+						}
+
+						foreach (var edge in roadBuilderUpdateSystem.GetEdges(entity))
+						{
+							edgeList.Add(edge);
+						}
 					}
 					else
 					{
 						EntityManager.AddComponent<RoadBuilderToBeDeletedComponent>(entity);
 						EntityManager.AddComponent<Updated>(entity);
 					}
+
+					EntityManager.RemoveComponent<RoadBuilderNetwork>(entity);
 				}
 			}
 

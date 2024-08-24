@@ -99,7 +99,7 @@ namespace RoadBuilder.Systems
 
 				if (builderPrefab.Prefab.name != builderPrefab.Config.ID)
 				{
-					Mod.Log.Warn($"ANOMALY - NAME <> ID: {builderPrefab.Prefab.name} - {builderPrefab.Config.ID}");
+					Mod.Log.Error($"ANOMALY - NAME <> ID: {builderPrefab.Prefab.name} - {builderPrefab.Config.ID}");
 				}
 
 				if (!list.Contains(builderPrefab.Prefab.name))

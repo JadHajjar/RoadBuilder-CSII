@@ -1,6 +1,34 @@
 [
   {
     "Beta": true,
+    "Version": "0.2.2.1",
+    "Date": "2024-08-19",
+    "ChangeGroups": [
+      {
+        "Name": "Hotfix",
+        "Changes": [
+          "Fixed deleting road configurations sometimes not updating the node properly."
+        ]
+      }
+    ]
+  },
+  {
+    "Beta": true,
+    "Version": "0.2.2",
+    "Date": "2024-08-19",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Fixes for deleting a road configuration not properly removing it from the map.",
+          "Fixed Empty Lanes not having all width options for european users.",
+          "Added Translations."
+        ]
+      }
+    ]
+  },
+  {
+    "Beta": true,
     "Version": "0.2.1",
     "Date": "2024-08-18",
     "ChangeGroups": [
