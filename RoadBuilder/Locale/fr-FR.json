@@ -15,6 +15,8 @@
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.NoImitateLaneOptionsOnPlace]": "Glisser une nouvelle voie définira toujours ses réglages à ceux par défaut, au lieu de copier les réglages de la voie la plus proche.",
   "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.ToolToggle]": "Raccourci d'activation de l'outil",
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.ToolToggle]": "Définis la touche de raccourci pour activer l'outil Road Builder.",
+  "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.RemoveLockRequirements]": "Remove Lock Restrictions",
+  "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.RemoveLockRequirements]": "Allows editing and using roads that are currently locked in your city's development tree.",
   "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.PlaceToggle]": "Raccourci de construction de la route",
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.PlaceToggle]": "Définis la touche de raccourci pour commencer à placer la route que vous éditez actuellement.",
   "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.DoNotAddSides]": "Remove automatic sides on tunnels and bridges.",
