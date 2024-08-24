@@ -15,6 +15,8 @@
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.NoImitateLaneOptionsOnPlace]": "새로운 차로를 드래그로 연결하면 가장 가까운 차로 설정을 복사하는 대신 항상 기본 옵션으로 적용됩니다.",
   "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.ToolToggle]": "도구 활성화 단축키",
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.ToolToggle]": "Road Builder 도구를 활성화하는 단축키를 설정합니다.",
+  "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.RemoveLockRequirements]": "Remove Lock Restrictions",
+  "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.RemoveLockRequirements]": "Allows editing and using roads that are currently locked in your city's development tree.",
   "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.PlaceToggle]": "Place Road Hotkey",
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.PlaceToggle]": "Determines the hot-key to start placing the road you are currently editing.",
   "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.DoNotAddSides]": "Remove automatic sides on tunnels and bridges.",
