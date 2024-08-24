@@ -1,6 +1,8 @@
 {
   "Options.SECTION[RoadBuilder.RoadBuilder.Mod]": "Road Builder",
+  "Options.GROUP[RoadBuilder.RoadBuilder.Mod.Hotkey]": "Hot-key Settings",
   "Options.GROUP[RoadBuilder.RoadBuilder.Mod.Main]": "General Settings",
+  "Options.GROUP[RoadBuilder.RoadBuilder.Mod.Advanced]": "Advanced Settings",
   "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.SaveUsedRoadsOnly]": "Save used roads only",
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.SaveUsedRoadsOnly]": "Only saves roads that were used inside the save-game to your computer's local folder.",
   "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.AdvancedUserMode]": "Advanced User Mode",
@@ -11,11 +13,15 @@
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.NoImitateLaneOptionsOnPlace]": "Dragging new lanes will always have the default lane options instead of copying the nearest lane's settings.",
   "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.ToolToggle]": "Enable Tool Hotkey",
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.ToolToggle]": "Determines the hot-key to activate the Road Builder tool.",
-  
+  "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.PlaceToggle]": "Place Road Hotkey",
+  "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.PlaceToggle]": "Determines the hot-key to start placing the road you are currently editing.",
+  "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.DoNotAddSides]": "Do not always add sides to roads.",
+  "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.DoNotAddSides]": "Allows creating roads without tunnel & bridge sides if you do not add a shoulder or sidewalk to an edge.",
+
   "RoadBuilder.DIALOG_MESSAGE[DELETE]": "Are you sure you want to delete this road? This will remove any placed segments in your city that uses it.",
   "RoadBuilder.DIALOG_MESSAGE[ReloadSave]": "This city contains roads that you did not have already. Reload this save-game immediately, without closing the game, so your changes to intersections are not lost.",
   "RoadBuilder.DIALOG_MESSAGE[Ok]": "OK",
- 
+
   "RoadBuilder.Config[RoadConfig]": "Road Properties",
   "RoadBuilder.Config[TrackConfig]": "Track Properties",
   "RoadBuilder.Config[PathConfig]": "Path Properties",
