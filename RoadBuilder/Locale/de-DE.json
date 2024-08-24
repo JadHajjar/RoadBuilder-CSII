@@ -35,7 +35,7 @@
   "RoadBuilder.RoadAddon[GeneratesZoningBlocks]": "Supports Zoning",
   "RoadBuilder.RoadAddon[HasUndergroundWaterPipes]": "Supports Underground Water & Sewage Pipes",
   "RoadBuilder.RoadAddon[HasUndergroundElectricityCable]": "Supports Underground Electricty Cables",
-  "RoadBuilder.RoadAddon[RequiresUpgradeForElectricity]": "Requires Electricty Upgrade To Pass Electricty",
+  "RoadBuilder.RoadAddon[RequiresUpgradeForElectricity]": "Erfordert elektrisches Upgrade, um Strom zu übertragen",
   "RoadBuilder.UseAsTemplate": "Als Vorlage verwenden",
   "RoadBuilder.DeleteRoad": "Straße löschen",
   "RoadBuilder.PickOther": "Pick a different road",
