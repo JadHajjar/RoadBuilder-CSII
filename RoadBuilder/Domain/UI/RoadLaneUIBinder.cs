@@ -14,6 +14,7 @@ namespace RoadBuilder.Domain.UI
 		public bool NoDirection;
 		public bool Invert;
 		public bool InvertImage;
+		public bool IsEdgePlaceholder;
 		public bool TwoWay;
 		public string Color;
 		public string Texture;

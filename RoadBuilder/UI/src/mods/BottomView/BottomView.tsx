@@ -88,7 +88,7 @@ export const BottomView = () => {
   };
 
   let items = roadLanes
-    .filter((val) => val.SectionPrefabName)
+    .filter((val) => val.SectionPrefabName || val.IsEdgePlaceholder)
     .flatMap((val, idx) => {
       return [
         <DragAndDropDivider ref={(elem) => (dividersRef.current[idx] = elem!)} key={idx * 2} listIdx={idx} />,

@@ -69,6 +69,7 @@ namespace RoadBuilder.Systems.UI
 					PrefabName = prefab.name,
 					DisplayName = GetAssetName(prefab),
 					Thumbnail = ImageSystem.GetIcon(prefab),
+					IsEdge = prefab.Has<RoadBuilderEdgeLaneInfo>(),
 					Width = prefab.CalculateWidth()
 				});
 			}
@@ -85,6 +86,7 @@ namespace RoadBuilder.Systems.UI
 					IsGroup = true,
 					PrefabName = prefab.name,
 					DisplayName = GetAssetName(prefab),
+					IsEdge = prefab.Has<RoadBuilderEdgeLaneInfo>(),
 					Thumbnail = ImageSystem.GetIcon(prefab)
 				});
 			}

@@ -9,6 +9,7 @@ export interface RoadLane {
   InvertImage?: boolean;
   TwoWay?: boolean;
   IsGroup: boolean;
+  IsEdgePlaceholder?: boolean;
   Color?: string;
   Texture?: string;
   NetSection?: NetSectionItem;

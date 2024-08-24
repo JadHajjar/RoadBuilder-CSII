@@ -34,7 +34,11 @@ export const editRoad = (id: string) => trigger(mod.id, "EditRoad", id);
 export const findRoad = (id: string) => trigger(mod.id, "FindRoad", id);
 export const deleteRoad = (id: string) => trigger(mod.id, "DeleteRoad", id);
 export const setRoadLanes = (lanes: RoadLane[]) => {
-  trigger(mod.id, "SetRoadLanes", lanes);
+  trigger(
+    mod.id,
+    "SetRoadLanes",
+    lanes.filter((x) => !x.IsEdgePlaceholder)
+  );
 };
 export const laneOptionClicked = (optionIndex: number, netSectionId: number, optionId: number, value: number) =>
   trigger(mod.id, "OptionClicked", optionIndex, netSectionId, optionId, value);

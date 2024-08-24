@@ -64,9 +64,6 @@
   padding-bottom: 0px;
   font-size: 0.8em;
 
-  border: 1rem solid rgba(225, 225, 225, 0.2);
-  border-width: 0 1rem;
-
   .laneName {
     height: 40%;
     padding: 4rem 8rem;
@@ -80,6 +77,9 @@
   .laneDesign {
     height: 60%;
     background-color: rgb(35, 35, 35);
+
+    border: 1rem solid rgba(225, 225, 225, 0.75);
+    border-width: 0 1rem;
 
     > div {
       display: flex;

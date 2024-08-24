@@ -1,4 +1,5 @@
 ﻿using Colossal.IO.AssetDatabase;
+using Colossal.IO.AssetDatabase.Internal;
 
 using Game;
 using Game.Common;
@@ -497,7 +498,8 @@ namespace RoadBuilder.Systems
 
 					newPiece.Remove<NetPieceObjects>();
 					newPiece.AddComponentFrom(tramPolePiece.GetComponent<NetPieceObjects>());
-				
+					newPiece.GetComponent<NetPieceObjects>().m_PieceObjects.ForEach(x => x.m_Position = new float3(x.m_Position.x -= (width - 1) / 2f, x.m_Position.y, x.m_Position.z));
+
 					prefabSystem.AddPrefab(NetPieces[newPiece.name] = newPiece);
 				}
 			}
@@ -512,7 +514,8 @@ namespace RoadBuilder.Systems
 
 					newPiece.Remove<NetPieceObjects>();
 					newPiece.AddComponentFrom(trainPolePiece.GetComponent<NetPieceObjects>());
-				
+					newPiece.GetComponent<NetPieceObjects>().m_PieceObjects.ForEach(x => x.m_Position = new float3(x.m_Position.x -= (width - 1) / 2f, x.m_Position.y, x.m_Position.z));
+
 					prefabSystem.AddPrefab(NetPieces[newPiece.name] = newPiece);
 				}
 			}
@@ -769,7 +772,7 @@ namespace RoadBuilder.Systems
 						m_Piece = NetPieces[string.Format(pieceBaseName + " {0}", width)],
 						m_RequireAll = new[] { NetPieceRequirements.Median },
 						m_RequireAny = new NetPieceRequirements[0],
-						m_RequireNone = new[] { NetPieceRequirements.LevelCrossing, NetPieceRequirements.Intersection, NetPieceRequirements.DeadEnd }
+						m_RequireNone = new[] { NetPieceRequirements.LevelCrossing, NetPieceRequirements.Node, NetPieceRequirements.DeadEnd }
 					},
 					new NetPieceInfo
 					{
@@ -783,20 +786,20 @@ namespace RoadBuilder.Systems
 						m_Piece = NetPieces[string.Format(pieceBaseName + " Flat {0}", width)],
 						m_RequireAll = new[] { NetPieceRequirements.LevelCrossing, NetPieceRequirements.Median },
 						m_RequireAny = new NetPieceRequirements[0],
-						m_RequireNone = new[] { NetPieceRequirements.Intersection, NetPieceRequirements.DeadEnd }
+						m_RequireNone = new[] { NetPieceRequirements.Node, NetPieceRequirements.DeadEnd }
 					},
 					new NetPieceInfo
 					{
 						m_Piece = NetPieces[string.Format(pieceBaseName + " Middle {0}", width)],
 						m_RequireAll = new[] { NetPieceRequirements.Median },
-						m_RequireAny = new[] { NetPieceRequirements.Intersection, NetPieceRequirements.DeadEnd },
+						m_RequireAny = new[] { NetPieceRequirements.Node, NetPieceRequirements.DeadEnd },
 						m_RequireNone = new[] { NetPieceRequirements.LevelCrossing }
 					},
 					new NetPieceInfo
 					{
 						m_Piece = NetPieces[string.Format(pieceBaseName + " Middle Flat {0}", width)],
 						m_RequireAll = new[] { NetPieceRequirements.Median, NetPieceRequirements.LevelCrossing },
-						m_RequireAny = new[] { NetPieceRequirements.Intersection, NetPieceRequirements.DeadEnd },
+						m_RequireAny = new[] { NetPieceRequirements.Node, NetPieceRequirements.DeadEnd },
 						m_RequireNone = new NetPieceRequirements[0],
 					},
 					new NetPieceInfo
@@ -804,7 +807,7 @@ namespace RoadBuilder.Systems
 						m_Piece = NetPieces[string.Format("Elevated Bottom Piece {0}", width)],
 						m_RequireAll = new[] { NetPieceRequirements.Elevated },
 						m_RequireAny = new NetPieceRequirements[0] ,
-						m_RequireNone = new[] { NetPieceRequirements.Intersection, NetPieceRequirements.HighTransition, NetPieceRequirements.LowTransition },
+						m_RequireNone = new[] { NetPieceRequirements.Node, NetPieceRequirements.HighTransition, NetPieceRequirements.LowTransition },
 					},
 					new NetPieceInfo
 					{
@@ -816,14 +819,14 @@ namespace RoadBuilder.Systems
 					new NetPieceInfo
 					{
 						m_Piece = NetPieces[string.Format("Elevated Bottom Piece {0}", width)],
-						m_RequireAll = new[] { NetPieceRequirements.Elevated, NetPieceRequirements.Intersection },
+						m_RequireAll = new[] { NetPieceRequirements.Elevated, NetPieceRequirements.Node },
 						m_RequireAny = new NetPieceRequirements[0] ,
 						m_RequireNone = new[] { NetPieceRequirements.Median, NetPieceRequirements.HighTransition, NetPieceRequirements.LowTransition },
 					},
 					new NetPieceInfo
 					{
 						m_Piece = NetPieces[string.Format("Elevated Bottom Piece {0} - Intersection Middle", width)],
-						m_RequireAll = new[] { NetPieceRequirements.Elevated, NetPieceRequirements.Intersection, NetPieceRequirements.Median },
+						m_RequireAll = new[] { NetPieceRequirements.Elevated, NetPieceRequirements.Node, NetPieceRequirements.Median },
 						m_RequireAny = new NetPieceRequirements[0] ,
 						m_RequireNone = new[] { NetPieceRequirements.HighTransition, NetPieceRequirements.LowTransition },
 					},
@@ -832,7 +835,7 @@ namespace RoadBuilder.Systems
 						m_Piece = NetPieces[string.Format("Tunnel Top Piece {0}", width)],
 						m_RequireAll = new[] { NetPieceRequirements.Tunnel },
 						m_RequireAny = new NetPieceRequirements[0] ,
-						m_RequireNone = new[] { NetPieceRequirements.Intersection, NetPieceRequirements.HighTransition, NetPieceRequirements.LowTransition },
+						m_RequireNone = new[] { NetPieceRequirements.Node, NetPieceRequirements.HighTransition, NetPieceRequirements.LowTransition },
 					},
 					new NetPieceInfo
 					{
@@ -844,14 +847,14 @@ namespace RoadBuilder.Systems
 					new NetPieceInfo
 					{
 						m_Piece = NetPieces[string.Format("Tunnel Top Piece {0}", width)],
-						m_RequireAll = new[] { NetPieceRequirements.Tunnel, NetPieceRequirements.Intersection },
+						m_RequireAll = new[] { NetPieceRequirements.Tunnel, NetPieceRequirements.Node },
 						m_RequireAny = new NetPieceRequirements[0] ,
 						m_RequireNone = new[] { NetPieceRequirements.Median, NetPieceRequirements.HighTransition, NetPieceRequirements.LowTransition },
 					},
 					new NetPieceInfo
 					{
 						m_Piece = NetPieces[string.Format("Tunnel Top Piece {0} - Intersection Middle", width)],
-						m_RequireAll = new[] { NetPieceRequirements.Tunnel, NetPieceRequirements.Intersection, NetPieceRequirements.Median },
+						m_RequireAll = new[] { NetPieceRequirements.Tunnel, NetPieceRequirements.Node, NetPieceRequirements.Median },
 						m_RequireAny = new NetPieceRequirements[0] ,
 						m_RequireNone = new[] { NetPieceRequirements.HighTransition, NetPieceRequirements.LowTransition },
 					},
@@ -910,7 +913,7 @@ namespace RoadBuilder.Systems
 						m_Piece = NetPieces[item.Item1],
 						m_RequireAll = new[] { NetPieceRequirements.Median },
 						m_RequireAny = new NetPieceRequirements[0],
-						m_RequireNone = new[] { NetPieceRequirements.LevelCrossing, NetPieceRequirements.Intersection, NetPieceRequirements.DeadEnd }
+						m_RequireNone = new[] { NetPieceRequirements.LevelCrossing, NetPieceRequirements.Node, NetPieceRequirements.DeadEnd }
 					},
 					new NetPieceInfo
 					{
@@ -924,20 +927,20 @@ namespace RoadBuilder.Systems
 						m_Piece = NetPieces[item.Item1 + " - Flat"],
 						m_RequireAll = new[] { NetPieceRequirements.LevelCrossing, NetPieceRequirements.Median },
 						m_RequireAny = new NetPieceRequirements[0],
-						m_RequireNone = new[] { NetPieceRequirements.Intersection, NetPieceRequirements.DeadEnd }
+						m_RequireNone = new[] { NetPieceRequirements.Node, NetPieceRequirements.DeadEnd }
 					},
 					new NetPieceInfo
 					{
 						m_Piece = NetPieces[item.Item1],
 						m_RequireAll = new[] { NetPieceRequirements.Median },
-						m_RequireAny = new[] { NetPieceRequirements.Intersection, NetPieceRequirements.DeadEnd },
+						m_RequireAny = new[] { NetPieceRequirements.Node, NetPieceRequirements.DeadEnd },
 						m_RequireNone = new[] { NetPieceRequirements.LevelCrossing }
 					},
 					new NetPieceInfo
 					{
 						m_Piece = NetPieces[item.Item1 + " - Flat"],
 						m_RequireAll = new[] { NetPieceRequirements.Median, NetPieceRequirements.LevelCrossing },
-						m_RequireAny = new[] { NetPieceRequirements.Intersection, NetPieceRequirements.DeadEnd },
+						m_RequireAny = new[] { NetPieceRequirements.Node, NetPieceRequirements.DeadEnd },
 						m_RequireNone = new NetPieceRequirements[0],
 					},
 					new NetPieceInfo
@@ -945,7 +948,7 @@ namespace RoadBuilder.Systems
 						m_Piece = NetPieces[string.Format("Elevated Bottom Piece {0}", width)],
 						m_RequireAll = new[] { NetPieceRequirements.Elevated },
 						m_RequireAny = new NetPieceRequirements[0] ,
-						m_RequireNone = new[] { NetPieceRequirements.Intersection, NetPieceRequirements.HighTransition, NetPieceRequirements.LowTransition },
+						m_RequireNone = new[] { NetPieceRequirements.Node, NetPieceRequirements.HighTransition, NetPieceRequirements.LowTransition },
 					},
 					new NetPieceInfo
 					{
@@ -957,14 +960,14 @@ namespace RoadBuilder.Systems
 					new NetPieceInfo
 					{
 						m_Piece = NetPieces[string.Format("Elevated Bottom Piece {0}", width)],
-						m_RequireAll = new[] { NetPieceRequirements.Elevated, NetPieceRequirements.Intersection },
+						m_RequireAll = new[] { NetPieceRequirements.Elevated, NetPieceRequirements.Node },
 						m_RequireAny = new NetPieceRequirements[0] ,
 						m_RequireNone = new[] { NetPieceRequirements.Median, NetPieceRequirements.HighTransition, NetPieceRequirements.LowTransition },
 					},
 					new NetPieceInfo
 					{
 						m_Piece = NetPieces[string.Format("Elevated Bottom Piece {0} - Intersection Middle", width)],
-						m_RequireAll = new[] { NetPieceRequirements.Elevated, NetPieceRequirements.Intersection, NetPieceRequirements.Median },
+						m_RequireAll = new[] { NetPieceRequirements.Elevated, NetPieceRequirements.Node, NetPieceRequirements.Median },
 						m_RequireAny = new NetPieceRequirements[0] ,
 						m_RequireNone = new[] { NetPieceRequirements.HighTransition, NetPieceRequirements.LowTransition },
 					},
@@ -973,7 +976,7 @@ namespace RoadBuilder.Systems
 						m_Piece = NetPieces[string.Format("Tunnel Top Piece {0}", width)],
 						m_RequireAll = new[] { NetPieceRequirements.Tunnel },
 						m_RequireAny = new NetPieceRequirements[0] ,
-						m_RequireNone = new[] { NetPieceRequirements.Intersection, NetPieceRequirements.HighTransition, NetPieceRequirements.LowTransition },
+						m_RequireNone = new[] { NetPieceRequirements.Node, NetPieceRequirements.HighTransition, NetPieceRequirements.LowTransition },
 					},
 					new NetPieceInfo
 					{
@@ -985,14 +988,14 @@ namespace RoadBuilder.Systems
 					new NetPieceInfo
 					{
 						m_Piece = NetPieces[string.Format("Tunnel Top Piece {0}", width)],
-						m_RequireAll = new[] { NetPieceRequirements.Tunnel, NetPieceRequirements.Intersection },
+						m_RequireAll = new[] { NetPieceRequirements.Tunnel, NetPieceRequirements.Node },
 						m_RequireAny = new NetPieceRequirements[0] ,
 						m_RequireNone = new[] { NetPieceRequirements.Median, NetPieceRequirements.HighTransition, NetPieceRequirements.LowTransition },
 					},
 					new NetPieceInfo
 					{
 						m_Piece = NetPieces[string.Format("Tunnel Top Piece {0} - Intersection Middle", width)],
-						m_RequireAll = new[] { NetPieceRequirements.Tunnel, NetPieceRequirements.Intersection, NetPieceRequirements.Median },
+						m_RequireAll = new[] { NetPieceRequirements.Tunnel, NetPieceRequirements.Node, NetPieceRequirements.Median },
 						m_RequireAny = new NetPieceRequirements[0] ,
 						m_RequireNone = new[] { NetPieceRequirements.HighTransition, NetPieceRequirements.LowTransition },
 					},
