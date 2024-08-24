@@ -91,6 +91,7 @@
 }
 
 .backButton,
+.pickerButton,
 .closeButton,
 .deleteRoadButton,
 .copyButton {
@@ -109,6 +110,13 @@
   }
 }
 
+.pickerButton {
+  img {
+    margin: 0rem;
+    mask-image: url(coui://roadbuildericons/RB_PlaceMore.svg);
+  }
+}
+
 .closeButton {
   img {
     margin: 0rem;
@@ -116,7 +124,7 @@
   }
 }
 
-.deleteRoadButton {  
+.deleteRoadButton {
   padding: 4rem 8rem;
   img {
     mask-image: url(coui://gameui/Media/Glyphs/Trash.svg);

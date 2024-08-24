@@ -191,6 +191,10 @@ namespace RoadBuilder.Systems.UI
 			{
 				toolSystem.ActivatePrefabTool(prefab);
 			}
+			else if (roadBuilderSystem.Configurations.TryGetValue(GetWorkingId(), out var networkPrefab))
+			{
+				toolSystem.ActivatePrefabTool(networkPrefab.Prefab);
+			}
 		}
 
 		public void CreateNewPrefab(Entity entity)

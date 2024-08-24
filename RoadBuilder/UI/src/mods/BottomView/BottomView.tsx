@@ -16,6 +16,7 @@ import {
   toggleTool,
   deleteRoad,
   getRoadId$,
+  pickPrefab,
 } from "mods/bindings";
 import { RoadBuilderToolModeEnum } from "domain/RoadBuilderToolMode";
 import { RoadLane } from "domain/RoadLane";
@@ -127,6 +128,11 @@ export const BottomView = () => {
                     toggleTool();
                   }}
                 >
+                  <img />
+                </Button>
+              </Tooltip>
+              <Tooltip tooltip={translate("RoadBuilder.Picker")}>
+                <Button className={styles.pickerButton} variant="flat" onSelect={pickPrefab}>
                   <img />
                 </Button>
               </Tooltip>
