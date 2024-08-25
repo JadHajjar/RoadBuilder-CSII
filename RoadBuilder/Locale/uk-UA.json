@@ -40,7 +40,7 @@
   "RoadBuilder.RoadAddon[HasUndergroundWaterPipes]": "Supports Underground Water & Sewage Pipes",
   "RoadBuilder.RoadAddon[HasUndergroundElectricityCable]": "Supports Underground Electricty Cables",
   "RoadBuilder.RoadAddon[RequiresUpgradeForElectricity]": "Requires Electricty Upgrade To Pass Electricty",
-  "RoadBuilder.Warning[MissingEdgeLane]": "Not having a Shoulder or Sidewalk lane at the edge may result in unexpected behaviour.",
+  "RoadBuilder.Warning[MissingEdgeLane]": "Not having a Shoulder or Sidewalk lane on this edge may result in unexpected behaviour.",
   "RoadBuilder.UseAsTemplate": "Use As Template",
   "RoadBuilder.DeleteRoad": "Delete Road",
   "RoadBuilder.PickOther": "Pick a different road",
