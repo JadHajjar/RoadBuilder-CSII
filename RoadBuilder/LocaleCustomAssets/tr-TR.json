@@ -10,7 +10,7 @@
   "Assets.NAME[RoadBuilder.LaneGroups.TrainGroupPrefab]": "Tren Rayı",
   "Assets.NAME[RoadBuilder.LaneGroups.TramGroupPrefab]": "Tramvay Rayı",
   "Assets.NAME[RoadBuilder.LaneGroups.ParkingGroupPrefab]": "Park Etme",
-  "Assets.NAME[RoadBuilder.LaneGroups.PoleGroupPrefab]": "Pole",
+  "Assets.NAME[RoadBuilder.LaneGroups.PoleGroupPrefab]": "Direk",
   "RoadBuilder.LaneGroups.BusGroupPrefab.Options[Lane Width]": "Şerit Genişliği",
   "RoadBuilder.LaneGroups.BusGroupPrefab.Options[Transport Option]": "Ulaşım Seçenekleri",
   "RoadBuilder.LaneGroups.CarGroupPrefab.Options[Lane Width]": "Şerit Genişliği",
