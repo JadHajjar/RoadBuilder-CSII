@@ -10,7 +10,7 @@
   "Assets.NAME[RoadBuilder.LaneGroups.TrainGroupPrefab]": "Eisenbahnspur",
   "Assets.NAME[RoadBuilder.LaneGroups.TramGroupPrefab]": "Straßenbahnspur",
   "Assets.NAME[RoadBuilder.LaneGroups.ParkingGroupPrefab]": "Parken",
-  "Assets.NAME[RoadBuilder.LaneGroups.PoleGroupPrefab]": "Pole",
+  "Assets.NAME[RoadBuilder.LaneGroups.PoleGroupPrefab]": "Mast",
   "RoadBuilder.LaneGroups.BusGroupPrefab.Options[Lane Width]": "Fahrspurbreite",
   "RoadBuilder.LaneGroups.BusGroupPrefab.Options[Transport Option]": "Transportoption",
   "RoadBuilder.LaneGroups.CarGroupPrefab.Options[Lane Width]": "Fahrspurbreite",
