@@ -37,6 +37,7 @@ namespace RoadBuilder.Systems
 		private RoadBuilderGenerationDataSystem roadGenerationDataSystem;
 		private ModificationBarrier1 modificationBarrier;
 		private Dictionary<Entity, Entity> toolbarUISystemLastSelectedAssets;
+		private DateTime lastUpdateRequest;
 
 		public event Action ConfigurationsUpdated;
 
@@ -65,7 +66,7 @@ namespace RoadBuilder.Systems
 
 		protected override void OnUpdate()
 		{
-			if (_updatedRoadPrefabsQueue.Count == 0)
+			if (_updatedRoadPrefabsQueue.Count == 0 || lastUpdateRequest > DateTime.Now.AddSeconds(-0.66))
 			{
 				return;
 			}
@@ -122,6 +123,8 @@ namespace RoadBuilder.Systems
 
 				networkBuilderPrefab = _networkBuilderPrefab;
 			}
+
+			lastUpdateRequest = DateTime.Now;
 
 			_updatedRoadPrefabsQueue.Enqueue((networkBuilderPrefab, true));
 		}

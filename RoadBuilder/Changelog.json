@@ -19,7 +19,8 @@
           "Edge lanes are marked with a special icon in the lane list.",
           "Placing an edge lane anywhere other than the edge will automatically move it to the closest available slot.",
           "Added a warning icon when a side is missing an edge lane.",
-          "Removed the Raised Sidewalks option to make room for smarter edge lanes. This means that you can now add sidewalks everywhere."
+          "Removed the Raised Sidewalks option to make room for smarter edge lanes. This means that you can now add sidewalks everywhere.",
+          "Added smaller, experimental versions of sidewalk lanes."
         ]
       },
       {
@@ -42,6 +43,7 @@
       {
         "Name": "Other Changes",
         "Changes": [
+          "Added a delay before changes to the road are reflected in-game. Allowing you to make multiple edits faster without your game stuttering.",
           "Added new Pole lanes, similar to the empty lanes, but with the Tram and Train poles.",
           "Added more width options for empty lanes that do not match the road's ground type.",
           "Added a potential fix for roads becoming grey.",

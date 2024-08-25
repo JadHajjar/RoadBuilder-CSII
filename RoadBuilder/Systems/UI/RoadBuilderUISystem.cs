@@ -16,6 +16,7 @@ using RoadBuilder.Utilities;
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 using Unity.Entities;
@@ -240,6 +241,7 @@ namespace RoadBuilder.Systems.UI
 
 		private void UpdateRoad(Action<INetworkConfig> action)
 		{
+			var sw=Stopwatch.StartNew();
 			var createNew = RoadBuilderMode == RoadBuilderToolMode.EditingSingle;
 			var nonExistent = RoadBuilderMode == RoadBuilderToolMode.EditingNonExistent;
 			var config = nonExistent ? workingConfig : createNew
@@ -497,7 +499,7 @@ namespace RoadBuilder.Systems.UI
 
 			if (leftEdgeMissing)
 			{
-				binders[0] = new RoadLaneUIBinder { Index = int.MinValue, IsEdgePlaceholder = true, InvertImage = true };
+				binders[0] = new RoadLaneUIBinder { Index = int.MinValue, IsEdgePlaceholder = true, InvertImage = !cityConfigurationSystem.leftHandTraffic };
 			}
 
 			for (var i = 0; i < config.Lanes.Count; i++)
@@ -506,7 +508,7 @@ namespace RoadBuilder.Systems.UI
 				var validSection = NetworkPrefabGenerationUtil.GetNetSection(roadGenerationDataSystem.RoadGenerationData, config, lane, out var section, out var groupPrefab);
 				var noDirection = validSection && ((section.TryGet<RoadBuilderLaneInfo>(out var laneInfo) && laneInfo.NoDirection) || ((groupPrefab?.TryGet<RoadBuilderLaneInfo>(out var groupInfo) ?? false) && groupInfo.NoDirection));
 				var isEdge = NetworkConfigExtensionsUtil.GetEdgeLaneInfo(section, groupPrefab, out _);
-				var isBackward = noDirection ? FindDirection(config, i) : (isEdge && cityConfigurationSystem.leftHandTraffic ? !lane.Invert : lane.Invert);
+				var isBackward = noDirection ? FindDirection(config, i) : lane.Invert;
 				var width = validSection ? section.CalculateWidth() : 0F;
 
 				GetThumbnailAndColor(config, lane, section, groupPrefab, isBackward, out var thumbnail, out var color, out var texture);
@@ -516,7 +518,7 @@ namespace RoadBuilder.Systems.UI
 					Index = i,
 					Invert = lane.Invert,
 					NoDirection = noDirection,
-					InvertImage = isBackward,
+					InvertImage = isEdge && cityConfigurationSystem.leftHandTraffic ? !isBackward : isBackward,
 					TwoWay = validSection && section.SupportsTwoWay(),
 					SectionPrefabName = string.IsNullOrEmpty(lane.GroupPrefabName) ? lane.SectionPrefabName : lane.GroupPrefabName,
 					IsGroup = !string.IsNullOrEmpty(lane.GroupPrefabName),
@@ -538,7 +540,7 @@ namespace RoadBuilder.Systems.UI
 
 			if (rightEdgeMissing)
 			{
-				binders[binders.Length - 1] = new RoadLaneUIBinder { Index = int.MaxValue, IsEdgePlaceholder = true };
+				binders[binders.Length - 1] = new RoadLaneUIBinder { Index = int.MaxValue, IsEdgePlaceholder = true, InvertImage = cityConfigurationSystem.leftHandTraffic };
 			}
 
 			if (cityConfigurationSystem.leftHandTraffic)

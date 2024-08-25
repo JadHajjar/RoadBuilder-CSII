@@ -1,5 +1,6 @@
 ﻿using Colossal.Entities;
 
+using Game;
 using Game.Common;
 using Game.Net;
 using Game.Prefabs;
@@ -74,9 +75,12 @@ namespace RoadBuilder.Systems.UI
 #else
 				Name = x.Value.Config.Name,
 #endif
-				Locked = !Mod.Settings.RemoveLockRequirements && EntityManager.HasEnabledComponent<Locked>(prefabSystem.GetEntity(x.Value.Prefab)),
+				Locked = !Mod.Settings.RemoveLockRequirements && GameManager.instance.gameMode == GameMode.Game && EntityManager.HasEnabledComponent<Locked>(prefabSystem.GetEntity(x.Value.Prefab)),
 				Thumbnail = ImageSystem.GetIcon(x.Value.Prefab)
-			}).ToArray();
+			})
+				.OrderBy(x => x.Locked)
+				.ThenBy(x => x.Name)
+				.ToArray();
 		}
 
 		private void ActivateRoad(string id)

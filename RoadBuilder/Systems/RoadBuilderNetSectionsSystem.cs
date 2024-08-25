@@ -241,15 +241,15 @@ namespace RoadBuilder.Systems
 
 		private void CreateAllEmptyPieces()
 		{
-			CreateAndAddEmptyPieces("RB Empty Piece {0}", ("Alley Shoulder 1", new[] { 0.5f, 1f }), ("Highway Shoulder 2", new[] { 1.5f, 2f }), ("Car Drive Piece 3", new[] { 2.5f, 3f }), ("Highway Drive Piece 4", new[] { 3.5f, 4f }));
-			CreateAndAddEmptyPieces("RB Empty Piece Flat {0}", ("Alley Shoulder 1 - Flat", new[] { 0.5f, 1f }), ("Highway Shoulder 2 - Flat", new[] { 1.5f, 2f }), ("Car Drive Piece 3 - Flat", new[] { 2.5f, 3f }), ("Highway Drive Piece 4 - Flat", new[] { 3.5f, 4f }));
-			CreateAndAddEmptyPieces("RB Empty Piece Middle {0}", ("Alley Shoulder 1", new[] { 0.5f, 1f }), ("Highway Shoulder 2", new[] { 1.5f, 2f }), ("Car Drive Piece 3", new[] { 2.5f, 3f }), ("Highway Drive Piece 4", new[] { 3.5f, 4f }));
-			CreateAndAddEmptyPieces("RB Empty Piece Middle Flat {0}", ("Alley Shoulder 1 - Flat", new[] { 0.5f, 1f }), ("Highway Shoulder 2 - Flat", new[] { 1.5f, 2f }), ("Car Drive Piece 3 - Flat", new[] { 2.5f, 3f }), ("Highway Drive Piece 4 - Flat", new[] { 3.5f, 4f }));
+			CreateAndAddEmptyPieces("RB Empty Piece {0}", ("Alley Shoulder 1", new[] { 0.5f, 1f }), ("Highway Shoulder 2", new[] { 1.5f, 2f }), ("Car Drive Piece 3", new[] { 2.5f, 3f }), ("Highway Drive Piece 4", new[] { 3.5f, 4f, 6f }));
+			CreateAndAddEmptyPieces("RB Empty Piece Flat {0}", ("Alley Shoulder 1 - Flat", new[] { 0.5f, 1f }), ("Highway Shoulder 2 - Flat", new[] { 1.5f, 2f }), ("Car Drive Piece 3 - Flat", new[] { 2.5f, 3f }), ("Highway Drive Piece 4 - Flat", new[] { 3.5f, 4f, 6f }));
+			CreateAndAddEmptyPieces("RB Empty Piece Middle {0}", ("Car Middle Piece 3", new[] { 0.5f, 1f, 1.5f, 2f, 2.5f, 3f }), ("Highway Middle Piece 4", new[] { 3.5f, 4f, 6f }));
+			CreateAndAddEmptyPieces("RB Empty Piece Middle Flat {0}", ("Car Middle Piece 3 - Flat", new[] { 0.5f, 1f, 1.5f, 2f, 2.5f, 3f }), ("Highway Middle Piece 4 - Flat", new[] { 3.5f, 4f, 6f }));
 
 			CreateAndAddEmptyPieces("RB Gravel Empty Piece {0}", ("Gravel Shoulder 1", new[] { 0.5f, 1f }), ("Gravel Drive Piece 3", new[] { 1.5f, 2f, 2.5f, 3f }));
 			CreateAndAddEmptyPieces("RB Gravel Empty Piece Flat {0}", ("Gravel Shoulder 1 - Flat", new[] { 0.5f, 1f }), ("Gravel Drive Piece 3 - Flat", new[] { 1.5f, 2f, 2.5f, 3f }));
-			CreateAndAddEmptyPieces("RB Gravel Empty Piece Middle {0}", ("Gravel Shoulder 1", new[] { 0.5f, 1f }), ("Gravel Drive Piece 3", new[] { 1.5f, 2f, 2.5f, 3f }));
-			CreateAndAddEmptyPieces("RB Gravel Empty Piece Middle Flat {0}", ("Gravel Shoulder 1 - Flat", new[] { 0.5f, 1f }), ("Gravel Drive Piece 3 - Flat", new[] { 1.5f, 2f, 2.5f, 3f }));
+			CreateAndAddEmptyPieces("RB Gravel Empty Piece Middle {0}", ("Gravel Middle Piece 3", new[] { 0.5f, 1f, 1.5f, 2f, 2.5f, 3f }));
+			CreateAndAddEmptyPieces("RB Gravel Empty Piece Middle Flat {0}", ("Gravel Middle Piece 3 - Flat", new[] { 0.5f, 1f, 1.5f, 2f, 2.5f, 3f }));
 
 			CreateAndAddEmptyPieces("RB Tiled Empty Piece {0}", ("Tiled Shoulder 1", new[] { 0.5f, 1f }), ("Tiled Drive Piece 3", new[] { 1.5f, 2f, 2.5f, 3f }));
 			CreateAndAddEmptyPieces("RB Tiled Empty Piece Flat {0}", ("Tiled Shoulder 1 - Flat", new[] { 0.5f, 1f }), ("Tiled Drive Piece 3 - Flat", new[] { 1.5f, 2f, 2.5f, 3f }));
@@ -258,8 +258,8 @@ namespace RoadBuilder.Systems
 
 			CreateAndAddEmptyPieces("RB Train Empty Piece {0}", ("Train Shoulder Piece 1", new[] { 0.5f, 1f }), ("Train Shoulder Piece 2", new[] { 1.5f, 2f }), ("Train Track Piece 4", new[] { 2.5f, 3f, 3.5f, 4f }));
 			CreateAndAddEmptyPieces("RB Train Empty Piece Flat {0}", ("Train Shoulder Piece 1", new[] { 0.5f, 1f }), ("Train Shoulder Piece 2", new[] { 1.5f, 2f }), ("Train Track Piece 4", new[] { 2.5f, 3f, 3.5f, 4f }));
-			CreateAndAddEmptyPieces("RB Train Empty Piece Middle {0}", ("Train Shoulder Piece 1", new[] { 0.5f, 1f }), ("Train Shoulder Piece 2", new[] { 1.5f, 2f }), ("Train Track Piece 4", new[] { 2.5f, 3f, 3.5f, 4f }));
-			CreateAndAddEmptyPieces("RB Train Empty Piece Middle Flat {0}", ("Train Shoulder Piece 1", new[] { 0.5f, 1f }), ("Train Shoulder Piece 2", new[] { 1.5f, 2f }), ("Train Track Piece 4", new[] { 2.5f, 3f, 3.5f, 4f }));
+			CreateAndAddEmptyPieces("RB Train Empty Piece Middle {0}", ("Train Track Middle Piece 4", new[] { 0.5f, 1f, 1.5f, 2f, 2.5f, 3f, 3.5f, 4f }));
+			CreateAndAddEmptyPieces("RB Train Empty Piece Middle Flat {0}", ("Train Track Middle Piece 4", new[] { 0.5f, 1f, 1.5f, 2f, 2.5f, 3f, 3.5f, 4f }));
 
 			CreateAndAddEmptyTunnelAndBridgePieces("Elevated Bottom Piece 1", "Elevated Bottom Piece {0}", 0.5f);
 			CreateAndAddEmptyTunnelAndBridgePieces("Elevated Bottom Piece 1 - Ending", "Elevated Bottom Piece {0} - Ending", 0.5f);
@@ -276,6 +276,10 @@ namespace RoadBuilder.Systems
 			CreateAndAddEmptyTunnelAndBridgePieces("Elevated Bottom Piece 4", "Elevated Bottom Piece {0}", 3.5f);
 			CreateAndAddEmptyTunnelAndBridgePieces("Elevated Bottom Piece 4 - Ending", "Elevated Bottom Piece {0} - Ending", 3.5f);
 			CreateAndAddEmptyTunnelAndBridgePieces("Elevated Bottom Piece 4 - Intersection Middle", "Elevated Bottom Piece {0} - Intersection Middle", 3.5f);
+
+			CreateAndAddEmptyTunnelAndBridgePieces("Elevated Bottom Piece 4", "Elevated Bottom Piece {0}", 6f);
+			CreateAndAddEmptyTunnelAndBridgePieces("Elevated Bottom Piece 4 - Ending", "Elevated Bottom Piece {0} - Ending", 6f);
+			CreateAndAddEmptyTunnelAndBridgePieces("Elevated Bottom Piece 4 - Intersection Middle", "Elevated Bottom Piece {0} - Intersection Middle", 6f);
 
 			CreateAndAddEmptyTunnelAndBridgePieces("Elevated Bottom Piece 3.5 - Edge", "Elevated Bottom Piece {0} - Edge", 3f);
 			CreateAndAddEmptyTunnelAndBridgePieces("Elevated Bottom Piece 3.5 - Edge Ending", "Elevated Bottom Piece {0} - Edge Ending", 3f);
@@ -450,14 +454,18 @@ namespace RoadBuilder.Systems
 				setUpSidewalk(NetPieces["Sidewalk Piece 3.5 - Flat"].Clone($"Sidewalk Piece {width.ToString(CultureInfo.InvariantCulture)} - Flat") as NetPiecePrefab, width);
 			}
 
+			setUpSidewalk(NetPieces["Sidewalk Piece 4.5"].Clone("Sidewalk Piece 4") as NetPiecePrefab, 4);
+			setUpSidewalk(NetPieces["Sidewalk Piece 4.5 - Flat"].Clone($"Sidewalk Piece 4 - Flat") as NetPiecePrefab, 4);
+
 			void setUpSidewalk(NetPiecePrefab sidewalk, float width)
 			{
+				var originalWidth = sidewalk.m_Width;
 				sidewalk.m_Width = width;
 
 				var matchPieceVertices = sidewalk.GetComponent<MatchPieceVertices>();
 				matchPieceVertices.m_Offsets[0] = sidewalk.m_Width / -2;
 				matchPieceVertices.m_Offsets[1] = (sidewalk.m_Width / -2) + 0.4f;
-				matchPieceVertices.m_Offsets[2] = sidewalk.m_Width / 2;
+				matchPieceVertices.m_Offsets[2] -= sidewalk.m_Width / 2;
 
 				if (sidewalk.TryGet<NetPieceLanes>(out var netPieceLanes))
 				{
@@ -474,11 +482,11 @@ namespace RoadBuilder.Systems
 				{
 					if (item.m_Position.x > 0)
 					{
-						item.m_Position = new(math.min(0, item.m_Position.x - ((3.5f - sidewalk.m_Width) / 2f)), item.m_Position.y, item.m_Position.z);
+						item.m_Position = new(math.min(0, item.m_Position.x - ((originalWidth - sidewalk.m_Width) / 2f)), item.m_Position.y, item.m_Position.z);
 					}
 					else if (item.m_Position.x < 0)
 					{
-						item.m_Position = new(math.max(0, item.m_Position.x + ((3.5f - sidewalk.m_Width) / 2f)), item.m_Position.y, item.m_Position.z);
+						item.m_Position = new(math.max(0, item.m_Position.x + ((originalWidth - sidewalk.m_Width) / 2f)), item.m_Position.y, item.m_Position.z);
 					}
 				}
 
@@ -873,11 +881,19 @@ namespace RoadBuilder.Systems
 				foreach (var item in sidewalk.m_Pieces)
 				{
 					item.m_Piece = NetPieces[item.m_Piece.name.Replace("3.5", width.ToString(CultureInfo.InvariantCulture))];
-					//item.m_Offset = new((3.5f - width) / 2, 0, 0);
 				}
 
 				prefabSystem.AddPrefab(sidewalk);
 			}
+
+			var sidewalk4 = NetSections["Sidewalk 4.5"].Clone("Sidewalk 4") as NetSectionPrefab;
+
+			foreach (var item in sidewalk4.m_Pieces)
+			{
+				item.m_Piece = NetPieces[item.m_Piece.name.Replace("4.5", "4")];
+			}
+
+			prefabSystem.AddPrefab(sidewalk4);
 		}
 
 		private void AddParkingNetSections()
@@ -886,10 +902,10 @@ namespace RoadBuilder.Systems
 			{
 				("RB Parking Piece Parallel", "RB Parking Section Parallel", "3"),
 				("RB Parking Piece Parallel NoMarking", "RB Parking Section Parallel NoMarking", "2"),
-				("RB Parking Piece Angled", "RB Parking Section Angled", "5"),
-				("RB Parking Piece Angled NoMarking", "RB Parking Section Angled NoMarking", "5"),
-				("RB Parking Piece Perpendicular", "RB Parking Section Perpendicular", "5"),
-				("RB Parking Piece Perpendicular NoMarking", "RB Parking Section Perpendicular NoMarking", "5"),
+				("RB Parking Piece Angled", "RB Parking Section Angled", "6"),
+				("RB Parking Piece Angled NoMarking", "RB Parking Section Angled NoMarking", "6"),
+				("RB Parking Piece Perpendicular", "RB Parking Section Perpendicular", "6"),
+				("RB Parking Piece Perpendicular NoMarking", "RB Parking Section Perpendicular NoMarking", "6"),
 			};
 
 			foreach (var item in sections)
@@ -931,14 +947,14 @@ namespace RoadBuilder.Systems
 					},
 					new NetPieceInfo
 					{
-						m_Piece = NetPieces[item.Item1],
+						m_Piece = NetPieces[string.Format("RB Empty Piece Middle {0}", width)],
 						m_RequireAll = new[] { NetPieceRequirements.Median },
 						m_RequireAny = new[] { NetPieceRequirements.Node, NetPieceRequirements.DeadEnd },
 						m_RequireNone = new[] { NetPieceRequirements.LevelCrossing }
 					},
 					new NetPieceInfo
 					{
-						m_Piece = NetPieces[item.Item1 + " - Flat"],
+						m_Piece = NetPieces[string.Format("RB Empty Piece Middle Flat {0}", width)],
 						m_RequireAll = new[] { NetPieceRequirements.Median, NetPieceRequirements.LevelCrossing },
 						m_RequireAny = new[] { NetPieceRequirements.Node, NetPieceRequirements.DeadEnd },
 						m_RequireNone = new NetPieceRequirements[0],
