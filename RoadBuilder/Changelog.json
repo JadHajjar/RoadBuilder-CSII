@@ -2,7 +2,7 @@
   {
     "Beta": true,
     "Version": "0.3.0",
-    "Date": "2024-08-24",
+    "Date": "2024-08-25",
     "ChangeGroups": [
       {
         "Name": "New Parking Lanes",
@@ -18,7 +18,8 @@
           "Sidewalk and Shoulder, referred to as 'Edge Lanes', are now required to be on the edges of your roads.",
           "Edge lanes are marked with a special icon in the lane list.",
           "Placing an edge lane anywhere other than the edge will automatically move it to the closest available slot.",
-          "Added a warning icon when a side is missing an edge lane."
+          "Added a warning icon when a side is missing an edge lane.",
+          "Removed the Raised Sidewalks option to make room for smarter edge lanes. This means that you can now add sidewalks everywhere."
         ]
       },
       {

@@ -369,7 +369,7 @@ namespace RoadBuilder.Systems.UI
 							continue;
 						}
 
-						lane.Invert = !cityConfigurationSystem.leftHandTraffic;
+						lane.Invert = true;
 
 						lastEdgeIndex = i;
 					}
@@ -396,7 +396,7 @@ namespace RoadBuilder.Systems.UI
 							continue;
 						}
 
-						lane.Invert = cityConfigurationSystem.leftHandTraffic;
+						lane.Invert = false;
 
 						lastEdgeIndex = i;
 					}
@@ -486,14 +486,14 @@ namespace RoadBuilder.Systems.UI
 
 		private RoadLaneUIBinder[] From(INetworkConfig config)
 		{
+			var isMetric = RoadOptionsUtil.IsMetric();
 			var leftEdgeMissing = !Mod.Settings.RemoveSafetyMeasures && config.Lanes.Count > 0 && !(NetworkPrefabGenerationUtil.GetNetSection(roadGenerationDataSystem.RoadGenerationData, config, config.Lanes[0], out var leftSection, out var leftGroupPrefab) && NetworkConfigExtensionsUtil.GetEdgeLaneInfo(leftSection, leftGroupPrefab, out _));
 			var rightEdgeMissing = !Mod.Settings.RemoveSafetyMeasures && config.Lanes.Count > 0 && !(NetworkPrefabGenerationUtil.GetNetSection(roadGenerationDataSystem.RoadGenerationData, config, config.Lanes[config.Lanes.Count - 1], out var rightSection, out var rightGroupPrefab) && NetworkConfigExtensionsUtil.GetEdgeLaneInfo(rightSection, rightGroupPrefab, out _));
 			var binders = new RoadLaneUIBinder[config.Lanes.Count + (leftEdgeMissing ? 1 : 0) + (rightEdgeMissing ? 1 : 0)];
-			var isMetric = RoadOptionsUtil.IsMetric();
 
 			Mod.Log.Warn($"leftEdgeMissing:{leftEdgeMissing} rightEdgeMissing:{rightEdgeMissing}");
 
-			if (cityConfigurationSystem.leftHandTraffic ? rightEdgeMissing : leftEdgeMissing)
+			if (leftEdgeMissing)
 			{
 				binders[0] = new RoadLaneUIBinder { Index = int.MinValue, IsEdgePlaceholder = true };
 			}
@@ -503,12 +503,13 @@ namespace RoadBuilder.Systems.UI
 				var lane = config.Lanes[i];
 				var validSection = NetworkPrefabGenerationUtil.GetNetSection(roadGenerationDataSystem.RoadGenerationData, config, lane, out var section, out var groupPrefab);
 				var noDirection = validSection && ((section.TryGet<RoadBuilderLaneInfo>(out var laneInfo) && laneInfo.NoDirection) || ((groupPrefab?.TryGet<RoadBuilderLaneInfo>(out var groupInfo) ?? false) && groupInfo.NoDirection));
-				var isBackward = noDirection ? FindDirection(config, i) : (cityConfigurationSystem.leftHandTraffic && (i == 0 || i == config.Lanes.Count - 1) ? !lane.Invert : lane.Invert);
+				var isEdge = NetworkConfigExtensionsUtil.GetEdgeLaneInfo(section, groupPrefab, out _);
+				var isBackward = noDirection ? FindDirection(config, i) : (isEdge && cityConfigurationSystem.leftHandTraffic ? !lane.Invert : lane.Invert);
 				var width = validSection ? section.CalculateWidth() : 0F;
 
 				GetThumbnailAndColor(config, lane, section, groupPrefab, isBackward, out var thumbnail, out var color, out var texture);
 
-				binders[cityConfigurationSystem.leftHandTraffic ? (binders.Length - i - (rightEdgeMissing ? 2 : 1)) : (leftEdgeMissing ? i + 1 : i)] = new RoadLaneUIBinder
+				binders[leftEdgeMissing ? i + 1 : i] = new RoadLaneUIBinder
 				{
 					Index = i,
 					Invert = lane.Invert,
@@ -524,7 +525,7 @@ namespace RoadBuilder.Systems.UI
 					{
 						PrefabName = section?.name ?? groupPrefab?.name,
 						IsGroup = !string.IsNullOrEmpty(lane.GroupPrefabName),
-						IsEdge = NetworkConfigExtensionsUtil.GetEdgeLaneInfo(section, groupPrefab, out _),
+						IsEdge = isEdge,
 						DisplayName = !validSection && groupPrefab is null ? "Unknown Lane" : GetAssetName((PrefabBase)groupPrefab ?? section),
 						Width = width,
 						WidthText = isMetric ? $"{width:0.##} m" : $"{Math.Round(width * 3.28084 * 4, MidpointRounding.AwayFromZero) / 4:0.##} ft",
@@ -533,9 +534,21 @@ namespace RoadBuilder.Systems.UI
 				};
 			}
 
-			if (cityConfigurationSystem.leftHandTraffic ? leftEdgeMissing : rightEdgeMissing)
+			if (rightEdgeMissing)
 			{
 				binders[binders.Length - 1] = new RoadLaneUIBinder { Index = int.MaxValue, IsEdgePlaceholder = true };
+			}
+
+			if (cityConfigurationSystem.leftHandTraffic)
+			{
+				var lhtBinders = new RoadLaneUIBinder[binders.Length];
+
+				for (var i = 0; i < binders.Length; i++)
+				{
+					lhtBinders[i] = binders[binders.Length - i - 1];
+				}
+
+				return lhtBinders;
 			}
 
 			return binders;
