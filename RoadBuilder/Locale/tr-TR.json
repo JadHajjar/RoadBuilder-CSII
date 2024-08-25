@@ -40,7 +40,7 @@
   "RoadBuilder.RoadAddon[HasUndergroundWaterPipes]": "Yeraltı Su ve Atıksu Borularını Destekler",
   "RoadBuilder.RoadAddon[HasUndergroundElectricityCable]": "Yeraltı Elektrik Kablolarını Destekler",
   "RoadBuilder.RoadAddon[RequiresUpgradeForElectricity]": "Elektrik İletimi İçin Elektrik Yükseltmesi Gerektirir",
-  "RoadBuilder.Warning[MissingEdgeLane]": "Not having a Shoulder or Sidewalk lane on this edge may result in unexpected behaviour.",
+  "RoadBuilder.Warning[MissingEdgeLane]": "Bu kenarda kenar veya kaldırım şeriti bulunmaması beklenmedik sorunlara sebep olabilir.",
   "RoadBuilder.UseAsTemplate": "Şablon Olarak Kullan",
   "RoadBuilder.DeleteRoad": "Yolu Sil",
   "RoadBuilder.PickOther": "Başka bir yol seç",
