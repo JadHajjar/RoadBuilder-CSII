@@ -10,7 +10,7 @@
   "Assets.NAME[RoadBuilder.LaneGroups.TrainGroupPrefab]": "火车轨道",
   "Assets.NAME[RoadBuilder.LaneGroups.TramGroupPrefab]": "有轨电车轨道",
   "Assets.NAME[RoadBuilder.LaneGroups.ParkingGroupPrefab]": "停车位",
-  "Assets.NAME[RoadBuilder.LaneGroups.PoleGroupPrefab]": "Pole",
+  "Assets.NAME[RoadBuilder.LaneGroups.PoleGroupPrefab]": "电线杆",
   "RoadBuilder.LaneGroups.BusGroupPrefab.Options[Lane Width]": "车道宽度",
   "RoadBuilder.LaneGroups.BusGroupPrefab.Options[Transport Option]": "交通种类选项",
   "RoadBuilder.LaneGroups.CarGroupPrefab.Options[Lane Width]": "车道宽度",
