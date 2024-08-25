@@ -40,7 +40,7 @@
   "RoadBuilder.RoadAddon[HasUndergroundWaterPipes]": "지하 상하수도관 지원",
   "RoadBuilder.RoadAddon[HasUndergroundElectricityCable]": "지하 전력선 지원",
   "RoadBuilder.RoadAddon[RequiresUpgradeForElectricity]": "전력이 통하려면 전기 업그레이드가 필요함",
-  "RoadBuilder.Warning[MissingEdgeLane]": "Not having a Shoulder or Sidewalk lane at the edge may result in unexpected behaviour.",
+  "RoadBuilder.Warning[MissingEdgeLane]": "Not having a Shoulder or Sidewalk lane on this edge may result in unexpected behaviour.",
   "RoadBuilder.UseAsTemplate": "템플릿으로 저장",
   "RoadBuilder.DeleteRoad": "도로 삭제",
   "RoadBuilder.PickOther": "다른 도로 선택",
