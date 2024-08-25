@@ -689,12 +689,12 @@ namespace RoadBuilder.Utilities
 				service = "Roads";
 				var width = NetworkPrefab.Prefab.m_Sections.Sum(x => x.m_Section.CalculateWidth());
 
-				if (width >= 32)
+				if (width >= 34)
 				{
 					group = "RoadsLargeRoads";
 					requirements = new[] { "RoadsLargeRoads", "BasicRoadServiceNode" };
 				}
-				else if (width >= 18)
+				else if (width >= 22)
 				{
 					group = "RoadsMediumRoads";
 					requirements = new[] { "RoadsMediumRoads", "BasicRoadServiceNode" };

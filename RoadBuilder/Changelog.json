@@ -1,6 +1,19 @@
 [
   {
     "Beta": true,
+    "Version": "0.3.0.1",
+    "Date": "2024-08-25",
+    "ChangeGroups": [
+      {
+        "Name": "Hotfix",
+        "Changes": [
+          "Reverted empty lanes' extra width which caused smaller empty lanes to distort sidewalks."
+        ]
+      }
+    ]
+  },
+  {
+    "Beta": true,
     "Version": "0.3.0",
     "Date": "2024-08-25",
     "ChangeGroups": [
