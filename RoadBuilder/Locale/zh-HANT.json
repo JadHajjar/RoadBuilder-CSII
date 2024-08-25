@@ -16,7 +16,7 @@
   "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.ToolToggle]": "啟用工具快捷鍵",
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.ToolToggle]": "啟用Road Builder的工具快捷鍵",
   "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.RemoveLockRequirements]": "移除鎖定限制",
-  "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.RemoveLockRequirements]": "允許編輯和使用目前鎖定在您城市發展樹中的道路。",
+  "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.RemoveLockRequirements]": "允許編輯和使用目前在城市發展樹中被鎖定的道路。",
   "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.PlaceToggle]": "放置道路快速鍵",
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.PlaceToggle]": "決定開始放置目前編輯道路的快速鍵。",
   "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.DoNotAddSides]": "移除隧道和橋樑自動產生的路側。",
