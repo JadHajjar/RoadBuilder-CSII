@@ -152,8 +152,6 @@ namespace RoadBuilder.LaneGroups
 				decoInfo.LaneTreeThumbnail = new[] { "coui://roadbuildericons/Thumb_SidewalkTree.svg" };
 				decoInfo.LaneGrassAndTreeThumbnail = new[] { "coui://roadbuildericons/Thumb_SidewalkGrassTree.svg" };
 			}
-
-			LinkedSections.Add(prefab);
 		}
 	}
 }

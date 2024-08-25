@@ -93,8 +93,6 @@ namespace RoadBuilder.LaneGroups
 				}
 			};
 
-			LinkedSections.Add(prefab);
-
 			return prefab;
 		}
 	}

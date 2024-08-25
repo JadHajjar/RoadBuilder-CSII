@@ -48,8 +48,6 @@ namespace RoadBuilder.LaneGroups
 					Value = string.Empty
 				}
 			} : new LaneOptionCombination[0];
-
-			LinkedSections.Add(prefab);
 		}
 	}
 }

@@ -62,7 +62,7 @@ namespace RoadBuilder.LaneGroups
 
 		private NetSectionPrefab SetUp(NetSectionPrefab prefab, bool link, string value, bool hasGrass = false)
 		{
-			var laneInfo = prefab.AddComponent<RoadBuilderLaneGroup>();
+			var laneInfo = link ? prefab.AddComponent<RoadBuilderLaneGroup>() : prefab.AddComponent<RoadBuilderVanillaLaneGroup>();
 			laneInfo.GroupPrefab = this;
 			laneInfo.Combination = hasGrass
 			? new LaneOptionCombination[]
@@ -86,11 +86,6 @@ namespace RoadBuilder.LaneGroups
 					Value = value
 				}
 			};
-
-			if (link)
-			{
-				LinkedSections.Add(prefab);
-			}
 
 			return prefab;
 		}

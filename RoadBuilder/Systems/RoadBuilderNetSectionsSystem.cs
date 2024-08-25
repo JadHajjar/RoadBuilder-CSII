@@ -6,6 +6,7 @@ using Game.Common;
 using Game.Prefabs;
 using Game.SceneFlow;
 
+using RoadBuilder.Domain.Components;
 using RoadBuilder.Domain.Components.Prefabs;
 using RoadBuilder.Domain.Enums;
 using RoadBuilder.Domain.Prefabs;
@@ -21,8 +22,6 @@ using Unity.Entities;
 using Unity.Mathematics;
 
 using UnityEngine;
-
-using static Game.UI.NameSystem;
 
 namespace RoadBuilder.Systems
 {
@@ -46,8 +45,8 @@ namespace RoadBuilder.Systems
 			base.OnCreate();
 
 			prefabSystem = World.GetOrCreateSystemManaged<PrefabSystem>();
-			prefabQuery = SystemAPI.QueryBuilder().WithAll<Created, PrefabData>().WithAny<NetSectionData, NetPieceData, NetLaneData>().Build();
-			allPrefabQuery = SystemAPI.QueryBuilder().WithAll<PrefabData>().WithAny<NetSectionData, NetPieceData, NetLaneData>().Build();
+			prefabQuery = SystemAPI.QueryBuilder().WithAll<Created, PrefabData>().WithAny<NetSectionData, NetPieceData, NetLaneData, RoadBuilderLaneGroupPrefabData>().Build();
+			allPrefabQuery = SystemAPI.QueryBuilder().WithAll<PrefabData>().WithAny<NetSectionData, NetPieceData, NetLaneData, RoadBuilderLaneGroupPrefabData>().Build();
 		}
 
 		protected override void OnUpdate()
@@ -83,6 +82,10 @@ namespace RoadBuilder.Systems
 					{
 						NetLanes[netLanePrefab.name] = netLanePrefab;
 					}
+					else if (prefab is LaneGroupPrefab laneGroupPrefab)
+					{
+						LaneGroups[laneGroupPrefab.name] = laneGroupPrefab;
+					}
 				}
 
 				if (NetSections.Count == 0)
@@ -95,6 +98,19 @@ namespace RoadBuilder.Systems
 					DoCustomSectionSetup();
 
 					return;
+				}
+
+				foreach (var item in LaneGroups.Values)
+				{
+					item.LinkedSections = new();
+
+					foreach (var section in NetSections.Values)
+					{
+						if (section.TryGetExactly<RoadBuilderLaneGroup>(out var laneGroup) && laneGroup.GroupPrefab == item)
+						{
+							item.LinkedSections.Add(section);
+						}
+					}
 				}
 
 				SectionsAdded?.Invoke();
@@ -195,8 +211,6 @@ namespace RoadBuilder.Systems
 					prefab.name = type.FullName;
 
 					prefabSystem.AddPrefab(prefab);
-
-					LaneGroups[prefab.name] = prefab;
 				}
 			}
 		}
@@ -351,7 +365,7 @@ namespace RoadBuilder.Systems
 
 				if (item.Item1 == "RB Parking Piece Parallel")
 				{
-					newPiece.AddOrGetComponent<NetPieceObjects>().m_PieceObjects = new[] 
+					newPiece.AddOrGetComponent<NetPieceObjects>().m_PieceObjects = new[]
 					{
 						new NetPieceObjectInfo
 						{
@@ -371,7 +385,7 @@ namespace RoadBuilder.Systems
 
 				if (item.Item1 == "RB Parking Piece Angled")
 				{
-					newPiece.AddOrGetComponent<NetPieceObjects>().m_PieceObjects = new[] 
+					newPiece.AddOrGetComponent<NetPieceObjects>().m_PieceObjects = new[]
 					{
 						new NetPieceObjectInfo
 						{
@@ -425,7 +439,7 @@ namespace RoadBuilder.Systems
 
 				if (item.Item1 == "RB Parking Piece Angled")
 				{
-					newPiece.AddOrGetComponent<NetPieceObjects>().m_PieceObjects = new[] 
+					newPiece.AddOrGetComponent<NetPieceObjects>().m_PieceObjects = new[]
 					{
 						new NetPieceObjectInfo
 						{

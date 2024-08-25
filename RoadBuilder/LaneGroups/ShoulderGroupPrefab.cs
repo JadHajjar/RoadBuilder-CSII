@@ -83,8 +83,6 @@ namespace RoadBuilder.LaneGroups
 
 			prefab.AddComponent<RoadBuilderEdgeLaneInfo>().SidePrefab = side;
 
-			LinkedSections.Add(prefab);
-
 			return prefab.AddOrGetComponent<RoadBuilderLaneInfo>();
 		}
 	}

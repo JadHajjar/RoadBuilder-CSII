@@ -81,8 +81,6 @@ namespace RoadBuilder.LaneGroups
 					},
 				};
 
-				LinkedSections.Add(prefab);
-
 				var laneInfo = prefab.AddOrGetComponent<RoadBuilderLaneInfo>();
 
 				if (width <= 2)
