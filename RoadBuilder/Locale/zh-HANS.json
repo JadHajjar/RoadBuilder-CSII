@@ -40,7 +40,7 @@
   "RoadBuilder.RoadAddon[HasUndergroundWaterPipes]": "启用地下水管/污水管",
   "RoadBuilder.RoadAddon[HasUndergroundElectricityCable]": "启用地下电缆",
   "RoadBuilder.RoadAddon[RequiresUpgradeForElectricity]": "需要添加电缆才能传输电力",
-  "RoadBuilder.Warning[MissingEdgeLane]": "Not having a Shoulder or Sidewalk lane at the edge may result in unexpected behaviour.",
+  "RoadBuilder.Warning[MissingEdgeLane]": "Not having a Shoulder or Sidewalk lane on this edge may result in unexpected behaviour.",
   "RoadBuilder.UseAsTemplate": "新建一个模板",
   "RoadBuilder.DeleteRoad": "删除道路",
   "RoadBuilder.PickOther": "选择另一条道路",
