@@ -298,6 +298,8 @@ namespace RoadBuilder.Utilities
 				{
 					Mod.Log.WarnFormat("Lane Fix Failed: no remaining sections left at option '{0}'", option.Name);
 
+					lane.GroupOptions = new();
+
 					return;
 				}
 

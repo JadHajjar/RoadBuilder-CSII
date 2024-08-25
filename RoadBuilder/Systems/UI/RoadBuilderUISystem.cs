@@ -292,16 +292,10 @@ namespace RoadBuilder.Systems.UI
 
 		private void UpdateLaneOrder(INetworkConfig config, RoadLaneUIBinder[] roadLanes)
 		{
-			Mod.Log.Warn($"UpdateLaneOrder");
 			var newLanes = new List<LaneConfig>();
 
-			foreach (var item in roadGenerationDataSystem.RoadGenerationData.LeftHandTraffic ? roadLanes.Reverse() : roadLanes)
+			foreach (var item in roadLanes)
 			{
-				if (item.Index is int.MinValue or int.MaxValue)
-				{
-					continue;
-				}
-
 				var existingLane = config.Lanes.ElementAtOrDefault(item.Index);
 
 				if (existingLane != null)
@@ -348,62 +342,72 @@ namespace RoadBuilder.Systems.UI
 
 			if (!Mod.Settings.RemoveSafetyMeasures)
 			{
-				var lastEdgeIndex = -1;
+				ReorderEdgeLanes(config, newLanes);
+			}
 
-				for (var i = 0; i < newLanes.Count / 2; i++)
-				{
-					var lane = newLanes[i];
-
-					if (!NetworkPrefabGenerationUtil.GetNetSection(roadGenerationDataSystem.RoadGenerationData, config, lane, out var section, out var groupPrefab))
-					{
-						continue;
-					}
-
-					if (NetworkConfigExtensionsUtil.GetEdgeLaneInfo(section, groupPrefab, out var edgeInfo))
-					{
-						if (lastEdgeIndex != i - 1)
-						{
-							newLanes.RemoveAt(i);
-							newLanes.Insert(lastEdgeIndex + 1, lane);
-							i = lastEdgeIndex = -1;
-							continue;
-						}
-
-						lane.Invert = true;
-
-						lastEdgeIndex = i;
-					}
-				}
-
-				lastEdgeIndex = newLanes.Count;
-
-				for (var i = newLanes.Count - 1; i >= newLanes.Count / 2; i--)
-				{
-					var lane = newLanes[i];
-
-					if (!NetworkPrefabGenerationUtil.GetNetSection(roadGenerationDataSystem.RoadGenerationData, config, lane, out var section, out var groupPrefab))
-					{
-						continue;
-					}
-
-					if (NetworkConfigExtensionsUtil.GetEdgeLaneInfo(section, groupPrefab, out var edgeInfo))
-					{
-						if (lastEdgeIndex != i + 1)
-						{
-							newLanes.RemoveAt(i);
-							newLanes.Insert(lastEdgeIndex - 1, lane);
-							i = lastEdgeIndex = newLanes.Count;
-							continue;
-						}
-
-						lane.Invert = false;
-
-						lastEdgeIndex = i;
-					}
-				}
+			if (cityConfigurationSystem.leftHandTraffic)
+			{
+				newLanes.Reverse();
 			}
 
 			config.Lanes = newLanes;
+		}
+
+		private void ReorderEdgeLanes(INetworkConfig config, List<LaneConfig> newLanes)
+		{
+			var lastEdgeIndex = -1;
+
+			for (var i = 0; i < newLanes.Count / 2; i++)
+			{
+				var lane = newLanes[i];
+
+				if (!NetworkPrefabGenerationUtil.GetNetSection(roadGenerationDataSystem.RoadGenerationData, config, lane, out var section, out var groupPrefab))
+				{
+					continue;
+				}
+
+				if (NetworkConfigExtensionsUtil.GetEdgeLaneInfo(section, groupPrefab, out var edgeInfo))
+				{
+					if (lastEdgeIndex != i - 1)
+					{
+						newLanes.RemoveAt(i);
+						newLanes.Insert(lastEdgeIndex + 1, lane);
+						i = lastEdgeIndex = -1;
+						continue;
+					}
+
+					lane.Invert = !cityConfigurationSystem.leftHandTraffic;
+
+					lastEdgeIndex = i;
+				}
+			}
+
+			lastEdgeIndex = newLanes.Count;
+
+			for (var i = newLanes.Count - 1; i >= newLanes.Count / 2; i--)
+			{
+				var lane = newLanes[i];
+
+				if (!NetworkPrefabGenerationUtil.GetNetSection(roadGenerationDataSystem.RoadGenerationData, config, lane, out var section, out var groupPrefab))
+				{
+					continue;
+				}
+
+				if (NetworkConfigExtensionsUtil.GetEdgeLaneInfo(section, groupPrefab, out var edgeInfo))
+				{
+					if (lastEdgeIndex != i + 1)
+					{
+						newLanes.RemoveAt(i);
+						newLanes.Insert(lastEdgeIndex - 1, lane);
+						i = lastEdgeIndex = newLanes.Count;
+						continue;
+					}
+
+					lane.Invert = cityConfigurationSystem.leftHandTraffic;
+
+					lastEdgeIndex = i;
+				}
+			}
 		}
 
 		private LaneConfig FindSimilarLane(List<LaneConfig> array, int startIndex, string groupPrefabName)
@@ -490,8 +494,6 @@ namespace RoadBuilder.Systems.UI
 			var leftEdgeMissing = !Mod.Settings.RemoveSafetyMeasures && config.Lanes.Count > 0 && !(NetworkPrefabGenerationUtil.GetNetSection(roadGenerationDataSystem.RoadGenerationData, config, config.Lanes[0], out var leftSection, out var leftGroupPrefab) && NetworkConfigExtensionsUtil.GetEdgeLaneInfo(leftSection, leftGroupPrefab, out _));
 			var rightEdgeMissing = !Mod.Settings.RemoveSafetyMeasures && config.Lanes.Count > 0 && !(NetworkPrefabGenerationUtil.GetNetSection(roadGenerationDataSystem.RoadGenerationData, config, config.Lanes[config.Lanes.Count - 1], out var rightSection, out var rightGroupPrefab) && NetworkConfigExtensionsUtil.GetEdgeLaneInfo(rightSection, rightGroupPrefab, out _));
 			var binders = new RoadLaneUIBinder[config.Lanes.Count + (leftEdgeMissing ? 1 : 0) + (rightEdgeMissing ? 1 : 0)];
-
-			Mod.Log.Warn($"leftEdgeMissing:{leftEdgeMissing} rightEdgeMissing:{rightEdgeMissing}");
 
 			if (leftEdgeMissing)
 			{
