@@ -42,14 +42,9 @@ export const LaneListItem = ({ netSection }: { netSection: NetSectionItem }) => 
         <p>{netSection.DisplayName}</p>
       </div>
 
-      {/* THIS IS FOR LATER IN CASE WE WANT CATEGORY ICONS NEXT TO THE LANES
-        <div className={styles.rightSideContainer}>
-          {props.showCategory && <img src={props.prefab.categoryThumbnail}></img>}
-
-          {props.prefab.dlcThumbnail && <img src={props.prefab.dlcThumbnail}></img>}
-
-          {props.prefab.random && <img src="coui://uil/Colored/Dice.svg"></img>}
-        </div>*/}
+      <div className={styles.rightSideContainer}>
+        {netSection.IsEdge && <img className={styles.edgeIcon} style={{ maskImage: "url(coui://roadbuildericons/RB_WhiteEdge.svg)" }}></img>}
+      </div>
     </div>
   );
 };

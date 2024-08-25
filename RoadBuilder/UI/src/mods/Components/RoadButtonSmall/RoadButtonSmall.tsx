@@ -19,7 +19,6 @@ type _Props = {
 export const RoadButtonSmall = (props: _Props) => {
   let laneCtx = useContext(LanePropertiesContext);
   let dragState = useContext(DragContext);
-  let netSectionStore = useContext(NetSectionsStoreContext);
   let containerRef = useRef<HTMLDivElement>(null);
   let rem = useRem();
   let { translate } = useLocalization();
@@ -54,13 +53,17 @@ export const RoadButtonSmall = (props: _Props) => {
   if (props.roadLane.IsEdgePlaceholder) {
     return (
       <Tooltip tooltip={translate("RoadBuilder.Warning[MissingEdgeLane]")}>
-        <div ref={containerRef} className={classNames(styles.container)}>
+        <div
+          ref={containerRef}
+          className={classNames(
+            styles.container,
+            styles.edgePlaceholder,
+            (dragState.netSectionItem?.IsEdge || dragState.roadLane?.NetSection?.IsEdge) && styles.highlighted
+          )}
+        >
           <div className={styles.button}>
             <div className={styles.imageContainer}>
-              <img
-                src={props.roadLane.NetSection?.Thumbnail ?? "coui://roadbuildericons/RB_Unknown.svg"}
-                className={props.roadLane.InvertImage && styles.inverted}
-              />
+              <img className={props.roadLane.InvertImage && styles.inverted} />
             </div>
           </div>
           <div className={styles.informationBar}></div>

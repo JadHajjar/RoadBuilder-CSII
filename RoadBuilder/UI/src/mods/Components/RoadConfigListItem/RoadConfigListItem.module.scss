@@ -24,6 +24,21 @@
   }
 }
 
+.gridItemLocked {
+  margin: 4rem;
+  width: 295rem;
+  height: 95rem;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: rgba(255, 255, 255, 0.1) !important;
+
+  .gridThumbnail {
+    filter: grayscale(100%) contrast(80%) brightness(0%);
+  }
+}
+
 .itemInfo {
   display: flex;
   flex-direction: row;
@@ -89,7 +104,24 @@
   }
 
   img {
-    width: 1.2em;
-    height: 1.2em;
+    width: 20rem;
+    height: 20rem;
+  }
+}
+
+.thumbnailContainer {
+  position: relative;
+
+  .lockIcon {
+    position: absolute;
+    z-index: 1;
+    bottom: 10rem;
+    right: 5rem;
+    width: 20rem;
+    height: 20rem;
+    background-color: #ffaa00;
+    mask-size: contain;
+    mask-position: 50% 50%;
+    mask-image: url(coui://gameui/Media/Glyphs/Lock.svg);
   }
 }

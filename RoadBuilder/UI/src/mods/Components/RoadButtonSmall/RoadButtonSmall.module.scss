@@ -141,6 +141,36 @@
   }
 }
 
-.container:nth-child(2) .informationBar {
-  border-left: 2rem solid rgba(225, 225, 225, 0.1);
+.edgePlaceholder .button {
+  height: 64rem;
+
+  .imageContainer {
+    height: 48rem;
+    width: 48rem;
+    background-color: rgba(237, 214, 138, 0.25);
+    border-radius: 10rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    img {
+      position: inherit;
+      width: 24rem;
+      height: 24rem;
+      background-color: #cf901d;
+      mask-size: contain;
+      mask-position: 50% 50%;
+      mask-image: url(coui://roadbuildericons/RB_WhiteEdge.svg);
+    }
+  }
+}
+
+.edgePlaceholder.highlighted {
+  .imageContainer {
+    background-color: #cf901d;
+
+    img {
+      background-color: white;
+    }
+  }
 }

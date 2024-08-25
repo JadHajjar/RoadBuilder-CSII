@@ -69,6 +69,10 @@
       margin-bottom: 20rem;
     }
 
+    .rightSideContainer > img {
+      filter: grayscale(0.85);
+    }
+
     .gridItemText {
       opacity: 0.6;
       background: none;
@@ -113,17 +117,23 @@
 
 .rightSideContainer {
   position: absolute;
-  top: 0.15em;
-  right: 0.15em;
+  top: 5rem;
+  right: 5rem;
   display: flex;
   flex-direction: column;
 }
 
 .rightSideContainer > img {
-  width: 1.15em;
-  height: 1.15em;
-  margin-bottom: 0.375em;
-  filter: drop-shadow(0px 0px 1rem rgba(0, 0, 0, 0.5));
+  width: 20rem;
+  height: 20rem;
+  margin-bottom: 5rem;
+  filter: drop-shadow(0px 0px 2rem rgba(0, 0, 0, 0.5));
+  mask-size: contain;
+  mask-position: 50% 50%;
+}
+
+.edgeIcon {
+  background-color: #cf901d;
 }
 
 .inverted {

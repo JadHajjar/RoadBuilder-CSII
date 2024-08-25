@@ -74,6 +74,7 @@ namespace RoadBuilder.Systems.UI
 #else
 				Name = x.Value.Config.Name,
 #endif
+				Locked = !Mod.Settings.RemoveLockRequirements && EntityManager.HasEnabledComponent<Locked>(prefabSystem.GetEntity(x.Value.Prefab)),
 				Thumbnail = ImageSystem.GetIcon(x.Value.Prefab)
 			}).ToArray();
 		}

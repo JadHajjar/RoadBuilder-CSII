@@ -497,7 +497,7 @@ namespace RoadBuilder.Systems.UI
 
 			if (leftEdgeMissing)
 			{
-				binders[0] = new RoadLaneUIBinder { Index = int.MinValue, IsEdgePlaceholder = true };
+				binders[0] = new RoadLaneUIBinder { Index = int.MinValue, IsEdgePlaceholder = true, InvertImage = true };
 			}
 
 			for (var i = 0; i < config.Lanes.Count; i++)
