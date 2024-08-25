@@ -289,7 +289,7 @@ namespace RoadBuilder.Systems.UI
 
 			var width = RoadLanes.Value.Sum(x => x.NetSection?.Width ?? 0);
 
-			RoadSize.Value = RoadOptionsUtil.IsMetric() ? $"{Math.Round(width):0}m / {width / 8f:0.#}U" : $"{Math.Round(width * 3.28084f):0} ft / {width / 8f:0.#}U";
+			RoadSize.Value = RoadOptionsUtil.IsMetric() ? $"{Math.Round(width):0.#}m / {width / 8f:0.#}U" : $"{Math.Round(width * 3.28084f):0} ft / {width / 8f:0.#}U";
 		}
 
 		private void UpdateLaneOrder(INetworkConfig config, RoadLaneUIBinder[] roadLanes)
