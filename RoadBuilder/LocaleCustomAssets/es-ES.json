@@ -10,7 +10,7 @@
   "Assets.NAME[RoadBuilder.LaneGroups.TrainGroupPrefab]": "Vías del Tren",
   "Assets.NAME[RoadBuilder.LaneGroups.TramGroupPrefab]": "Vías de Tranvía",
   "Assets.NAME[RoadBuilder.LaneGroups.ParkingGroupPrefab]": "Aparcamiento",
-  "Assets.NAME[RoadBuilder.LaneGroups.PoleGroupPrefab]": "Pole",
+  "Assets.NAME[RoadBuilder.LaneGroups.PoleGroupPrefab]": "Asta",
   "RoadBuilder.LaneGroups.BusGroupPrefab.Options[Lane Width]": "Ancho de Carril",
   "RoadBuilder.LaneGroups.BusGroupPrefab.Options[Transport Option]": "Opciones de Transporte",
   "RoadBuilder.LaneGroups.CarGroupPrefab.Options[Lane Width]": "Ancho de Carril",
