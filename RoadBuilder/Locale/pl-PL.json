@@ -25,6 +25,7 @@
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.DoNotAddSides]": "Pozwala na tworzenie drogi bez boków tunelu lub mostu, jeśli pobocze lub chodnik nie zostało dodane.",
   "RoadBuilder.DIALOG_MESSAGE[DELETE]": "Czy na pewno chcesz usunąć tę drogę? To usunie wszystkie umieszczone segmenty tej drogi w twoim mieście.",
   "RoadBuilder.DIALOG_MESSAGE[ReloadSave]": "To miasto zawiera drogi, których jeszcze nie posiadasz. Przeładuj ten zapis natychmiast, bez zamykania gry, żeby Twoje zmiany w skrzyżowaniach nie zostały utracone.",
+  "RoadBuilder.DIALOG_MESSAGE[FixInvalidEdges]": "Some roads or tracks in this city are invalid.\n\nWould you like to fix them by resetting them to vanilla networks?",
   "RoadBuilder.DIALOG_MESSAGE[Ok]": "OK",
   "RoadBuilder.Config[RoadConfig]": "Właściwości drogi",
   "RoadBuilder.Config[TrackConfig]": "Właściwości toru",
