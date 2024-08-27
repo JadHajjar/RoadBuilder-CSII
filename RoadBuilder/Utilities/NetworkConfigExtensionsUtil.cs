@@ -57,9 +57,16 @@ namespace RoadBuilder.Utilities
 				return subSectionsWidth;
 			}
 
-			return subSectionsWidth + netSection.m_Pieces.Max(x =>
+			var pieceWidths = netSection.m_Pieces.Max(x =>
 				x.m_RequireAll.Length == 0 &&
 				x.m_RequireAny.Length == 0 ? x.m_Piece.m_Width : 0f);
+
+			if (pieceWidths == 0)
+			{
+				pieceWidths = netSection.m_Pieces[0].m_Piece.m_Width;
+			}
+
+			return subSectionsWidth + pieceWidths;
 		}
 
 		public static bool IsMedian(this NetSectionPrefab netSection)

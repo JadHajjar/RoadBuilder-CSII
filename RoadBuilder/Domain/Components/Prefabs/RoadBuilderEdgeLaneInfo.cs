@@ -12,6 +12,7 @@ namespace RoadBuilder.Domain.Components.Prefabs
 	{
 		public NetSectionPrefab SidePrefab;
 		public bool AddSidewalkStateOnNode;
+		public bool DoNotRequireBeingOnEdge;
 
 		public override void GetArchetypeComponents(HashSet<ComponentType> components)
 		{ }

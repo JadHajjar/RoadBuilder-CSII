@@ -71,15 +71,12 @@ namespace RoadBuilder.LaneGroups
 			edgeInfo.AddSidewalkStateOnNode = true;
 			edgeInfo.SidePrefab = sections["Road Side 0"];
 
-			if (Mod.Settings.RemoveSafetyMeasures)
-			{
-				SetUp(sections["Sidewalk 1"], "", "1m", false);
-				SetUp(sections["Sidewalk 1.5"], "", "1.5m", false);
-				SetUp(sections["Sidewalk 2"], "", "2m", false);
-				SetUp(sections["Sidewalk 2.5"], "", "2.5m", false);
-				SetUp(sections["Sidewalk 3"], "", "3m", false);
-				SetUp(sections["Sidewalk 4"], "", "4m", false);
-			}
+			SetUp(sections["Sidewalk 1"], "", "1m", false);
+			SetUp(sections["Sidewalk 1.5"], "", "1.5m", false);
+			SetUp(sections["Sidewalk 2"], "", "2m", false);
+			SetUp(sections["Sidewalk 2.5"], "", "2.5m", false);
+			SetUp(sections["Sidewalk 3"], "", "3m", false);
+			SetUp(sections["Sidewalk 4"], "", "4m", false);
 
 			SetUp(sections["Sidewalk 3.5"], "", "3.5m", false);
 			SetUp(sections["Sidewalk 4.5"], "", "4.5m", false);

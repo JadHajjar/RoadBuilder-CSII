@@ -43,7 +43,7 @@ export const LaneListItem = ({ netSection }: { netSection: NetSectionItem }) => 
       </div>
 
       <div className={styles.rightSideContainer}>
-        {netSection.IsEdge && <img className={styles.edgeIcon} style={{ maskImage: "url(coui://roadbuildericons/RB_WhiteEdge.svg)" }}></img>}
+        {netSection.IsEdge && <img className={styles.edgeIcon} style={{ maskImage: "url(coui://roadbuildericons/RB_RaisedSidewalks.svg)" }}></img>}
       </div>
     </div>
   );

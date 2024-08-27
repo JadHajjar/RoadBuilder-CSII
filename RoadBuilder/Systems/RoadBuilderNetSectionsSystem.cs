@@ -66,13 +66,13 @@ namespace RoadBuilder.Systems
 					{
 						NetSections[netSectionPrefab.name] = netSectionPrefab;
 
-						if (InitialSetupFinished && GameManager.instance.gameMode == GameMode.Editor && !netSectionPrefab.builtin && !netSectionPrefab.Has<RoadBuilderLaneGroup>() && !netSectionPrefab.Has<RoadBuilderLaneInfo>())
-						{
-							netSectionPrefab.AddOrGetComponent<RoadBuilderLaneGroup>();
-							netSectionPrefab.AddOrGetComponent<RoadBuilderLaneInfo>();
-							netSectionPrefab.AddOrGetComponent<RoadBuilderLaneDecorationInfo>();
-							netSectionPrefab.AddOrGetComponent<RoadBuilderEdgeLaneInfo>();
-						}
+						//if (InitialSetupFinished && GameManager.instance.gameMode == GameMode.Editor && !netSectionPrefab.builtin && !netSectionPrefab.Has<RoadBuilderLaneGroup>() && !netSectionPrefab.Has<RoadBuilderLaneInfo>())
+						//{
+						//	netSectionPrefab.AddOrGetComponent<RoadBuilderLaneGroup>();
+						//	netSectionPrefab.AddOrGetComponent<RoadBuilderLaneInfo>();
+						//	netSectionPrefab.AddOrGetComponent<RoadBuilderLaneDecorationInfo>();
+						//	netSectionPrefab.AddOrGetComponent<RoadBuilderEdgeLaneInfo>();
+						//}
 					}
 					else if (prefab is NetPiecePrefab netPiecePrefab)
 					{
@@ -354,12 +354,15 @@ namespace RoadBuilder.Systems
 				newPiece.geometryAsset = NetPieces[item.Item4].geometryAsset;
 				newPiece.surfaceAssets = NetPieces[item.Item5].surfaceAssets;
 				newPiece.m_Width = item.Item3;
+				newPiece.m_SurfaceHeights = new(-0.2f);
 				newPiece.Remove<NetPieceObjects>();
+				newPiece.Remove<NetPieceCrosswalk>();
 				newPiece.AddOrGetComponent<NetPieceLanes>().m_Lanes = new[]
 				{
 					new NetLaneInfo
 					{
-						m_Lane = NetLanes[item.Item2]
+						m_Lane = NetLanes[item.Item2],
+						m_Position = new float3(0, -0.2f, 0)
 					}
 				};
 
@@ -408,12 +411,15 @@ namespace RoadBuilder.Systems
 				newPiece.geometryAsset = NetPieces[item.Item4].geometryAsset;
 				newPiece.surfaceAssets = NetPieces[item.Item5].surfaceAssets;
 				newPiece.m_Width = item.Item3;
+				newPiece.m_SurfaceHeights = new(-0.2f);
 				newPiece.Remove<NetPieceObjects>();
+				newPiece.Remove<NetPieceCrosswalk>();
 				newPiece.AddOrGetComponent<NetPieceLanes>().m_Lanes = new[]
 				{
 					new NetLaneInfo
 					{
-						m_Lane = NetLanes[item.Item2]
+						m_Lane = NetLanes[item.Item2],
+						m_Position = new float3(0, -0.2f, 0)
 					}
 				};
 
@@ -476,31 +482,27 @@ namespace RoadBuilder.Systems
 				var originalWidth = sidewalk.m_Width;
 				sidewalk.m_Width = width;
 
-				var matchPieceVertices = sidewalk.GetComponent<MatchPieceVertices>();
-				matchPieceVertices.m_Offsets[0] = sidewalk.m_Width / -2;
-				matchPieceVertices.m_Offsets[1] = (sidewalk.m_Width / -2) + 0.4f;
-				matchPieceVertices.m_Offsets[2] -= sidewalk.m_Width / 2;
-
 				if (sidewalk.TryGet<NetPieceLanes>(out var netPieceLanes))
 				{
 					netPieceLanes.m_Lanes[0].m_Position = new(sidewalk.m_Width / -2, -0.2f, 0f);
-					netPieceLanes.m_Lanes[1].m_Lane = NetLanes["Alley Pedestrian Lane 1"];
+					netPieceLanes.m_Lanes[1].m_Lane = NetLanes[width < 2 ? "Alley Pedestrian Lane 0.5" : "Alley Pedestrian Lane 1"];
 					netPieceLanes.m_Lanes[1].m_Position = new((sidewalk.m_Width - 1f) / 2f, 0f, 0f);
 				}
 
-				var netPieceCrosswalk = sidewalk.GetComponent<NetPieceCrosswalk>();
-				netPieceCrosswalk.m_Start = new(matchPieceVertices.m_Offsets[0], -0.2f, 1.3f);
-				netPieceCrosswalk.m_End = new(matchPieceVertices.m_Offsets[1], -0.2f, 1.3f);
+				var matchPieceVertices = sidewalk.GetComponent<MatchPieceVertices>();
+				//matchPieceVertices.m_Offsets[0] = sidewalk.m_Width / -2;
+				//matchPieceVertices.m_Offsets[1] = (sidewalk.m_Width / -2) + 0.4f;
+				matchPieceVertices.m_Offsets[2] = sidewalk.m_Width / 2;
 
 				foreach (var item in sidewalk.GetComponent<NetPieceObjects>().m_PieceObjects)
 				{
 					if (item.m_Position.x > 0)
 					{
-						item.m_Position = new(math.min(0, item.m_Position.x - ((originalWidth - sidewalk.m_Width) / 2f)), item.m_Position.y, item.m_Position.z);
+						item.m_Position = new(math.max(width / -3f, item.m_Position.x - ((originalWidth - sidewalk.m_Width) / 2f)), item.m_Position.y, item.m_Position.z);
 					}
 					else if (item.m_Position.x < 0)
 					{
-						item.m_Position = new(math.max(0, item.m_Position.x + ((originalWidth - sidewalk.m_Width) / 2f)), item.m_Position.y, item.m_Position.z);
+						item.m_Position = new(math.min(width / 3f, item.m_Position.x + ((originalWidth - sidewalk.m_Width) / 2f)), item.m_Position.y, item.m_Position.z);
 					}
 				}
 
@@ -888,26 +890,52 @@ namespace RoadBuilder.Systems
 
 		private void GenerateSidewalkSections()
 		{
-			foreach (var width in new float[] { 3, 2.5f, 2, 1.5f, 1 })
+			foreach (var width in new float[] { 4, 3, 2.5f, 2, 1.5f, 1 })
 			{
-				var sidewalk = NetSections["Sidewalk 3.5"].Clone("Sidewalk " + width.ToString(CultureInfo.InvariantCulture)) as NetSectionPrefab;
+				var originalSize = width > 3 ? "4.5" : "3.5";
+				var sidewalk = NetSections["Sidewalk " + originalSize].Clone("Sidewalk " + width.ToString(CultureInfo.InvariantCulture)) as NetSectionPrefab;
 
 				foreach (var item in sidewalk.m_Pieces)
 				{
-					item.m_Piece = NetPieces[item.m_Piece.name.Replace("3.5", width.ToString(CultureInfo.InvariantCulture))];
+					item.m_Piece = NetPieces[item.m_Piece.name.Replace(originalSize, width.ToString(CultureInfo.InvariantCulture))];
 				}
+
+				var offset = width switch
+				{
+					4 => 0.25f,
+					3 =>0,
+					_ => (3.5f - width) / 2f
+				};
+
+				var pieces = new List<NetPieceInfo>(sidewalk.m_Pieces);
+
+				sidewalk.m_Pieces[0].m_RequireAll = new[] { NetPieceRequirements.Inverted };
+				sidewalk.m_Pieces[1].m_RequireAll = new[] { NetPieceRequirements.Inverted, NetPieceRequirements.LevelCrossing };
+				sidewalk.m_Pieces[0].m_Offset = new(-offset, 0f, 0f);
+				sidewalk.m_Pieces[1].m_Offset = new(-offset, 0f, 0f);
+
+				pieces.Add(new NetPieceInfo
+				{
+					m_Piece = sidewalk.m_Pieces[0].m_Piece,
+					m_Offset = new(offset, 0f, 0f),
+					m_RequireAll = new NetPieceRequirements[0],
+					m_RequireAny = new NetPieceRequirements[0],
+					m_RequireNone = new[] { NetPieceRequirements.Inverted, NetPieceRequirements.LevelCrossing, NetPieceRequirements.Tunnel, NetPieceRequirements.Elevated },
+				});
+
+				pieces.Add(new NetPieceInfo
+				{
+					m_Piece = sidewalk.m_Pieces[1].m_Piece,
+					m_Offset = new(offset, 0f, 0f),
+					m_RequireAll = new[] { NetPieceRequirements.LevelCrossing },
+					m_RequireAny = new NetPieceRequirements[0],
+					m_RequireNone = new[] { NetPieceRequirements.Inverted, NetPieceRequirements.Tunnel, NetPieceRequirements.Elevated },
+				});
+
+				sidewalk.m_Pieces = pieces.ToArray();
 
 				prefabSystem.AddPrefab(sidewalk);
 			}
-
-			var sidewalk4 = NetSections["Sidewalk 4.5"].Clone("Sidewalk 4") as NetSectionPrefab;
-
-			foreach (var item in sidewalk4.m_Pieces)
-			{
-				item.m_Piece = NetPieces[item.m_Piece.name.Replace("4.5", "4")];
-			}
-
-			prefabSystem.AddPrefab(sidewalk4);
 		}
 
 		private void AddParkingNetSections()
@@ -1041,6 +1069,8 @@ namespace RoadBuilder.Systems
 			SetUp("Tiled Pedestrian Section 3", "coui://roadbuildericons/RB_PedestrianOnly.svg").WithRequireAll(RoadCategory.Tiled).AddLaneThumbnail("coui://roadbuildericons/Thumb_TiledSmall.svg");
 			SetUp("RB Tiled Median 2", "coui://roadbuildericons/RB_TiledMedian_Centered.svg").WithRequireAll(RoadCategory.Tiled).WithThumbnail("coui://roadbuildericons/RB_TiledMedian.svg").AddLaneThumbnail("coui://roadbuildericons/Thumb_PedestrianLaneSmall.svg");
 			SetUp("Sound Barrier 1", "coui://roadbuildericons/RB_SoundBarrier.svg").AddLaneThumbnail("coui://roadbuildericons/Thumb_SoundBarrier.svg");
+
+			NetSections["Sound Barrier 1"].AddComponent<RoadBuilderEdgeLaneInfo>().DoNotRequireBeingOnEdge = true;
 		}
 
 		private RoadBuilderLaneInfo SetUp(string prefabName, string thumbnail)

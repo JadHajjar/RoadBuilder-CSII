@@ -518,6 +518,7 @@ namespace RoadBuilder.Utilities
 				var uIObject = ScriptableObject.CreateInstance<UIObject>();
 				uIObject.m_Group = _roadGenerationData.UIGroupPrefabs[group];
 				uIObject.m_Icon = _roadGenerationData.UIGroupPrefabs[group].GetComponent<UIObject>().m_Icon;
+				uIObject.m_LargeIcon = string.Empty;
 				uIObject.m_Priority = 999999;
 				yield return uIObject;
 			}

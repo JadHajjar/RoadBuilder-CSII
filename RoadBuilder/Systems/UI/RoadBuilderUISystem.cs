@@ -368,7 +368,7 @@ namespace RoadBuilder.Systems.UI
 					continue;
 				}
 
-				if (NetworkConfigExtensionsUtil.GetEdgeLaneInfo(section, groupPrefab, out var edgeInfo))
+				if (NetworkConfigExtensionsUtil.GetEdgeLaneInfo(section, groupPrefab, out var edgeInfo) && !edgeInfo.DoNotRequireBeingOnEdge)
 				{
 					if (lastEdgeIndex != i - 1)
 					{
@@ -395,7 +395,7 @@ namespace RoadBuilder.Systems.UI
 					continue;
 				}
 
-				if (NetworkConfigExtensionsUtil.GetEdgeLaneInfo(section, groupPrefab, out var edgeInfo))
+				if (NetworkConfigExtensionsUtil.GetEdgeLaneInfo(section, groupPrefab, out var edgeInfo) && !edgeInfo.DoNotRequireBeingOnEdge)
 				{
 					if (lastEdgeIndex != i + 1)
 					{
