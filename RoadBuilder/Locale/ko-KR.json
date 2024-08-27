@@ -25,6 +25,7 @@
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.DoNotAddSides]": "가장자리에 도로변이나 보도가 추가되지 않은 경우 터널이나 교량 측면 없이 도로를 만들 수 있습니다.",
   "RoadBuilder.DIALOG_MESSAGE[DELETE]": "정말로 도로를 삭제하시겠습니까? 기존에 배치되었던 도로들이 전부 삭제됩니다.",
   "RoadBuilder.DIALOG_MESSAGE[ReloadSave]": "도시에 아직 저장되지 않은 도로가 있습니다. 게임을 종료하지 않고 이 세이브를 다시 불러오면 교차로에 대한 변경사항이 손실되지 않습니다.",
+  "RoadBuilder.DIALOG_MESSAGE[FixInvalidEdges]": "Some roads or tracks in this city are invalid.\n\nWould you like to fix them by resetting them to vanilla networks?",
   "RoadBuilder.DIALOG_MESSAGE[Ok]": "확인",
   "RoadBuilder.Config[RoadConfig]": "도로 속성",
   "RoadBuilder.Config[TrackConfig]": "선로 속성",
