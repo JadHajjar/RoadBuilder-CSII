@@ -25,6 +25,7 @@
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.DoNotAddSides]": "如果道路两侧没有添加路缘或人行道，则会自动创建为没有挡土墙的隧道或没有基层箱梁的桥梁。",
   "RoadBuilder.DIALOG_MESSAGE[DELETE]": "您确定要删除这条道路吗？这将删除存档中任何使用此道路的路段。",
   "RoadBuilder.DIALOG_MESSAGE[ReloadSave]": "此存档包含您之前没有创建的道路。请立即重新加载此存档（不要关闭游戏，否则路口的变更将会丢失）。",
+  "RoadBuilder.DIALOG_MESSAGE[FixInvalidEdges]": "Some roads or tracks in this city are invalid.\n\nWould you like to fix them by resetting them to vanilla networks?",
   "RoadBuilder.DIALOG_MESSAGE[Ok]": "确定",
   "RoadBuilder.Config[RoadConfig]": "道路属性",
   "RoadBuilder.Config[TrackConfig]": "轨道属性",
