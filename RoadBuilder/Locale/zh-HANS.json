@@ -77,5 +77,7 @@
   "RoadBuilder.Addons": "附属项",
   "RoadBuilder.Name": "名称",
   "RoadBuilder.RoadName": "道路名称",
-  "RoadBuilder.RoadWidth": "总道路宽度"
+  "RoadBuilder.RoadWidth": "总道路宽度",
+  "RoadBuilder.EdgeLane": "Edge Lane",
+  "RoadBuilder.RestrictedLane": "Unrestricted Lane"
 }
