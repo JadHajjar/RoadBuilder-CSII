@@ -92,7 +92,7 @@ namespace RoadBuilder.Systems
 			}
 			catch (Exception ex)
 			{
-				Mod.Log.Error(ex); 
+				Mod.Log.Error(ex);
 			}
 		}
 
@@ -123,7 +123,7 @@ namespace RoadBuilder.Systems
 			var subwayTrackId = prefabSystem.TryGetPrefab(new PrefabID(nameof(TrackPrefab), "Double Subway Track"), out var subwayTrack) ? prefabSystem.GetEntity(subwayTrack) : Entity.Null;
 
 			Mod.Log.WarnFormat("{0} invalid edges found", invalidEntities.Count);
-		
+
 			GameManager.instance.userInterface.appBindings.ShowConfirmationDialog(new ConfirmationDialog("Options.SECTION[RoadBuilder.RoadBuilder.Mod]", "RoadBuilder.DIALOG_MESSAGE[FixInvalidEdges]", "Common.DIALOG_ACTION[Yes]", "Common.DIALOG_ACTION[No]"), msg =>
 			{
 				if (msg == 0)
@@ -139,21 +139,21 @@ namespace RoadBuilder.Systems
 								m_Prefab = smallRoadId
 							});
 						}
-						else if(EntityManager.HasComponent<TrainTrack>(entity))
+						else if (EntityManager.HasComponent<TrainTrack>(entity))
 						{
 							EntityManager.SetComponentData(entity, new PrefabRef
 							{
 								m_Prefab = trainTrackId
 							});
 						}
-						else if(EntityManager.HasComponent<TramTrack>(entity))
+						else if (EntityManager.HasComponent<TramTrack>(entity))
 						{
 							EntityManager.SetComponentData(entity, new PrefabRef
 							{
 								m_Prefab = tramTrackId
 							});
 						}
-						else if(EntityManager.HasComponent<SubwayTrack>(entity))
+						else if (EntityManager.HasComponent<SubwayTrack>(entity))
 						{
 							EntityManager.SetComponentData(entity, new PrefabRef
 							{

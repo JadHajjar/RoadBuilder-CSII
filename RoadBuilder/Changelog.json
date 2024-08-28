@@ -1,6 +1,40 @@
 [
   {
     "Beta": true,
+    "Version": "0.3.1",
+    "Date": "2024-08-28",
+    "ChangeGroups": [
+      {
+        "Name": "Lane Changes",
+        "Changes": [
+          "Added smaller sidewalk sizes to the Sidewalk lane. Those are experimental and might not look perfect for now.",
+          "Added the Sound Barrier lane to the edge lane group to allow placing it on the edge of the road.",
+          "Fixed parked cars not touching the asphalt on the Parking lane."
+        ]
+      },
+      {
+        "Name": "Experimental Custom Lane Support",
+        "Changes": [
+          "Added basic support for custom lanes from PDX Mods.",
+          "Use those lanes with caution.",
+          "Loading the game with 'missing' custom lanes will not break your created roads, it will however generate the road as if those lanes are not part of the road."
+        ]
+      },
+      {
+        "Name": "Other Changes",
+        "Changes": [
+          "Added an automatic prompt while loading into a savegame with grey roads to automatically replace them and save the city.",
+          "Updated the 'Edge Lane' icon and added a tooltip for it.",
+          "Added a warning icon on lanes in the list which are unrestricted by the respective advanced option.",
+          "Dragging a lane now pauses the road update for a smoother editing experience.",
+          "Fixed bridge and tunnel pieces not facing the right direction when there's no edge lane present.",
+          "Fixed not being able to change the road category."
+        ]
+      }
+    ]
+  },
+  {
+    "Beta": true,
     "Version": "0.3.0.1",
     "Date": "2024-08-25",
     "ChangeGroups": [

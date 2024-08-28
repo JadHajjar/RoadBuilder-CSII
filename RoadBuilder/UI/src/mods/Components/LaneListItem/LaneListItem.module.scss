@@ -124,16 +124,16 @@
 }
 
 .rightSideContainer > img {
-  width: 20rem;
-  height: 20rem;
-  margin-bottom: 5rem;
+  width: 18rem;
+  height: 18rem;
+  margin-bottom: 6rem;
   filter: drop-shadow(0px 0px 2rem rgba(0, 0, 0, 0.5));
-  mask-size: contain;
-  mask-position: 50% 50%;
-}
 
-.edgeIcon {
-  background-color: #f6bd53;
+  &.edgeIcon {
+    width: 20rem;
+    height: 20rem;
+    filter: brightness(1.3) drop-shadow(0px 0px 2rem rgba(0, 0, 0, 0.5));
+  }
 }
 
 .inverted {

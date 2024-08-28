@@ -365,7 +365,7 @@ namespace RoadBuilder.Utilities
 					yield return new NetSectionInfo
 					{
 						m_Section = leftSectionEdgeInfo?.SidePrefab ?? _roadGenerationData.NetSectionPrefabs[GetSideName()],
-						m_Invert = lane.Invert
+						m_Invert = true
 					};
 				}
 
@@ -388,7 +388,7 @@ namespace RoadBuilder.Utilities
 					yield return new NetSectionInfo
 					{
 						m_Section = rightSectionEdgeInfo?.SidePrefab ?? _roadGenerationData.NetSectionPrefabs[GetSideName()],
-						m_Invert = lane.Invert
+						m_Invert = false
 					};
 				}
 			}

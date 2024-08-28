@@ -217,19 +217,17 @@ namespace RoadBuilder.Utilities
 
 					break;
 
-				//case ActionType.RoadCategory:
-				//	var nonTypes = RoadCategory.RaisedSidewalk;
+				case ActionType.RoadCategory:
+					if (config.Category.HasFlag((RoadCategory)id))
+					{
+						config.Category = config is TrackConfig ? RoadCategory.Tram : RoadCategory.Road;
+					}
+					else
+					{
+						config.Category = (RoadCategory)id;
+					}
 
-				//	if (config.Category.HasFlag((RoadCategory)id))
-				//	{
-				//		config.Category &= nonTypes;
-				//	}
-				//	else
-				//	{
-				//		config.Category = (RoadCategory)id | (config.Category & nonTypes);
-				//	}
-
-				//	break;
+					break;
 
 				case ActionType.Addons:
 					if (id < 0)

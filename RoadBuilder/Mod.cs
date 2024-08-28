@@ -88,7 +88,7 @@ namespace RoadBuilder
 		public static void ReloadActiveLocale()
 		{
 			try
-			{ 
+			{
 				GameManager.instance.localizationManager.ReloadActiveLocale();
 			}
 			catch (Exception ex)

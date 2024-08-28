@@ -63,7 +63,7 @@ export const RoadButtonSmall = (props: _Props) => {
         >
           <div className={styles.button}>
             <div className={styles.imageContainer}>
-              <img className={props.roadLane.InvertImage && styles.inverted} />
+              <img className={props.roadLane.InvertImage && styles.inverted} src="coui://roadbuildericons/RB_Edge.svg" />
             </div>
           </div>
           <div className={styles.informationBar}></div>

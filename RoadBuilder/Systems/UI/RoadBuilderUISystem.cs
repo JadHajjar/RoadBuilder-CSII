@@ -16,7 +16,6 @@ using RoadBuilder.Utilities;
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 using Unity.Entities;
@@ -95,6 +94,7 @@ namespace RoadBuilder.Systems.UI
 			CreateTrigger<int, int, int>("RoadOptionClicked", (x, y, z) => UpdateRoad(c => RoadOptionClicked(c, x, y, z)));
 			CreateTrigger<int, int, int, int>("OptionClicked", (i, x, y, z) => UpdateRoad(c => LaneOptionClicked(c, i, x, y, z)));
 			CreateTrigger<int>("DuplicateLane", x => UpdateRoad(c => DuplicateLane(c, x)));
+			CreateTrigger<bool>("SetDragging", x => roadBuilderSystem.IsDragging = x);
 			CreateTrigger("ToggleTool", ToggleTool);
 			CreateTrigger("CreateNewPrefab", () => CreateNewPrefab(workingEntity));
 			CreateTrigger("ClearTool", ClearTool);
@@ -241,7 +241,6 @@ namespace RoadBuilder.Systems.UI
 
 		private void UpdateRoad(Action<INetworkConfig> action)
 		{
-			var sw=Stopwatch.StartNew();
 			var createNew = RoadBuilderMode == RoadBuilderToolMode.EditingSingle;
 			var nonExistent = RoadBuilderMode == RoadBuilderToolMode.EditingNonExistent;
 			var config = nonExistent ? workingConfig : createNew
@@ -368,8 +367,14 @@ namespace RoadBuilder.Systems.UI
 					continue;
 				}
 
-				if (NetworkConfigExtensionsUtil.GetEdgeLaneInfo(section, groupPrefab, out var edgeInfo) && !edgeInfo.DoNotRequireBeingOnEdge)
+				if (NetworkConfigExtensionsUtil.GetEdgeLaneInfo(section, groupPrefab, out var edgeInfo))
 				{
+					if (edgeInfo.DoNotRequireBeingOnEdge)
+					{
+						lastEdgeIndex = i;
+						continue;
+					}
+
 					if (lastEdgeIndex != i - 1)
 					{
 						newLanes.RemoveAt(i);
@@ -395,8 +400,14 @@ namespace RoadBuilder.Systems.UI
 					continue;
 				}
 
-				if (NetworkConfigExtensionsUtil.GetEdgeLaneInfo(section, groupPrefab, out var edgeInfo) && !edgeInfo.DoNotRequireBeingOnEdge)
+				if (NetworkConfigExtensionsUtil.GetEdgeLaneInfo(section, groupPrefab, out var edgeInfo))
 				{
+					if (edgeInfo.DoNotRequireBeingOnEdge)
+					{
+						lastEdgeIndex = i;
+						continue;
+					}
+
 					if (lastEdgeIndex != i + 1)
 					{
 						newLanes.RemoveAt(i);

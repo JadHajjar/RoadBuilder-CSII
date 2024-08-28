@@ -6,6 +6,8 @@ export interface NetSectionItem {
   Thumbnail: string;
   IsGroup: boolean;
   IsEdge: boolean;
+  IsRestricted: boolean;
+  IsCustom: boolean;
   Width?: number;
   WidthText?: string;
 }

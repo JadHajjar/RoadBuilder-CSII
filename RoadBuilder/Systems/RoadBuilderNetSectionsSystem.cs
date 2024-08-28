@@ -4,7 +4,6 @@ using Colossal.IO.AssetDatabase.Internal;
 using Game;
 using Game.Common;
 using Game.Prefabs;
-using Game.SceneFlow;
 
 using RoadBuilder.Domain.Components;
 using RoadBuilder.Domain.Components.Prefabs;
@@ -903,7 +902,6 @@ namespace RoadBuilder.Systems
 				var offset = width switch
 				{
 					4 => 0.25f,
-					3 =>0,
 					_ => (3.5f - width) / 2f
 				};
 
@@ -1079,7 +1077,11 @@ namespace RoadBuilder.Systems
 
 			prefab.AddOrGetComponent<UIObject>().m_Icon = thumbnail;
 
-			return prefab.AddOrGetComponent<RoadBuilderLaneInfo>();
+			var info = prefab.AddOrGetComponent<RoadBuilderLaneInfo>();
+
+			info.RoadBuilder = true;
+
+			return info;
 		}
 
 		private T[] Add<T>(T[] array, params T[] values)

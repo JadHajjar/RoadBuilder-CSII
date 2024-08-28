@@ -6,13 +6,11 @@ using Game.Common;
 using Game.Net;
 using Game.Prefabs;
 using Game.SceneFlow;
-using Game.Tools;
 using Game.UI.InGame;
 
 using RoadBuilder.Domain.Components;
 using RoadBuilder.Domain.Configurations;
 using RoadBuilder.Domain.Prefabs;
-using RoadBuilder.Systems.UI;
 using RoadBuilder.Utilities;
 
 using System;
@@ -40,6 +38,7 @@ namespace RoadBuilder.Systems
 		public event Action ConfigurationsUpdated;
 
 		public Dictionary<string, INetworkBuilderPrefab> Configurations { get; } = new();
+		public bool IsDragging { get; set; }
 
 		protected override void OnCreate()
 		{
@@ -59,7 +58,7 @@ namespace RoadBuilder.Systems
 
 		protected override void OnUpdate()
 		{
-			if (_updatedRoadPrefabsQueue.Count == 0 || lastUpdateRequest > DateTime.Now.AddSeconds(-0.66))
+			if (IsDragging || _updatedRoadPrefabsQueue.Count == 0 || lastUpdateRequest > DateTime.Now.AddSeconds(-0.66))
 			{
 				return;
 			}
