@@ -77,5 +77,7 @@
   "RoadBuilder.Addons": "부가 기능",
   "RoadBuilder.Name": "이름",
   "RoadBuilder.RoadName": "도로 이름",
-  "RoadBuilder.RoadWidth": "총 도로 너비"
+  "RoadBuilder.RoadWidth": "총 도로 너비",
+  "RoadBuilder.EdgeLane": "Edge Lane",
+  "RoadBuilder.RestrictedLane": "Unrestricted Lane"
 }
