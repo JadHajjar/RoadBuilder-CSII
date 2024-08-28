@@ -8,7 +8,9 @@ using RoadBuilder.Domain.Prefabs;
 using RoadBuilder.Domain.UI;
 using RoadBuilder.Systems;
 
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 using Unity.Entities;
@@ -19,7 +21,7 @@ namespace RoadBuilder.Utilities
 	{
 		private enum ActionType
 		{
-			Invert,
+			Invert
 		}
 
 		private static readonly RoadBuilderNetSectionsSystem _netSectionsSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystemManaged<RoadBuilderNetSectionsSystem>();
@@ -66,7 +68,7 @@ namespace RoadBuilder.Utilities
 					continue;
 				}
 
-				var entries = new OptionItemUIEntry[option.Type is LaneOptionType.Decoration or LaneOptionType.TwoWay ? 2 : option.Type is LaneOptionType.ValueUpDown ? 1 : option.Options.Length];
+				var entries = new OptionItemUIEntry[option.Type is LaneOptionType.Decoration or LaneOptionType.TwoWay ? 2 : option.Type is LaneOptionType.ValueUpDown or LaneOptionType.LaneWidth ? 1 : option.Options.Length];
 				var value = GetSelectedOptionValue(config, lane, option);
 
 				if (option.Type is LaneOptionType.Decoration)
@@ -90,7 +92,7 @@ namespace RoadBuilder.Utilities
 						Disabled = !available,
 					};
 				}
-				else if (option.Type is LaneOptionType.ValueUpDown)
+				else if (option.Type is LaneOptionType.ValueUpDown or LaneOptionType.LaneWidth)
 				{
 					if (remainingSections.Count <= 1)
 					{
@@ -100,8 +102,8 @@ namespace RoadBuilder.Utilities
 
 					entries[0] = new()
 					{
-						IsValue = option.Type is LaneOptionType.ValueUpDown,
-						Value = LocaleHelper.Translate($"{group.name}.Options[{option.Name}][{value}]", value),
+						IsValue = option.Type is LaneOptionType.ValueUpDown or LaneOptionType.LaneWidth,
+						Value = option.Type is LaneOptionType.LaneWidth ? ConvertWidth(value) : LocaleHelper.Translate($"{group.name}.Options[{option.Name}][{value}]", value),
 					};
 				}
 				else
@@ -123,6 +125,7 @@ namespace RoadBuilder.Utilities
 				{
 					Id = --index,
 					Options = entries,
+					IsToggle = option.Type is LaneOptionType.Toggle,
 					Name = option.Type is LaneOptionType.Decoration
 					? LocaleHelper.Translate("RoadBuilder.Decoration", "Decoration")
 					: LocaleHelper.Translate($"{group.name}.Options[{option.Name}]", option.Name)
@@ -130,6 +133,21 @@ namespace RoadBuilder.Utilities
 
 				remainingSections.RemoveAll(x => !MatchesOptionValue(x, option, value));
 			}
+		}
+
+		private static string ConvertWidth(string value)
+		{
+			if (!double.TryParse(value.TrimEnd('m').Trim(), NumberStyles.Any, CultureInfo.InvariantCulture, out var width))
+			{
+				return value;
+			}
+
+			if (RoadOptionsUtil.IsMetric())
+			{
+				return $"{width:0.##} m";
+			}
+
+			return $"{Math.Round(width * 3.28084 * 4, MidpointRounding.AwayFromZero) / 4:0.##} ft";
 		}
 
 		private static bool MatchesOptionValue(NetSectionPrefab section, RoadBuilderLaneOption option, string currentValue)
@@ -243,7 +261,7 @@ namespace RoadBuilder.Utilities
 					return;
 				}
 
-				if (option.Type is not LaneOptionType.ValueUpDown)
+				if (option.Type is not LaneOptionType.ValueUpDown and not LaneOptionType.LaneWidth)
 				{
 					lane.GroupOptions[option.Name] = option.Options[id].Value;
 

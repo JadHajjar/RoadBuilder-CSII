@@ -58,7 +58,7 @@ export const LaneListItem = ({ netSection }: { netSection: NetSectionItem }) => 
         )}
 
         {netSection.IsCustom && (
-          <Tooltip tooltip={translate("RoadBuilder.RestrictedLane")}>
+          <Tooltip tooltip={translate("RoadBuilder.CustomLane")}>
             <img src="coui://gameui/Media/Glyphs/ParadoxModsCloud.svg"></img>
           </Tooltip>
         )}

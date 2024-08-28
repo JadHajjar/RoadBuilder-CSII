@@ -6,6 +6,7 @@
 		MultiSelectionButtons = 10,
 		Toggle = 20,
 		ValueUpDown = 30,
+		LaneWidth = 31,
 		Decoration = 40,
 		TwoWay = 50
 	}

@@ -19,7 +19,7 @@ namespace RoadBuilder.LaneGroups
 				new()
 				{
 					DefaultValue = "3.5m",
-					Type = LaneOptionType.ValueUpDown,
+					Type = LaneOptionType.LaneWidth,
 					Name = OptionName2,
 					Options = new RoadBuilderLaneOptionValue[]
 					{
@@ -41,6 +41,7 @@ namespace RoadBuilder.LaneGroups
 				{
 					DefaultValue = "",
 					Name = OptionName1,
+					Type = LaneOptionType.Toggle,
 					Options = new RoadBuilderLaneOptionValue[]
 					{
 						new()

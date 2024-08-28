@@ -28,7 +28,8 @@
           "Added a warning icon on lanes in the list which are unrestricted by the respective advanced option.",
           "Dragging a lane now pauses the road update for a smoother editing experience.",
           "Fixed bridge and tunnel pieces not facing the right direction when there's no edge lane present.",
-          "Fixed not being able to change the road category."
+          "Fixed not being able to change the road category.",
+          "Updated lane width options to match metric values while using US Customary units."
         ]
       }
     ]

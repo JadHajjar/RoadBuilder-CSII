@@ -126,12 +126,28 @@ This helps us better assist you and avoids your message from getting lost in the
   <Screenshot Value="Properties/Screenshot_07.png" />
   <Tag Value="Code Mod" />
   <ForumLink Value="https://forum.paradoxplaza.com/forum/threads/road-builder.1698661/" />
-  <ModVersion Value="0.3.0.1" />
+  <ModVersion Value="0.3.1" />
   <GameVersion Value="1.1.*" />
   <ChangeLog>
-# v0.3.0.1
-## Hotfix
-* Reverted empty lanes' extra width which caused smaller empty lanes to distort sidewalks.
+# v0.3.1
+## Lane Changes
+* Added smaller sidewalk sizes to the Sidewalk lane. Those are experimental and might not look perfect for now.
+* Added the Sound Barrier lane to the edge lane group to allow placing it on the edge of the road.
+* Fixed parked cars not touching the asphalt on the Parking lane.
+
+## Experimental Custom Lane Support
+* Added basic support for custom lanes from PDX Mods.
+* Use those lanes with caution.
+* Loading the game with 'missing' custom lanes will not break your created roads, it will however generate the road as if those lanes are not part of the road.
+
+## Other Changes
+* Added an automatic prompt while loading into a savegame with grey roads to automatically replace them and save the city.
+* Updated the 'Edge Lane' icon and added a tooltip for it.
+* Added a warning icon on lanes in the list which are unrestricted by the respective advanced option.
+* Dragging a lane now pauses the road update for a smoother editing experience.
+* Fixed bridge and tunnel pieces not facing the right direction when there's no edge lane present.
+* Fixed not being able to change the road category.
+* Updated lane width options to match metric values while using US Customary units.
 </ChangeLog>
   <ExternalLink Type="discord" Url="https://discord.gg/E4k8ZEtRxd" />
   <ExternalLink Type="github" Url="https://github.com/JadHajjar/RoadBuilder-CSII" />
