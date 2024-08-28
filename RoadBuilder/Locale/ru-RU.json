@@ -77,5 +77,7 @@
   "RoadBuilder.Addons": "Аддоны",
   "RoadBuilder.Name": "Имя",
   "RoadBuilder.RoadName": "Название дороги",
-  "RoadBuilder.RoadWidth": "Общая ширина дороги"
+  "RoadBuilder.RoadWidth": "Общая ширина дороги",
+  "RoadBuilder.EdgeLane": "Edge Lane",
+  "RoadBuilder.RestrictedLane": "Unrestricted Lane"
 }
