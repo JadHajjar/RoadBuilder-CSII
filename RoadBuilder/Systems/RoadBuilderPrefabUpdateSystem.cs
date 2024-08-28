@@ -62,7 +62,7 @@ namespace RoadBuilder.Systems
 
 		protected override void OnUpdate()
 		{
-			GameManager.instance.localizationManager.ReloadActiveLocale();
+			Mod.ReloadActiveLocale();
 
 			roadBuilderSystem.UpdateConfigurationList();
 

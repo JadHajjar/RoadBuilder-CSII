@@ -77,7 +77,7 @@ namespace RoadBuilder.Systems
 
 			if (_prefabsToUpdate.Count > 0)
 			{
-				GameManager.instance.localizationManager.ReloadActiveLocale();
+				Mod.ReloadActiveLocale();
 
 				_prefabsToUpdate.Clear();
 

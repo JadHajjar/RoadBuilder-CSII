@@ -11,6 +11,7 @@ using RoadBuilder.Systems;
 using RoadBuilder.Systems.UI;
 using RoadBuilder.Utilities;
 
+using System;
 using System.IO;
 
 namespace RoadBuilder
@@ -82,6 +83,18 @@ namespace RoadBuilder
 			UIManager.defaultUISystem.RemoveHostLocation("roadbuilderthumbnails");
 
 			new DirectoryInfo(FoldersUtil.TempFolder).Delete(true);
+		}
+
+		public static void ReloadActiveLocale()
+		{
+			try
+			{ 
+				GameManager.instance.localizationManager.ReloadActiveLocale();
+			}
+			catch (Exception ex)
+			{
+				Log.Warn(ex, "Unexpected error during dictionary refresh");
+			}
 		}
 	}
 }

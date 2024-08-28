@@ -150,7 +150,7 @@ namespace RoadBuilder.Systems
 
 			AddCustomPrefabComponents();
 
-			GameManager.instance.localizationManager.ReloadActiveLocale();
+			Mod.ReloadActiveLocale();
 		}
 
 		private void DoNetLaneCreation()

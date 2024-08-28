@@ -27,8 +27,6 @@ namespace RoadBuilder.Systems
 	{
 		private readonly Queue<(INetworkBuilderPrefab prefab, bool generateId)> _updatedRoadPrefabsQueue = new();
 
-		private EntityQuery prefabRefQuery;
-		private RoadNameUtil roadNameUtil;
 		private PrefabSystem prefabSystem;
 		private PrefabUISystem prefabUISystem;
 		private RoadBuilderNetSectionsSystem netSectionsSystem;
@@ -54,11 +52,6 @@ namespace RoadBuilder.Systems
 			cityConfigurationSystem = World.GetOrCreateSystemManaged<CityConfigurationSystem>();
 			roadGenerationDataSystem = World.GetOrCreateSystemManaged<RoadBuilderGenerationDataSystem>();
 			modificationBarrier = World.GetOrCreateSystemManaged<ModificationBarrier1>();
-			roadNameUtil = new(this, World.GetOrCreateSystemManaged<RoadBuilderUISystem>(), prefabUISystem, netSectionsSystem);
-			prefabRefQuery = SystemAPI.QueryBuilder()
-				.WithAll<RoadBuilderNetwork, PrefabRef>()
-				.WithNone<Temp>()
-				.Build();
 
 			// Delay getting the toolbar ui system assets for the next frame
 			GameManager.instance.RegisterUpdater(() => toolbarUISystemLastSelectedAssets ??= typeof(ToolbarUISystem).GetField("m_LastSelectedAssets", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(World.GetOrCreateSystemManaged<ToolbarUISystem>()) as Dictionary<Entity, Entity>);
