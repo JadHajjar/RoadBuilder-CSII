@@ -6,6 +6,10 @@
 		public string DisplayName;
 		public string Thumbnail;
 		public bool IsGroup;
+		public bool IsEdge;
+		public bool IsRestricted;
+		public bool IsCustom;
 		public float Width;
+		public string WidthText;
 	}
 }

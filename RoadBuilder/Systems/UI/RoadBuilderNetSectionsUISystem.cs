@@ -6,6 +6,7 @@ using Game.UI.InGame;
 using RoadBuilder.Domain.Components.Prefabs;
 using RoadBuilder.Domain.Configurations;
 using RoadBuilder.Domain.UI;
+using RoadBuilder.LaneGroups;
 using RoadBuilder.Utilities;
 
 using System.Collections.Generic;
@@ -54,9 +55,14 @@ namespace RoadBuilder.Systems.UI
 					continue;
 				}
 
-				if (!Mod.Settings.AdvancedUserMode && (!prefab.Has<RoadBuilderLaneInfo>() || !prefab.MatchCategories(activeConfig)))
+				var restricted = false;
+
+				if (restricted = !prefab.MatchCategories(activeConfig))
 				{
-					continue;
+					if (!Mod.Settings.UnrestrictedLanes)
+					{
+						continue;
+					}
 				}
 
 				if (IsInvalidLane(prefab))
@@ -69,15 +75,23 @@ namespace RoadBuilder.Systems.UI
 					PrefabName = prefab.name,
 					DisplayName = GetAssetName(prefab),
 					Thumbnail = ImageSystem.GetIcon(prefab),
+					IsEdge = prefab.Has<RoadBuilderEdgeLaneInfo>(),
+					IsRestricted = restricted,
+					IsCustom = !prefab.GetComponent<RoadBuilderLaneInfo>().RoadBuilder,
 					Width = prefab.CalculateWidth()
 				});
 			}
 
 			foreach (var prefab in netSectionsSystem.LaneGroups.Values)
 			{
-				if (!Mod.Settings.AdvancedUserMode && !prefab.MatchCategories(activeConfig))
+				var restricted = false;
+
+				if (restricted = !prefab.MatchCategories(activeConfig))
 				{
-					continue;
+					if (!Mod.Settings.UnrestrictedLanes)
+					{
+						continue;
+					}
 				}
 
 				sections.Add(new NetSectionItem
@@ -85,6 +99,9 @@ namespace RoadBuilder.Systems.UI
 					IsGroup = true,
 					PrefabName = prefab.name,
 					DisplayName = GetAssetName(prefab),
+					IsEdge = prefab.Has<RoadBuilderEdgeLaneInfo>(),
+					IsRestricted = restricted,
+					IsCustom = prefab is not BaseLaneGroupPrefab,
 					Thumbnail = ImageSystem.GetIcon(prefab)
 				});
 			}

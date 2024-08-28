@@ -31,9 +31,6 @@ namespace RoadBuilder.LaneGroups
 
 			sections["Tram Track Section 3"].AddComponent<RoadBuilderLaneInfo>().WithRequireNone(RoadCategory.Tiled).WithGroundTexture(LaneGroundType.Asphalt);
 			sections["RB Tiled Tram Section 3"].AddComponent<RoadBuilderLaneInfo>().WithRequireAll(RoadCategory.Tiled).AddLaneThumbnail("coui://roadbuildericons/Thumb_TiledTramLane.svg").WithGroundTexture(LaneGroundType.Tiled);
-
-			LinkedSections.Add(sections["Tram Track Section 3"]);
-			LinkedSections.Add(sections["RB Tiled Tram Section 3"]);
 		}
 	}
 }

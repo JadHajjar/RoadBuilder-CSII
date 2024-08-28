@@ -6,13 +6,11 @@ using Game.Common;
 using Game.Net;
 using Game.Prefabs;
 using Game.SceneFlow;
-using Game.Tools;
 using Game.UI.InGame;
 
 using RoadBuilder.Domain.Components;
 using RoadBuilder.Domain.Configurations;
 using RoadBuilder.Domain.Prefabs;
-using RoadBuilder.Systems.UI;
 using RoadBuilder.Utilities;
 
 using System;
@@ -27,8 +25,6 @@ namespace RoadBuilder.Systems
 	{
 		private readonly Queue<(INetworkBuilderPrefab prefab, bool generateId)> _updatedRoadPrefabsQueue = new();
 
-		private EntityQuery prefabRefQuery;
-		private RoadNameUtil roadNameUtil;
 		private PrefabSystem prefabSystem;
 		private PrefabUISystem prefabUISystem;
 		private RoadBuilderNetSectionsSystem netSectionsSystem;
@@ -37,10 +33,12 @@ namespace RoadBuilder.Systems
 		private RoadBuilderGenerationDataSystem roadGenerationDataSystem;
 		private ModificationBarrier1 modificationBarrier;
 		private Dictionary<Entity, Entity> toolbarUISystemLastSelectedAssets;
+		private DateTime lastUpdateRequest;
 
 		public event Action ConfigurationsUpdated;
 
 		public Dictionary<string, INetworkBuilderPrefab> Configurations { get; } = new();
+		public bool IsDragging { get; set; }
 
 		protected override void OnCreate()
 		{
@@ -53,11 +51,6 @@ namespace RoadBuilder.Systems
 			cityConfigurationSystem = World.GetOrCreateSystemManaged<CityConfigurationSystem>();
 			roadGenerationDataSystem = World.GetOrCreateSystemManaged<RoadBuilderGenerationDataSystem>();
 			modificationBarrier = World.GetOrCreateSystemManaged<ModificationBarrier1>();
-			roadNameUtil = new(this, World.GetOrCreateSystemManaged<RoadBuilderUISystem>(), prefabUISystem, netSectionsSystem);
-			prefabRefQuery = SystemAPI.QueryBuilder()
-				.WithAll<RoadBuilderNetwork, PrefabRef>()
-				.WithNone<Temp>()
-				.Build();
 
 			// Delay getting the toolbar ui system assets for the next frame
 			GameManager.instance.RegisterUpdater(() => toolbarUISystemLastSelectedAssets ??= typeof(ToolbarUISystem).GetField("m_LastSelectedAssets", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(World.GetOrCreateSystemManaged<ToolbarUISystem>()) as Dictionary<Entity, Entity>);
@@ -65,7 +58,7 @@ namespace RoadBuilder.Systems
 
 		protected override void OnUpdate()
 		{
-			if (_updatedRoadPrefabsQueue.Count == 0)
+			if (IsDragging || _updatedRoadPrefabsQueue.Count == 0 || lastUpdateRequest > DateTime.Now.AddSeconds(-0.66))
 			{
 				return;
 			}
@@ -122,6 +115,8 @@ namespace RoadBuilder.Systems
 
 				networkBuilderPrefab = _networkBuilderPrefab;
 			}
+
+			lastUpdateRequest = DateTime.Now;
 
 			_updatedRoadPrefabsQueue.Enqueue((networkBuilderPrefab, true));
 		}
@@ -306,6 +301,15 @@ namespace RoadBuilder.Systems
 						{
 							prefab.Prefab.GetComponent<UIObject>().m_Icon = thumbnail;
 						}
+					}
+
+					if (prefab.Prefab.name != prefab.Config.ID)
+					{
+						Mod.Log.Warn($"Configuration Mismatch: {prefab.Prefab.name} - {prefab.Config.ID}");
+
+						prefab.Prefab.name = prefab.Config.ID;
+
+						UpdatePrefab(prefab.Prefab);
 					}
 				}
 			}

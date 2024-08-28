@@ -64,3 +64,19 @@
   width: 26rem;
   height: 26rem;
 }
+
+.toggleOption.optionContent > button {
+  width: 52rem;
+
+  &:nth-child(1) {
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  &:nth-child(2) {
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+    margin-left: 0 !important;
+  }
+}

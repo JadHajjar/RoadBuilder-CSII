@@ -15,6 +15,25 @@ export const RoadConfigListItem = ({ road }: { road: RoadConfiguration }) => {
   const getRoadId = useValue(getRoadId$);
   const { translate } = useLocalization();
 
+  if (road.Locked) {
+    return (
+      <div
+        className={classNames(styles.gridItemLocked, VanillaComponentResolver.instance.assetGridTheme.item, getRoadId == road.ID && styles.active)}
+      >
+        <div className={styles.itemInfo}>
+          <div className={styles.thumbnailContainer}>
+            <img className={styles.lockIcon} />
+            <img className={classNames(styles.gridThumbnail)} src={road.Thumbnail ?? "coui://roadbuildericons/RB_Unknown.svg"} />
+          </div>
+
+          <div className={classNames(styles.gridItemText)}>
+            <p>{road.Name}</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
       className={classNames(VanillaComponentResolver.instance.assetGridTheme.item, styles.gridItem, getRoadId == road.ID && styles.active)}

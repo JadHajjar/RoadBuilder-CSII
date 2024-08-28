@@ -1,4 +1,4 @@
-import { Button } from "cs2/ui";
+import { Button, Tooltip } from "cs2/ui";
 import styles from "./LaneListItem.module.scss";
 import { NetSectionItem } from "domain/NetSectionItem";
 import { CSSProperties, MouseEventHandler, forwardRef, useContext } from "react";
@@ -6,10 +6,12 @@ import classNames from "classnames";
 import { DragContext } from "mods/Contexts/DragContext";
 import { MouseButtons } from "mods/util";
 import { VanillaComponentResolver } from "vanillacomponentresolver";
+import { useLocalization } from "cs2/l10n";
 
 export const LaneListItem = ({ netSection }: { netSection: NetSectionItem }) => {
   // let [dragging, setDragging] = useState(false);
   let dragContext = useContext(DragContext);
+  let { translate } = useLocalization();
 
   let dragging = dragContext.netSectionItem?.PrefabName == netSection.PrefabName;
   let containerStyles: Record<string, boolean> = {};
@@ -42,14 +44,25 @@ export const LaneListItem = ({ netSection }: { netSection: NetSectionItem }) => 
         <p>{netSection.DisplayName}</p>
       </div>
 
-      {/* THIS IS FOR LATER IN CASE WE WANT CATEGORY ICONS NEXT TO THE LANES
-        <div className={styles.rightSideContainer}>
-          {props.showCategory && <img src={props.prefab.categoryThumbnail}></img>}
+      <div className={styles.rightSideContainer}>
+        {netSection.IsEdge && (
+          <Tooltip tooltip={translate("RoadBuilder.EdgeLane")}>
+            <img className={styles.edgeIcon} src="coui://roadbuildericons/RB_Edge.svg"></img>
+          </Tooltip>
+        )}
 
-          {props.prefab.dlcThumbnail && <img src={props.prefab.dlcThumbnail}></img>}
+        {netSection.IsRestricted && (
+          <Tooltip tooltip={translate("RoadBuilder.RestrictedLane")}>
+            <img src="coui://gameui/Media/Game/Notifications/BuildingOnFire.svg"></img>
+          </Tooltip>
+        )}
 
-          {props.prefab.random && <img src="coui://uil/Colored/Dice.svg"></img>}
-        </div>*/}
+        {netSection.IsCustom && (
+          <Tooltip tooltip={translate("RoadBuilder.CustomLane")}>
+            <img src="coui://gameui/Media/Glyphs/ParadoxModsCloud.svg"></img>
+          </Tooltip>
+        )}
+      </div>
     </div>
   );
 };
@@ -85,7 +98,13 @@ export const LaneListItemDrag = forwardRef<HTMLDivElement>((props, ref) => {
 
   return (
     <div style={offsetStyle} className={containerClasses} ref={ref}>
-      <div className={classNames(VanillaComponentResolver.instance.assetGridTheme.thumbnail, styles.gridThumbnail)}>
+      <div
+        className={classNames(
+          VanillaComponentResolver.instance.assetGridTheme.thumbnail,
+          styles.gridThumbnail,
+          dragData.roadLane?.InvertImage && styles.inverted
+        )}
+      >
         <img src={netSection.Thumbnail ?? "coui://roadbuildericons/RB_Unknown.svg"} />
       </div>
     </div>

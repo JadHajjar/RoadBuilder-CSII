@@ -19,7 +19,7 @@ namespace RoadBuilder.LaneGroups
 				new()
 				{
 					DefaultValue = "3m",
-					Type = LaneOptionType.ValueUpDown,
+					Type = LaneOptionType.LaneWidth,
 					Name = OptionName,
 					Options = new RoadBuilderLaneOptionValue[]
 					{
@@ -79,8 +79,6 @@ namespace RoadBuilder.LaneGroups
 					Value = value2
 				}
 			};
-
-			LinkedSections.Add(prefab);
 
 			return prefab;
 		}

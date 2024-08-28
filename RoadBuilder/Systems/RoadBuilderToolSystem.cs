@@ -27,8 +27,11 @@ namespace RoadBuilder.Systems
 	{
 		private PrefabSystem prefabSystem;
 		private RoadBuilderUISystem roadBuilderUISystem;
+		private RoadBuilderSystem roadBuilderSystem;
+		private ToolSystem toolSystem;
 		private EntityQuery highlightedQuery;
 		private EntityQuery roadBuilderNetworkQuery;
+		private ProxyAction placeAction;
 		private ProxyAction applyAction;
 		private ProxyAction cancelAction;
 
@@ -40,10 +43,13 @@ namespace RoadBuilder.Systems
 
 			prefabSystem = World.GetOrCreateSystemManaged<PrefabSystem>();
 			roadBuilderUISystem = World.GetOrCreateSystemManaged<RoadBuilderUISystem>();
+			roadBuilderSystem = World.GetOrCreateSystemManaged<RoadBuilderSystem>();
+			toolSystem = World.GetOrCreateSystemManaged<ToolSystem>();
 
 			highlightedQuery = SystemAPI.QueryBuilder().WithAny<Highlighted, RoadBuilderUpdateFlagComponent>().Build();
 			roadBuilderNetworkQuery = GetEntityQuery(ComponentType.ReadOnly<RoadBuilderNetwork>());
 
+			placeAction = Mod.Settings.GetAction(nameof(Setting.PlaceToggle));
 			applyAction = Mod.Settings.GetAction(nameof(RoadBuilder) + "Apply");
 			cancelAction = Mod.Settings.GetAction(nameof(RoadBuilder) + "Cancel");
 
@@ -76,7 +82,19 @@ namespace RoadBuilder.Systems
 
 		protected override JobHandle OnUpdate(JobHandle inputDeps)
 		{
+			placeAction.shouldBeEnabled = roadBuilderUISystem.Mode is RoadBuilderToolMode.Editing or RoadBuilderToolMode.EditingNonExistent;
+			applyAction.shouldBeEnabled = roadBuilderUISystem.Mode is RoadBuilderToolMode.Picker;
 			cancelAction.shouldBeEnabled = true;
+
+			if (placeAction.WasPerformedThisFrame())
+			{
+				if (roadBuilderSystem.Configurations.TryGetValue(roadBuilderUISystem.GetWorkingId(), out var prefab))
+				{
+					toolSystem.ActivatePrefabTool(prefab.Prefab);
+				}
+
+				return base.OnUpdate(inputDeps);
+			}
 
 			if (cancelAction.WasPerformedThisFrame())
 			{
@@ -93,8 +111,6 @@ namespace RoadBuilder.Systems
 
 				return base.OnUpdate(inputDeps);
 			}
-
-			applyAction.shouldBeEnabled = roadBuilderUISystem.Mode is RoadBuilderToolMode.Picker;
 
 			switch (roadBuilderUISystem.Mode)
 			{
@@ -161,7 +177,12 @@ namespace RoadBuilder.Systems
 				return false;
 			}
 
-			if (!EntityManager.TryGetComponent<PrefabRef>(entity, out var prefabRef) || EntityManager.HasComponent<Owner>(entity))
+			if (!EntityManager.TryGetComponent<PrefabRef>(entity, out var prefabRef) || EntityManager.HasComponent<Owner>(entity) || !EntityManager.HasComponent<Edge>(entity))
+			{
+				return false;
+			}
+
+			if (!Mod.Settings.RemoveLockRequirements && EntityManager.HasEnabledComponent<Locked>(prefabRef.m_Prefab))
 			{
 				return false;
 			}

@@ -2,6 +2,7 @@
 
 using RoadBuilder.Domain.Components.Prefabs;
 using RoadBuilder.Domain.Configurations;
+using RoadBuilder.Domain.Prefabs;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,21 @@ namespace RoadBuilder.Utilities
 {
 	public static class NetworkConfigExtensionsUtil
 	{
+		public static bool GetEdgeLaneInfo(NetSectionPrefab section, LaneGroupPrefab groupPrefab, out RoadBuilderEdgeLaneInfo sectionEdgeInfo)
+		{
+			if (section.TryGet(out sectionEdgeInfo))
+			{
+				return true;
+			}
+
+			if (groupPrefab != null && groupPrefab.TryGet(out sectionEdgeInfo))
+			{
+				return true;
+			}
+
+			return false;
+		}
+
 		public static bool IsOneWay(this INetworkConfig config)
 		{
 			if (config.Lanes.Count < 2)
@@ -41,9 +57,16 @@ namespace RoadBuilder.Utilities
 				return subSectionsWidth;
 			}
 
-			return subSectionsWidth + netSection.m_Pieces.Max(x =>
+			var pieceWidths = netSection.m_Pieces.Max(x =>
 				x.m_RequireAll.Length == 0 &&
 				x.m_RequireAny.Length == 0 ? x.m_Piece.m_Width : 0f);
+
+			if (pieceWidths == 0)
+			{
+				pieceWidths = netSection.m_Pieces[0].m_Piece.m_Width;
+			}
+
+			return subSectionsWidth + pieceWidths;
 		}
 
 		public static bool IsMedian(this NetSectionPrefab netSection)

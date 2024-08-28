@@ -18,7 +18,7 @@ namespace RoadBuilder.LaneGroups
 				new()
 				{
 					DefaultValue = "2m",
-					Type = LaneOptionType.ValueUpDown,
+					Type = LaneOptionType.LaneWidth,
 					IgnoreForSimilarDuplicate = true,
 					Name = OptionName,
 					Options = new RoadBuilderLaneOptionValue[]
@@ -36,7 +36,7 @@ namespace RoadBuilder.LaneGroups
 			};
 
 			AddOrGetComponent<RoadBuilderLaneInfo>()
-				.WithRequireNone(RoadCategory.NoRaisedSidewalkSupport)
+				.WithRequireNone(RoadCategory.Train | RoadCategory.Subway | RoadCategory.Gravel | RoadCategory.Fence | RoadCategory.Pathway)
 				.WithThumbnail("coui://roadbuildericons/RB_Median.svg")
 				.AddLaneThumbnail("coui://roadbuildericons/Thumb_MedianSmall.svg");
 
@@ -61,7 +61,7 @@ namespace RoadBuilder.LaneGroups
 
 		private NetSectionPrefab SetUp(NetSectionPrefab prefab, bool link, string value, bool hasGrass = false)
 		{
-			var laneInfo = prefab.AddComponent<RoadBuilderLaneGroup>();
+			var laneInfo = link ? prefab.AddComponent<RoadBuilderLaneGroup>() : prefab.AddComponent<RoadBuilderVanillaLaneGroup>();
 			laneInfo.GroupPrefab = this;
 			laneInfo.Combination = hasGrass
 			? new LaneOptionCombination[]
@@ -85,11 +85,6 @@ namespace RoadBuilder.LaneGroups
 					Value = value
 				}
 			};
-
-			if (link)
-			{
-				LinkedSections.Add(prefab);
-			}
 
 			return prefab;
 		}

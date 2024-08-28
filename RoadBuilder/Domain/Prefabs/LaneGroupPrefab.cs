@@ -19,7 +19,7 @@ namespace RoadBuilder.Domain.Prefabs
 		{
 			base.GetPrefabComponents(components);
 
-			components.Add(ComponentType.ReadWrite<RoadBuilderPrefabData>());
+			components.Add(ComponentType.ReadWrite<RoadBuilderLaneGroupPrefabData>());
 		}
 	}
 }

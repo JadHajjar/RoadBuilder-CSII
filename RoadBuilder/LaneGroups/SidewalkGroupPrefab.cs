@@ -19,11 +19,17 @@ namespace RoadBuilder.LaneGroups
 				new()
 				{
 					DefaultValue = "3.5m",
-					Type = LaneOptionType.ValueUpDown,
+					Type = LaneOptionType.LaneWidth,
 					Name = OptionName2,
 					Options = new RoadBuilderLaneOptionValue[]
 					{
+						new() { Value = "1m" },
+						new() { Value = "1.5m" },
+						new() { Value = "2m" },
+						new() { Value = "2.5m" },
+						new() { Value = "3m" },
 						new() { Value = "3.5m" },
+						new() { Value = "4m" },
 						new() { Value = "4.5m" },
 						new() { Value = "5m" },
 						new() { Value = "5.5m" },
@@ -35,6 +41,7 @@ namespace RoadBuilder.LaneGroups
 				{
 					DefaultValue = "",
 					Name = OptionName1,
+					Type = LaneOptionType.Toggle,
 					Options = new RoadBuilderLaneOptionValue[]
 					{
 						new()
@@ -57,15 +64,25 @@ namespace RoadBuilder.LaneGroups
 			};
 
 			AddComponent<RoadBuilderLaneInfo>()
-				.WithRequireAll(RoadCategory.RaisedSidewalk)
 				.AddLaneThumbnail("coui://roadbuildericons/Thumb_SidewalkWide.svg");
 
 			AddComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_WideSidewalkRight.svg";
 
-			SetUp(sections["Sidewalk With Parking 5"], "P", "5m");
+			var edgeInfo = AddComponent<RoadBuilderEdgeLaneInfo>();
+			edgeInfo.AddSidewalkStateOnNode = true;
+			edgeInfo.SidePrefab = sections["Road Side 0"];
+
+			SetUp(sections["Sidewalk 1"], "", "1m", false);
+			SetUp(sections["Sidewalk 1.5"], "", "1.5m", false);
+			SetUp(sections["Sidewalk 2"], "", "2m", false);
+			SetUp(sections["Sidewalk 2.5"], "", "2.5m", false);
+			SetUp(sections["Sidewalk 3"], "", "3m", false);
+			SetUp(sections["Sidewalk 4"], "", "4m", false);
+
 			SetUp(sections["Sidewalk 3.5"], "", "3.5m", false);
-			SetUp(sections["Sidewalk With Parking 6"], "P", "6m");
 			SetUp(sections["Sidewalk 4.5"], "", "4.5m", false);
+			SetUp(sections["Sidewalk With Parking 5"], "P", "5m");
+			SetUp(sections["Sidewalk With Parking 6"], "P", "6m");
 			SetUp(sections["Sidewalk With Parking 7"], "P", "7m");
 			SetUp(sections["Sidewalk With Parking 5.5"], "P", "5.5m");
 			SetUp(sections["Sidewalk 5"], "", "5m");
@@ -133,8 +150,6 @@ namespace RoadBuilder.LaneGroups
 				decoInfo.LaneTreeThumbnail = new[] { "coui://roadbuildericons/Thumb_SidewalkTree.svg" };
 				decoInfo.LaneGrassAndTreeThumbnail = new[] { "coui://roadbuildericons/Thumb_SidewalkGrassTree.svg" };
 			}
-
-			LinkedSections.Add(prefab);
 		}
 	}
 }
