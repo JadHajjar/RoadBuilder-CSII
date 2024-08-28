@@ -25,7 +25,7 @@
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.DoNotAddSides]": "Ermöglicht die Straßenkreation ohne Tunnel- oder Brückenseiten, wenn keine Randstreifen oder Gehweg am Rand hinzugefügt wird.",
   "RoadBuilder.DIALOG_MESSAGE[DELETE]": "Bist du sicher, dass du diese Straße löschen möchtest? Dadurch werden alle platzierten Segmente in deiner Stadt, die du genutzt hast, entfernt.",
   "RoadBuilder.DIALOG_MESSAGE[ReloadSave]": "Diese Stadt enthält Straßen, die du noch nicht hattest. Lade dieses Spiel sofort neu, ohne das Spiel zu schließen, damit deine Änderungen an den Kreuzungen nicht verloren gehen.",
-  "RoadBuilder.DIALOG_MESSAGE[FixInvalidEdges]": "Some roads or tracks in this city are invalid.\n\nWould you like to fix them by resetting them to vanilla networks?",
+  "RoadBuilder.DIALOG_MESSAGE[FixInvalidEdges]": "Einige Straßen oder Wege in dieser Stadt sind ungültig.\n\nMöchten Sie sie durch Zurücksetzen auf Standardnetzwerke reparieren?",
   "RoadBuilder.DIALOG_MESSAGE[Ok]": "Ok",
   "RoadBuilder.Config[RoadConfig]": "Straßeneigenschaften",
   "RoadBuilder.Config[TrackConfig]": "Gleis-Eigenschaften",
