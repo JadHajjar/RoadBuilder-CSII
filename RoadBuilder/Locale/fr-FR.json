@@ -77,5 +77,7 @@
   "RoadBuilder.Addons": "Ajouts",
   "RoadBuilder.Name": "Nom",
   "RoadBuilder.RoadName": "Nom de la Route",
-  "RoadBuilder.RoadWidth": "Largeur Totale de la Route"
+  "RoadBuilder.RoadWidth": "Largeur Totale de la Route",
+  "RoadBuilder.EdgeLane": "Edge Lane",
+  "RoadBuilder.RestrictedLane": "Unrestricted Lane"
 }
