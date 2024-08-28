@@ -77,5 +77,7 @@
   "RoadBuilder.Addons": "Eklentiler",
   "RoadBuilder.Name": "İsim",
   "RoadBuilder.RoadName": "Yol İsmi",
-  "RoadBuilder.RoadWidth": "Toplam Yol Genişliği"
+  "RoadBuilder.RoadWidth": "Toplam Yol Genişliği",
+  "RoadBuilder.EdgeLane": "Edge Lane",
+  "RoadBuilder.RestrictedLane": "Unrestricted Lane"
 }
