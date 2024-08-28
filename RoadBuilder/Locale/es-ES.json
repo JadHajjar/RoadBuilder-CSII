@@ -25,6 +25,7 @@
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.DoNotAddSides]": "Permite la creación de carreteras de túneles y puentes sin lados, si es que no se agrega arcén o acera en los extremos.",
   "RoadBuilder.DIALOG_MESSAGE[DELETE]": "¿Seguro que quieres eliminar esta carretera? Esto eliminará cualquier segmento colocado en tu ciudad que la utilice.",
   "RoadBuilder.DIALOG_MESSAGE[ReloadSave]": "Esta ciudad contiene carreteras que aún no tienes en tu colección. Recarga esta partida guardada inmediatamente, sin cerrar el juego, para que los cambios a las intersecciones no se pierden.",
+  "RoadBuilder.DIALOG_MESSAGE[FixInvalidEdges]": "Some roads or tracks in this city are invalid.\n\nWould you like to fix them by resetting them to vanilla networks?",
   "RoadBuilder.DIALOG_MESSAGE[Ok]": "Aceptar",
   "RoadBuilder.Config[RoadConfig]": "Propiedades de Carretera",
   "RoadBuilder.Config[TrackConfig]": "Propiedades de las Vías",
@@ -76,5 +77,7 @@
   "RoadBuilder.Addons": "Agregados",
   "RoadBuilder.Name": "Nombre",
   "RoadBuilder.RoadName": "Nombre de la Carretera",
-  "RoadBuilder.RoadWidth": "Ancho Total de la Carretera"
+  "RoadBuilder.RoadWidth": "Ancho Total de la Carretera",
+  "RoadBuilder.EdgeLane": "Edge Lane",
+  "RoadBuilder.RestrictedLane": "Unrestricted Lane"
 }
