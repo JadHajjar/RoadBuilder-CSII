@@ -25,7 +25,7 @@
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.DoNotAddSides]": "如果不在道路邊緣添加路肩或人行道，則允許在沒有隧道或橋樑邊緣的情況下創建道路。",
   "RoadBuilder.DIALOG_MESSAGE[DELETE]": "您確定要刪除此道路嗎？這將使存檔中任何使用此道路的路段都被移除。",
   "RoadBuilder.DIALOG_MESSAGE[ReloadSave]": "此存檔包含您尚未建立的道路。請立即重新載入此存檔（請勿關閉遊戲，否則您將遺失所有交叉路口的變更）",
-  "RoadBuilder.DIALOG_MESSAGE[FixInvalidEdges]": "Some roads or tracks in this city are invalid.\n\nWould you like to fix them by resetting them to vanilla networks?",
+  "RoadBuilder.DIALOG_MESSAGE[FixInvalidEdges]": "此城市中的某些道路或路徑是無效的。\n\n您是否要將它們重設為香草路網來修正嗎？",
   "RoadBuilder.DIALOG_MESSAGE[Ok]": "確定",
   "RoadBuilder.Config[RoadConfig]": "道路屬性",
   "RoadBuilder.Config[TrackConfig]": "軌道屬性",
