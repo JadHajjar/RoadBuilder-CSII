@@ -3,6 +3,7 @@ import { RoadLane } from "domain/RoadLane";
 import { LaneListItemDrag } from "mods/Components/LaneListItem/LaneListItem";
 import { createContext, PropsWithChildren, startTransition, useEffect, useMemo, useReducer, useRef } from "react";
 import { defaultDragCtxReducerState, DragContextAction, DragContextActionType, dragContextReducer, DragContextReducerState } from "../Reducers/DragContextReducer";
+import { setIsUIDragging } from "mods/bindings";
 
 export interface DragContextData extends DragContextReducerState {
   onNetSectionItemChange: (item?: NetSectionItem) => void;
@@ -51,7 +52,9 @@ export const DragContextManager = ({ children }: PropsWithChildren) => {
     document.addEventListener("mousedown", onMouseDown);
     document.addEventListener("mouseup", onMouseRelease);
     document.addEventListener("click", onMouseClick);
-    console.log("Setup event listener");
+    
+    let isDragging = reducerState.netSectionItem != undefined || reducerState.roadLane != undefined;
+    setIsUIDragging(isDragging);
     return () => {
       document.removeEventListener("mousemove", onMouseMove);
       document.removeEventListener("mousedown", onMouseDown);
