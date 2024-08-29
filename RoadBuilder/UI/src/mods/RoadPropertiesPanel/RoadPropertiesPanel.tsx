@@ -11,10 +11,11 @@ import { roadOptionClicked } from "mods/bindings";
 import { KeyboardEvent, useState } from "react";
 import { VanillaComponentResolver } from "vanillacomponentresolver";
 import { useLocalization } from "cs2/l10n";
+import classNames from "classnames";
 
 const DropdownStyle: Theme | any = getModule("game-ui/menu/themes/dropdown.module.scss", "classes");
 
-export const RoadPropertiesPanel = () => {
+export const RoadPropertiesPanel = (props: { editor: boolean }) => {
   const { translate } = useLocalization();
   let roadOptions = useValue(roadOptions$);
   let getRoadTypeName = useValue(getRoadTypeName$);
@@ -35,7 +36,7 @@ export const RoadPropertiesPanel = () => {
   };
 
   return (
-    <div className={styles.panel}>
+    <div className={classNames(styles.panel, props.editor ? styles.editor : styles.game)}>
       <div className={styles.header}>
         <div className={styles.title}>{translate(getRoadTypeName)}</div>
         <Tooltip tooltip={translate("RoadBuilder.RoadWidth", "Road Width")}>

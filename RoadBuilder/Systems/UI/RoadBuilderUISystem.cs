@@ -1,10 +1,12 @@
-﻿using Game.City;
+﻿using Game;
+using Game.City;
 using Game.Input;
 using Game.Prefabs;
 using Game.SceneFlow;
 using Game.Simulation;
 using Game.Tools;
 using Game.UI;
+using Game.UI.Editor;
 using Game.UI.InGame;
 
 using RoadBuilder.Domain.Components.Prefabs;
@@ -41,7 +43,7 @@ namespace RoadBuilder.Systems.UI
 		private RoadBuilderNetSectionsSystem netSectionsSystem;
 		private CityConfigurationSystem cityConfigurationSystem;
 		private RoadBuilderConfigurationsUISystem roadBuilderConfigurationsUISystem;
-
+		private EditorToolUISystem editorToolUISystem;
 		private ValueBindingHelper<RoadBuilderToolMode> RoadBuilderMode;
 		private ValueBindingHelper<string> RoadId;
 		private ValueBindingHelper<string> RoadName;
@@ -76,6 +78,7 @@ namespace RoadBuilder.Systems.UI
 			netSectionsSystem = World.GetOrCreateSystemManaged<RoadBuilderNetSectionsSystem>();
 			cityConfigurationSystem = World.GetOrCreateSystemManaged<CityConfigurationSystem>();
 			roadBuilderConfigurationsUISystem = World.GetOrCreateSystemManaged<RoadBuilderConfigurationsUISystem>();
+			editorToolUISystem = World.GetOrCreateSystemManaged<EditorToolUISystem>();
 
 			toolSystem.EventToolChanged += OnToolChanged;
 
@@ -95,7 +98,7 @@ namespace RoadBuilder.Systems.UI
 			CreateTrigger<int, int, int, int>("OptionClicked", (i, x, y, z) => UpdateRoad(c => LaneOptionClicked(c, i, x, y, z)));
 			CreateTrigger<int>("DuplicateLane", x => UpdateRoad(c => DuplicateLane(c, x)));
 			CreateTrigger<bool>("SetDragging", x => roadBuilderSystem.IsDragging = x);
-			CreateTrigger("ToggleTool", ToggleTool);
+			CreateTrigger("ToggleTool", () => ToggleTool());
 			CreateTrigger("CreateNewPrefab", () => CreateNewPrefab(workingEntity));
 			CreateTrigger("ClearTool", ClearTool);
 			CreateTrigger("PickPrefab", PickPrefab);
@@ -124,9 +127,9 @@ namespace RoadBuilder.Systems.UI
 			}
 		}
 
-		private void ToggleTool()
+		public void ToggleTool(bool? enable = null)
 		{
-			if (toolSystem.activeTool is RoadBuilderToolSystem)
+			if (enable == false || (enable is null && toolSystem.activeTool is RoadBuilderToolSystem))
 			{
 				ClearTool();
 			}
@@ -192,11 +195,11 @@ namespace RoadBuilder.Systems.UI
 		{
 			if (workingEntity != Entity.Null && prefabSystem.TryGetPrefab<PrefabBase>(EntityManager.GetComponentData<PrefabRef>(workingEntity), out var prefab))
 			{
-				toolSystem.ActivatePrefabTool(prefab);
+				ActivateRoad(prefab);
 			}
 			else if (roadBuilderSystem.Configurations.TryGetValue(GetWorkingId(), out var networkPrefab))
 			{
-				toolSystem.ActivatePrefabTool(networkPrefab.Prefab);
+				ActivateRoad(networkPrefab.Prefab);
 			}
 		}
 
@@ -717,6 +720,20 @@ namespace RoadBuilder.Systems.UI
 			}
 
 			return prefab.name.Replace('_', ' ').FormatWords();
+		}
+
+		public void ActivateRoad(PrefabBase prefab)
+		{
+			if (GameManager.instance.gameMode == GameMode.Editor)
+			{
+				editorToolUISystem.activeTool = editorToolUISystem.tools.First(x => x is EditorPrefabTool);
+
+				GameManager.instance.RegisterUpdater(() => toolSystem.ActivatePrefabTool(prefab));
+			}
+			else
+			{
+				toolSystem.ActivatePrefabTool(prefab);
+			}
 		}
 	}
 }

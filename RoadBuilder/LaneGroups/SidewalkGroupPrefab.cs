@@ -3,8 +3,6 @@
 using RoadBuilder.Domain.Components.Prefabs;
 using RoadBuilder.Domain.Enums;
 
-using System.Collections.Generic;
-
 namespace RoadBuilder.LaneGroups
 {
 	public class SidewalkGroupPrefab : BaseLaneGroupPrefab

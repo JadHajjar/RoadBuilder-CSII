@@ -6,7 +6,6 @@
   right: 20%;
   // The Vanilla Prefab Picker width => calc( var(--assetMenuColumns) * ( var(--assetMenuItemSize) + var(--assetMenuItemGap) ) - var(--assetMenuItemGap) + 40rem);
   height: auto; //120rem;
-  bottom: base.$bottomBarOffset;
   z-index: 0;
 
   display: flex;
@@ -16,6 +15,14 @@
   align-items: flex-end;
 
   animation: entry 0.2s;
+
+  &.game {
+    bottom: base.$bottomBarOffset;
+  }
+
+  &.editor {
+    bottom: base.$bottomBarOffsetEditor;
+  }
 }
 
 .view {
@@ -36,6 +43,10 @@
   flex-wrap: nowrap;
   align-items: flex-end;
 
+  pointer-events: auto;
+}
+
+.game .view > div:first-child {
   background: linear-gradient(
     to top,
     rgba(217, 217, 217, 0) base.$bottomBarHeight,
@@ -43,7 +54,18 @@
     rgba(0, 0, 0, 0.15) base.$bottomViewHeight,
     rgba(0, 0, 0, 0) base.$bottomViewHeight + 24rem
   );
-  pointer-events: auto;
+}
+
+.editor .view > div:first-child {
+  padding-bottom: 6rem;
+  border-bottom-left-radius: 10rem;
+  border-bottom-right-radius: 10rem;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.35) 0,
+    rgba(0, 0, 0, 0.15) base.$bottomViewHeight,
+    rgba(0, 0, 0, 0) base.$bottomViewHeight + base.$bottomBarHeight + 24rem
+  );
 }
 
 .bottomBG {
@@ -51,8 +73,6 @@
   width: 100vw;
   bottom: -0.5rem;
   height: base.$bottomBarHeight;
-  background-color: var(--panelColorNormal);
-  backdrop-filter: var(--panelBlur);
   z-index: -1;
 
   padding: 8rem;
@@ -65,6 +85,11 @@
   &.paused {
     width: calc(100vw - 10rem);
   }
+}
+
+.game .bottomBG {
+  background-color: var(--panelColorNormal);
+  backdrop-filter: var(--panelBlur);
 }
 
 .bottomLeftButtonBar {
