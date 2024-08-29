@@ -1075,6 +1075,11 @@ namespace RoadBuilder.Systems
 			SetUp("Sound Barrier 1", "coui://roadbuildericons/RB_SoundBarrier.svg").AddLaneThumbnail("coui://roadbuildericons/Thumb_SoundBarrier.svg");
 
 			NetSections["Sound Barrier 1"].AddComponent<RoadBuilderEdgeLaneInfo>().DoNotRequireBeingOnEdge = true;
+
+			var pathEdgeInfo = NetSections["Pavement Path Section 3"].AddComponent<RoadBuilderEdgeLaneInfo>();
+			pathEdgeInfo.SidePrefab = NetSections["Pavement Path Side Section 0"];
+			pathEdgeInfo.AddSidewalkStateOnNode = true;
+			pathEdgeInfo.DoNotRequireBeingOnEdge = true;
 		}
 
 		private RoadBuilderLaneInfo SetUp(string prefabName, string thumbnail)

@@ -70,7 +70,7 @@ namespace RoadBuilder.Utilities
 				config.Addons |= RoadAddons.HasUndergroundWaterPipes;
 			}
 
-			//if (NetworkPrefab.Has<ElectricityConnection>())
+			if (NetworkPrefab.Has<ElectricityConnection>())
 			{
 				config.Addons |= RoadAddons.HasUndergroundElectricityCable;
 			}
@@ -242,7 +242,7 @@ namespace RoadBuilder.Utilities
 		{
 			var config = new FenceConfig();
 
-			config.Category |= RoadCategory.Fence;
+			config.Category = RoadCategory.Fence;
 
 			return config;
 		}
@@ -251,7 +251,7 @@ namespace RoadBuilder.Utilities
 		{
 			var config = new PathConfig();
 
-			config.Category |= RoadCategory.Pathway;
+			config.Category = RoadCategory.Pathway;
 
 			return config;
 		}
