@@ -204,10 +204,16 @@ namespace RoadBuilder.Systems
 			{
 				if (typeof(BaseLaneGroupPrefab).IsAssignableFrom(type) && !type.IsAbstract)
 				{
-					var prefab = (BaseLaneGroupPrefab)ScriptableObject.CreateInstance(type);
+					var prefab = ScriptableObject.CreateInstance<LaneGroupPrefab>();
 
-					prefab.Initialize(NetSections);
+					var groupPrefab = Activator.CreateInstance(type) as BaseLaneGroupPrefab;
+
+					groupPrefab.Prefab = prefab;
+					groupPrefab.Sections = NetSections;
+					groupPrefab.Initialize();
+
 					prefab.name = type.FullName;
+					prefab.RoadBuilder = true;
 
 					prefabSystem.AddPrefab(prefab);
 				}

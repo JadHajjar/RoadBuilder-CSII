@@ -6,8 +6,10 @@ using System.Collections.Generic;
 
 namespace RoadBuilder.LaneGroups
 {
-	public abstract class BaseLaneGroupPrefab : LaneGroupPrefab
+	public abstract class BaseLaneGroupPrefab
 	{
-		public abstract void Initialize(Dictionary<string, NetSectionPrefab> sections);
+        public LaneGroupPrefab Prefab { get; set; }
+        public Dictionary<string, NetSectionPrefab> Sections { get; set; }
+		public abstract void Initialize();
 	}
 }

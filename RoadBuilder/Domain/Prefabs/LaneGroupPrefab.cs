@@ -13,7 +13,8 @@ namespace RoadBuilder.Domain.Prefabs
 	{
 		public RoadBuilderLaneOption[] Options;
 
-		public List<NetSectionPrefab> LinkedSections { get; set; } = new();
+		internal List<NetSectionPrefab> LinkedSections { get; set; } = new();
+		internal bool RoadBuilder { get; set; }
 
 		public override void GetPrefabComponents(HashSet<ComponentType> components)
 		{

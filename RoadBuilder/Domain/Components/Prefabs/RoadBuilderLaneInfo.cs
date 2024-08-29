@@ -26,7 +26,7 @@ namespace RoadBuilder.Domain.Components.Prefabs
 		public string FrontThumbnail;
 		public string[] LaneThumbnails;
 
-		public bool RoadBuilder { get; set; }
+		internal bool RoadBuilder { get; set; }
 
 		public override void GetArchetypeComponents(HashSet<ComponentType> components)
 		{ }

@@ -11,9 +11,9 @@ namespace RoadBuilder.LaneGroups
 	{
 		private const string OptionName = "Two-way Support";
 
-		public override void Initialize(Dictionary<string, NetSectionPrefab> sections)
+		public override void Initialize()
 		{
-			Options = new RoadBuilderLaneOption[]
+			Prefab.Options = new RoadBuilderLaneOption[]
 			{
 				new()
 				{
@@ -22,7 +22,7 @@ namespace RoadBuilder.LaneGroups
 				}
 			};
 
-			AddComponent<RoadBuilderLaneInfo>()
+			Prefab.AddComponent<RoadBuilderLaneInfo>()
 				.WithRequireAll(RoadCategory.Subway)
 				.WithColor(66, 60, 51)
 				.WithFrontThumbnail("coui://roadbuildericons/RB_SubwayFront.svg")
@@ -30,16 +30,16 @@ namespace RoadBuilder.LaneGroups
 				.AddLaneThumbnail("coui://roadbuildericons/Thumb_SubwayRail.svg")
 				.AddLaneThumbnail("coui://roadbuildericons/Thumb_TrackLane.svg");
 
-			AddComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_SubwayFront.svg";
+			Prefab.AddComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_SubwayFront.svg";
 
-			SetUp(sections["Subway Track Section 4"], false);
-			SetUp(sections["Subway Track Twoway Section 4"], true);
+			SetUp(Sections["Subway Track Section 4"], false);
+			SetUp(Sections["Subway Track Twoway Section 4"], true);
 		}
 
 		private void SetUp(NetSectionPrefab prefab, bool value)
 		{
 			var laneInfo = prefab.AddComponent<RoadBuilderLaneGroup>();
-			laneInfo.GroupPrefab = this;
+			laneInfo.GroupPrefab = Prefab;
 			laneInfo.Combination = value ? new LaneOptionCombination[]
 			{
 				new()

@@ -101,7 +101,7 @@ namespace RoadBuilder.Systems.UI
 					DisplayName = GetAssetName(prefab),
 					IsEdge = prefab.Has<RoadBuilderEdgeLaneInfo>(),
 					IsRestricted = restricted,
-					IsCustom = prefab is not BaseLaneGroupPrefab,
+					IsCustom = !prefab.RoadBuilder,
 					Thumbnail = ImageSystem.GetIcon(prefab)
 				});
 			}
