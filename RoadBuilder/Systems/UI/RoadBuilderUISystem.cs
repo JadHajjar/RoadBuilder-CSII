@@ -523,7 +523,7 @@ namespace RoadBuilder.Systems.UI
 				var noDirection = validSection && ((section.TryGet<RoadBuilderLaneInfo>(out var laneInfo) && laneInfo.NoDirection) || ((groupPrefab?.TryGet<RoadBuilderLaneInfo>(out var groupInfo) ?? false) && groupInfo.NoDirection));
 				var isEdge = NetworkConfigExtensionsUtil.GetEdgeLaneInfo(section, groupPrefab, out _);
 				var isBackward = noDirection ? FindDirection(config, i) : lane.Invert;
-				var width = validSection ? section.CalculateWidth() : 0F;
+				var width = validSection ? section.CalculateWidth(groupPrefab) : 0F;
 
 				GetThumbnailAndColor(config, lane, section, groupPrefab, isBackward, out var thumbnail, out var color, out var texture);
 

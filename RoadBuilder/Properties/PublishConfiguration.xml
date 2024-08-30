@@ -126,13 +126,13 @@ This helps us better assist you and avoids your message from getting lost in the
   <Screenshot Value="Properties/Screenshot_07.png" />
   <Tag Value="Code Mod" />
   <ForumLink Value="https://forum.paradoxplaza.com/forum/threads/road-builder.1698661/" />
-  <ModVersion Value="0.3.2" />
+  <ModVersion Value="0.3.3.1" />
   <GameVersion Value="1.1.*" />
   <ChangeLog>
-# v0.3.2
-## Hotfix
-* Fixed names and descriptions of roads not showing.
-* Fixed the base type of group prefabs.
+# v0.3.3.1
+## Minor Update
+* Added new translations.
+* Added invert option to aggregates.
 </ChangeLog>
   <ExternalLink Type="discord" Url="https://discord.gg/E4k8ZEtRxd" />
   <ExternalLink Type="github" Url="https://github.com/JadHajjar/RoadBuilder-CSII" />

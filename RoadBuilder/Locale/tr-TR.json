@@ -25,7 +25,7 @@
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.DoNotAddSides]": "Yolun kenarına kenar veya kaldırım eklenmediği vakit tünel veya köprü kenarı olmayan yolların oluşturulmasına izin verir.",
   "RoadBuilder.DIALOG_MESSAGE[DELETE]": "Bu yolu silmek istediğinizden emin misiniz? Şehrinizde bu yolun kullanıldığı tüm kısımlar kaldırılacaktır.",
   "RoadBuilder.DIALOG_MESSAGE[ReloadSave]": "Bu şehirde sizde mevcut olmayan yollar bulunuyor. Bu kayıt dosyasını oyunu kapatmadan şimdi yeniden yükleyin, aksi takdirde kavşaklarda yaptığınız değişiklikler kaybolabilir.",
-  "RoadBuilder.DIALOG_MESSAGE[FixInvalidEdges]": "Some roads or tracks in this city are invalid.\n\nWould you like to fix them by resetting them to vanilla networks?",
+  "RoadBuilder.DIALOG_MESSAGE[FixInvalidEdges]": "Bu şehirdeki bazı yollar veya raylar geçersiz.\n\nBu geçersiz yolları standart yollarla değiştirerek düzeltmek ister misiniz?",
   "RoadBuilder.DIALOG_MESSAGE[Ok]": "Tamam",
   "RoadBuilder.Config[RoadConfig]": "Yol Özellikleri",
   "RoadBuilder.Config[TrackConfig]": "Ray Özellikleri",
@@ -78,6 +78,6 @@
   "RoadBuilder.Name": "İsim",
   "RoadBuilder.RoadName": "Yol İsmi",
   "RoadBuilder.RoadWidth": "Toplam Yol Genişliği",
-  "RoadBuilder.EdgeLane": "Edge Lane",
-  "RoadBuilder.RestrictedLane": "Unrestricted Lane"
+  "RoadBuilder.EdgeLane": "Kenar Şeriti",
+  "RoadBuilder.RestrictedLane": "Sınırlandırılmamış Şerit"
 }

@@ -46,11 +46,16 @@ namespace RoadBuilder.Utilities
 			return true;
 		}
 
-		public static float CalculateWidth(this NetSectionPrefab netSection)
+		public static float CalculateWidth(this NetSectionPrefab netSection, LaneGroupPrefab groupPrefab = null)
 		{
 			var subSectionsWidth = netSection.m_SubSections.Sum(x =>
 				x.m_RequireAll.Length == 0 &&
 				x.m_RequireAny.Length == 0 ? x.m_Section.CalculateWidth() : 0f);
+
+			if (groupPrefab is not null && (netSection.TryGet<RoadBuilderLaneAggregate>(out var aggregate) || groupPrefab.TryGet(out aggregate)))
+			{
+				subSectionsWidth += (aggregate.LeftSections?.Sum(x => x.Section.CalculateWidth()) ?? 0) + (aggregate.RightSections?.Sum(x => x.Section.CalculateWidth()) ?? 0);
+			}
 
 			if (netSection.m_Pieces.Length == 0)
 			{

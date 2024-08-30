@@ -77,7 +77,6 @@ namespace RoadBuilder.Systems.UI
 					IsEdge = prefab.Has<RoadBuilderEdgeLaneInfo>(),
 					IsRestricted = restricted,
 					IsCustom = !prefab.GetComponent<RoadBuilderLaneInfo>().RoadBuilder,
-					Width = prefab.CalculateWidth()
 				});
 			}
 
