@@ -366,7 +366,7 @@ namespace RoadBuilder.Utilities
 					};
 				}
 
-				if (section.TryGet<RoadBuilderLaneAggregate>(out var aggregate) || groupPrefab.TryGet(out aggregate))
+				if (section.TryGet<RoadBuilderLaneAggregate>(out var aggregate) || (groupPrefab?.TryGet(out aggregate) ?? false))
 				{
 					var sections = new List<NetSectionPrefab>();
 
