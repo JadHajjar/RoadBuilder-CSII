@@ -10,7 +10,7 @@ import styles from "./ModView.module.scss";
 
 import RB_ClickOnRoad from "images/RB_ClickOnRoad.svg";
 
-export const Router = () => {
+export const Router = (props: { editor: boolean }) => {
   const roadBuilderToolMode = useValue(roadBuilderToolMode$);
   let { translate } = useLocalization();
 
@@ -25,7 +25,7 @@ export const Router = () => {
               {translate("RoadBuilder.PickerHint", "Click On A Road")}
             </span>
           </div>
-          <SidePanel />
+          <SidePanel editor={props.editor} />
         </>
       );
       break;
@@ -41,17 +41,15 @@ export const Router = () => {
     case RoadBuilderToolModeEnum.EditingNonExistent:
       content = (
         <>
-          <SidePanel />
-          <BottomView />
-          <RoadPropertiesPanel />
+          <SidePanel editor={props.editor} />
+          <BottomView editor={props.editor} />
+          <RoadPropertiesPanel editor={props.editor} />
         </>
       );
       break;
     default:
       return <></>;
-  }    
+  }
 
-  return (
-    <div className={styles.view}>{content}</div>
-  )
-}
+  return <div className={styles.view}>{content}</div>;
+};

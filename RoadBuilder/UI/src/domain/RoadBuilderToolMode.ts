@@ -4,5 +4,5 @@ export enum RoadBuilderToolModeEnum {
   ActionSelection = 2,
   Editing = 3,
   EditingSingle = 4,
-  EditingNonExistent = 5
+  EditingNonExistent = 5,
 }

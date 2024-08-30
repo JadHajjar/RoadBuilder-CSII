@@ -26,8 +26,9 @@ import { DeleteAreaDnD } from "mods/Components/DeleteAreaDnD/DeleteAreaDnD";
 import { useLocalization } from "cs2/l10n";
 import { EditPropertiesPopup } from "mods/Components/EditPropertiesPopup/EditPropertiesPopup";
 import { LanePropertiesContext } from "mods/Contexts/LanePropertiesContext";
+import classNames from "classnames";
 
-export const BottomView = () => {
+export const BottomView = (props: { editor: boolean }) => {
   let dragContext = useContext(DragContext);
   let laneCtx = useContext(LanePropertiesContext);
   let toolMode = useValue(roadBuilderToolMode$);
@@ -103,7 +104,7 @@ export const BottomView = () => {
 
   let isDragging = dragContext.netSectionItem || dragContext.roadLane;
   return (
-    <div className={styles.viewContainer} onMouseLeave={laneCtx.close}>
+    <div className={classNames(styles.viewContainer, props.editor ? styles.editor : styles.game)} onMouseLeave={laneCtx.close}>
       <div className={styles.editPropertiesContainer}>
         <EditPropertiesPopup />
       </div>
@@ -155,7 +156,7 @@ export const BottomView = () => {
           </>
         )}
       </div>
-      <DeleteAreaDnD onRemove={deleteLane} />
+      <DeleteAreaDnD onRemove={deleteLane} editor={props.editor} />
     </div>
   );
 };

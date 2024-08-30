@@ -3,7 +3,6 @@
 .panel {
   position: absolute;
   left: 10rem;
-  bottom: 10rem + _base.$bottomBarOffset + _base.$bottomBarHeight;
   width: 310rem;
   padding: 10rem 0;
   background-color: var(--panelColorNormal);
@@ -14,6 +13,14 @@
   border-top-left-radius: var(--panelRadius);
   border-top-right-radius: var(--panelRadius);
   pointer-events: auto;
+
+  &.game {
+    bottom: 10rem + _base.$bottomBarOffset + _base.$bottomBarHeight;
+  }
+
+  &.editor {
+    bottom: 10rem + _base.$bottomBarOffsetEditor + _base.$bottomBarHeight;
+  }
 }
 
 .header {

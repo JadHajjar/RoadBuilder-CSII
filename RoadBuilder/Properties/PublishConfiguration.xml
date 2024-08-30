@@ -126,28 +126,23 @@ This helps us better assist you and avoids your message from getting lost in the
   <Screenshot Value="Properties/Screenshot_07.png" />
   <Tag Value="Code Mod" />
   <ForumLink Value="https://forum.paradoxplaza.com/forum/threads/road-builder.1698661/" />
-  <ModVersion Value="0.3.1" />
+  <ModVersion Value="0.3.3" />
   <GameVersion Value="1.1.*" />
   <ChangeLog>
-# v0.3.1
-## Lane Changes
-* Added smaller sidewalk sizes to the Sidewalk lane. Those are experimental and might not look perfect for now.
-* Added the Sound Barrier lane to the edge lane group to allow placing it on the edge of the road.
-* Fixed parked cars not touching the asphalt on the Parking lane.
-
-## Experimental Custom Lane Support
-* Added basic support for custom lanes from PDX Mods.
-* Use those lanes with caution.
-* Loading the game with 'missing' custom lanes will not break your created roads, it will however generate the road as if those lanes are not part of the road.
+# v0.3.3
+## Pedestrian Paths Changes
+* Fixed pathways not connecting properly to other roads and paths.
+* Fixed pathways not having a pillar.
+* Fixed newly created pathways having electricity by default.
+* Added the Pedestrian path lane to the Edge lanes.
 
 ## Other Changes
-* Added an automatic prompt while loading into a savegame with grey roads to automatically replace them and save the city.
-* Updated the 'Edge Lane' icon and added a tooltip for it.
-* Added a warning icon on lanes in the list which are unrestricted by the respective advanced option.
-* Dragging a lane now pauses the road update for a smoother editing experience.
-* Fixed bridge and tunnel pieces not facing the right direction when there's no edge lane present.
-* Fixed not being able to change the road category.
-* Updated lane width options to match metric values while using US Customary units.
+* Added a dedicated Road Builder button to the Editor for easy access when creating maps.
+* Updated the UI in the editor to better fit the available space.
+* Fixed roads not being selectable in the Editor.
+* Fixed generated thumbnails having a powerline when it's not available.
+* Fixed various unnecessary components getting added to the generated prefabs.
+* Added aggregate component for custom lanes and future features.
 </ChangeLog>
   <ExternalLink Type="discord" Url="https://discord.gg/E4k8ZEtRxd" />
   <ExternalLink Type="github" Url="https://github.com/JadHajjar/RoadBuilder-CSII" />

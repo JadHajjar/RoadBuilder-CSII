@@ -204,10 +204,16 @@ namespace RoadBuilder.Systems
 			{
 				if (typeof(BaseLaneGroupPrefab).IsAssignableFrom(type) && !type.IsAbstract)
 				{
-					var prefab = (BaseLaneGroupPrefab)ScriptableObject.CreateInstance(type);
+					var prefab = ScriptableObject.CreateInstance<LaneGroupPrefab>();
 
-					prefab.Initialize(NetSections);
+					var groupPrefab = Activator.CreateInstance(type) as BaseLaneGroupPrefab;
+
+					groupPrefab.Prefab = prefab;
+					groupPrefab.Sections = NetSections;
+					groupPrefab.Initialize();
+
 					prefab.name = type.FullName;
+					prefab.RoadBuilder = true;
 
 					prefabSystem.AddPrefab(prefab);
 				}
@@ -355,7 +361,6 @@ namespace RoadBuilder.Systems
 				newPiece.m_Width = item.Item3;
 				newPiece.m_SurfaceHeights = new(-0.2f);
 				newPiece.Remove<NetPieceObjects>();
-				newPiece.Remove<NetPieceCrosswalk>();
 				newPiece.AddOrGetComponent<NetPieceLanes>().m_Lanes = new[]
 				{
 					new NetLaneInfo
@@ -412,7 +417,6 @@ namespace RoadBuilder.Systems
 				newPiece.m_Width = item.Item3;
 				newPiece.m_SurfaceHeights = new(-0.2f);
 				newPiece.Remove<NetPieceObjects>();
-				newPiece.Remove<NetPieceCrosswalk>();
 				newPiece.AddOrGetComponent<NetPieceLanes>().m_Lanes = new[]
 				{
 					new NetLaneInfo
@@ -1069,6 +1073,11 @@ namespace RoadBuilder.Systems
 			SetUp("Sound Barrier 1", "coui://roadbuildericons/RB_SoundBarrier.svg").AddLaneThumbnail("coui://roadbuildericons/Thumb_SoundBarrier.svg");
 
 			NetSections["Sound Barrier 1"].AddComponent<RoadBuilderEdgeLaneInfo>().DoNotRequireBeingOnEdge = true;
+
+			var pathEdgeInfo = NetSections["Pavement Path Section 3"].AddComponent<RoadBuilderEdgeLaneInfo>();
+			pathEdgeInfo.SidePrefab = NetSections["Pavement Path Side Section 0"];
+			pathEdgeInfo.AddSidewalkStateOnNode = true;
+			pathEdgeInfo.DoNotRequireBeingOnEdge = true;
 		}
 
 		private RoadBuilderLaneInfo SetUp(string prefabName, string thumbnail)

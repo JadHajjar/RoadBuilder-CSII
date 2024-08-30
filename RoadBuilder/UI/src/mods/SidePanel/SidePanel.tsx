@@ -8,8 +8,9 @@ import { useLocalization } from "cs2/l10n";
 import { SearchTextBox } from "mods/Components/SearchTextBox/SearchTextBox";
 import { RoadConfigListItem } from "mods/Components/RoadConfigListItem/RoadConfigListItem";
 import { RoadBuilderToolModeEnum } from "domain/RoadBuilderToolMode";
+import classNames from "classnames";
 
-export const SidePanel = () => {
+export const SidePanel = (props: { editor: boolean }) => {
   const { translate } = useLocalization();
   const toolMode = useValue(roadBuilderToolMode$);
   const roadListView = useValue(roadListView$);
@@ -38,7 +39,7 @@ export const SidePanel = () => {
   }
 
   return (
-    <div className={styles.panel}>
+    <div className={classNames(styles.panel, props.editor ? styles.editor : styles.game)}>
       <div className={styles.header}>
         {toolMode == RoadBuilderToolModeEnum.Picker && (
           <div className={styles.subHeader}>

@@ -8,8 +8,8 @@ const register: ModRegistrar = (moduleRegistry) => {
   VanillaComponentResolver.setRegistry(moduleRegistry);
 
   moduleRegistry.append("GameTopLeft", ModIconButton);
-  moduleRegistry.append("Game", ModView);
-  moduleRegistry.append("Editor", ModView);
+  moduleRegistry.append("Game", () => ModView(false));
+  moduleRegistry.append("Editor", () => ModView(true));
   moduleRegistry.extend("game-ui/game/components/right-menu/right-menu.tsx", "RightMenu", RemoveVanillaRightToolbar);
 };
 

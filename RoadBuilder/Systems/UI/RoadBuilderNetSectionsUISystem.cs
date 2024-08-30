@@ -6,7 +6,6 @@ using Game.UI.InGame;
 using RoadBuilder.Domain.Components.Prefabs;
 using RoadBuilder.Domain.Configurations;
 using RoadBuilder.Domain.UI;
-using RoadBuilder.LaneGroups;
 using RoadBuilder.Utilities;
 
 using System.Collections.Generic;
@@ -78,7 +77,6 @@ namespace RoadBuilder.Systems.UI
 					IsEdge = prefab.Has<RoadBuilderEdgeLaneInfo>(),
 					IsRestricted = restricted,
 					IsCustom = !prefab.GetComponent<RoadBuilderLaneInfo>().RoadBuilder,
-					Width = prefab.CalculateWidth()
 				});
 			}
 
@@ -101,7 +99,7 @@ namespace RoadBuilder.Systems.UI
 					DisplayName = GetAssetName(prefab),
 					IsEdge = prefab.Has<RoadBuilderEdgeLaneInfo>(),
 					IsRestricted = restricted,
-					IsCustom = prefab is not BaseLaneGroupPrefab,
+					IsCustom = !prefab.RoadBuilder,
 					Thumbnail = ImageSystem.GetIcon(prefab)
 				});
 			}

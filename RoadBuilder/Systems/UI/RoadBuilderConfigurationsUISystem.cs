@@ -90,7 +90,7 @@ namespace RoadBuilder.Systems.UI
 				return;
 			}
 
-			toolSystem.ActivatePrefabTool(prefab.Prefab);
+			roadBuilderUISystem.ActivateRoad(prefab.Prefab);
 		}
 
 		private void EditRoad(string id)
