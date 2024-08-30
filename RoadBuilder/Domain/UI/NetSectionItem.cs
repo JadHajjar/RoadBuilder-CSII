@@ -1,4 +1,6 @@
-﻿namespace RoadBuilder.Domain.UI
+﻿using RoadBuilder.Domain.Enums;
+
+namespace RoadBuilder.Domain.UI
 {
 	public class NetSectionItem
 	{
@@ -11,5 +13,6 @@
 		public bool IsCustom;
 		public float Width;
 		public string WidthText;
+		public LaneSectionType Type;
 	}
 }
