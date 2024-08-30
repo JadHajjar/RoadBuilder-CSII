@@ -78,6 +78,6 @@
   "RoadBuilder.Name": "Nazwa",
   "RoadBuilder.RoadName": "Nazwa drogi",
   "RoadBuilder.RoadWidth": "Całkowita szerokość drogi",
-  "RoadBuilder.EdgeLane": "Edge Lane",
-  "RoadBuilder.RestrictedLane": "Unrestricted Lane"
+  "RoadBuilder.EdgeLane": "Pas krawędzi",
+  "RoadBuilder.RestrictedLane": "Nieograniczony pas"
 }
