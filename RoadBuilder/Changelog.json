@@ -1,6 +1,20 @@
 [
   {
     "Beta": true,
+    "Version": "0.3.3.1",
+    "Date": "2024-08-31",
+    "ChangeGroups": [
+      {
+        "Name": "Minor Update",
+        "Changes": [
+          "Added new translations.",
+          "Added invert option to aggregates."
+        ]
+      }
+    ]
+  },
+  {
+    "Beta": true,
     "Version": "0.3.3",
     "Date": "2024-08-30",
     "ChangeGroups": [

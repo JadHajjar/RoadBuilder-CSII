@@ -368,11 +368,31 @@ namespace RoadBuilder.Utilities
 
 				if (section.TryGet<RoadBuilderLaneAggregate>(out var aggregate) || (groupPrefab?.TryGet(out aggregate) ?? false))
 				{
-					var sections = new List<NetSectionPrefab>();
+					var sections = new List<NetSectionInfo>();
 
-					sections.AddRange(aggregate.LeftSections ?? new NetSectionPrefab[0]);
-					sections.Add(section);
-					sections.AddRange(aggregate.RightSections ?? new NetSectionPrefab[0]);
+					if (aggregate.LeftSections != null)
+					{
+						sections.AddRange(aggregate.LeftSections.Select(x => new NetSectionInfo
+						{
+							m_Section = x.Section,
+							m_Invert = x.Invert ? !lane.Invert : lane.Invert,
+						}));
+					}
+
+					sections.Add(new NetSectionInfo
+					{
+						m_Section = section,
+						m_Invert = lane.Invert,
+					});
+
+					if (aggregate.RightSections != null)
+					{
+						sections.AddRange(aggregate.RightSections.Select(x => new NetSectionInfo
+						{
+							m_Section = x.Section,
+							m_Invert = x.Invert ? !lane.Invert : lane.Invert,
+						}));
+					}
 
 					if (lane.Invert)
 					{
@@ -381,11 +401,7 @@ namespace RoadBuilder.Utilities
 
 					foreach (var item in sections)
 					{
-						yield return new NetSectionInfo
-						{
-							m_Section = item,
-							m_Invert = lane.Invert,
-						};
+						yield return item;
 					}
 				}
 				else
