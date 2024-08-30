@@ -126,12 +126,13 @@ This helps us better assist you and avoids your message from getting lost in the
   <Screenshot Value="Properties/Screenshot_07.png" />
   <Tag Value="Code Mod" />
   <ForumLink Value="https://forum.paradoxplaza.com/forum/threads/road-builder.1698661/" />
-  <ModVersion Value="0.2.2.1" />
+  <ModVersion Value="0.3.2" />
   <GameVersion Value="1.1.*" />
   <ChangeLog>
-# v0.2.2.1
+# v0.3.2
 ## Hotfix
-* Fixed deleting road configurations sometimes not updating the node properly.
+* Fixed names and descriptions of roads not showing.
+* Fixed the base type of group prefabs.
 </ChangeLog>
   <ExternalLink Type="discord" Url="https://discord.gg/E4k8ZEtRxd" />
   <ExternalLink Type="github" Url="https://github.com/JadHajjar/RoadBuilder-CSII" />

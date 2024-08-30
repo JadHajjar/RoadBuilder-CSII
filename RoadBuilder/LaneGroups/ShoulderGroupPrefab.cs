@@ -3,8 +3,6 @@
 using RoadBuilder.Domain.Components.Prefabs;
 using RoadBuilder.Domain.Enums;
 
-using System.Collections.Generic;
-
 namespace RoadBuilder.LaneGroups
 {
 	public class ShoulderGroupPrefab : BaseLaneGroupPrefab
@@ -12,9 +10,9 @@ namespace RoadBuilder.LaneGroups
 		private const string OptionName1 = "Lane Width";
 		private const string OptionName2 = "Ground Type";
 
-		public override void Initialize(Dictionary<string, NetSectionPrefab> sections)
+		public override void Initialize()
 		{
-			Options = new RoadBuilderLaneOption[]
+			Prefab.Options = new RoadBuilderLaneOption[]
 			{
 				new()
 				{
@@ -35,7 +33,7 @@ namespace RoadBuilder.LaneGroups
 				new()
 				{
 					DefaultValue = "1m",
-					Type = LaneOptionType.ValueUpDown,
+					Type = LaneOptionType.LaneWidth,
 					Name = OptionName1,
 					Options = new RoadBuilderLaneOptionValue[]
 					{
@@ -45,28 +43,28 @@ namespace RoadBuilder.LaneGroups
 				},
 			};
 
-			AddComponent<RoadBuilderEdgeLaneInfo>();
+			Prefab.AddComponent<RoadBuilderEdgeLaneInfo>();
 
-			AddComponent<RoadBuilderLaneInfo>()
+			Prefab.AddComponent<RoadBuilderLaneInfo>()
 				.WithGroundTexture(LaneGroundType.Asphalt)
 				.AddLaneThumbnail("coui://roadbuildericons/Thumb_Shoulder.svg");
 
-			AddComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_Shoulder.svg";
+			Prefab.AddComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_Shoulder.svg";
 
-			SetUp(sections["Alley Shoulder 1"], sections["Alley Side 0"], "1m", "Asphalt").WithThumbnail("coui://roadbuildericons/RB_ShoulderLight.svg");
-			SetUp(sections["Highway Shoulder 2"], sections["Highway Side 0"], "2m", "Asphalt").WithThumbnail("coui://roadbuildericons/RB_ShoulderLight.svg");
-			SetUp(sections["Public Transport Shoulder 1"], sections["Alley Side 0"], "1m", "Bus").WithThumbnail("coui://roadbuildericons/RB_ShoulderLight.svg");
-			SetUp(sections["Gravel Shoulder 1"], sections["Gravel Side 0"], "1m", "Gravel").WithThumbnail("coui://roadbuildericons/RB_Empty.svg").WithGroundTexture(LaneGroundType.Gravel).WithColor(143, 131, 97).AddLaneThumbnail("coui://roadbuildericons/Thumb_ShoulderGravel.svg");
-			SetUp(sections["Tiled Shoulder 1"], sections["Tiled Side 0"], "1m", "Tiled").WithThumbnail("coui://roadbuildericons/RB_Empty.svg").WithGroundTexture(LaneGroundType.Tiled).WithColor(76, 78, 83).AddLaneThumbnail("coui://roadbuildericons/Thumb_ShoulderPedestrian.svg");
-			SetUp(sections["Subway Shoulder 2"], sections["Subway Side 0"], "2m", "Subway").WithThumbnail("coui://roadbuildericons/RB_Empty.svg").WithGroundTexture(LaneGroundType.Train).WithColor(82, 62, 51).AddLaneThumbnail("coui://roadbuildericons/Thumb_ShoulderTrack.svg");
-			SetUp(sections["Train Shoulder 2"], sections["Train Side 0"], "2m", "Train").WithThumbnail("coui://roadbuildericons/RB_TrainShoulder.svg").WithGroundTexture(LaneGroundType.Train).WithColor(82, 62, 51).AddLaneThumbnail("coui://roadbuildericons/Thumb_ShoulderTrack.svg");
-			SetUp(sections["Tram Shoulder 1"], sections["Alley Side 0"], "1m", "Tram").WithThumbnail("coui://roadbuildericons/RB_TramShoulder.svg").AddLaneThumbnail("coui://roadbuildericons/Thumb_ShoulderTrack.svg");
+			SetUp(Sections["Alley Shoulder 1"], Sections["Alley Side 0"], "1m", "Asphalt").WithThumbnail("coui://roadbuildericons/RB_ShoulderLight.svg");
+			SetUp(Sections["Highway Shoulder 2"], Sections["Highway Side 0"], "2m", "Asphalt").WithThumbnail("coui://roadbuildericons/RB_ShoulderLight.svg");
+			SetUp(Sections["Public Transport Shoulder 1"], Sections["Alley Side 0"], "1m", "Bus").WithThumbnail("coui://roadbuildericons/RB_ShoulderLight.svg");
+			SetUp(Sections["Gravel Shoulder 1"], Sections["Gravel Side 0"], "1m", "Gravel").WithThumbnail("coui://roadbuildericons/RB_Empty.svg").WithGroundTexture(LaneGroundType.Gravel).WithColor(143, 131, 97).AddLaneThumbnail("coui://roadbuildericons/Thumb_ShoulderGravel.svg");
+			SetUp(Sections["Tiled Shoulder 1"], Sections["Tiled Side 0"], "1m", "Tiled").WithThumbnail("coui://roadbuildericons/RB_Empty.svg").WithGroundTexture(LaneGroundType.Tiled).WithColor(76, 78, 83).AddLaneThumbnail("coui://roadbuildericons/Thumb_ShoulderPedestrian.svg");
+			SetUp(Sections["Subway Shoulder 2"], Sections["Subway Side 0"], "2m", "Subway").WithThumbnail("coui://roadbuildericons/RB_Empty.svg").WithGroundTexture(LaneGroundType.Train).WithColor(82, 62, 51).AddLaneThumbnail("coui://roadbuildericons/Thumb_ShoulderTrack.svg");
+			SetUp(Sections["Train Shoulder 2"], Sections["Train Side 0"], "2m", "Train").WithThumbnail("coui://roadbuildericons/RB_TrainShoulder.svg").WithGroundTexture(LaneGroundType.Train).WithColor(82, 62, 51).AddLaneThumbnail("coui://roadbuildericons/Thumb_ShoulderTrack.svg");
+			SetUp(Sections["Tram Shoulder 1"], Sections["Alley Side 0"], "1m", "Tram").WithThumbnail("coui://roadbuildericons/RB_TramShoulder.svg").AddLaneThumbnail("coui://roadbuildericons/Thumb_ShoulderTrack.svg");
 		}
 
 		private RoadBuilderLaneInfo SetUp(NetSectionPrefab prefab, NetSectionPrefab side, string value1, string value2)
 		{
 			var laneInfo = prefab.AddComponent<RoadBuilderLaneGroup>();
-			laneInfo.GroupPrefab = this;
+			laneInfo.GroupPrefab = Prefab;
 			laneInfo.Combination = new LaneOptionCombination[]
 			{
 				new()
@@ -82,8 +80,6 @@ namespace RoadBuilder.LaneGroups
 			};
 
 			prefab.AddComponent<RoadBuilderEdgeLaneInfo>().SidePrefab = side;
-
-			LinkedSections.Add(prefab);
 
 			return prefab.AddOrGetComponent<RoadBuilderLaneInfo>();
 		}

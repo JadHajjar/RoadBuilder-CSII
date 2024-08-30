@@ -101,19 +101,29 @@ namespace RoadBuilder.Utilities
 					}
 				}
 
-				string pipesFile;
-				if (NetworkPrefab.Config.Addons.HasFlag(Domain.Enums.RoadAddons.HasUndergroundWaterPipes))
+				string pipesFile = null;
+				if (NetworkPrefab.Config.Addons.HasFlag(RoadAddons.HasUndergroundElectricityCable) && !NetworkPrefab.Config.Addons.HasFlag(RoadAddons.RequiresUpgradeForElectricity))
 				{
-					pipesFile = totalSize > 115 ? "Thumb_PipesPower" : "Thumb_PipesPowerSmall";
+					if (NetworkPrefab.Config.Addons.HasFlag(RoadAddons.HasUndergroundWaterPipes))
+					{
+						pipesFile = totalSize > 115 ? "Thumb_PipesPower" : "Thumb_PipesPowerSmall";
+					}
+					else
+					{
+						pipesFile = totalSize > 115 ? "Thumb_Power" : "Thumb_PowerSmall";
+					}
 				}
-				else
+				else if (NetworkPrefab.Config.Addons.HasFlag(RoadAddons.HasUndergroundWaterPipes))
 				{
-					pipesFile = totalSize > 115 ? "Thumb_Power" : "Thumb_PowerSmall";
+					pipesFile = totalSize > 115 ? "Thumb_Pipes" : "Thumb_PipesSmall";
 				}
 
-				var pipe = new SvgItem(GetFileName($"coui://roadbuildericons/{pipesFile}.svg"));
+				if (pipesFile is not null)
+				{
+					var pipe = new SvgItem(GetFileName($"coui://roadbuildericons/{pipesFile}.svg"));
 
-				elements.Insert(0, pipe.SetBounds((totalSize - 100) / 2, (totalSize - 100) / 2, false));
+					elements.Insert(0, pipe.SetBounds((totalSize - 100) / 2, (totalSize - 100) / 2, false));
+				}
 
 				XNamespace aw = "http://www.w3.org/2000/svg";
 				var combinedSvg = new XElement(aw + "svg",

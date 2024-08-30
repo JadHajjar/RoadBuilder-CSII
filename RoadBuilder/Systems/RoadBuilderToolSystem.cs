@@ -1,11 +1,16 @@
 ﻿using Colossal.Entities;
+using Colossal.Serialization.Entities;
 
+using Game;
 using Game.Common;
 using Game.Input;
 using Game.Net;
 using Game.Prefabs;
+using Game.SceneFlow;
 using Game.Tools;
+using Game.UI.Editor;
 
+using RoadBuilder.Domain;
 using RoadBuilder.Domain.Components;
 using RoadBuilder.Domain.Enums;
 using RoadBuilder.Domain.Prefabs;
@@ -29,6 +34,7 @@ namespace RoadBuilder.Systems
 		private RoadBuilderUISystem roadBuilderUISystem;
 		private RoadBuilderSystem roadBuilderSystem;
 		private ToolSystem toolSystem;
+		private EditorToolUISystem editorToolUISystem;
 		private EntityQuery highlightedQuery;
 		private EntityQuery roadBuilderNetworkQuery;
 		private ProxyAction placeAction;
@@ -45,6 +51,7 @@ namespace RoadBuilder.Systems
 			roadBuilderUISystem = World.GetOrCreateSystemManaged<RoadBuilderUISystem>();
 			roadBuilderSystem = World.GetOrCreateSystemManaged<RoadBuilderSystem>();
 			toolSystem = World.GetOrCreateSystemManaged<ToolSystem>();
+			editorToolUISystem = World.GetExistingSystemManaged<EditorToolUISystem>();
 
 			highlightedQuery = SystemAPI.QueryBuilder().WithAny<Highlighted, RoadBuilderUpdateFlagComponent>().Build();
 			roadBuilderNetworkQuery = GetEntityQuery(ComponentType.ReadOnly<RoadBuilderNetwork>());
@@ -71,6 +78,24 @@ namespace RoadBuilder.Systems
 			InputManager.instance.SetBinding(mimicCancelBinding, out _);
 		}
 
+		protected override void OnGamePreload(Purpose purpose, GameMode mode)
+		{
+			base.OnGamePreload(purpose, mode);
+
+			if (mode == GameMode.Editor)
+			{
+				if (editorToolUISystem.tools.Any(t => t.id == toolID))
+				{
+					return;
+				}
+
+				var tools = editorToolUISystem.tools;
+				Array.Resize(ref tools, tools.Length + 1);
+				tools[tools.Length - 1] = new RoadBuilderEditorTool(World, this, roadBuilderUISystem);
+				editorToolUISystem.tools = tools;
+			}
+		}
+
 		public override void InitializeRaycast()
 		{
 			base.InitializeRaycast();
@@ -90,7 +115,7 @@ namespace RoadBuilder.Systems
 			{
 				if (roadBuilderSystem.Configurations.TryGetValue(roadBuilderUISystem.GetWorkingId(), out var prefab))
 				{
-					toolSystem.ActivatePrefabTool(prefab.Prefab);
+					roadBuilderUISystem.ActivateRoad(prefab.Prefab);
 				}
 
 				return base.OnUpdate(inputDeps);
@@ -182,7 +207,7 @@ namespace RoadBuilder.Systems
 				return false;
 			}
 
-			if (!Mod.Settings.RemoveLockRequirements && EntityManager.HasEnabledComponent<Locked>(prefabRef.m_Prefab))
+			if (!Mod.Settings.RemoveLockRequirements && GameManager.instance.gameMode == GameMode.Game && EntityManager.HasEnabledComponent<Locked>(prefabRef.m_Prefab))
 			{
 				return false;
 			}

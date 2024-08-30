@@ -1,10 +1,12 @@
-﻿using Game.City;
+﻿using Game;
+using Game.City;
 using Game.Input;
 using Game.Prefabs;
 using Game.SceneFlow;
 using Game.Simulation;
 using Game.Tools;
 using Game.UI;
+using Game.UI.Editor;
 using Game.UI.InGame;
 
 using RoadBuilder.Domain.Components.Prefabs;
@@ -41,7 +43,7 @@ namespace RoadBuilder.Systems.UI
 		private RoadBuilderNetSectionsSystem netSectionsSystem;
 		private CityConfigurationSystem cityConfigurationSystem;
 		private RoadBuilderConfigurationsUISystem roadBuilderConfigurationsUISystem;
-
+		private EditorToolUISystem editorToolUISystem;
 		private ValueBindingHelper<RoadBuilderToolMode> RoadBuilderMode;
 		private ValueBindingHelper<string> RoadId;
 		private ValueBindingHelper<string> RoadName;
@@ -76,6 +78,7 @@ namespace RoadBuilder.Systems.UI
 			netSectionsSystem = World.GetOrCreateSystemManaged<RoadBuilderNetSectionsSystem>();
 			cityConfigurationSystem = World.GetOrCreateSystemManaged<CityConfigurationSystem>();
 			roadBuilderConfigurationsUISystem = World.GetOrCreateSystemManaged<RoadBuilderConfigurationsUISystem>();
+			editorToolUISystem = World.GetOrCreateSystemManaged<EditorToolUISystem>();
 
 			toolSystem.EventToolChanged += OnToolChanged;
 
@@ -94,7 +97,8 @@ namespace RoadBuilder.Systems.UI
 			CreateTrigger<int, int, int>("RoadOptionClicked", (x, y, z) => UpdateRoad(c => RoadOptionClicked(c, x, y, z)));
 			CreateTrigger<int, int, int, int>("OptionClicked", (i, x, y, z) => UpdateRoad(c => LaneOptionClicked(c, i, x, y, z)));
 			CreateTrigger<int>("DuplicateLane", x => UpdateRoad(c => DuplicateLane(c, x)));
-			CreateTrigger("ToggleTool", ToggleTool);
+			CreateTrigger<bool>("SetDragging", x => roadBuilderSystem.IsDragging = x);
+			CreateTrigger("ToggleTool", () => ToggleTool());
 			CreateTrigger("CreateNewPrefab", () => CreateNewPrefab(workingEntity));
 			CreateTrigger("ClearTool", ClearTool);
 			CreateTrigger("PickPrefab", PickPrefab);
@@ -123,9 +127,9 @@ namespace RoadBuilder.Systems.UI
 			}
 		}
 
-		private void ToggleTool()
+		public void ToggleTool(bool? enable = null)
 		{
-			if (toolSystem.activeTool is RoadBuilderToolSystem)
+			if (enable == false || (enable is null && toolSystem.activeTool is RoadBuilderToolSystem))
 			{
 				ClearTool();
 			}
@@ -191,11 +195,11 @@ namespace RoadBuilder.Systems.UI
 		{
 			if (workingEntity != Entity.Null && prefabSystem.TryGetPrefab<PrefabBase>(EntityManager.GetComponentData<PrefabRef>(workingEntity), out var prefab))
 			{
-				toolSystem.ActivatePrefabTool(prefab);
+				ActivateRoad(prefab);
 			}
 			else if (roadBuilderSystem.Configurations.TryGetValue(GetWorkingId(), out var networkPrefab))
 			{
-				toolSystem.ActivatePrefabTool(networkPrefab.Prefab);
+				ActivateRoad(networkPrefab.Prefab);
 			}
 		}
 
@@ -287,21 +291,15 @@ namespace RoadBuilder.Systems.UI
 
 			var width = RoadLanes.Value.Sum(x => x.NetSection?.Width ?? 0);
 
-			RoadSize.Value = RoadOptionsUtil.IsMetric() ? $"{Math.Round(width):0}m / {width / 8f:0.#}U" : $"{Math.Round(width * 3.28084f):0} ft / {width / 8f:0.#}U";
+			RoadSize.Value = RoadOptionsUtil.IsMetric() ? $"{Math.Round(width):0.#}m / {width / 8f:0.#}U" : $"{Math.Round(width * 3.28084f):0} ft / {width / 8f:0.#}U";
 		}
 
 		private void UpdateLaneOrder(INetworkConfig config, RoadLaneUIBinder[] roadLanes)
 		{
-			Mod.Log.Warn($"UpdateLaneOrder");
 			var newLanes = new List<LaneConfig>();
 
-			foreach (var item in roadGenerationDataSystem.RoadGenerationData.LeftHandTraffic ? roadLanes.Reverse() : roadLanes)
+			foreach (var item in roadLanes)
 			{
-				if (item.Index is int.MinValue or int.MaxValue)
-				{
-					continue;
-				}
-
 				var existingLane = config.Lanes.ElementAtOrDefault(item.Index);
 
 				if (existingLane != null)
@@ -348,62 +346,84 @@ namespace RoadBuilder.Systems.UI
 
 			if (!Mod.Settings.RemoveSafetyMeasures)
 			{
-				var lastEdgeIndex = -1;
+				ReorderEdgeLanes(config, newLanes);
+			}
 
-				for (var i = 0; i < newLanes.Count / 2; i++)
-				{
-					var lane = newLanes[i];
-
-					if (!NetworkPrefabGenerationUtil.GetNetSection(roadGenerationDataSystem.RoadGenerationData, config, lane, out var section, out var groupPrefab))
-					{
-						continue;
-					}
-
-					if (NetworkConfigExtensionsUtil.GetEdgeLaneInfo(section, groupPrefab, out var edgeInfo))
-					{
-						if (lastEdgeIndex != i - 1)
-						{
-							newLanes.RemoveAt(i);
-							newLanes.Insert(lastEdgeIndex + 1, lane);
-							i = lastEdgeIndex = -1;
-							continue;
-						}
-
-						lane.Invert = !cityConfigurationSystem.leftHandTraffic;
-
-						lastEdgeIndex = i;
-					}
-				}
-
-				lastEdgeIndex = newLanes.Count;
-
-				for (var i = newLanes.Count - 1; i >= newLanes.Count / 2; i--)
-				{
-					var lane = newLanes[i];
-
-					if (!NetworkPrefabGenerationUtil.GetNetSection(roadGenerationDataSystem.RoadGenerationData, config, lane, out var section, out var groupPrefab))
-					{
-						continue;
-					}
-
-					if (NetworkConfigExtensionsUtil.GetEdgeLaneInfo(section, groupPrefab, out var edgeInfo))
-					{
-						if (lastEdgeIndex != i + 1)
-						{
-							newLanes.RemoveAt(i);
-							newLanes.Insert(lastEdgeIndex - 1, lane);
-							i = lastEdgeIndex = newLanes.Count;
-							continue;
-						}
-
-						lane.Invert = cityConfigurationSystem.leftHandTraffic;
-
-						lastEdgeIndex = i;
-					}
-				}
+			if (cityConfigurationSystem.leftHandTraffic)
+			{
+				newLanes.Reverse();
 			}
 
 			config.Lanes = newLanes;
+		}
+
+		private void ReorderEdgeLanes(INetworkConfig config, List<LaneConfig> newLanes)
+		{
+			var lastEdgeIndex = -1;
+
+			for (var i = 0; i < newLanes.Count / 2; i++)
+			{
+				var lane = newLanes[i];
+
+				if (!NetworkPrefabGenerationUtil.GetNetSection(roadGenerationDataSystem.RoadGenerationData, config, lane, out var section, out var groupPrefab))
+				{
+					continue;
+				}
+
+				if (NetworkConfigExtensionsUtil.GetEdgeLaneInfo(section, groupPrefab, out var edgeInfo))
+				{
+					if (edgeInfo.DoNotRequireBeingOnEdge)
+					{
+						lastEdgeIndex = i;
+						continue;
+					}
+
+					if (lastEdgeIndex != i - 1)
+					{
+						newLanes.RemoveAt(i);
+						newLanes.Insert(lastEdgeIndex + 1, lane);
+						i = lastEdgeIndex = -1;
+						continue;
+					}
+
+					lane.Invert = !cityConfigurationSystem.leftHandTraffic;
+
+					lastEdgeIndex = i;
+				}
+			}
+
+			lastEdgeIndex = newLanes.Count;
+
+			for (var i = newLanes.Count - 1; i >= newLanes.Count / 2; i--)
+			{
+				var lane = newLanes[i];
+
+				if (!NetworkPrefabGenerationUtil.GetNetSection(roadGenerationDataSystem.RoadGenerationData, config, lane, out var section, out var groupPrefab))
+				{
+					continue;
+				}
+
+				if (NetworkConfigExtensionsUtil.GetEdgeLaneInfo(section, groupPrefab, out var edgeInfo))
+				{
+					if (edgeInfo.DoNotRequireBeingOnEdge)
+					{
+						lastEdgeIndex = i;
+						continue;
+					}
+
+					if (lastEdgeIndex != i + 1)
+					{
+						newLanes.RemoveAt(i);
+						newLanes.Insert(lastEdgeIndex - 1, lane);
+						i = lastEdgeIndex = newLanes.Count;
+						continue;
+					}
+
+					lane.Invert = cityConfigurationSystem.leftHandTraffic;
+
+					lastEdgeIndex = i;
+				}
+			}
 		}
 
 		private LaneConfig FindSimilarLane(List<LaneConfig> array, int startIndex, string groupPrefabName)
@@ -486,16 +506,14 @@ namespace RoadBuilder.Systems.UI
 
 		private RoadLaneUIBinder[] From(INetworkConfig config)
 		{
+			var isMetric = RoadOptionsUtil.IsMetric();
 			var leftEdgeMissing = !Mod.Settings.RemoveSafetyMeasures && config.Lanes.Count > 0 && !(NetworkPrefabGenerationUtil.GetNetSection(roadGenerationDataSystem.RoadGenerationData, config, config.Lanes[0], out var leftSection, out var leftGroupPrefab) && NetworkConfigExtensionsUtil.GetEdgeLaneInfo(leftSection, leftGroupPrefab, out _));
 			var rightEdgeMissing = !Mod.Settings.RemoveSafetyMeasures && config.Lanes.Count > 0 && !(NetworkPrefabGenerationUtil.GetNetSection(roadGenerationDataSystem.RoadGenerationData, config, config.Lanes[config.Lanes.Count - 1], out var rightSection, out var rightGroupPrefab) && NetworkConfigExtensionsUtil.GetEdgeLaneInfo(rightSection, rightGroupPrefab, out _));
 			var binders = new RoadLaneUIBinder[config.Lanes.Count + (leftEdgeMissing ? 1 : 0) + (rightEdgeMissing ? 1 : 0)];
-			var isMetric = RoadOptionsUtil.IsMetric();
 
-			Mod.Log.Warn($"leftEdgeMissing:{leftEdgeMissing} rightEdgeMissing:{rightEdgeMissing}");
-
-			if (cityConfigurationSystem.leftHandTraffic ? rightEdgeMissing : leftEdgeMissing)
+			if (leftEdgeMissing)
 			{
-				binders[0] = new RoadLaneUIBinder { Index = int.MinValue, IsEdgePlaceholder = true };
+				binders[0] = new RoadLaneUIBinder { Index = int.MinValue, IsEdgePlaceholder = true, InvertImage = !cityConfigurationSystem.leftHandTraffic };
 			}
 
 			for (var i = 0; i < config.Lanes.Count; i++)
@@ -503,17 +521,18 @@ namespace RoadBuilder.Systems.UI
 				var lane = config.Lanes[i];
 				var validSection = NetworkPrefabGenerationUtil.GetNetSection(roadGenerationDataSystem.RoadGenerationData, config, lane, out var section, out var groupPrefab);
 				var noDirection = validSection && ((section.TryGet<RoadBuilderLaneInfo>(out var laneInfo) && laneInfo.NoDirection) || ((groupPrefab?.TryGet<RoadBuilderLaneInfo>(out var groupInfo) ?? false) && groupInfo.NoDirection));
-				var isBackward = noDirection ? FindDirection(config, i) : (cityConfigurationSystem.leftHandTraffic && (i == 0 || i == config.Lanes.Count - 1) ? !lane.Invert : lane.Invert);
+				var isEdge = NetworkConfigExtensionsUtil.GetEdgeLaneInfo(section, groupPrefab, out _);
+				var isBackward = noDirection ? FindDirection(config, i) : lane.Invert;
 				var width = validSection ? section.CalculateWidth() : 0F;
 
 				GetThumbnailAndColor(config, lane, section, groupPrefab, isBackward, out var thumbnail, out var color, out var texture);
 
-				binders[cityConfigurationSystem.leftHandTraffic ? (binders.Length - i - (rightEdgeMissing ? 2 : 1)) : (leftEdgeMissing ? i + 1 : i)] = new RoadLaneUIBinder
+				binders[leftEdgeMissing ? i + 1 : i] = new RoadLaneUIBinder
 				{
 					Index = i,
 					Invert = lane.Invert,
 					NoDirection = noDirection,
-					InvertImage = isBackward,
+					InvertImage = isEdge && cityConfigurationSystem.leftHandTraffic ? !isBackward : isBackward,
 					TwoWay = validSection && section.SupportsTwoWay(),
 					SectionPrefabName = string.IsNullOrEmpty(lane.GroupPrefabName) ? lane.SectionPrefabName : lane.GroupPrefabName,
 					IsGroup = !string.IsNullOrEmpty(lane.GroupPrefabName),
@@ -524,7 +543,7 @@ namespace RoadBuilder.Systems.UI
 					{
 						PrefabName = section?.name ?? groupPrefab?.name,
 						IsGroup = !string.IsNullOrEmpty(lane.GroupPrefabName),
-						IsEdge = NetworkConfigExtensionsUtil.GetEdgeLaneInfo(section, groupPrefab, out _),
+						IsEdge = isEdge,
 						DisplayName = !validSection && groupPrefab is null ? "Unknown Lane" : GetAssetName((PrefabBase)groupPrefab ?? section),
 						Width = width,
 						WidthText = isMetric ? $"{width:0.##} m" : $"{Math.Round(width * 3.28084 * 4, MidpointRounding.AwayFromZero) / 4:0.##} ft",
@@ -533,9 +552,21 @@ namespace RoadBuilder.Systems.UI
 				};
 			}
 
-			if (cityConfigurationSystem.leftHandTraffic ? leftEdgeMissing : rightEdgeMissing)
+			if (rightEdgeMissing)
 			{
-				binders[binders.Length - 1] = new RoadLaneUIBinder { Index = int.MaxValue, IsEdgePlaceholder = true };
+				binders[binders.Length - 1] = new RoadLaneUIBinder { Index = int.MaxValue, IsEdgePlaceholder = true, InvertImage = cityConfigurationSystem.leftHandTraffic };
+			}
+
+			if (cityConfigurationSystem.leftHandTraffic)
+			{
+				var lhtBinders = new RoadLaneUIBinder[binders.Length];
+
+				for (var i = 0; i < binders.Length; i++)
+				{
+					lhtBinders[i] = binders[binders.Length - i - 1];
+				}
+
+				return lhtBinders;
 			}
 
 			return binders;
@@ -689,6 +720,20 @@ namespace RoadBuilder.Systems.UI
 			}
 
 			return prefab.name.Replace('_', ' ').FormatWords();
+		}
+
+		public void ActivateRoad(PrefabBase prefab)
+		{
+			if (GameManager.instance.gameMode == GameMode.Editor)
+			{
+				editorToolUISystem.activeTool = editorToolUISystem.tools.First(x => x is EditorPrefabTool);
+
+				GameManager.instance.RegisterUpdater(() => toolSystem.ActivatePrefabTool(prefab));
+			}
+			else
+			{
+				toolSystem.ActivatePrefabTool(prefab);
+			}
 		}
 	}
 }

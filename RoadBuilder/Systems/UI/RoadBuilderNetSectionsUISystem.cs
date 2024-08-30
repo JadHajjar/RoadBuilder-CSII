@@ -54,9 +54,14 @@ namespace RoadBuilder.Systems.UI
 					continue;
 				}
 
-				if (!Mod.Settings.UnrestrictedLanes && (!prefab.Has<RoadBuilderLaneInfo>() || !prefab.MatchCategories(activeConfig)))
+				var restricted = false;
+
+				if (restricted = !prefab.MatchCategories(activeConfig))
 				{
-					continue;
+					if (!Mod.Settings.UnrestrictedLanes)
+					{
+						continue;
+					}
 				}
 
 				if (IsInvalidLane(prefab))
@@ -70,15 +75,22 @@ namespace RoadBuilder.Systems.UI
 					DisplayName = GetAssetName(prefab),
 					Thumbnail = ImageSystem.GetIcon(prefab),
 					IsEdge = prefab.Has<RoadBuilderEdgeLaneInfo>(),
+					IsRestricted = restricted,
+					IsCustom = !prefab.GetComponent<RoadBuilderLaneInfo>().RoadBuilder,
 					Width = prefab.CalculateWidth()
 				});
 			}
 
 			foreach (var prefab in netSectionsSystem.LaneGroups.Values)
 			{
-				if (!Mod.Settings.UnrestrictedLanes && !prefab.MatchCategories(activeConfig))
+				var restricted = false;
+
+				if (restricted = !prefab.MatchCategories(activeConfig))
 				{
-					continue;
+					if (!Mod.Settings.UnrestrictedLanes)
+					{
+						continue;
+					}
 				}
 
 				sections.Add(new NetSectionItem
@@ -87,6 +99,8 @@ namespace RoadBuilder.Systems.UI
 					PrefabName = prefab.name,
 					DisplayName = GetAssetName(prefab),
 					IsEdge = prefab.Has<RoadBuilderEdgeLaneInfo>(),
+					IsRestricted = restricted,
+					IsCustom = !prefab.RoadBuilder,
 					Thumbnail = ImageSystem.GetIcon(prefab)
 				});
 			}

@@ -3,37 +3,32 @@
 using RoadBuilder.Domain.Components.Prefabs;
 using RoadBuilder.Domain.Enums;
 
-using System.Collections.Generic;
-
 namespace RoadBuilder.LaneGroups
 {
 	public class TramGroupPrefab : BaseLaneGroupPrefab
 	{
-		public override void Initialize(Dictionary<string, NetSectionPrefab> sections)
+		public override void Initialize()
 		{
-			Options = new RoadBuilderLaneOption[0];
+			Prefab.Options = new RoadBuilderLaneOption[0];
 
-			AddComponent<RoadBuilderLaneInfo>()
+			Prefab.AddComponent<RoadBuilderLaneInfo>()
 				.WithRequireNone(RoadCategory.Gravel | RoadCategory.Pathway | RoadCategory.Fence | RoadCategory.Subway)
 				.WithFrontThumbnail("coui://roadbuildericons/RB_TramFront.svg")
 				.WithBackThumbnail("coui://roadbuildericons/RB_TramRear.svg")
 				.AddLaneThumbnail("coui://roadbuildericons/Thumb_TramLane.svg");
 
-			AddComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_TramFront.svg";
+			Prefab.AddComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_TramFront.svg";
 
-			var laneInfo1 = sections["Tram Track Section 3"].AddComponent<RoadBuilderLaneGroup>();
-			laneInfo1.GroupPrefab = this;
+			var laneInfo1 = Sections["Tram Track Section 3"].AddComponent<RoadBuilderLaneGroup>();
+			laneInfo1.GroupPrefab = Prefab;
 			laneInfo1.Combination = new LaneOptionCombination[0];
 
-			var laneInfo2 = sections["RB Tiled Tram Section 3"].AddComponent<RoadBuilderLaneGroup>();
-			laneInfo2.GroupPrefab = this;
+			var laneInfo2 = Sections["RB Tiled Tram Section 3"].AddComponent<RoadBuilderLaneGroup>();
+			laneInfo2.GroupPrefab = Prefab;
 			laneInfo2.Combination = new LaneOptionCombination[0];
 
-			sections["Tram Track Section 3"].AddComponent<RoadBuilderLaneInfo>().WithRequireNone(RoadCategory.Tiled).WithGroundTexture(LaneGroundType.Asphalt);
-			sections["RB Tiled Tram Section 3"].AddComponent<RoadBuilderLaneInfo>().WithRequireAll(RoadCategory.Tiled).AddLaneThumbnail("coui://roadbuildericons/Thumb_TiledTramLane.svg").WithGroundTexture(LaneGroundType.Tiled);
-
-			LinkedSections.Add(sections["Tram Track Section 3"]);
-			LinkedSections.Add(sections["RB Tiled Tram Section 3"]);
+			Sections["Tram Track Section 3"].AddComponent<RoadBuilderLaneInfo>().WithRequireNone(RoadCategory.Tiled).WithGroundTexture(LaneGroundType.Asphalt);
+			Sections["RB Tiled Tram Section 3"].AddComponent<RoadBuilderLaneInfo>().WithRequireAll(RoadCategory.Tiled).AddLaneThumbnail("coui://roadbuildericons/Thumb_TiledTramLane.svg").WithGroundTexture(LaneGroundType.Tiled);
 		}
 	}
 }

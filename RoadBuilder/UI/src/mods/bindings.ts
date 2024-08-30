@@ -44,3 +44,4 @@ export const laneOptionClicked = (optionIndex: number, netSectionId: number, opt
   trigger(mod.id, "OptionClicked", optionIndex, netSectionId, optionId, value);
 export const roadOptionClicked = (netSectionId: number, optionId: number, value: number) =>
   trigger(mod.id, "RoadOptionClicked", netSectionId, optionId, value);
+export const setIsUIDragging = (isDragging: boolean) => trigger(mod.id, "SetDragging", isDragging);

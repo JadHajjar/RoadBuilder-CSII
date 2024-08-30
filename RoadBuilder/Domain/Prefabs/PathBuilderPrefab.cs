@@ -9,7 +9,7 @@ using Unity.Entities;
 
 namespace RoadBuilder.Domain.Prefabs
 {
-	public class PathBuilderPrefab : FencePrefab, INetworkBuilderPrefab
+	public class PathBuilderPrefab : PathwayPrefab, INetworkBuilderPrefab
 	{
 		public PathConfig Config { get; set; }
 		public bool Deleted { get; set; }

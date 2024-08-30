@@ -21,7 +21,7 @@ export const OptionsPanelComponent = (props: _Props) => {
         <div className={styles.optionRow}>
           <div className={styles.optionSection}>
             <div className={styles.optionLabel}>{section.name}</div>
-            <div className={styles.optionContent}>
+            <div className={classNames(styles.optionContent, section.isToggle && styles.toggleOption)}>
               {section.options?.map((option) =>
                 option.isValue ? (
                   <>

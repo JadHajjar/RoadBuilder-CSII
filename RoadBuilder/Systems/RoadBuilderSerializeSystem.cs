@@ -1,6 +1,7 @@
 ﻿using Colossal.Serialization.Entities;
 
 using Game;
+using Game.Net;
 using Game.Prefabs;
 using Game.SceneFlow;
 using Game.UI;
@@ -76,7 +77,7 @@ namespace RoadBuilder.Systems
 
 			if (_prefabsToUpdate.Count > 0)
 			{
-				GameManager.instance.localizationManager.ReloadActiveLocale();
+				Mod.ReloadActiveLocale();
 
 				_prefabsToUpdate.Clear();
 
@@ -84,6 +85,84 @@ namespace RoadBuilder.Systems
 			}
 
 			roadBuilderSystem.UpdateConfigurationList(true);
+
+			try
+			{
+				FixInvalidEdges();
+			}
+			catch (Exception ex)
+			{
+				Mod.Log.Error(ex);
+			}
+		}
+
+		private void FixInvalidEdges()
+		{
+			var edgeQuery = SystemAPI.QueryBuilder().WithAll<Edge, PrefabRef>().WithAny<Road, TrainTrack, TramTrack, SubwayTrack>().Build();
+			var edges = edgeQuery.ToEntityArray(Allocator.Temp);
+			var refs = edgeQuery.ToComponentDataArray<PrefabRef>(Allocator.Temp);
+			var invalidEntities = new List<Entity>();
+
+			for (var i = 0; i < edges.Length; i++)
+			{
+				if (refs[i].m_Prefab.Index < 0 || !prefabSystem.TryGetPrefab<NetGeometryPrefab>(refs[i], out var prefab))
+				{
+					invalidEntities.Add(edges[i]);
+				}
+			}
+
+			if (invalidEntities.Count == 0)
+			{
+				return;
+			}
+
+			var updateSystem = World.GetOrCreateSystemManaged<RoadBuilderPrefabUpdateSystem>();
+			var smallRoadId = prefabSystem.TryGetPrefab(new PrefabID(nameof(RoadPrefab), "Small Road"), out var smallRoad) ? prefabSystem.GetEntity(smallRoad) : Entity.Null;
+			var trainTrackId = prefabSystem.TryGetPrefab(new PrefabID(nameof(TrackPrefab), "Double Train Track"), out var trainTrack) ? prefabSystem.GetEntity(trainTrack) : Entity.Null;
+			var tramTrackId = prefabSystem.TryGetPrefab(new PrefabID(nameof(TrackPrefab), "Double Tram Track"), out var tramTrack) ? prefabSystem.GetEntity(tramTrack) : Entity.Null;
+			var subwayTrackId = prefabSystem.TryGetPrefab(new PrefabID(nameof(TrackPrefab), "Double Subway Track"), out var subwayTrack) ? prefabSystem.GetEntity(subwayTrack) : Entity.Null;
+
+			Mod.Log.WarnFormat("{0} invalid edges found", invalidEntities.Count);
+
+			GameManager.instance.userInterface.appBindings.ShowConfirmationDialog(new ConfirmationDialog("Options.SECTION[RoadBuilder.RoadBuilder.Mod]", "RoadBuilder.DIALOG_MESSAGE[FixInvalidEdges]", "Common.DIALOG_ACTION[Yes]", "Common.DIALOG_ACTION[No]"), msg =>
+			{
+				if (msg == 0)
+				{
+					foreach (var entity in invalidEntities)
+					{
+						updateSystem.UpdateEdge(entity);
+
+						if (EntityManager.HasComponent<Road>(entity))
+						{
+							EntityManager.SetComponentData(entity, new PrefabRef
+							{
+								m_Prefab = smallRoadId
+							});
+						}
+						else if (EntityManager.HasComponent<TrainTrack>(entity))
+						{
+							EntityManager.SetComponentData(entity, new PrefabRef
+							{
+								m_Prefab = trainTrackId
+							});
+						}
+						else if (EntityManager.HasComponent<TramTrack>(entity))
+						{
+							EntityManager.SetComponentData(entity, new PrefabRef
+							{
+								m_Prefab = tramTrackId
+							});
+						}
+						else if (EntityManager.HasComponent<SubwayTrack>(entity))
+						{
+							EntityManager.SetComponentData(entity, new PrefabRef
+							{
+								m_Prefab = subwayTrackId
+							});
+						}
+					}
+				}
+			});
 		}
 
 		private List<string> CreateNetworksList(in NativeArray<PrefabRef> prefabRefs)

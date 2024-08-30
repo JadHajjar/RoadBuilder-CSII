@@ -3,8 +3,6 @@
 using RoadBuilder.Domain.Components.Prefabs;
 using RoadBuilder.Domain.Enums;
 
-using System.Collections.Generic;
-
 namespace RoadBuilder.LaneGroups
 {
 	public class SidewalkGroupPrefab : BaseLaneGroupPrefab
@@ -12,23 +10,24 @@ namespace RoadBuilder.LaneGroups
 		private const string OptionName1 = "Parking";
 		private const string OptionName2 = "Width";
 
-		public override void Initialize(Dictionary<string, NetSectionPrefab> sections)
+		public override void Initialize()
 		{
-			Options = new RoadBuilderLaneOption[]
+			Prefab.Options = new RoadBuilderLaneOption[]
 			{
 				new()
 				{
 					DefaultValue = "3.5m",
-					Type = LaneOptionType.ValueUpDown,
+					Type = LaneOptionType.LaneWidth,
 					Name = OptionName2,
 					Options = new RoadBuilderLaneOptionValue[]
 					{
-						//new() { Value = "1m" },
-						//new() { Value = "1.5m" },
-						//new() { Value = "2m" },
-						//new() { Value = "2.5m" },
-						//new() { Value = "3m" },
+						new() { Value = "1m" },
+						new() { Value = "1.5m" },
+						new() { Value = "2m" },
+						new() { Value = "2.5m" },
+						new() { Value = "3m" },
 						new() { Value = "3.5m" },
+						new() { Value = "4m" },
 						new() { Value = "4.5m" },
 						new() { Value = "5m" },
 						new() { Value = "5.5m" },
@@ -40,6 +39,7 @@ namespace RoadBuilder.LaneGroups
 				{
 					DefaultValue = "",
 					Name = OptionName1,
+					Type = LaneOptionType.Toggle,
 					Options = new RoadBuilderLaneOptionValue[]
 					{
 						new()
@@ -61,36 +61,37 @@ namespace RoadBuilder.LaneGroups
 				},
 			};
 
-			AddComponent<RoadBuilderLaneInfo>()
+			Prefab.AddComponent<RoadBuilderLaneInfo>()
 				.AddLaneThumbnail("coui://roadbuildericons/Thumb_SidewalkWide.svg");
 
-			AddComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_WideSidewalkRight.svg";
+			Prefab.AddComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_WideSidewalkRight.svg";
 
-			var edgeInfo = AddComponent<RoadBuilderEdgeLaneInfo>();
+			var edgeInfo = Prefab.AddComponent<RoadBuilderEdgeLaneInfo>();
 			edgeInfo.AddSidewalkStateOnNode = true;
-			edgeInfo.SidePrefab = sections["Road Side 0"];
+			edgeInfo.SidePrefab = Sections["Road Side 0"];
 
-			//SetUp(sections["Sidewalk 1"], "", "1m", false);
-			//SetUp(sections["Sidewalk 1.5"], "", "1.5m", false);
-			//SetUp(sections["Sidewalk 2"], "", "2m", false);
-			//SetUp(sections["Sidewalk 2.5"], "", "2.5m", false);
-			//SetUp(sections["Sidewalk 3"], "", "3m", false);
-			SetUp(sections["Sidewalk With Parking 5"], "P", "5m");
-			SetUp(sections["Sidewalk 3.5"], "", "3.5m", false);
-			SetUp(sections["Sidewalk With Parking 6"], "P", "6m");
-			SetUp(sections["Sidewalk 4.5"], "", "4.5m", false);
-			SetUp(sections["Sidewalk With Parking 7"], "P", "7m");
-			SetUp(sections["Sidewalk With Parking 5.5"], "P", "5.5m");
-			SetUp(sections["Sidewalk 5"], "", "5m");
-			SetUp(sections["Sidewalk 7"], "", "7m");
-			SetUp(sections["Sidewalk 6"], "", "6m");
-			SetUp(sections["Sidewalk 5.5"], "", "5.5m");
+			SetUp(Sections["Sidewalk 1"], "", "1m", false);
+			SetUp(Sections["Sidewalk 1.5"], "", "1.5m", false);
+			SetUp(Sections["Sidewalk 2"], "", "2m", false);
+			SetUp(Sections["Sidewalk 2.5"], "", "2.5m", false);
+			SetUp(Sections["Sidewalk 3"], "", "3m", false);
+			SetUp(Sections["Sidewalk 4"], "", "4m", false);
+			SetUp(Sections["Sidewalk 3.5"], "", "3.5m", false);
+			SetUp(Sections["Sidewalk 4.5"], "", "4.5m", false);
+			SetUp(Sections["Sidewalk With Parking 5"], "P", "5m");
+			SetUp(Sections["Sidewalk With Parking 6"], "P", "6m");
+			SetUp(Sections["Sidewalk With Parking 7"], "P", "7m");
+			SetUp(Sections["Sidewalk With Parking 5.5"], "P", "5.5m");
+			SetUp(Sections["Sidewalk 5"], "", "5m");
+			SetUp(Sections["Sidewalk 7"], "", "7m");
+			SetUp(Sections["Sidewalk 6"], "", "6m");
+			SetUp(Sections["Sidewalk 5.5"], "", "5.5m");
 		}
 
 		private void SetUp(NetSectionPrefab prefab, string value1, string value2, bool deco = true)
 		{
 			var laneInfo = prefab.AddComponent<RoadBuilderLaneGroup>();
-			laneInfo.GroupPrefab = this;
+			laneInfo.GroupPrefab = Prefab;
 			laneInfo.Combination = deco
 				? new LaneOptionCombination[]
 				{
@@ -146,8 +147,6 @@ namespace RoadBuilder.LaneGroups
 				decoInfo.LaneTreeThumbnail = new[] { "coui://roadbuildericons/Thumb_SidewalkTree.svg" };
 				decoInfo.LaneGrassAndTreeThumbnail = new[] { "coui://roadbuildericons/Thumb_SidewalkGrassTree.svg" };
 			}
-
-			LinkedSections.Add(prefab);
 		}
 	}
 }

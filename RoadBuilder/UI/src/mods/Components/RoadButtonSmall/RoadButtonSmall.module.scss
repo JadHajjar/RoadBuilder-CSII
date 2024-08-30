@@ -141,6 +141,33 @@
   }
 }
 
-.container:nth-child(2) .informationBar {
-  border-left: 2rem solid rgba(225, 225, 225, 0.1);
+.edgePlaceholder .button {
+  height: 64rem;
+
+  .imageContainer {
+    height: 48rem;
+    width: 48rem;
+    background-color: rgba(230, 230, 230, 0.25);
+    border-radius: 10rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    img {
+      filter: brightness(1.3);
+      position: inherit;
+      width: 32rem;
+      height: 32rem;
+    }
+  }
+}
+
+.edgePlaceholder.highlighted {
+  .imageContainer {
+    background-color: rgba(255, 255, 255, 1);
+
+    img {
+      //filter: brightness(0.9);
+    }
+  }
 }

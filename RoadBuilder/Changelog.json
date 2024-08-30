@@ -1,8 +1,70 @@
 [
   {
     "Beta": true,
+    "Version": "0.3.2",
+    "Date": "2024-08-29",
+    "ChangeGroups": [
+      {
+        "Name": "Hotfix",
+        "Changes": [
+          "Fixed names and descriptions of roads not showing.",
+          "Fixed the base type of group prefabs."
+        ]
+      }
+    ]
+  },
+  {
+    "Beta": true,
+    "Version": "0.3.1",
+    "Date": "2024-08-28",
+    "ChangeGroups": [
+      {
+        "Name": "Lane Changes",
+        "Changes": [
+          "Added smaller sidewalk sizes to the Sidewalk lane. Those are experimental and might not look perfect for now.",
+          "Added the Sound Barrier lane to the edge lane group to allow placing it on the edge of the road.",
+          "Fixed parked cars not touching the asphalt on the Parking lane."
+        ]
+      },
+      {
+        "Name": "Experimental Custom Lane Support",
+        "Changes": [
+          "Added basic support for custom lanes from PDX Mods.",
+          "Use those lanes with caution.",
+          "Loading the game with 'missing' custom lanes will not break your created roads, it will however generate the road as if those lanes are not part of the road."
+        ]
+      },
+      {
+        "Name": "Other Changes",
+        "Changes": [
+          "Added an automatic prompt while loading into a savegame with grey roads to automatically replace them and save the city.",
+          "Updated the 'Edge Lane' icon and added a tooltip for it.",
+          "Added a warning icon on lanes in the list which are unrestricted by the respective advanced option.",
+          "Dragging a lane now pauses the road update for a smoother editing experience.",
+          "Fixed bridge and tunnel pieces not facing the right direction when there's no edge lane present.",
+          "Fixed not being able to change the road category.",
+          "Updated lane width options to match metric values while using US Customary units."
+        ]
+      }
+    ]
+  },
+  {
+    "Beta": true,
+    "Version": "0.3.0.1",
+    "Date": "2024-08-25",
+    "ChangeGroups": [
+      {
+        "Name": "Hotfix",
+        "Changes": [
+          "Reverted empty lanes' extra width which caused smaller empty lanes to distort sidewalks."
+        ]
+      }
+    ]
+  },
+  {
+    "Beta": true,
     "Version": "0.3.0",
-    "Date": "2024-08-24",
+    "Date": "2024-08-25",
     "ChangeGroups": [
       {
         "Name": "New Parking Lanes",
@@ -18,7 +80,9 @@
           "Sidewalk and Shoulder, referred to as 'Edge Lanes', are now required to be on the edges of your roads.",
           "Edge lanes are marked with a special icon in the lane list.",
           "Placing an edge lane anywhere other than the edge will automatically move it to the closest available slot.",
-          "Added a warning icon when a side is missing an edge lane."
+          "Added a warning icon when a side is missing an edge lane.",
+          "Removed the Raised Sidewalks option to make room for smarter edge lanes. This means that you can now add sidewalks everywhere.",
+          "Added experimental versions of sidewalk lanes with smaller sizes, accessed by removing safety measures."
         ]
       },
       {
@@ -41,6 +105,7 @@
       {
         "Name": "Other Changes",
         "Changes": [
+          "Added a delay before changes to the road are reflected in-game. Allowing you to make multiple edits faster without your game stuttering.",
           "Added new Pole lanes, similar to the empty lanes, but with the Tram and Train poles.",
           "Added more width options for empty lanes that do not match the road's ground type.",
           "Added a potential fix for roads becoming grey.",

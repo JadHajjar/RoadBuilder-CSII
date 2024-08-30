@@ -140,6 +140,11 @@ namespace RoadBuilder.Systems
 				roadGenerationData.PillarPrefabs[subwayPillar.name] = subwayPillar as StaticObjectPrefab;
 			}
 
+			if (prefabSystem.TryGetPrefab(new PrefabID(nameof(StaticObjectPrefab), "Pillar Pedestrian Placeholder"), out var pedestrianPillar))
+			{
+				roadGenerationData.PillarPrefabs[pedestrianPillar.name] = pedestrianPillar as StaticObjectPrefab;
+			}
+
 			var uIGroupElementQuery = SystemAPI.QueryBuilder().WithAll<UIGroupElement>().Build();
 			var uIGroupElementEntities = uIGroupElementQuery.ToEntityArray(Allocator.Temp);
 

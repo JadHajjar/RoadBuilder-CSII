@@ -1,6 +1,7 @@
 export interface OptionSection {
   id: number;
   name: string;
+  isToggle: boolean;
   options: OptionItem[];
 }
 

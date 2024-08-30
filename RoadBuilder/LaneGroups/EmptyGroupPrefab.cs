@@ -15,9 +15,9 @@ namespace RoadBuilder.LaneGroups
 		private const string OptionName1 = "Lane Width";
 		private const string OptionName2 = "Ground Type";
 
-		public override void Initialize(Dictionary<string, NetSectionPrefab> sections)
+		public override void Initialize()
 		{
-			Options = new RoadBuilderLaneOption[]
+			Prefab.Options = new RoadBuilderLaneOption[]
 			{
 				new()
 				{
@@ -35,7 +35,7 @@ namespace RoadBuilder.LaneGroups
 				new()
 				{
 					DefaultValue = "1m",
-					Type = LaneOptionType.ValueUpDown,
+					Type = LaneOptionType.LaneWidth,
 					IgnoreForSimilarDuplicate = true,
 					Name = OptionName1,
 					Options = new RoadBuilderLaneOptionValue[]
@@ -52,12 +52,12 @@ namespace RoadBuilder.LaneGroups
 				},
 			};
 
-			AddComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_Empty.svg";
+			Prefab.AddComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_Empty.svg";
 
-			SetUp(sections, "RB Empty Section {0}", 4, "Asphalt", "Thumb_CarLane", "Thumb_CarLaneSmall").ForEach(x => x.Item2.WithRequireNone(x.Item1 is 1 or 2 or 3 or 4 ? default : RoadCategory.NonAsphalt).WithGroundTexture(LaneGroundType.Asphalt));
-			SetUp(sections, "RB Train Empty Section {0}", 4, "Train", "Thumb_TracklessLane", "Thumb_TracklessLaneSmall").ForEach(x => x.Item2.WithRequireAny(x.Item1 is 1 or 2 or 4 ? default : RoadCategory.Train | RoadCategory.Subway).WithGroundTexture(LaneGroundType.Train).WithColor(82, 62, 51));
-			SetUp(sections, "RB Gravel Empty Section {0}", 3, "Gravel", "Thumb_GravelLane", "Thumb_GravelLaneSmall").ForEach(x => x.Item2.WithRequireAny(x.Item1 is 1 or 3 ? default : RoadCategory.Gravel).WithGroundTexture(LaneGroundType.Gravel).WithColor(143, 131, 97));
-			SetUp(sections, "RB Tiled Empty Section {0}", 3, "Tiled", "Thumb_TiledWide", "Thumb_TiledSmall").ForEach(x => x.Item2.WithRequireAny(x.Item1 is 1 or 3 ? default : RoadCategory.Tiled).WithGroundTexture(LaneGroundType.Tiled).WithColor(76, 78, 83));
+			SetUp(Sections, "RB Empty Section {0}", 4, "Asphalt", "Thumb_CarLane", "Thumb_CarLaneSmall").ForEach(x => x.Item2.WithRequireNone(x.Item1 is 3 or 4 ? default : RoadCategory.NonAsphalt).WithGroundTexture(LaneGroundType.Asphalt));
+			SetUp(Sections, "RB Train Empty Section {0}", 4, "Train", "Thumb_TracklessLane", "Thumb_TracklessLaneSmall").ForEach(x => x.Item2.WithRequireAny(x.Item1 is 4 ? default : RoadCategory.Train | RoadCategory.Subway).WithGroundTexture(LaneGroundType.Train).WithColor(82, 62, 51));
+			SetUp(Sections, "RB Gravel Empty Section {0}", 3, "Gravel", "Thumb_GravelLane", "Thumb_GravelLaneSmall").ForEach(x => x.Item2.WithRequireAny(x.Item1 is 3 ? default : RoadCategory.Gravel).WithGroundTexture(LaneGroundType.Gravel).WithColor(143, 131, 97));
+			SetUp(Sections, "RB Tiled Empty Section {0}", 3, "Tiled", "Thumb_TiledWide", "Thumb_TiledSmall").ForEach(x => x.Item2.WithRequireAny(x.Item1 is 3 ? default : RoadCategory.Tiled).WithGroundTexture(LaneGroundType.Tiled).WithColor(76, 78, 83));
 		}
 
 		private IEnumerable<(float, RoadBuilderLaneInfo)> SetUp(Dictionary<string, NetSectionPrefab> sections, string name, float maxWidth, string value2, string largeThumb, string smallThumb)
@@ -66,7 +66,7 @@ namespace RoadBuilder.LaneGroups
 			{
 				var prefab = sections[string.Format(name, width.ToString(CultureInfo.InvariantCulture))];
 				var laneGroup = prefab.AddComponent<RoadBuilderLaneGroup>();
-				laneGroup.GroupPrefab = this;
+				laneGroup.GroupPrefab = Prefab;
 				laneGroup.Combination = new LaneOptionCombination[]
 				{
 					new()
@@ -80,8 +80,6 @@ namespace RoadBuilder.LaneGroups
 						Value = value2
 					},
 				};
-
-				LinkedSections.Add(prefab);
 
 				var laneInfo = prefab.AddOrGetComponent<RoadBuilderLaneInfo>();
 
