@@ -366,11 +366,36 @@ namespace RoadBuilder.Utilities
 					};
 				}
 
-				yield return new NetSectionInfo
+				if (section.TryGet<RoadBuilderLaneAggregate>(out var aggregate) || groupPrefab.TryGet(out aggregate))
 				{
-					m_Section = section,
-					m_Invert = lane.Invert,
-				};
+					var sections = new List<NetSectionPrefab>();
+
+					sections.AddRange(aggregate.LeftSections ?? new NetSectionPrefab[0]);
+					sections.Add(section);
+					sections.AddRange(aggregate.RightSections ?? new NetSectionPrefab[0]);
+
+					if (lane.Invert)
+					{
+						sections.Reverse();
+					}
+
+					foreach (var item in sections)
+					{
+						yield return new NetSectionInfo
+						{
+							m_Section = item,
+							m_Invert = lane.Invert,
+						};
+					}
+				}
+				else
+				{
+					yield return new NetSectionInfo
+					{
+						m_Section = section,
+						m_Invert = lane.Invert,
+					};
+				}
 
 				if (i == NetworkPrefab.Config.Lanes.Count - 1 && (NetworkConfigExtensionsUtil.GetEdgeLaneInfo(section, groupPrefab, out rightSectionEdgeInfo) | !Mod.Settings.DoNotAddSides))
 				{
@@ -467,7 +492,7 @@ namespace RoadBuilder.Utilities
 
 			placeableNet.m_AllowParallelMode = true;
 			placeableNet.m_XPReward = 2;
-			placeableNet.m_ElevationRange = NetworkPrefab.Config.Category.HasFlag(RoadCategory.Pathway)? new()
+			placeableNet.m_ElevationRange = NetworkPrefab.Config.Category.HasFlag(RoadCategory.Pathway) ? new()
 			{
 				min = -20,
 				max = 20

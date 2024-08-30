@@ -361,7 +361,6 @@ namespace RoadBuilder.Systems
 				newPiece.m_Width = item.Item3;
 				newPiece.m_SurfaceHeights = new(-0.2f);
 				newPiece.Remove<NetPieceObjects>();
-				newPiece.Remove<NetPieceCrosswalk>();
 				newPiece.AddOrGetComponent<NetPieceLanes>().m_Lanes = new[]
 				{
 					new NetLaneInfo
@@ -418,7 +417,6 @@ namespace RoadBuilder.Systems
 				newPiece.m_Width = item.Item3;
 				newPiece.m_SurfaceHeights = new(-0.2f);
 				newPiece.Remove<NetPieceObjects>();
-				newPiece.Remove<NetPieceCrosswalk>();
 				newPiece.AddOrGetComponent<NetPieceLanes>().m_Lanes = new[]
 				{
 					new NetLaneInfo
