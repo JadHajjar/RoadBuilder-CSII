@@ -44,11 +44,11 @@
 
 	<Target Name="CopyFiles" AfterTargets="DeployWIP">
 		<ItemGroup>
-			<IconFiles Include=".\PrefabIcons\*.*" />
+			<IconFiles Include=".\CustomIcons\*.*" />
 			<BadgesFiles Include=".\Properties\Badges\*.*" />
 		</ItemGroup>
 
-		<Copy SourceFiles="@(IconFiles)" DestinationFiles="@(IconFiles->'$(DeployDir)\PrefabIcons\%(RecursiveDir)%(Filename)%(Extension)')" />
+		<Copy SourceFiles="@(IconFiles)" DestinationFiles="@(IconFiles->'$(DeployDir)\Icons\%(RecursiveDir)%(Filename)%(Extension)')" />
 		<Copy SourceFiles="@(BadgesFiles)" DestinationFiles="@(BadgesFiles->'$(DeployDir)\Badges\%(RecursiveDir)%(Filename)%(Extension)')" />
 	</Target>
 

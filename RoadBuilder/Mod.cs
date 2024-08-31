@@ -35,7 +35,7 @@ namespace RoadBuilder
 
 			if (GameManager.instance.modManager.TryGetExecutableAsset(this, out var asset))
 			{
-				UIManager.defaultUISystem.AddHostLocation($"roadbuildericons", Path.Combine(Path.GetDirectoryName(asset.path), "PrefabIcons"), false);
+				UIManager.defaultUISystem.AddHostLocation($"roadbuildericons", Path.Combine(Path.GetDirectoryName(asset.path), "Icons"), false);
 			}
 			else
 			{
