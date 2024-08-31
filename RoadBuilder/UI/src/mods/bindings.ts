@@ -18,6 +18,7 @@ export const getRoadSize$ = bindValue<string>(mod.id, "GetRoadSize");
 export const getRoadTypeName$ = bindValue<string>(mod.id, "GetRoadTypeName");
 export const getRoadId$ = bindValue<string>(mod.id, "GetRoadId");
 export const isPaused$ = bindValue<boolean>(mod.id, "IsPaused");
+export const fpsMeterLevel$ = bindValue<number>(mod.id, "FpsMeterLevel");
 export const roadListView$ = bindValue<boolean>(mod.id, "RoadListView");
 export const IsCustomRoadSelected$ = bindValue<boolean>(mod.id, "IsCustomRoadSelected", false);
 

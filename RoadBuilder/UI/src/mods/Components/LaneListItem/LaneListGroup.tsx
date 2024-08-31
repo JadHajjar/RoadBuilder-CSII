@@ -9,7 +9,7 @@ import { VanillaComponentResolver } from "vanillacomponentresolver";
 import { useLocalization } from "cs2/l10n";
 import { LaneSectionType } from "domain/LaneSectionType";
 
-export const LaneListGroup = (props: { type: LaneSectionType; children: ReactNode | undefined }) => {
+export const LaneListGroup = (props: { type: LaneSectionType; small: boolean; children: ReactNode | undefined }) => {
   let { translate } = useLocalization();
   let [isFolded, setFolded] = useState(false);
 
@@ -25,7 +25,7 @@ export const LaneListGroup = (props: { type: LaneSectionType; children: ReactNod
   }
 
   return (
-    <div className={classNames(styles.group, isFolded && styles.folded)}>
+    <div className={classNames(styles.group, isFolded && styles.folded, props.small && styles.small)}>
       <div className={styles.header} onClick={() => setFolded(!isFolded)}>
         <div className={styles.name}>
           <img src={icon} />

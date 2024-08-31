@@ -3,4 +3,5 @@ export interface RoadConfiguration {
   Name: string;
   Thumbnail: string;
   Locked: boolean;
+  Used: boolean;
 }

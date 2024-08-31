@@ -10,6 +10,7 @@ using RoadBuilder.Domain.Prefabs;
 using RoadBuilder.Domain.UI;
 using RoadBuilder.Utilities;
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -21,6 +22,7 @@ namespace RoadBuilder.Systems.UI
 	{
 		private PrefabSystem prefabSystem;
 		private PrefabUISystem prefabUISystem;
+		private RoadBuilderSystem roadBuilderSystem;
 		private RoadBuilderNetSectionsSystem netSectionsSystem;
 		private ValueBindingHelper<NetSectionGroup[]> _NetSections;
 		private List<NetSectionItem> availableSections;
@@ -33,6 +35,7 @@ namespace RoadBuilder.Systems.UI
 
 			prefabSystem = World.GetOrCreateSystemManaged<PrefabSystem>();
 			prefabUISystem = World.GetOrCreateSystemManaged<PrefabUISystem>();
+			roadBuilderSystem = World.GetOrCreateSystemManaged<RoadBuilderSystem>();
 			netSectionsSystem = World.GetOrCreateSystemManaged<RoadBuilderNetSectionsSystem>();
 
 			_NetSections = CreateBinding("NetSections", new NetSectionGroup[0]);
@@ -48,7 +51,6 @@ namespace RoadBuilder.Systems.UI
 
 			_NetSections.Value = availableSections
 				.Where(x => Filter(x.DisplayName))
-				.OrderBy(x => x.DisplayName)
 				.GroupBy(x => x.SectionType)
 				.Select(x => new NetSectionGroup
 				{
@@ -130,7 +132,28 @@ namespace RoadBuilder.Systems.UI
 				});
 			}
 
+			sections.Sort((x, y) => GetUseCount(y) - GetUseCount(x));
+
 			return sections;
+		}
+
+		private int GetUseCount(NetSectionItem section)
+		{
+			var name = section.PrefabName;
+			var count = 0;
+
+			foreach (var item in roadBuilderSystem.Configurations.Values)
+			{
+				foreach (var lane in item.Config.Lanes)
+				{
+					if (lane.SectionPrefabName == name || lane.GroupPrefabName == name)
+					{
+						count++;
+					}
+				}
+			}
+
+			return count;
 		}
 
 		private bool Filter(string name)
@@ -152,19 +175,22 @@ namespace RoadBuilder.Systems.UI
 
 		private LaneSectionType GetSectionType(LaneGroupPrefab prefab)
 		{
-			var sectionsType = prefab.LinkedSections.Min(GetSectionType);
-
-			if (sectionsType > LaneSectionType.Edges && prefab.Has<RoadBuilderEdgeLaneInfo>())
+			if (prefab.Has<RoadBuilderEdgeLaneInfo>())
 			{
 				return LaneSectionType.Edges;
 			}
 
-			return sectionsType;
+			return prefab.LinkedSections.Min(GetSectionType);
 		}
 
 		private LaneSectionType GetSectionType(NetSectionPrefab prefab)
 		{
-			if (prefab.FindLanes<CarLane>().Any() || prefab.FindLanes<ParkingLane>().Any())
+			if (prefab.Has<RoadBuilderEdgeLaneInfo>())
+			{
+				return LaneSectionType.Edges;
+			}
+
+			if (prefab.FindLanes<CarLane>().Any())
 			{
 				return LaneSectionType.Vehicles;
 			}
@@ -174,14 +200,9 @@ namespace RoadBuilder.Systems.UI
 				return LaneSectionType.Tracks;
 			}
 
-			if (prefab.IsMedian())
+			if (prefab.IsMedian() || prefab.name.IndexOf("Median", StringComparison.InvariantCultureIgnoreCase) >= 0)
 			{
 				return LaneSectionType.Medians;
-			}
-
-			if (prefab.Has<RoadBuilderEdgeLaneInfo>())
-			{
-				return LaneSectionType.Edges;
 			}
 
 			if (prefab.FindLanes<ParkingLane>().Any())

@@ -2,7 +2,15 @@ import { Scrollable } from "cs2/ui";
 import { LaneListItem } from "../Components/LaneListItem/LaneListItem";
 import styles from "./SidePanel.module.scss";
 import { useValue } from "cs2/api";
-import { allNetSections$, allRoadConfigurations$, roadBuilderToolMode$, roadListView$, setRoadListView, setSearchBinder } from "mods/bindings";
+import {
+  allNetSections$,
+  allRoadConfigurations$,
+  fpsMeterLevel$,
+  roadBuilderToolMode$,
+  roadListView$,
+  setRoadListView,
+  setSearchBinder,
+} from "mods/bindings";
 import { useEffect, useState } from "react";
 import { useLocalization } from "cs2/l10n";
 import { SearchTextBox } from "mods/Components/SearchTextBox/SearchTextBox";
@@ -17,6 +25,7 @@ export const SidePanel = (props: { editor: boolean }) => {
   const roadListView = useValue(roadListView$);
   const roadConfigurations = useValue(allRoadConfigurations$);
   const netSections = useValue(allNetSections$);
+  const fpsMeterLevel = useValue(fpsMeterLevel$);
   let [searchQuery, setSearchQuery] = useState<string>("");
   let items: JSX.Element[];
 
@@ -39,19 +48,20 @@ export const SidePanel = (props: { editor: boolean }) => {
       .filter((val, idx) => searchQuery == undefined || searchQuery == "" || val.Name.toLowerCase().indexOf(searchQuery.toLowerCase()) >= 0)
       .map((val, idx) => <RoadConfigListItem key={idx} road={val} />);
   } else {
+    const small = netSections.map((x) => x.Sections.length).reduce((x, s) => x + s, 0) >= 15;
     items = netSections
       .sort((a, b) => (a.Type > b.Type ? 1 : -1))
       .map((grp) => (
-        <LaneListGroup type={grp.Type}>
+        <LaneListGroup type={grp.Type} small={small}>
           {grp.Sections.map((val, idx) => (
-            <LaneListItem key={idx} netSection={val} />
+            <LaneListItem key={idx} netSection={val} small={small} />
           ))}
         </LaneListGroup>
       ));
   }
 
   return (
-    <div className={classNames(styles.panel, props.editor ? styles.editor : styles.game)}>
+    <div className={classNames(styles.panel, props.editor ? styles.editor : styles.game, styles["fpsLevel" + fpsMeterLevel])}>
       <div className={styles.header}>
         {toolMode == RoadBuilderToolModeEnum.Picker && (
           <div className={styles.subHeader}>

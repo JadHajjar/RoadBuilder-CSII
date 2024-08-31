@@ -53,6 +53,7 @@ namespace RoadBuilder.Systems.UI
 		private ValueBindingHelper<OptionSectionUIEntry[]> RoadOptions;
 		private ValueBindingHelper<bool> RoadListView;
 		private ValueBindingHelper<bool> IsPaused;
+		private ValueBindingHelper<int> FpsMeterLevel;
 		private ValueBindingHelper<bool> IsCustomRoadSelected;
 		private ProxyAction _toolKeyBinding;
 
@@ -90,6 +91,7 @@ namespace RoadBuilder.Systems.UI
 			RoadLanes = CreateBinding("GetRoadLanes", new RoadLaneUIBinder[0]);
 			RoadOptions = CreateBinding("GetRoadOptions", new OptionSectionUIEntry[0]);
 			IsPaused = CreateBinding("IsPaused", simulationSystem.selectedSpeed == 0f);
+			FpsMeterLevel = CreateBinding("FpsMeterLevel", 0);
 			RoadListView = CreateBinding("RoadListView", "SetRoadListView", true);
 			IsCustomRoadSelected = CreateBinding("IsCustomRoadSelected", false);
 
@@ -109,6 +111,7 @@ namespace RoadBuilder.Systems.UI
 		protected override void OnUpdate()
 		{
 			IsPaused.Value = simulationSystem.selectedSpeed == 0f;
+			FpsMeterLevel.Value = (int)(GameManager.instance?.settings?.general?.fpsMode ?? Game.Settings.GeneralSettings.FPSMode.Off);
 			RoadId.Value = GetWorkingId();
 
 			if (_toolKeyBinding.WasPerformedThisFrame())

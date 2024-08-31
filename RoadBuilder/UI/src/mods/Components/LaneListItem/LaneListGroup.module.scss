@@ -8,7 +8,7 @@
 
 .header {
   margin: 4rem;
-  padding: 4rem;
+  padding: 6rem;
   border-radius: 4rem;
   display: flex;
   flex-direction: row;
@@ -16,9 +16,15 @@
   justify-content: space-between;
   align-items: center;
   color: var(--textColorDim);
+  font-size: 16rem;
 
   &:hover {
     background-color: rgba(255, 255, 255, 0.2);
+  }
+
+  img {
+    width: 24rem;
+    height: 24rem;
   }
 
   .name {
@@ -28,28 +34,16 @@
     justify-content: space-between;
     align-items: center;
 
-    img {
-      width: 24rem;
-      height: 24rem;
-    }
-
     span {
-      margin-left: 6rem;
+      margin-left: 8rem;
     }
   }
 
   .foldArrow {
-    float: right;
-    width: 32rem;
-    height: 32rem;
-    padding: 4rem;
-
     img {
       background-color: #fff;
       mask-size: contain;
       mask-position: 50% 50%;
-      width: 24rem;
-      height: 24rem;
       mask-image: url(coui://gameui/Media/Glyphs/ThickStrokeArrowDown.svg);
     }
   }
@@ -79,4 +73,26 @@
 
 .folded .container {
   display: none;
+}
+
+.small {
+  &.group {
+    margin-bottom: 6rem;
+
+    &.folded {
+      margin-bottom: 3rem;
+    }
+  }
+
+  .header {
+    margin: 3rem;
+    padding: 5rem;
+    border-radius: 3rem;
+    font-size: 13rem;
+
+    img {
+      width: 20rem;
+      height: 20rem;
+    }
+  }
 }

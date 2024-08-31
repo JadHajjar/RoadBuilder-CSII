@@ -19,6 +19,7 @@ namespace RoadBuilder.Utilities
 			SpeedLimit,
 			Addons,
 			RoadCategory,
+			ShowInToolbar
 		}
 
 		public static OptionSectionUIEntry[] GetRoadOptions(INetworkConfig config)
@@ -195,6 +196,37 @@ namespace RoadBuilder.Utilities
 				}
 			});
 
+			options.Add(new()
+			{
+				Id = (int)ActionType.ShowInToolbar,
+				Name = LocaleHelper.Translate("RoadBuilder.ShowInToolbar", "Toolbar View"),
+				IsToggle = true,
+				Options = new[]
+				{
+					new OptionItemUIEntry
+					{
+						Id = (int)ShowInToolbarState.Hide,
+						Name = $"RoadBuilder.ShowInToolbarState[{ShowInToolbarState.Hide}]",
+						Icon = "coui://roadbuildericons/RB_Hide.svg",
+						Selected = config.ToolbarState == ShowInToolbarState.Hide
+					},
+					new OptionItemUIEntry
+					{
+						Id = (int)ShowInToolbarState.Inherit,
+						Name = $"RoadBuilder.ShowInToolbarState[{ShowInToolbarState.Inherit}]",
+						Icon = "coui://roadbuildericons/RB_Any.svg",
+						Selected = config.ToolbarState == ShowInToolbarState.Inherit
+					},
+					new OptionItemUIEntry
+					{
+						Id = (int)ShowInToolbarState.Show,
+						Name = $"RoadBuilder.ShowInToolbarState[{ShowInToolbarState.Show}]",
+						Icon = "coui://roadbuildericons/RB_Show.svg",
+						Selected = config.ToolbarState == ShowInToolbarState.Show
+					},
+				}
+			});
+
 			return options.ToArray();
 		}
 
@@ -214,7 +246,6 @@ namespace RoadBuilder.Utilities
 					{
 						trackConfig.SpeedLimit = Mathf.Max(trackConfig.SpeedLimit + (value * multiplier), multiplier);
 					}
-
 					break;
 
 				case ActionType.RoadCategory:
@@ -226,7 +257,6 @@ namespace RoadBuilder.Utilities
 					{
 						config.Category = (RoadCategory)id;
 					}
-
 					break;
 
 				case ActionType.Addons:
@@ -256,7 +286,10 @@ namespace RoadBuilder.Utilities
 							config.Addons |= addon;
 						}
 					}
+					break;
 
+				case ActionType.ShowInToolbar:
+					config.ToolbarState = (ShowInToolbarState)id;
 					break;
 			}
 		}

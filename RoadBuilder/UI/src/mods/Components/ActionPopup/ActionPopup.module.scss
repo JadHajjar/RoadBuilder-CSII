@@ -28,50 +28,77 @@
   pointer-events: auto;
 }
 
+.relContainer > div {
+  width: 0;
+  height: 0;
+  position: absolute;
+  display: flex;
+  align-items: center;
+}
+
 .button {
   @include base.basicButton();
 
-  position: absolute;
-  width: 220rem;
+  min-width: 220rem;
   height: 40rem;
   font-size: 16rem;
   text-transform: uppercase;
-  font-style: bold;
+  font-weight: bold;
 
   &.hidden {
     display: none;
   }
+
   img {
     width: 30rem;
     height: 30rem;
     margin-right: 10rem;
   }
 }
+
 .pickerButton {
-  transform: translate(-290rem, -20rem);
-  @include entry_animation(template, -100rem, 0rem);
-  filter: saturate(0.5);
+  transform: translate(-80rem, 0);
+  @include entry_animation(template, 0rem, 0rem);
+  justify-content: flex-end;
+
+  .button {
+    filter: saturate(0.5);
+  }
 
   img {
     mask-image: url(coui://roadbuildericons/RB_PlaceMore.svg);
   }
 }
+
 .templateButton {
-  transform: translate(80rem, -20rem);
-  @include entry_animation(create, -100rem, -20rem);
-  filter: saturate(0.5);
+  transform: translate(80rem, 0);
+  @include entry_animation(create, 0rem, 0rem);
+  justify-content: flex-start;
+
+  .button {
+    filter: saturate(0.5);
+  }
 
   img {
     mask-image: url(coui://roadbuildericons/RB_UseTemplate.svg);
   }
 }
-.editButton {
-  background-color: var(--accentColorDark-hover);
-  transform: translate(-110rem, -100rem);
-  @include entry_animation(template, -100rem, 0rem);
 
-  &:hover {
-    background-color: var(--accentColorDark);
+.editButton {
+  transform: translate(0, -80rem);
+  @include entry_animation(template, 0rem, 0rem);
+  justify-content: center;
+
+  .button {
+    background-color: var(--accentColorDark-hover);
+
+    &:hover {
+      background-color: var(--accentColorDark);
+    }
+    &:active {
+      background-image: none !important;
+      background-color: var(--accentColorDark-focused) !important;
+    }
   }
 
   img {
@@ -80,9 +107,20 @@
 }
 
 .cancelButton {
-  background-color: var(--menuPanel2);
-  transform: translate(-50rem, 60rem);
-  @include entry_animation(cancel, -50rem, 0rem);
-  width: 100rem;
-  font-weight: inherit;
+  transform: translate(0, 80rem);
+  @include entry_animation(cancel, 0rem, 0rem);
+  justify-content: center;
+
+  .button {
+    background-color: var(--menuPanel2);
+    font-weight: inherit;
+
+    &:hover {
+      background-color: rgb(83, 42, 42, var(--panelOpacityNormal));
+    }
+    &:active {
+      background-image: none !important;
+      background-color: var(--animation-curve-n1-stroke) !important;
+    }
+  }
 }

@@ -27,12 +27,14 @@ namespace RoadBuilder.Systems.UI
 		private RoadBuilderSystem roadBuilderSystem;
 		private RoadBuilderUISystem roadBuilderUISystem;
 		private RoadBuilderPrefabUpdateSystem roadBuilderUpdateSystem;
+		private RoadBuilderRoadTrackerSystem roadBuilderRoadTrackerSystem;
 		private PrefabSystem prefabSystem;
 		private CameraUpdateSystem cameraUpdateSystem;
-		private ToolSystem toolSystem;
+
+		private ValueBindingHelper<RoadConfigurationUIBinder[]> RoadConfigurations;
+
 		private EntityQuery prefabRefQuery;
 		private EntityQuery edgeRefQuery;
-		private ValueBindingHelper<RoadConfigurationUIBinder[]> RoadConfigurations;
 
 		private string lastFindId;
 		private int lastFindIndex;
@@ -44,9 +46,9 @@ namespace RoadBuilder.Systems.UI
 			roadBuilderSystem = World.GetOrCreateSystemManaged<RoadBuilderSystem>();
 			roadBuilderUISystem = World.GetOrCreateSystemManaged<RoadBuilderUISystem>();
 			roadBuilderUpdateSystem = World.GetOrCreateSystemManaged<RoadBuilderPrefabUpdateSystem>();
+			roadBuilderRoadTrackerSystem = World.GetOrCreateSystemManaged<RoadBuilderRoadTrackerSystem>();
 			prefabSystem = World.GetOrCreateSystemManaged<PrefabSystem>();
 			cameraUpdateSystem = World.GetOrCreateSystemManaged<CameraUpdateSystem>();
-			toolSystem = World.GetOrCreateSystemManaged<ToolSystem>();
 
 			roadBuilderSystem.ConfigurationsUpdated += UpdateConfigurationList;
 
@@ -59,6 +61,7 @@ namespace RoadBuilder.Systems.UI
 				.Build();
 
 			RoadConfigurations = CreateBinding("GetRoadConfigurations", new RoadConfigurationUIBinder[0]);
+
 			CreateTrigger<string>("ActivateRoad", ActivateRoad);
 			CreateTrigger<string>("EditRoad", EditRoad);
 			CreateTrigger<string>("FindRoad", FindRoad);
@@ -76,6 +79,7 @@ namespace RoadBuilder.Systems.UI
 				Name = x.Value.Config.Name,
 #endif
 				Locked = !Mod.Settings.RemoveLockRequirements && GameManager.instance.gameMode == GameMode.Game && EntityManager.HasEnabledComponent<Locked>(prefabSystem.GetEntity(x.Value.Prefab)),
+				Used = roadBuilderRoadTrackerSystem.UsedNetworkPrefabs.Contains(x.Value),
 				Thumbnail = ImageSystem.GetIcon(x.Value.Prefab)
 			})
 				.OrderBy(x => x.Locked)

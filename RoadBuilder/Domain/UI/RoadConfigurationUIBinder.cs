@@ -6,5 +6,6 @@
 		public string Name;
 		public string Thumbnail;
 		public bool Locked;
+		public bool Used;
 	}
 }
