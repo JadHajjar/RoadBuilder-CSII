@@ -20,7 +20,7 @@ $height: _base.$bottomBarHeight + 18rem;
   &.game {
     bottom: -1 * $height;
     height: $height - 4rem;
-    backdrop-filter: blur(24rem);
+    backdrop-filter: blur(24px);
   }
 
   &.editor {
