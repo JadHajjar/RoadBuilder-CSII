@@ -13,6 +13,6 @@ namespace RoadBuilder.Domain.UI
 		public bool IsCustom;
 		public float Width;
 		public string WidthText;
-		public LaneSectionType Type;
+		public LaneSectionType SectionType;
 	}
 }

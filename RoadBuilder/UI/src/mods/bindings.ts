@@ -1,4 +1,6 @@
 import { bindValue, trigger } from "cs2/api";
+import { LaneSectionType } from "domain/LaneSectionType";
+import { NetSectionGroup } from "domain/NetSectionGroup";
 import { NetSectionItem } from "domain/NetSectionItem";
 import { OptionSection } from "domain/Options";
 import { RoadBuilderToolModeEnum } from "domain/RoadBuilderToolMode";
@@ -6,9 +8,8 @@ import { RoadConfiguration } from "domain/RoadConfiguration";
 import { RoadLane } from "domain/RoadLane";
 import mod from "mod.json";
 
-export const allNetSections$ = bindValue<NetSectionItem[]>(mod.id, "NetSections");
+export const allNetSections$ = bindValue<NetSectionGroup[]>(mod.id, "NetSections");
 export const allRoadConfigurations$ = bindValue<RoadConfiguration[]>(mod.id, "GetRoadConfigurations");
-//todo: create a "store" for holding the net sections by their name
 export const roadBuilderToolMode$ = bindValue(mod.id, "RoadBuilderToolMode", RoadBuilderToolModeEnum.None);
 export const roadLanes$ = bindValue<RoadLane[]>(mod.id, "GetRoadLanes", []);
 export const roadOptions$ = bindValue<OptionSection[]>(mod.id, "GetRoadOptions");
@@ -45,3 +46,4 @@ export const laneOptionClicked = (optionIndex: number, netSectionId: number, opt
 export const roadOptionClicked = (netSectionId: number, optionId: number, value: number) =>
   trigger(mod.id, "RoadOptionClicked", netSectionId, optionId, value);
 export const setIsUIDragging = (isDragging: boolean) => trigger(mod.id, "SetDragging", isDragging);
+export const setSearchBinder = (q: string) => trigger(mod.id, "SetSearchQuery", q);

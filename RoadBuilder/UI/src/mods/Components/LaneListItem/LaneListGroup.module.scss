@@ -1,0 +1,82 @@
+.group {
+  margin-bottom: 12rem;
+
+  &.folded {
+    margin-bottom: 6rem;
+  }
+}
+
+.header {
+  margin: 4rem;
+  padding: 4rem;
+  border-radius: 4rem;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--textColorDim);
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .name {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+
+    img {
+      width: 24rem;
+      height: 24rem;
+    }
+
+    span {
+      margin-left: 6rem;
+    }
+  }
+
+  .foldArrow {
+    float: right;
+    width: 32rem;
+    height: 32rem;
+    padding: 4rem;
+
+    img {
+      background-color: #fff;
+      mask-size: contain;
+      mask-position: 50% 50%;
+      width: 24rem;
+      height: 24rem;
+      mask-image: url(coui://gameui/Media/Glyphs/ThickStrokeArrowDown.svg);
+    }
+  }
+}
+
+.folded .header {
+  background-color: rgba(255, 255, 255, 0.1);
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+  }
+
+  .foldArrow {
+    img {
+      mask-image: url(coui://gameui/Media/Glyphs/ThickStrokeArrowUp.svg);
+    }
+  }
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.folded .container {
+  display: none;
+}

@@ -1,4 +1,5 @@
 {
+  "Editor.TOOL[RoadBuilderTool]": "Road Builder",
   "Options.SECTION[RoadBuilder.RoadBuilder.Mod]": "Road Builder",
   "Options.GROUP[RoadBuilder.RoadBuilder.Mod.Hotkey]": "Hot-key Settings",
   "Options.GROUP[RoadBuilder.RoadBuilder.Mod.Main]": "General Settings",
@@ -43,8 +44,8 @@
   "RoadBuilder.RoadAddon[GeneratesTrafficLights]": "Adds Traffic Lights On Intersections",
   "RoadBuilder.RoadAddon[GeneratesZoningBlocks]": "Supports Zoning",
   "RoadBuilder.RoadAddon[HasUndergroundWaterPipes]": "Supports Underground Water & Sewage Pipes",
-  "RoadBuilder.RoadAddon[HasUndergroundElectricityCable]": "Supports Underground Electricty Cables",
-  "RoadBuilder.RoadAddon[RequiresUpgradeForElectricity]": "Requires Electricty Upgrade To Pass Electricty",
+  "RoadBuilder.RoadAddon[HasUndergroundElectricityCable]": "Supports Underground Electricity Cables",
+  "RoadBuilder.RoadAddon[RequiresUpgradeForElectricity]": "Requires to be upgraded with \"Lightning\" road service to allow passing electricity",
 
   "RoadBuilder.Warning[MissingEdgeLane]": "Not having a Shoulder or Sidewalk lane on this edge may result in unexpected behaviour.",
 

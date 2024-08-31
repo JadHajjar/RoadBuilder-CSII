@@ -27,13 +27,6 @@
     flex: 1;
   }
 
-  .list > :first-child {
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
-    align-items: center;
-  }
-
   &.game {
     bottom: 10rem + _base.$bottomBarOffset + _base.$bottomBarHeight;
   }

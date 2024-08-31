@@ -1,4 +1,4 @@
-import { Color } from "cs2/bindings";
+import { LaneSectionType } from "./LaneSectionType";
 
 export interface NetSectionItem {
   PrefabName: string;
@@ -10,4 +10,5 @@ export interface NetSectionItem {
   IsCustom: boolean;
   Width?: number;
   WidthText?: string;
+  SectionType: LaneSectionType;
 }
