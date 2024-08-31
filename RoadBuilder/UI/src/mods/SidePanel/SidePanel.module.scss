@@ -3,7 +3,7 @@
 .panel {
   position: absolute;
   width: 330rem;
-  top: 100rem;
+  top: 60rem;
   right: 10rem;
   z-index: 0;
   display: flex;
@@ -33,6 +33,18 @@
 
   &.editor {
     bottom: 10rem + _base.$bottomBarOffsetEditor + _base.$bottomBarHeight;
+  }
+
+  &.fpsLevel1 {
+    top: 80rem;
+  }
+
+  &.fpsLevel2 {
+    top: 150rem;
+  }
+
+  &.fpsLevel3 {
+    top: 160rem;
   }
 }
 
