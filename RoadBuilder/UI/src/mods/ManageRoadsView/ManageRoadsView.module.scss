@@ -2,9 +2,11 @@
 
 .panel {
   position: absolute;
-  top: 15%;
-  right: 10%;
-  left: 10%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 1550rem;
+  height: 750rem;
   display: flex;
   flex-direction: column;
 
@@ -85,6 +87,7 @@
   display: flex;
 
   > div {
+    background-color: rgba(255, 255, 255, 0.1);
     color: var(--textColorDim);
     padding: 6rem;
     text-transform: uppercase;
@@ -92,23 +95,23 @@
     font-size: 14rem;
     transition: background-color 0.25s;
     width: 120rem;
-    height: 80rem;
+    height: 64rem;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 
     img {
-      width: 24rem;
-      height: 24rem;
-      margin-bottom: 6rem;
+      width: 20rem;
+      height: 20rem;
+      margin: 4rem;
       background-color: var(--textColorDim);
       mask-size: contain;
       mask-position: 50% 50%;
     }
 
     span {
-      font-size: 15rem;
+      font-size: 14rem;
       font-weight: bold;
       max-width: 90%;
       max-height: 50%;
@@ -128,7 +131,7 @@
 .filters {
   position: relative;
   height: 100%;
-  width: 100%;
+  flex: 1;
 }
 
 .browseContainer {
@@ -154,6 +157,17 @@
 
 .searchBar {
   width: 300rem;
+  position: absolute;
+  bottom: 5rem;
+  right: 5rem;
+}
+
+.closeButton {
+  @include _base.basicButton(true, false);
+
+  width: 42rem;
+  height: 42rem;
+  margin: 10rem 20rem;
 }
 
 .categories {
@@ -205,6 +219,29 @@
       }
     }
   }
+}
+
+.localContainer {
+  display: flex;
+  width: 100%;
+  flex: 1;
+
+  & > div:first-child() {
+    flex: 1;
+  }
+}
+
+.managePanel {
+  background-color: var(--menuPanel1);
+  color: var(--menuText1Normal);
+  width: 425rem;
+  height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: nowrap;
 }
 
 @keyframes entry {

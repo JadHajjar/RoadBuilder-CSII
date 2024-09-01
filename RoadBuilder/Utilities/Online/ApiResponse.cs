@@ -8,8 +8,8 @@ namespace RoadBuilder.Utilities.Online
 {
 	public class ApiResponse
 	{
-		public bool Success { get; set; }
-		public string Message { get; set; }
-		public object Data { get; set; }
+		public bool success { get; set; }
+		public string message { get; set; }
+		public object data { get; set; }
 	}
 }

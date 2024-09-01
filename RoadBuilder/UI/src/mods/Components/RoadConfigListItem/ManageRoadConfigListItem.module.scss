@@ -2,8 +2,8 @@
 
 .gridItem {
   margin: 4rem !important;
-  width: 100%;
-  height: 95rem;
+  width: 100rem;
+  height: 120rem;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -12,22 +12,12 @@
   &.active {
     background-color: var(--accentColorDark) !important;
   }
-
-  &:hover .itemInfo,
-  &:active .itemInfo {
-    height: 65rem;
-  }
-
-  &:hover .gridThumbnail,
-  &:active .gridThumbnail {
-    height: 55rem;
-  }
 }
 
 .gridItemLocked {
-  margin: 4rem;
-  width: 295rem;
-  height: 95rem;
+  margin: 4rem !important;
+  width: 100rem;
+  height: 120rem;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -41,19 +31,17 @@
 
 .itemInfo {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  height: 95rem;
-  transition: height 0.15s;
+  height: 100%;
 }
 
 .gridThumbnail {
-  width: 75rem;
-  height: 75rem;
+  width: 70rem;
+  height: 70rem;
   margin: 4rem;
-  transition: width 0.15s, height 0.15s;
 }
 
 .gridItemText {
@@ -68,49 +56,6 @@
   p {
     text-align: center;
     coh-font-fit-mode: shrink;
-  }
-}
-
-.jpgThumb {
-  border-radius: 5rem;
-  margin-bottom: 5rem;
-}
-
-.buttons {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-.gridItem:hover .buttons,
-.gridItem:active .buttons {
-  opacity: 1;
-}
-
-.buttons Button {
-  @include base.basicButton();
-
-  flex: 1;
-  border-radius: 0;
-  padding: 4rem;
-  backdrop-filter: none;
-  background: none;
-
-  &:hover {
-    background-color: var(--hoverColorBright);
-  }
-
-  &.danger:active {
-    background-color: var(--animation-curve-active-n1-stroke) !important;
-  }
-
-  img {
-    width: 20rem;
-    height: 20rem;
   }
 }
 

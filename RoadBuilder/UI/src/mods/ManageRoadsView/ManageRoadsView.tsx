@@ -5,6 +5,10 @@ import { useValue } from "cs2/api";
 import {
   allNetSections$,
   allRoadConfigurations$,
+  DiscoverCurrentPage$,
+  DiscoverItems$,
+  DiscoverLoading$,
+  DiscoverMaxPages$,
   fpsMeterLevel$,
   roadBuilderToolMode$,
   roadListView$,
@@ -20,12 +24,21 @@ import classNames from "classnames";
 import { LaneListGroup } from "mods/Components/LaneListItem/LaneListGroup";
 import { DiscoverRoadConfigListItem } from "mods/Components/RoadConfigListItem/DiscoverRoadConfigListItem";
 import { GetCategoryIcon, GetCategoryName, RoadCategory } from "domain/RoadCategory";
+import { ManageRoadConfigListItem } from "mods/Components/RoadConfigListItem/ManageRoadConfigListItem";
+import { RoadConfiguration } from "domain/RoadConfiguration";
+import { ManageRoadPanel } from "./ManageRoadPanel";
 
 export const ManageRoadsView = (props: { editor: boolean }) => {
   const { translate } = useLocalization();
+  const DiscoverLoading = useValue(DiscoverLoading$);
+  const DiscoverCurrentPage = useValue(DiscoverCurrentPage$);
+  const DiscoverMaxPages = useValue(DiscoverMaxPages$);
+  const DiscoverItems = useValue(DiscoverItems$);
   const roadConfigurations = useValue(allRoadConfigurations$);
   let [searchQuery, setSearchQuery] = useState<string>("");
   let [discoverView, setDiscoverView] = useState<boolean>(false);
+  let [discoverViewLoaded, setDiscoverViewLoaded] = useState<boolean>(false);
+  let [workingConfiguration, setWorkingConfiguration] = useState<RoadConfiguration>(roadConfigurations[0]);
   let [selectedCategory, setSelectedCategory] = useState<string | RoadCategory | undefined>(undefined);
   let items: JSX.Element;
 
@@ -40,30 +53,38 @@ export const ManageRoadsView = (props: { editor: boolean }) => {
   }, [discoverView]);
 
   if (discoverView) {
+    {
+      items = (
+        <div className={styles.browseContainer}>
+          <Scrollable className={styles.list} vertical smooth trackVisibility="scrollable">
+            {roadConfigurations
+              .filter((val, idx) => val.Name)
+              .filter((val, idx) => searchQuery == undefined || searchQuery == "" || val.Name.toLowerCase().indexOf(searchQuery.toLowerCase()) >= 0)
+              .map((val, idx) => (
+                <DiscoverRoadConfigListItem key={idx} road={val} />
+              ))}
+          </Scrollable>
+
+          <div className={styles.paging}>1</div>
+        </div>
+      );
+    }
+  } else {
     items = (
-      <div className={styles.browseContainer}>
+      <div className={styles.localContainer}>
         <Scrollable className={styles.list} vertical smooth trackVisibility="scrollable">
           {roadConfigurations
+            .filter((val, idx) => selectedCategory == undefined || selectedCategory == val.Category)
             .filter((val, idx) => val.Name)
             .filter((val, idx) => searchQuery == undefined || searchQuery == "" || val.Name.toLowerCase().indexOf(searchQuery.toLowerCase()) >= 0)
             .map((val, idx) => (
-              <DiscoverRoadConfigListItem key={idx} road={val} />
+              <ManageRoadConfigListItem key={idx} road={val} selectRoad={setWorkingConfiguration} selected={workingConfiguration === val} />
             ))}
         </Scrollable>
-
-        <div className={styles.paging}>1</div>
+        <div className={styles.managePanel}>
+          <ManageRoadPanel road={workingConfiguration}></ManageRoadPanel>
+        </div>
       </div>
-    );
-  } else {
-    items = (
-      <Scrollable className={styles.list} vertical smooth trackVisibility="scrollable">
-        {roadConfigurations
-          .filter((val, idx) => val.Name)
-          .filter((val, idx) => searchQuery == undefined || searchQuery == "" || val.Name.toLowerCase().indexOf(searchQuery.toLowerCase()) >= 0)
-          .map((val, idx) => (
-            <RoadConfigListItem key={idx} road={val} />
-          ))}
-      </Scrollable>
     );
   }
 
@@ -84,6 +105,7 @@ export const ManageRoadsView = (props: { editor: boolean }) => {
           <div className={styles.searchBar}>
             <SearchTextBox value={searchQuery} onChange={setAndBindSearch} />
           </div>
+
           <div className={styles.categories}>
             <Button className={selectedCategory == undefined && styles.selected} variant="flat" onSelect={() => setSelectedCategory(undefined)}>
               <img src="Media/Tools/Snap Options/All.svg" />
@@ -99,6 +121,10 @@ export const ManageRoadsView = (props: { editor: boolean }) => {
               ))}
           </div>
         </div>
+
+        <Button className={styles.closeButton} variant="flat">
+          <img style={{ maskImage: "url(Media/Glyphs/Close.svg)" }} />
+        </Button>
       </div>
       {items}
     </div>

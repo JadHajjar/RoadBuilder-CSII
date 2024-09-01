@@ -32,6 +32,11 @@
   text-align: left;
   overflow: hidden;
   text-overflow: ellipsis;
+
+  p {
+    text-align: center;
+    coh-font-fit-mode: shrink;
+  }
 }
 
 .bottom {

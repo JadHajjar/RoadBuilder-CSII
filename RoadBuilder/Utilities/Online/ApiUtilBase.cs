@@ -74,7 +74,7 @@ namespace RoadBuilder.Utilities.Online
 			return typeof(T) == typeof(ApiResponse)
 				? (T)(object)new ApiResponse
 				{
-					Message = httpResponse.ReasonPhrase
+					message = httpResponse.ReasonPhrase
 				}
 				: default;
 		}
@@ -123,7 +123,7 @@ namespace RoadBuilder.Utilities.Online
 			Mod.Log.Error($"[API] ({baseUrl}) failed: {httpResponse.ReasonPhrase}");
 
 			return typeof(T) == typeof(ApiResponse)
-				? (T)(object)new ApiResponse { Message = httpResponse.ReasonPhrase }
+				? (T)(object)new ApiResponse { message = httpResponse.ReasonPhrase }
 				: default;
 		}
 	}

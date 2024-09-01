@@ -31,9 +31,9 @@ namespace RoadBuilder.Utilities.Online
 			return userId is not null;
 		}
 
-		public async Task<RoadBuilderEntry[]> GetEntries(string query = null, int? category = null, int order = 0, int page = 1)
+		public async Task<PagedContent<RoadBuilderEntry>> GetEntries(string query = null, int? category = null, int order = 0, int page = 1)
 		{
-			return await Get<RoadBuilderEntry[]>("/Roads", (nameof(query), query), (nameof(category), category), (nameof(order), order), (nameof(page), page));
+			return await Get<PagedContent<RoadBuilderEntry>>("/Roads", (nameof(query), query), (nameof(category), category), (nameof(order), order), (nameof(page), page));
 		}
 
 		public async Task<ApiResponse> GetEntries(RoadBuilderEntryPost road)

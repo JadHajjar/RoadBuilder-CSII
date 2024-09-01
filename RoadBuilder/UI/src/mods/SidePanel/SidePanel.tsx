@@ -46,8 +46,8 @@ export const SidePanel = (props: { editor: boolean }) => {
 
   if (roadListView || toolMode == RoadBuilderToolModeEnum.Picker) {
     items = roadConfigurations
-      .filter((val, idx) => val.Name)
       .filter((val, idx) => selectedCategory == undefined || selectedCategory == val.Category)
+      .filter((val, idx) => val.Name)
       .filter((val, idx) => searchQuery == undefined || searchQuery == "" || val.Name.toLowerCase().indexOf(searchQuery.toLowerCase()) >= 0)
       .map((val, idx) => <RoadConfigListItem key={idx} road={val} />);
   } else {

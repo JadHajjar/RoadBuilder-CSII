@@ -73,6 +73,7 @@ namespace RoadBuilder
 			updateSystem.UpdateAt<RoadBuilderUISystem>(SystemUpdatePhase.UIUpdate);
 			updateSystem.UpdateAt<RoadBuilderNetSectionsUISystem>(SystemUpdatePhase.UIUpdate);
 			updateSystem.UpdateAt<RoadBuilderConfigurationsUISystem>(SystemUpdatePhase.UIUpdate);
+			updateSystem.UpdateAt<RoadBuilderRoadManagementUISystem>(SystemUpdatePhase.UIUpdate);
 		}
 
 		public void OnDispose()
