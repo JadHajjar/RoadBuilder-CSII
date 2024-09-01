@@ -78,6 +78,6 @@
   "RoadBuilder.Name": "名稱",
   "RoadBuilder.RoadName": "道路名稱",
   "RoadBuilder.RoadWidth": "道路總寬度",
-  "RoadBuilder.EdgeLane": "Edge Lane",
-  "RoadBuilder.RestrictedLane": "Unrestricted Lane"
+  "RoadBuilder.EdgeLane": "邊緣車道",
+  "RoadBuilder.RestrictedLane": "不受限制車道"
 }

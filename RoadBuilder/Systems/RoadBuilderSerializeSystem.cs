@@ -160,6 +160,13 @@ namespace RoadBuilder.Systems
 								m_Prefab = subwayTrackId
 							});
 						}
+						else
+						{
+							EntityManager.SetComponentData(entity, new PrefabRef
+							{
+								m_Prefab = smallRoadId
+							});
+						}
 					}
 				}
 			});

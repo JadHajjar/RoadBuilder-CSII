@@ -887,6 +887,8 @@ namespace RoadBuilder.Systems
 					},
 				};
 
+				section.AddComponent<NetDividerPiece>().m_BlockTraffic = true;
+
 				prefabSystem.AddPrefab(NetSections[section.name] = section);
 			}
 		}

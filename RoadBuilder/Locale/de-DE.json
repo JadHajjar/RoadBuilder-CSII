@@ -78,6 +78,6 @@
   "RoadBuilder.Name": "Name",
   "RoadBuilder.RoadName": "Straßenname",
   "RoadBuilder.RoadWidth": "Gesamtbreite der Straße",
-  "RoadBuilder.EdgeLane": "Edge Lane",
-  "RoadBuilder.RestrictedLane": "Unrestricted Lane"
+  "RoadBuilder.EdgeLane": "Randspur",
+  "RoadBuilder.RestrictedLane": "Unbeschränkte Fahrspur"
 }

@@ -54,7 +54,7 @@ namespace RoadBuilder.Utilities
 
 			if (groupPrefab is not null && (netSection.TryGet<RoadBuilderLaneAggregate>(out var aggregate) || groupPrefab.TryGet(out aggregate)))
 			{
-				subSectionsWidth += (aggregate.LeftSections?.Sum(x => x.CalculateWidth()) ?? 0) + (aggregate.RightSections?.Sum(x => x.CalculateWidth()) ?? 0);
+				subSectionsWidth += (aggregate.LeftSections?.Sum(x => x.Section.CalculateWidth()) ?? 0) + (aggregate.RightSections?.Sum(x => x.Section.CalculateWidth()) ?? 0);
 			}
 
 			if (netSection.m_Pieces.Length == 0)
