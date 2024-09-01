@@ -1,4 +1,4 @@
-import { Scrollable } from "cs2/ui";
+import { Button, FOCUS_DISABLED, Scrollable, Tooltip } from "cs2/ui";
 import { LaneListItem } from "../Components/LaneListItem/LaneListItem";
 import styles from "./SidePanel.module.scss";
 import { useValue } from "cs2/api";
@@ -6,6 +6,7 @@ import {
   allNetSections$,
   allRoadConfigurations$,
   fpsMeterLevel$,
+  manageRoads,
   roadBuilderToolMode$,
   roadListView$,
   setRoadListView,
@@ -18,6 +19,7 @@ import { RoadConfigListItem } from "mods/Components/RoadConfigListItem/RoadConfi
 import { RoadBuilderToolModeEnum } from "domain/RoadBuilderToolMode";
 import classNames from "classnames";
 import { LaneListGroup } from "mods/Components/LaneListItem/LaneListGroup";
+import { GetCategoryIcon, GetCategoryName, RoadCategory } from "domain/RoadCategory";
 
 export const SidePanel = (props: { editor: boolean }) => {
   const { translate } = useLocalization();
@@ -26,13 +28,13 @@ export const SidePanel = (props: { editor: boolean }) => {
   const roadConfigurations = useValue(allRoadConfigurations$);
   const netSections = useValue(allNetSections$);
   const fpsMeterLevel = useValue(fpsMeterLevel$);
+  let [selectedCategory, setSelectedCategory] = useState<string | RoadCategory | undefined>(undefined);
   let [searchQuery, setSearchQuery] = useState<string>("");
   let items: JSX.Element[];
 
   function setAndBindSearch(query: string) {
     setSearchQuery(query);
     setSearchBinder(query);
-    console.log(query);
   }
 
   useEffect(() => {
@@ -45,6 +47,7 @@ export const SidePanel = (props: { editor: boolean }) => {
   if (roadListView || toolMode == RoadBuilderToolModeEnum.Picker) {
     items = roadConfigurations
       .filter((val, idx) => val.Name)
+      .filter((val, idx) => selectedCategory == undefined || selectedCategory == val.Category)
       .filter((val, idx) => searchQuery == undefined || searchQuery == "" || val.Name.toLowerCase().indexOf(searchQuery.toLowerCase()) >= 0)
       .map((val, idx) => <RoadConfigListItem key={idx} road={val} />);
   } else {
@@ -61,7 +64,14 @@ export const SidePanel = (props: { editor: boolean }) => {
   }
 
   return (
-    <div className={classNames(styles.panel, props.editor ? styles.editor : styles.game, styles["fpsLevel" + fpsMeterLevel])}>
+    <div
+      className={classNames(
+        styles.panel,
+        props.editor ? styles.editor : styles.game,
+        styles["fpsLevel" + fpsMeterLevel],
+        toolMode == RoadBuilderToolModeEnum.Picker && styles.expanded
+      )}
+    >
       <div className={styles.header}>
         {toolMode == RoadBuilderToolModeEnum.Picker && (
           <div className={styles.subHeader}>
@@ -82,10 +92,36 @@ export const SidePanel = (props: { editor: boolean }) => {
         <div style={{ marginTop: "6rem" }}>
           <SearchTextBox value={searchQuery} onChange={setAndBindSearch} />
         </div>
+        {(roadListView || toolMode == RoadBuilderToolModeEnum.Picker) && (
+          <div className={styles.categories}>
+            <Tooltip tooltip={translate("RoadBuilder.AllRoads")}>
+              <Button className={selectedCategory == undefined && styles.selected} variant="flat" onSelect={() => setSelectedCategory(undefined)}>
+                <img src="Media/Tools/Snap Options/All.svg" />
+              </Button>
+            </Tooltip>
+            {Object.values(RoadCategory)
+              .filter((x) => GetCategoryIcon(x as RoadCategory) != undefined)
+              .map((x) => (
+                <Tooltip tooltip={translate(GetCategoryName(x as RoadCategory))}>
+                  <Button className={selectedCategory == x && styles.selected} variant="flat" onSelect={() => setSelectedCategory(x)}>
+                    <img src={GetCategoryIcon(x as RoadCategory)} />
+                  </Button>
+                </Tooltip>
+              ))}
+          </div>
+        )}
       </div>
       <Scrollable className={styles.list} vertical smooth trackVisibility="scrollable">
         {items}
       </Scrollable>
+      {toolMode == RoadBuilderToolModeEnum.Picker && (
+        <div className={styles.manageRoadsButton}>
+          <Button onSelect={manageRoads} variant="flat" focusKey={FOCUS_DISABLED}>
+            <img style={{ maskImage: "url(coui://roadbuildericons/RB_WhiteWrench.svg)" }} />
+            {translate("RoadBuilder.ManageRoads", "Manage Your Roads")}
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

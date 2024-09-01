@@ -24,6 +24,7 @@ export const IsCustomRoadSelected$ = bindValue<boolean>(mod.id, "IsCustomRoadSel
 
 export const toggleTool = trigger.bind(null, mod.id, "ToggleTool");
 export const clearTool = trigger.bind(null, mod.id, "ClearTool");
+export const manageRoads = trigger.bind(null, mod.id, "ManageRoads");
 export const createNewPrefab = trigger.bind(null, mod.id, "CreateNewPrefab"); // create a new prefab from the selected one
 export const pickPrefab = trigger.bind(null, mod.id, "PickPrefab"); // create a new prefab from the selected one
 export const editPrefab = trigger.bind(null, mod.id, "EditPrefab"); // edit the selected prefab
@@ -35,6 +36,8 @@ export const activateRoad = (id: string) => trigger(mod.id, "ActivateRoad", id);
 export const editRoad = (id: string) => trigger(mod.id, "EditRoad", id);
 export const findRoad = (id: string) => trigger(mod.id, "FindRoad", id);
 export const deleteRoad = (id: string) => trigger(mod.id, "DeleteRoad", id);
+export const setIsUIDragging = (isDragging: boolean) => trigger(mod.id, "SetDragging", isDragging);
+export const setSearchBinder = (q: string) => trigger(mod.id, "SetSearchQuery", q);
 export const setRoadLanes = (lanes: RoadLane[]) => {
   trigger(
     mod.id,
@@ -46,5 +49,3 @@ export const laneOptionClicked = (optionIndex: number, netSectionId: number, opt
   trigger(mod.id, "OptionClicked", optionIndex, netSectionId, optionId, value);
 export const roadOptionClicked = (netSectionId: number, optionId: number, value: number) =>
   trigger(mod.id, "RoadOptionClicked", netSectionId, optionId, value);
-export const setIsUIDragging = (isDragging: boolean) => trigger(mod.id, "SetDragging", isDragging);
-export const setSearchBinder = (q: string) => trigger(mod.id, "SetSearchQuery", q);

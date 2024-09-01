@@ -2,7 +2,6 @@
 
 using RoadBuilder.Domain.Enums;
 using RoadBuilder.Domain.Prefabs;
-using RoadBuilder.Systems;
 
 using System;
 using System.Collections.Generic;
@@ -93,6 +92,11 @@ namespace RoadBuilder.Domain.Configurations
 
 		public void ApplyVersionChanges()
 		{
+			if (Version < VER_ADD_TOOLBAR_STATE)
+			{
+				Category &= ~RoadCategory.RaisedSidewalk;
+			}
+
 			if (Version < VER_FIX_PEDESTRIAN_ROADS)
 			{
 				Addons |= RoadAddons.HasUndergroundElectricityCable;

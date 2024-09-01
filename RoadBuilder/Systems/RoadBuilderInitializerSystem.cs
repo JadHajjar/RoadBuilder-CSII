@@ -30,11 +30,13 @@ namespace RoadBuilder.Systems
 
 			Enabled = false;
 
-			foreach (var item in LocalSaveUtil.LoadConfigs())
+			foreach (var config in LocalSaveUtil.LoadConfigs())
 			{
-				Mod.Log.Debug($"LoadLocalNetwork: {item.GetType().Name} {item.ID}");
+				Mod.Log.Debug($"LoadLocalNetwork: {config.GetType().Name} {config.ID}");
 
-				roadBuilderSystem.AddPrefab(item);
+				config.ApplyVersionChanges();
+
+				roadBuilderSystem.AddPrefab(config);
 			}
 
 			roadBuilderSystem.UpdateConfigurationList();

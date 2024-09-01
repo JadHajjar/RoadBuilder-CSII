@@ -557,15 +557,12 @@ namespace RoadBuilder.Utilities
 				yield return undergroundNetSections;
 			}
 
-			if (group != null)
-			{
-				var uIObject = ScriptableObject.CreateInstance<UIObject>();
-				uIObject.m_Group = showInToolbar ? _roadGenerationData.UIGroupPrefabs[group] : null;
-				uIObject.m_Icon = _roadGenerationData.UIGroupPrefabs[group].GetComponent<UIObject>().m_Icon;
-				uIObject.m_LargeIcon = string.Empty;
-				uIObject.m_Priority = 999999;
-				yield return uIObject;
-			}
+			var uIObject = ScriptableObject.CreateInstance<UIObject>();
+			uIObject.m_Group = showInToolbar && group != null ? _roadGenerationData.UIGroupPrefabs[group] : null;
+			uIObject.m_Icon = group != null ? _roadGenerationData.UIGroupPrefabs[group].GetComponent<UIObject>().m_Icon : string.Empty;
+			uIObject.m_LargeIcon = string.Empty;
+			uIObject.m_Priority = 999999;
+			yield return uIObject;
 
 			if (NetworkPrefab.Config.Addons.HasFlag(RoadAddons.HasUndergroundWaterPipes))
 			{

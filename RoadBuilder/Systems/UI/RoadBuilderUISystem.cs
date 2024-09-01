@@ -15,10 +15,12 @@ using RoadBuilder.Domain.Enums;
 using RoadBuilder.Domain.Prefabs;
 using RoadBuilder.Domain.UI;
 using RoadBuilder.Utilities;
+using RoadBuilder.Utilities.Online;
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 using Unity.Entities;
 
@@ -53,6 +55,7 @@ namespace RoadBuilder.Systems.UI
 		private ValueBindingHelper<OptionSectionUIEntry[]> RoadOptions;
 		private ValueBindingHelper<bool> RoadListView;
 		private ValueBindingHelper<bool> IsPaused;
+		private ValueBindingHelper<bool> IsLoggedIn;
 		private ValueBindingHelper<int> FpsMeterLevel;
 		private ValueBindingHelper<bool> IsCustomRoadSelected;
 		private ProxyAction _toolKeyBinding;
@@ -91,6 +94,7 @@ namespace RoadBuilder.Systems.UI
 			RoadLanes = CreateBinding("GetRoadLanes", new RoadLaneUIBinder[0]);
 			RoadOptions = CreateBinding("GetRoadOptions", new OptionSectionUIEntry[0]);
 			IsPaused = CreateBinding("IsPaused", simulationSystem.selectedSpeed == 0f);
+			IsLoggedIn = CreateBinding("IsLoggedIn", false);
 			FpsMeterLevel = CreateBinding("FpsMeterLevel", 0);
 			RoadListView = CreateBinding("RoadListView", "SetRoadListView", true);
 			IsCustomRoadSelected = CreateBinding("IsCustomRoadSelected", false);
@@ -105,6 +109,7 @@ namespace RoadBuilder.Systems.UI
 			CreateTrigger("ClearTool", ClearTool);
 			CreateTrigger("PickPrefab", PickPrefab);
 			CreateTrigger("EditPrefab", EditPrefab);
+			CreateTrigger("ManageRoads", ManageRoads);
 			CreateTrigger("CancelActionPopup", CancelActionPopup);
 		}
 
@@ -155,9 +160,17 @@ namespace RoadBuilder.Systems.UI
 			toolSystem.activeTool = defaultToolSystem;
 		}
 
+		private void ManageRoads()
+		{
+			RoadBuilderMode.Value = RoadBuilderToolMode.ManageRoads;
+
+			Task.Run(async () => IsLoggedIn.Value = await ApiUtil.Instance.Start());
+		}
+
 		public void ShowActionPopup(Entity entity, PrefabBase prefab)
 		{
 			IsCustomRoadSelected.Value = prefab is INetworkBuilderPrefab;
+
 			SetWorkingEntity(entity, RoadBuilderToolMode.ActionSelection);
 		}
 

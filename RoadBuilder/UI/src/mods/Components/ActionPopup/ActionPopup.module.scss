@@ -114,6 +114,7 @@
   .button {
     background-color: var(--menuPanel2);
     font-weight: inherit;
+    min-width: 160rem;
 
     &:hover {
       background-color: rgb(83, 42, 42, var(--panelOpacityNormal));

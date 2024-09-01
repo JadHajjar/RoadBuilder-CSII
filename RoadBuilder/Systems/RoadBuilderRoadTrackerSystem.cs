@@ -70,8 +70,6 @@ namespace RoadBuilder.Systems
 			}
 
 			UsedNetworkPrefabs = list;
-
-			Mod.Log.Warn(list.Count);
 		}
 	}
 }

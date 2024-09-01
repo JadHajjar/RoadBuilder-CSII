@@ -88,6 +88,9 @@
 		<Reference Include="Colossal.PSI.Common">
 			<Private>false</Private>
 		</Reference>
+		<Reference Include="Colossal.PSI.PdxSdk">
+			<Private>false</Private>
+		</Reference>
 		<Reference Include="Colossal.UI">
 			<Private>false</Private>
 		</Reference>
@@ -98,6 +101,12 @@
 			<Private>false</Private>
 		</Reference>
 		<Reference Include="cohtml.Net">
+			<Private>false</Private>
+		</Reference>
+		<Reference Include="PDX.SDK">
+			<Private>false</Private>
+		</Reference>
+		<Reference Include="System.Net.Http">
 			<Private>false</Private>
 		</Reference>
 		<Reference Include="UnityEngine.CoreModule">

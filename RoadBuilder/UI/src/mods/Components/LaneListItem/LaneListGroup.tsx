@@ -16,11 +16,20 @@ export const LaneListGroup = (props: { type: LaneSectionType; small: boolean; ch
   let icon: string = "";
 
   switch (props.type) {
+    case LaneSectionType.Vehicles:
+      icon = "coui://roadbuildericons/RB_Sort-Car.svg";
+      break;
+    case LaneSectionType.Medians:
+      icon = "coui://roadbuildericons/RB_Sort-Medians.svg";
+      break;
     case LaneSectionType.Tracks:
-      icon = "Media/Game/Icons/TwoWayTrainTrack.svg";
+      icon = "coui://roadbuildericons/RB_Sort-Tracks.svg";
       break;
     case LaneSectionType.Edges:
       icon = "coui://roadbuildericons/RB_Edge.svg";
+      break;
+    case LaneSectionType.Misc:
+      icon = "coui://roadbuildericons/RB_Sort-Misc.svg";
       break;
   }
 

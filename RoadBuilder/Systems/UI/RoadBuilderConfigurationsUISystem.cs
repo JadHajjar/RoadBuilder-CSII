@@ -74,12 +74,13 @@ namespace RoadBuilder.Systems.UI
 			{
 				ID = x.Key,
 #if DEBUG
-				Name = x.Value.Config.Name + " - " + x.Value.Config.ID,
+				Name = x.Value.Config.Name ,//+ " - " + x.Value.Config.ID,
 #else
 				Name = x.Value.Config.Name,
 #endif
 				Locked = !Mod.Settings.RemoveLockRequirements && GameManager.instance.gameMode == GameMode.Game && EntityManager.HasEnabledComponent<Locked>(prefabSystem.GetEntity(x.Value.Prefab)),
 				Used = roadBuilderRoadTrackerSystem.UsedNetworkPrefabs.Contains(x.Value),
+				Category = x.Value.Config.Category,
 				Thumbnail = ImageSystem.GetIcon(x.Value.Prefab)
 			})
 				.OrderBy(x => x.Locked)

@@ -1,8 +1,8 @@
 @use "../../base.scss";
 
 .gridItem {
-  margin: 4rem;
-  width: 295rem;
+  margin: 4rem !important;
+  width: 100%;
   height: 95rem;
   overflow: hidden;
   display: flex;

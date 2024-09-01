@@ -36,6 +36,7 @@
   "RoadBuilder.Config[TrackConfig]": "Track Properties",
   "RoadBuilder.Config[PathConfig]": "Path Properties",
   "RoadBuilder.Config[FenceConfig]": "Fence Properties",
+  "RoadBuilder.RoadCategory[Road]": "Generic Road",
   "RoadBuilder.RoadCategory[Highway]": "Highway Road",
   "RoadBuilder.RoadCategory[PublicTransport]": "Bus / Public Transport Road",
   "RoadBuilder.RoadCategory[Gravel]": "Gravel Road",
@@ -43,6 +44,7 @@
   "RoadBuilder.RoadCategory[Tram]": "Tram Tracks",
   "RoadBuilder.RoadCategory[Train]": "Train Tracks",
   "RoadBuilder.RoadCategory[Subway]": "Subway Tracks",
+  "RoadBuilder.RoadCategory[Pathway]": "Pathways",
   "RoadBuilder.RoadAddon[GeneratesTrafficLights]": "Adds Traffic Lights On Intersections",
   "RoadBuilder.RoadAddon[GeneratesZoningBlocks]": "Supports Zoning",
   "RoadBuilder.RoadAddon[HasUndergroundWaterPipes]": "Supports Underground Water & Sewage Pipes",
@@ -97,5 +99,10 @@
   "RoadBuilder.RoadWidth": "Total Road Width",
   "RoadBuilder.EdgeLane": "Edge Lane",
   "RoadBuilder.RestrictedLane": "Unrestricted Lane",
-  "RoadBuilder.ShowInToolbar": "Toolbar View"
+  "RoadBuilder.ShowInToolbar": "Toolbar View",
+  "RoadBuilder.ManageRoads": "Manage & Discover Roads",
+  "RoadBuilder.MyRoads": "My Roads",
+  "RoadBuilder.Discover": "Discover",
+  "RoadBuilder.Download": "Download",
+  "RoadBuilder.AllRoads": "All Roads"
 }
