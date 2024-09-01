@@ -37,25 +37,29 @@ export default () => {
   return (
     <div className={styles.container}>
       <div className={styles.relContainer} style={positionStyle}>
-        {/* Pick Prefab */}
-        <Button className={classNames(styles.pickerButton, styles.button)} onSelect={pickPrefab} variant="flat" focusKey={FOCUS_AUTO}>
-          <img />
-          {translate("RoadBuilder.Picker", "Place More")}
-        </Button>
-        {/* Use as Template */}
-        <Button className={classNames(styles.templateButton, styles.button)} variant="flat" onSelect={createNewPrefab} focusKey={FOCUS_AUTO}>
-          <img />
-          {translate("RoadBuilder.UseAsTemplate", "Use As Template")}
-        </Button>
-        {/* Edit Prefab */}
-        <Button className={classNames(styles.editButton, styles.button)} onSelect={editPrefab} variant="flat" focusKey={FOCUS_AUTO}>
-          <img />
-          {translate("RoadBuilder.EditAllInstances", "Edit All Instances")}
-        </Button>
-        {/* Cancel Button */}
-        <Button className={classNames(styles.cancelButton, styles.button)} onSelect={cancelActionPopup} variant="flat" focusKey={FOCUS_DISABLED}>
-          {translate("RoadBuilder.Cancel", "Cancel")}
-        </Button>
+        <div className={styles.pickerButton}>
+          <Button className={styles.button} onSelect={pickPrefab} variant="flat" focusKey={FOCUS_AUTO}>
+            <img />
+            {translate("RoadBuilder.Picker", "Place More")}
+          </Button>
+        </div>
+        <div className={styles.templateButton}>
+          <Button className={styles.button} variant="flat" onSelect={createNewPrefab} focusKey={FOCUS_AUTO}>
+            <img />
+            {translate("RoadBuilder.UseAsTemplate", "Use As Template")}
+          </Button>
+        </div>
+        <div className={styles.editButton}>
+          <Button className={styles.button} onSelect={editPrefab} variant="flat" focusKey={FOCUS_AUTO}>
+            <img />
+            {translate("RoadBuilder.EditAllInstances", "Edit All Instances")}
+          </Button>
+        </div>
+        <div className={styles.cancelButton}>
+          <Button className={styles.button} onSelect={cancelActionPopup} variant="flat" focusKey={FOCUS_DISABLED}>
+            {translate("RoadBuilder.Cancel", "Cancel")}
+          </Button>
+        </div>
       </div>
     </div>
   );

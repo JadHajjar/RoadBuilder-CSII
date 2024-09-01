@@ -1,0 +1,218 @@
+@use "../base.scss" as _base;
+
+.panel {
+  position: absolute;
+  top: 15%;
+  right: 10%;
+  left: 10%;
+  display: flex;
+  flex-direction: column;
+
+  background-color: var(--panelColorNormal);
+  backdrop-filter: var(--panelBlur);
+  border-radius: 8rem;
+
+  pointer-events: auto;
+
+  overflow: hidden;
+
+  animation: entry 0.2s;
+
+  &.game {
+    bottom: 15%;
+  }
+
+  &.editor {
+    bottom: 20%;
+  }
+}
+
+.manageRoadsButton {
+  @include _base.basicButton();
+
+  position: absolute;
+  width: 330rem;
+  height: 38rem;
+  right: 10rem;
+  font-size: 16rem;
+  text-transform: uppercase;
+  font-weight: bold;
+  background-color: var(--panelColorNormal);
+
+  &:hover {
+    background-color: var(--panelColorDark);
+  }
+
+  &.game {
+    bottom: 10rem + _base.$bottomBarOffset + _base.$bottomBarHeight - 48rem;
+  }
+
+  &.editor {
+    bottom: 10rem + _base.$bottomBarOffsetEditor + _base.$bottomBarHeight - 48rem;
+  }
+}
+
+.header {
+  background-color: var(--panelColorDark);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom-style: solid;
+  border-bottom-width: var(--stroke2);
+  border-bottom-color: var(--accentColorDark);
+}
+
+.subHeader {
+  display: flex;
+  justify-content: space-between;
+  padding: 2rem 10rem;
+}
+
+.title {
+  color: var(--accentColorNormal);
+  text-transform: uppercase;
+  font-size: 13rem;
+}
+
+.roadCount {
+  color: var(--menuText1Normal);
+  text-align: center;
+  font-size: 14rem;
+}
+
+.mode {
+  display: flex;
+
+  > div {
+    color: var(--textColorDim);
+    padding: 6rem;
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 14rem;
+    transition: background-color 0.25s;
+    width: 120rem;
+    height: 80rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    img {
+      width: 24rem;
+      height: 24rem;
+      margin-bottom: 6rem;
+      background-color: var(--textColorDim);
+      mask-size: contain;
+      mask-position: 50% 50%;
+    }
+
+    span {
+      font-size: 15rem;
+      font-weight: bold;
+      max-width: 90%;
+      max-height: 50%;
+      coh-font-fit-mode: shrink;
+    }
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.35);
+    }
+
+    &.selected {
+      background-color: var(--accentColorDark) !important;
+    }
+  }
+}
+
+.filters {
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
+.browseContainer {
+  flex: 1;
+
+  .paging {
+    height: 60rem;
+  }
+}
+
+.list {
+  margin: 6rem;
+  flex: 1;
+}
+
+.list > div {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.searchBar {
+  width: 300rem;
+}
+
+.categories {
+  display: flex;
+  position: absolute;
+  bottom: 0;
+  left: 20rem;
+
+  Button {
+    @include _base.basicButton();
+
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    margin: 0 3rem;
+    padding: 4rem;
+    width: 32rem;
+    height: 32rem;
+    backdrop-filter: none;
+    transition: width 0.2s;
+    background-color: rgba(255, 255, 255, 0.1);
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.35);
+    }
+
+    img {
+      width: 22rem;
+      height: 22rem;
+      background: inherit;
+      margin: 0;
+    }
+
+    span {
+      opacity: 0;
+      width: 0;
+      transition: opacity 0.2s, width 0.2s;
+      coh-font-fit-mode: shrink;
+      max-height: 24rem;
+    }
+
+    &.selected {
+      width: 200rem;
+      background-color: var(--accentColorDark) !important;
+
+      span {
+        margin-left: 6rem;
+        width: 160rem;
+        opacity: 1;
+      }
+    }
+  }
+}
+
+@keyframes entry {
+  0% {
+    right: -10rem;
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}

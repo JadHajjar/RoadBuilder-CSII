@@ -2,10 +2,11 @@
 
 using RoadBuilder.Domain.Enums;
 using RoadBuilder.Domain.Prefabs;
-using RoadBuilder.Systems;
 
 using System;
 using System.Collections.Generic;
+
+using static RoadBuilder.Systems.RoadBuilderSerializeSystem;
 
 namespace RoadBuilder.Domain.Configurations
 {
@@ -22,13 +23,14 @@ namespace RoadBuilder.Domain.Configurations
 		public RoadCategory Category { get; set; }
 		public RoadAddons Addons { get; set; }
 		public List<LaneConfig> Lanes { get; set; } = new();
+		public ShowInToolbarState ToolbarState { get; set; }
 
 		public void Deserialize<TReader>(TReader reader) where TReader : IReader
 		{
 			reader.Read(out string iD);
 			reader.Read(out string name);
 
-			if (Version < RoadBuilderSerializeSystem.VER_REMOVE_AGGREGATE_TYPE)
+			if (Version < VER_REMOVE_AGGREGATE_TYPE)
 			{
 				reader.Read(out string _);
 			}
@@ -39,6 +41,13 @@ namespace RoadBuilder.Domain.Configurations
 			reader.Read(out ulong category);
 			reader.Read(out ulong addons);
 
+			var toolbarState = 0;
+
+			if (Version >= VER_ADD_TOOLBAR_STATE)
+			{
+				reader.Read(out toolbarState);
+			}
+
 			ID = iD;
 			Name = name;
 			PillarPrefabName = pillarPrefabName;
@@ -46,6 +55,7 @@ namespace RoadBuilder.Domain.Configurations
 			MaxSlopeSteepness = maxSlopeSteepness;
 			Category = (RoadCategory)category;
 			Addons = (RoadAddons)addons;
+			ToolbarState = (ShowInToolbarState)toolbarState;
 
 			reader.Read(out int laneCount);
 
@@ -70,6 +80,7 @@ namespace RoadBuilder.Domain.Configurations
 			writer.Write(MaxSlopeSteepness);
 			writer.Write((ulong)Category);
 			writer.Write((ulong)Addons);
+			writer.Write((int)ToolbarState);
 
 			writer.Write(Lanes.Count);
 
@@ -81,7 +92,12 @@ namespace RoadBuilder.Domain.Configurations
 
 		public void ApplyVersionChanges()
 		{
-			if (Version <= RoadBuilderSerializeSystem.VER_FIX_PEDESTRIAN_ROADS)
+			if (Version < VER_ADD_TOOLBAR_STATE)
+			{
+				Category &= ~RoadCategory.RaisedSidewalk;
+			}
+
+			if (Version < VER_FIX_PEDESTRIAN_ROADS)
 			{
 				Addons |= RoadAddons.HasUndergroundElectricityCable;
 

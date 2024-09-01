@@ -3,7 +3,7 @@
 .panel {
   position: absolute;
   width: 330rem;
-  top: 100rem;
+  top: 60rem;
   right: 10rem;
   z-index: 0;
   display: flex;
@@ -11,10 +11,7 @@
 
   background-color: var(--panelColorNormal);
   backdrop-filter: var(--panelBlur);
-  border-bottom-left-radius: var(--panelRadius);
-  border-bottom-right-radius: var(--panelRadius);
-  border-top-left-radius: var(--panelRadius);
-  border-top-right-radius: var(--panelRadius);
+  border-radius: 6rem;
 
   pointer-events: auto;
 
@@ -22,30 +19,69 @@
 
   animation: entry 0.2s;
 
+  &.expanded {
+    width: 370rem;
+  }
+
   .list {
     margin: 6rem;
     flex: 1;
-  }
 
-  .list > :first-child {
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
-    align-items: center;
+    & > div {
+      margin-right: 6rem;
+    }
   }
 
   &.game {
     bottom: 10rem + _base.$bottomBarOffset + _base.$bottomBarHeight;
+
+    &.expanded {
+      bottom: 10rem + _base.$bottomBarOffset;
+    }
   }
 
   &.editor {
     bottom: 10rem + _base.$bottomBarOffsetEditor + _base.$bottomBarHeight;
+  }
+
+  &.fpsLevel1 {
+    top: 80rem;
+  }
+
+  &.fpsLevel2 {
+    top: 150rem;
+  }
+
+  &.fpsLevel3 {
+    top: 160rem;
+  }
+}
+
+.manageRoadsButton {
+  width: 100%;
+  padding: 5rem 10rem 10rem 10rem;
+
+  Button {
+    @include _base.basicButton();
+
+    height: 38rem;
+    font-size: 16rem;
+    text-transform: uppercase;
+    font-weight: bold;
+    background-color: var(--menuPanel2);
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.45);
+    }
   }
 }
 
 .header {
   background-color: var(--panelColorDark);
   padding: 6rem;
+  border-bottom-style: solid;
+  border-bottom-width: var(--stroke2);
+  border-bottom-color: var(--accentColorDark);
 }
 
 .subHeader {
@@ -88,6 +124,34 @@
 
   .selected {
     background-color: var(--accentColorDark) !important;
+  }
+}
+
+.categories {
+  display: flex;
+  margin-top: 6rem;
+
+  Button {
+    @include _base.basicButton();
+
+    flex: 1;
+    //border-radius: 0;
+    width: 32rem;
+    height: 32rem;
+    margin: 1rem;
+    backdrop-filter: none;
+    background-color: transparent;
+
+    img {
+      width: 22rem;
+      height: 22rem;
+      background: inherit;
+      margin: 0;
+    }
+
+    &.selected {
+      background-color: var(--accentColorDark) !important;
+    }
   }
 }
 

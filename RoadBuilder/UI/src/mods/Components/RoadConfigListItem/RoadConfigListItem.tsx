@@ -48,19 +48,19 @@ export const RoadConfigListItem = ({ road }: { road: RoadConfiguration }) => {
       </div>
 
       <div className={styles.buttons}>
-        <Tooltip tooltip={translate("RoadBuilder.EditTooltip")}>
+        <Tooltip tooltip={translate("RoadBuilder.EditTooltip/RB_Edit.svg")}>
           <Button variant="flat" onSelect={() => editRoad(road.ID)}>
-            <img style={{ maskImage: "url(coui://gameui/Media/Glyphs/Pen.svg)" }} /> {translate("RoadBuilder.Edit")}
+            <img style={{ maskImage: "url(coui://roadbuildericons/RB_Edit.svg)" }} /> {translate("RoadBuilder.Edit")}
           </Button>
         </Tooltip>
         <Tooltip tooltip={translate("RoadBuilder.FindTooltip")}>
-          <Button variant="flat" onSelect={() => findRoad(road.ID)}>
-            <img style={{ maskImage: "url(coui://gameui/Media/Radio/MapMarker.svg)" }} /> {translate("RoadBuilder.Find")}
+          <Button disabled={!road.Used} variant="flat" onSelect={() => findRoad(road.ID)}>
+            <img style={{ maskImage: "url(coui://roadbuildericons/RB_Location.svg)" }} /> {translate("RoadBuilder.Find")}
           </Button>
         </Tooltip>
         <Tooltip tooltip={translate("RoadBuilder.DeleteTooltip")}>
           <Button variant="flat" onSelect={() => deleteRoad(road.ID)} className={styles.danger}>
-            <img style={{ maskImage: "url(coui://gameui/Media/Glyphs/Trash.svg)" }} /> {translate("RoadBuilder.Delete")}
+            <img style={{ maskImage: "url(coui://roadbuildericons/RB_Trash.svg)" }} /> {translate("RoadBuilder.Delete")}
           </Button>
         </Tooltip>
       </div>

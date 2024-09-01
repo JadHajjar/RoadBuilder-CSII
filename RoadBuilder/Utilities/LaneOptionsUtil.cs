@@ -34,7 +34,7 @@ namespace RoadBuilder.Utilities
 			{
 				if ((group is not null || !(section?.SupportsTwoWay() ?? false)) && !(section.TryGet<RoadBuilderLaneInfo>(out var laneInfo) && laneInfo.NoDirection) && !((group?.TryGet<RoadBuilderLaneInfo>(out var groupInfo) ?? false) && groupInfo.NoDirection))
 				{
-					options.Add(GetInvertOption(roadGenerationData, config, lane, group?.Options?.FirstOrDefault(x => x.Type is LaneOptionType.TwoWay)));
+					options.Add(GetInvertOption(config, lane, group?.Options?.FirstOrDefault(x => x.Type is LaneOptionType.TwoWay)));
 				}
 			}
 
@@ -162,7 +162,7 @@ namespace RoadBuilder.Utilities
 			return value is not null && value == currentValue;
 		}
 
-		private static OptionSectionUIEntry GetInvertOption(RoadGenerationData roadGenerationData, INetworkConfig config, LaneConfig lane, RoadBuilderLaneOption twoWayOption)
+		private static OptionSectionUIEntry GetInvertOption(INetworkConfig config, LaneConfig lane, RoadBuilderLaneOption twoWayOption)
 		{
 			var isTwoWaySelected = twoWayOption is not null && GetSelectedOptionValue(config, lane, twoWayOption) == "1";
 

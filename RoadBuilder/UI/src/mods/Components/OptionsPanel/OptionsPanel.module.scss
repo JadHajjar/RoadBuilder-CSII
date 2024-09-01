@@ -24,9 +24,10 @@
 }
 
 .optionLabel {
-  max-height: 26rem;
+  max-width: 50%;
   margin-right: 15rem;
   font-size: var(--fontSizeM);
+  coh-font-fit-mode: shrink;
 }
 
 .optionContent {
@@ -65,18 +66,26 @@
   height: 26rem;
 }
 
-.toggleOption.optionContent > button {
-  width: 52rem;
+.optionContent.toggleOption > button {
+  width: 36rem;
+  border-radius: 0 !important;
+  margin: 2rem 0 !important;
+  border-left: solid 1rem rgba(255, 255, 255, 0.5);
+  border-right: solid 1rem rgba(255, 255, 255, 0.5);
 
-  &:nth-child(1) {
-    border-top-right-radius: 0 !important;
-    border-bottom-right-radius: 0 !important;
-    margin-right: 0 !important;
+  &:last-child {
+    width: 52rem;
+    border-top-right-radius: 4rem !important;
+    border-bottom-right-radius: 4rem !important;
+    margin-right: 2rem !important;
+    border: none;
   }
 
-  &:nth-child(2) {
-    border-top-left-radius: 0 !important;
-    border-bottom-left-radius: 0 !important;
-    margin-left: 0 !important;
+  &:first-child {
+    width: 52rem;
+    border-top-left-radius: 4rem !important;
+    border-bottom-left-radius: 4rem !important;
+    margin-left: 2rem !important;
+    border: none;
   }
 }

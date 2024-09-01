@@ -66,6 +66,7 @@ $laneButtonSize: 64rem;
 }
 
 @mixin basicButton() {
+  pointer-events: auto;
   padding: 8rem;
   border-radius: 4rem;
   backdrop-filter: blur(4px);

@@ -21,11 +21,12 @@ namespace RoadBuilder.Systems
 {
 	public partial class RoadBuilderSerializeSystem : GameSystemBase
 	{
-		public const ushort CURRENT_VERSION = 3;
+		public const ushort CURRENT_VERSION = 4;
 
 		// Version History
 		public const ushort VER_REMOVE_AGGREGATE_TYPE = 2;
 		public const ushort VER_FIX_PEDESTRIAN_ROADS = 3;
+		public const ushort VER_ADD_TOOLBAR_STATE = 4;
 
 		private static RoadBuilderSystem roadBuilderSystem;
 		private static PrefabSystem prefabSystem;
@@ -43,10 +44,7 @@ namespace RoadBuilder.Systems
 		{
 			roadBuilderSystem.UpdateConfigurationList();
 
-			var roadBuilderNetsQuery = SystemAPI.QueryBuilder().WithAll<RoadBuilderNetwork, PrefabRef>().Build();
-			var prefabRefs = roadBuilderNetsQuery.ToComponentDataArray<PrefabRef>(Allocator.Temp);
-
-			var placedNetworks = CreateNetworksList(in prefabRefs);
+			var placedNetworks = CreateNetworksList();
 
 			foreach (var prefabName in placedNetworks)
 			{
@@ -172,13 +170,16 @@ namespace RoadBuilder.Systems
 			});
 		}
 
-		private List<string> CreateNetworksList(in NativeArray<PrefabRef> prefabRefs)
+		private HashSet<string> CreateNetworksList()
 		{
-			var list = new List<string>();
+			var roadBuilderNetsQuery = SystemAPI.QueryBuilder().WithAll<Edge, PrefabRef>().Build();
+			var prefabRefs = roadBuilderNetsQuery.ToComponentDataArray<PrefabRef>(Allocator.Temp);
+
+			var list = new HashSet<string>();
 
 			for (var i = 0; i < prefabRefs.Length; i++)
 			{
-				if (!prefabSystem.TryGetPrefab<PrefabBase>(prefabRefs[i], out var prefab) || prefab is not INetworkBuilderPrefab builderPrefab || builderPrefab.Deleted)
+				if (!prefabSystem.TryGetPrefab<PrefabBase>(prefabRefs[i], out var prefab) || prefab is not INetworkBuilderPrefab builderPrefab)
 				{
 					continue;
 				}

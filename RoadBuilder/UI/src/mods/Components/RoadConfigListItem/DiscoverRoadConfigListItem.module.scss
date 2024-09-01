@@ -1,0 +1,125 @@
+@use "../../base.scss";
+
+.gridItem {
+  margin: 10rem 7.5rem !important;
+  width: 200rem;
+  height: 260rem;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: var(--normalTextColor);
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.itemInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+}
+
+.gridThumbnail {
+  width: 160rem;
+  height: 160rem;
+}
+
+.gridItemText {
+  max-height: 38rem + 12rem;
+  font-size: 16rem;
+  padding: 6rem;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bottom {
+  width: 100%;
+  position: relative;
+
+  & > div {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    transition: opacity 0.25s, transform 0.25s;
+  }
+
+  .info {
+    padding: 5rem;
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .buttons {
+    padding: 0 10rem 10rem 10rem;
+    transform: translateY(30rem);
+    opacity: 0;
+  }
+}
+
+.gridItem:hover .info,
+.gridItem:active .info {
+  transform: translateY(30rem);
+  opacity: 0;
+}
+
+.gridItem:hover .buttons,
+.gridItem:active .buttons {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.buttons Button {
+  @include base.basicButton();
+
+  flex: 1;
+  z-index: 2;
+  padding: 4rem;
+
+  &:hover {
+    background-color: var(--hoverColorBright);
+  }
+
+  &.danger:active {
+    background-color: var(--animation-curve-active-n1-stroke) !important;
+  }
+
+  img {
+    width: 20rem;
+    height: 20rem;
+  }
+}
+
+.info {
+  font-size: 14rem;
+  color: var(--menuText1Normal);
+
+  .category {
+    width: 32rem;
+    height: 32rem;
+  }
+
+  .author {
+    display: flex;
+    align-items: center;
+
+    span {
+      margin-right: 6rem;
+    }
+
+    img {
+      width: 16rem;
+      height: 16rem;
+      margin-right: 6rem;
+      background-color: var(--menuText1Normal);
+      mask-size: contain;
+      mask-position: 50% 50%;
+    }
+  }
+}

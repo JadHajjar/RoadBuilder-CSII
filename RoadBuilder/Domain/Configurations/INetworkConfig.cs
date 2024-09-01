@@ -19,7 +19,8 @@ namespace RoadBuilder.Domain.Configurations
 		float MaxSlopeSteepness { get; set; }
 		List<LaneConfig> Lanes { get; set; }
 		string PillarPrefabName { get; set; }
-
+		ShowInToolbarState ToolbarState { get; set; }
+		
 		void ApplyVersionChanges();
 		Type GetPrefabType();
 	}
