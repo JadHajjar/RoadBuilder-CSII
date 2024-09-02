@@ -26,6 +26,8 @@
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.DoNotAddSides]": "Permet de créer des routes sans bords aux tunnels et ponts, s'il n'y a pas d'accotement ou de trottoir ajouté au bord.",
   "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.HideRoadsFromToolbarByDefault]": "Hide roads from the asset toolbar by default",
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.HideRoadsFromToolbarByDefault]": "Roads that do not have an assigned toolbar state will be hidden by default.\n\nRequires a restart to take effect.",
+  "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.NoPlaysetIsolation]": "Disable Playset Isolation",
+  "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.NoPlaysetIsolation]": "Unlocks all roads in all playsets instead of restricting roads in the playset they were created in.",
   "RoadBuilder.DIALOG_MESSAGE[DELETE]": "Êtes-vous sûr de vouloir supprimer cette route ? Cela supprimera également tous les segments qui utilisent ce modèle dans votre ville.",
   "RoadBuilder.DIALOG_MESSAGE[ReloadSave]": "Cette ville contient des routes que vous n'aviez pas encore. Rechargez cette sauvegarde immédiatement, sans fermer le jeu, pour que vos modifications apportées aux intersections ne soient pas perdues.",
   "RoadBuilder.DIALOG_MESSAGE[FixInvalidEdges]": "Some roads or tracks in this city are invalid.\n\nWould you like to fix them by resetting them to vanilla networks?",
