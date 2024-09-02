@@ -26,6 +26,8 @@
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.DoNotAddSides]": "Yolun kenarına kenar veya kaldırım eklenmediği vakit tünel veya köprü kenarı olmayan yolların oluşturulmasına izin verir.",
   "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.HideRoadsFromToolbarByDefault]": "Hide roads from the asset toolbar by default",
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.HideRoadsFromToolbarByDefault]": "Roads that do not have an assigned toolbar state will be hidden by default.\n\nRequires a restart to take effect.",
+  "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.NoPlaysetIsolation]": "Disable Playset Isolation",
+  "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.NoPlaysetIsolation]": "Unlocks all roads in all playsets instead of restricting roads in the playset they were created in.",
   "RoadBuilder.DIALOG_MESSAGE[DELETE]": "Bu yolu silmek istediğinizden emin misiniz? Şehrinizde bu yolun kullanıldığı tüm kısımlar kaldırılacaktır.",
   "RoadBuilder.DIALOG_MESSAGE[ReloadSave]": "Bu şehirde sizde mevcut olmayan yollar bulunuyor. Bu kayıt dosyasını oyunu kapatmadan şimdi yeniden yükleyin, aksi takdirde kavşaklarda yaptığınız değişiklikler kaybolabilir.",
   "RoadBuilder.DIALOG_MESSAGE[FixInvalidEdges]": "Bu şehirdeki bazı yollar veya raylar geçersiz.\n\nBu geçersiz yolları standart yollarla değiştirerek düzeltmek ister misiniz?",
