@@ -1,8 +1,8 @@
 ﻿using RoadBuilder.Domain.Enums;
 using RoadBuilder.Domain.UI;
+using RoadBuilder.Utilities;
 using RoadBuilder.Utilities.Online;
 
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,6 +14,9 @@ namespace RoadBuilder.Systems.UI
 		private string query;
 		private RoadCategory? currentCategory;
 		private int sorting;
+		private RoadBuilderSystem roadBuilderSystem;
+		private RoadBuilderConfigurationsUISystem roadBuilderConfigurationsUISystem;
+		private ValueBindingHelper<bool> RestrictPlayset;
 		private ValueBindingHelper<bool> Loading;
 		private ValueBindingHelper<int> CurrentPage;
 		private ValueBindingHelper<int> MaxPages;
@@ -23,6 +26,10 @@ namespace RoadBuilder.Systems.UI
 		{
 			base.OnCreate();
 
+			roadBuilderSystem = World.GetOrCreateSystemManaged<RoadBuilderSystem>();
+			roadBuilderConfigurationsUISystem = World.GetOrCreateSystemManaged<RoadBuilderConfigurationsUISystem>();
+
+			RestrictPlayset = CreateBinding("Management.RestrictPlayset", true);
 			Loading = CreateBinding("Discover.Loading", true);
 			CurrentPage = CreateBinding("Discover.CurrentPage", 1);
 			MaxPages = CreateBinding("Discover.MaxPages", 1);
@@ -33,6 +40,39 @@ namespace RoadBuilder.Systems.UI
 			CreateTrigger<string>("Discover.Download", DownloadConfig);
 			CreateTrigger<string>("Management.SetSearchQuery", SetSearchQuery);
 			CreateTrigger<int>("Management.SetCategory", SetCategory);
+			CreateTrigger<string>("Management.AddToPlayset", AddToPlayset);
+			CreateTrigger<string>("Management.RemovePlayset", RemoveToPlayset);
+		}
+
+		protected override void OnUpdate()
+		{
+			RestrictPlayset.Value = !Mod.Settings.NoPlaysetIsolation;
+
+			base.OnUpdate();
+		}
+
+		private void AddToPlayset(string obj)
+		{
+			if (roadBuilderSystem.Configurations.TryGetValue(obj, out var config)
+				&& PdxModsUtil.CurrentPlayset > 0
+				&& !config.Config.Playsets.Contains(PdxModsUtil.CurrentPlayset))
+			{
+				config.Config.Playsets.Add(PdxModsUtil.CurrentPlayset);
+
+				roadBuilderConfigurationsUISystem.UpdateConfigurationList();
+			}
+		}
+
+		private void RemoveToPlayset(string obj)
+		{
+			if (roadBuilderSystem.Configurations.TryGetValue(obj, out var config)
+				&& PdxModsUtil.CurrentPlayset > 0
+				&& config.Config.Playsets.Contains(PdxModsUtil.CurrentPlayset))
+			{
+				config.Config.Playsets.Remove(PdxModsUtil.CurrentPlayset);
+
+				roadBuilderConfigurationsUISystem.UpdateConfigurationList();
+			}
 		}
 
 		private void SetCategory(int obj)

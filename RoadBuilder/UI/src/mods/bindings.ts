@@ -25,6 +25,7 @@ export const DiscoverLoading$ = bindValue<boolean>(mod.id, "Discover.Loading", t
 export const DiscoverCurrentPage$ = bindValue<number>(mod.id, "Discover.CurrentPage", 1);
 export const DiscoverMaxPages$ = bindValue<number>(mod.id, "Discover.MaxPages", 1);
 export const DiscoverItems$ = bindValue<RoadConfiguration[]>(mod.id, "Discover.Items");
+export const RestrictPlayset$ = bindValue<RoadConfiguration[]>(mod.id, "Management.RestrictPlayset");
 
 export const toggleTool = trigger.bind(null, mod.id, "ToggleTool");
 export const clearTool = trigger.bind(null, mod.id, "ClearTool");

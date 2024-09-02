@@ -94,7 +94,6 @@ namespace RoadBuilder.Systems.UI
 			RoadLanes = CreateBinding("GetRoadLanes", new RoadLaneUIBinder[0]);
 			RoadOptions = CreateBinding("GetRoadOptions", new OptionSectionUIEntry[0]);
 			IsPaused = CreateBinding("IsPaused", simulationSystem.selectedSpeed == 0f);
-			IsLoggedIn = CreateBinding("IsLoggedIn", false);
 			FpsMeterLevel = CreateBinding("FpsMeterLevel", 0);
 			RoadListView = CreateBinding("RoadListView", "SetRoadListView", true);
 			IsCustomRoadSelected = CreateBinding("IsCustomRoadSelected", false);
@@ -163,8 +162,6 @@ namespace RoadBuilder.Systems.UI
 		private void ManageRoads()
 		{
 			RoadBuilderMode.Value = RoadBuilderToolMode.ManageRoads;
-
-			Task.Run(async () => IsLoggedIn.Value = await ApiUtil.Instance.Start());
 		}
 
 		public void ShowActionPopup(Entity entity, PrefabBase prefab)

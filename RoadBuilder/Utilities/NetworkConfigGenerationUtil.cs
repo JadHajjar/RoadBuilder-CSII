@@ -61,6 +61,7 @@ namespace RoadBuilder.Utilities
 				throw new Exception("Invalid Prefab");
 			}
 
+			config.Playsets = new() { PdxModsUtil.CurrentPlayset };
 			config.Name = $"Custom {GetAssetName(NetworkPrefab)}";
 			config.MaxSlopeSteepness = NetworkPrefab.m_MaxSlopeSteepness;
 			config.PillarPrefabName = FindPillarPrefab(NetworkPrefab);
@@ -116,6 +117,7 @@ namespace RoadBuilder.Utilities
 			config.ID = string.Empty;
 			config.OriginalID = null;
 			config.Name = $"Copy of {config.Name}";
+			config.Playsets = new() { PdxModsUtil.CurrentPlayset };
 
 			return config;
 		}

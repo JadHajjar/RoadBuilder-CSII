@@ -20,6 +20,7 @@ namespace RoadBuilder.Domain.Configurations
 		List<LaneConfig> Lanes { get; set; }
 		string PillarPrefabName { get; set; }
 		ShowInToolbarState ToolbarState { get; set; }
+		List<int> Playsets { get; set; }
 		
 		void ApplyVersionChanges();
 		Type GetPrefabType();

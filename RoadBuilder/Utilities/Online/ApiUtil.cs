@@ -10,26 +10,8 @@ namespace RoadBuilder.Utilities.Online
 	public class ApiUtil
 	{
 		private readonly ApiUtilBase _apiUtil = new();
-		private string userId;
 
 		public static ApiUtil Instance { get; } = new();
-
-		public async Task<bool> Start()
-		{
-			if (userId is not null)
-			{
-				return true;
-			}
-
-			var pdxPlatform = PlatformManager.instance.GetPSI<PdxSdkPlatform>("PdxSdk");
-			var context = typeof(PdxSdkPlatform).GetField("m_SDKContext", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(pdxPlatform) as PDX.SDK.Contracts.IContext;
-
-			var result = await context.Profile.Get();
-
-			userId = result.Social?.DisplayName;
-
-			return userId is not null;
-		}
 
 		public async Task<PagedContent<RoadBuilderEntry>> GetEntries(string query = null, int? category = null, int order = 0, int page = 1)
 		{
@@ -44,14 +26,14 @@ namespace RoadBuilder.Utilities.Online
 		private async Task<T> Get<T>(string url, params (string, object)[] queryParams)
 		{
 			return await _apiUtil.Get<T>(KEYS.API_URL + url
-				, new (string, string)[] { ("USER_ID", userId), ("IDENTIFIER", PlatformManager.instance.userSpecificPath) }
+				, new (string, string)[] { ("USER_ID", PdxModsUtil.UserId), ("IDENTIFIER", PlatformManager.instance.userSpecificPath) }
 				, queryParams);
 		}
 
 		private async Task<T> Delete<T>(string url, params (string, object)[] queryParams)
 		{
 			return await _apiUtil.Delete<T>(KEYS.API_URL + url
-				, new (string, string)[] { ("USER_ID", userId), ("IDENTIFIER", PlatformManager.instance.userSpecificPath) }
+				, new (string, string)[] { ("USER_ID", PdxModsUtil.UserId), ("IDENTIFIER", PlatformManager.instance.userSpecificPath) }
 				, queryParams);
 		}
 
@@ -59,7 +41,7 @@ namespace RoadBuilder.Utilities.Online
 		{
 			return await _apiUtil.Post<TBody, T>(KEYS.API_URL + url
 				, body
-				, new (string, string)[] { ("USER_ID", userId), ("IDENTIFIER", PlatformManager.instance.userSpecificPath) }
+				, new (string, string)[] { ("USER_ID", PdxModsUtil.UserId), ("IDENTIFIER", PlatformManager.instance.userSpecificPath) }
 				, queryParams);
 		}
 	}

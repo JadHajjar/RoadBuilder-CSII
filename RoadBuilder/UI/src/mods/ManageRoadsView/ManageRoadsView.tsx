@@ -34,9 +34,11 @@ export const ManageRoadsView = (props: { editor: boolean }) => {
   const DiscoverCurrentPage = useValue(DiscoverCurrentPage$);
   const DiscoverMaxPages = useValue(DiscoverMaxPages$);
   const DiscoverItems = useValue(DiscoverItems$);
+  const RestrictPlayset = useValue(RestrictPlayset$);
   const roadConfigurations = useValue(allRoadConfigurations$);
   let [searchQuery, setSearchQuery] = useState<string>("");
   let [discoverView, setDiscoverView] = useState<boolean>(false);
+  let [showAllPlaysets, setShowAllPlaysets] = useState<boolean>(false);
   let [discoverViewLoaded, setDiscoverViewLoaded] = useState<boolean>(false);
   let [workingConfiguration, setWorkingConfiguration] = useState<RoadConfiguration>(roadConfigurations[0]);
   let [selectedCategory, setSelectedCategory] = useState<string | RoadCategory | undefined>(undefined);
@@ -74,7 +76,7 @@ export const ManageRoadsView = (props: { editor: boolean }) => {
       <div className={styles.localContainer}>
         <Scrollable className={styles.list} vertical smooth trackVisibility="scrollable">
           {roadConfigurations
-            .filter((val, idx) => selectedCategory == undefined || selectedCategory == val.Category)
+            .filter((val, idx) => (selectedCategory == undefined || selectedCategory == val.Category) && (!val.IsNotInPlayset || showAllPlaysets))
             .filter((val, idx) => val.Name)
             .filter((val, idx) => searchQuery == undefined || searchQuery == "" || val.Name.toLowerCase().indexOf(searchQuery.toLowerCase()) >= 0)
             .map((val, idx) => (
@@ -101,11 +103,7 @@ export const ManageRoadsView = (props: { editor: boolean }) => {
             <span>{translate("RoadBuilder.Discover")}</span>
           </div>
         </div>
-        <div className={styles.filters}>
-          <div className={styles.searchBar}>
-            <SearchTextBox value={searchQuery} onChange={setAndBindSearch} />
-          </div>
-
+        <div className={styles.topBar}>
           <div className={styles.categories}>
             <Button className={selectedCategory == undefined && styles.selected} variant="flat" onSelect={() => setSelectedCategory(undefined)}>
               <img src="Media/Tools/Snap Options/All.svg" />
@@ -119,6 +117,17 @@ export const ManageRoadsView = (props: { editor: boolean }) => {
                   <span>{translate(GetCategoryName(x as RoadCategory))}</span>
                 </Button>
               ))}
+          </div>
+
+          <div className={styles.filters}>
+            {RestrictPlayset && (
+              <Button variant="flat" selected={showAllPlaysets} onSelect={() => setShowAllPlaysets(!showAllPlaysets)}>
+                <img style={{ maskImage: "url()" }} />
+              </Button>
+            )}
+            <div className={styles.searchBar}>
+              <SearchTextBox value={searchQuery} onChange={setAndBindSearch} />
+            </div>
           </div>
         </div>
 

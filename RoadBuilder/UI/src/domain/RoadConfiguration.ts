@@ -6,6 +6,7 @@ export interface RoadConfiguration {
   Thumbnail: string;
   Locked: boolean;
   Used: boolean;
+  IsNotInPlayset: boolean;
   Category: RoadCategory;
   Tags: string[];
 }

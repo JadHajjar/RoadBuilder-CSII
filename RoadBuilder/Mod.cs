@@ -13,6 +13,7 @@ using RoadBuilder.Utilities;
 
 using System;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace RoadBuilder
 {
@@ -74,6 +75,8 @@ namespace RoadBuilder
 			updateSystem.UpdateAt<RoadBuilderNetSectionsUISystem>(SystemUpdatePhase.UIUpdate);
 			updateSystem.UpdateAt<RoadBuilderConfigurationsUISystem>(SystemUpdatePhase.UIUpdate);
 			updateSystem.UpdateAt<RoadBuilderRoadManagementUISystem>(SystemUpdatePhase.UIUpdate);
+
+			GameManager.instance.RegisterUpdater(() => Task.Run(PdxModsUtil.Start));
 		}
 
 		public void OnDispose()

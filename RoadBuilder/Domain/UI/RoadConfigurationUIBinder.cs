@@ -9,6 +9,7 @@ namespace RoadBuilder.Domain.UI
 		public string Thumbnail;
 		public bool Locked;
 		public bool Used;
+		public bool IsNotInPlayset;
 		public RoadCategory Category;
 		public string[] Tags;
 	}

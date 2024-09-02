@@ -24,6 +24,7 @@ namespace RoadBuilder.Domain.Configurations
 		public RoadAddons Addons { get; set; }
 		public List<LaneConfig> Lanes { get; set; } = new();
 		public ShowInToolbarState ToolbarState { get; set; }
+		public List<int> Playsets { get; set; }
 
 		public void Deserialize<TReader>(TReader reader) where TReader : IReader
 		{
@@ -41,13 +42,6 @@ namespace RoadBuilder.Domain.Configurations
 			reader.Read(out ulong category);
 			reader.Read(out ulong addons);
 
-			var toolbarState = 0;
-
-			if (Version >= VER_ADD_TOOLBAR_STATE)
-			{
-				reader.Read(out toolbarState);
-			}
-
 			ID = iD;
 			Name = name;
 			PillarPrefabName = pillarPrefabName;
@@ -55,7 +49,7 @@ namespace RoadBuilder.Domain.Configurations
 			MaxSlopeSteepness = maxSlopeSteepness;
 			Category = (RoadCategory)category;
 			Addons = (RoadAddons)addons;
-			ToolbarState = (ShowInToolbarState)toolbarState;
+			OriginalID = ID;
 
 			reader.Read(out int laneCount);
 
@@ -68,7 +62,14 @@ namespace RoadBuilder.Domain.Configurations
 				Lanes.Add(lane);
 			}
 
-			OriginalID = ID;
+			if (Version < VER_MANAGEMENT_REWORK)
+			{
+				return;
+			}
+
+			reader.Read(out int toolbarState);
+
+			ToolbarState = (ShowInToolbarState)toolbarState;
 		}
 
 		public void Serialize<TWriter>(TWriter writer) where TWriter : IWriter
@@ -92,7 +93,7 @@ namespace RoadBuilder.Domain.Configurations
 
 		public void ApplyVersionChanges()
 		{
-			if (Version < VER_ADD_TOOLBAR_STATE)
+			if (Version < VER_MANAGEMENT_REWORK)
 			{
 				Category &= ~RoadCategory.RaisedSidewalk;
 			}

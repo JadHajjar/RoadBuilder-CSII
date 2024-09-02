@@ -16,15 +16,11 @@ export const ManageRoadPanel = ({ road }: { road: RoadConfiguration }) => {
   const { translate } = useLocalization();
 
   return (
-    <>
       <img className={styles.thumbnail} src={road.Thumbnail ?? "coui://roadbuildericons/RB_Unknown.svg"} />
-      <div>
         <div className={styles.itemInfo}>
           <div className={classNames(styles.gridItemText)}>
             <p>{road.Name}</p>
           </div>
-        </div>
       </div>
-    </>
   );
 };

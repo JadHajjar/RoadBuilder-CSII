@@ -40,6 +40,9 @@ namespace RoadBuilder
 		public bool HideRoadsFromToolbarByDefault { get; set; }
 
 		[SettingsUISection(MAIN_SECTION, MAIN_GROUP)]
+		public bool NoPlaysetIsolation { get; set; }
+
+		[SettingsUISection(MAIN_SECTION, MAIN_GROUP)]
 		public bool SaveUsedRoadsOnly { get; set; }
 
 		[SettingsUISection(MAIN_SECTION, MAIN_GROUP)]

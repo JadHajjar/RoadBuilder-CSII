@@ -6,7 +6,6 @@ using Game.Net;
 using Game.Prefabs;
 using Game.Rendering;
 using Game.SceneFlow;
-using Game.Tools;
 using Game.UI;
 
 using RoadBuilder.Domain.Components;
@@ -74,10 +73,11 @@ namespace RoadBuilder.Systems.UI
 			{
 				ID = x.Key,
 #if DEBUG
-				Name = x.Value.Config.Name ,//+ " - " + x.Value.Config.ID,
+				Name = x.Value.Config.Name,//+ " - " + x.Value.Config.ID,
 #else
 				Name = x.Value.Config.Name,
 #endif
+				IsNotInPlayset = (!Mod.Settings.NoPlaysetIsolation && (prefab.Config.Playsets?.Any() ?? false) && !prefab.Config.Playsets.Contains(PdxModsUtil.CurrentPlayset)),
 				Locked = !Mod.Settings.RemoveLockRequirements && GameManager.instance.gameMode == GameMode.Game && EntityManager.HasEnabledComponent<Locked>(prefabSystem.GetEntity(x.Value.Prefab)),
 				Used = roadBuilderRoadTrackerSystem.UsedNetworkPrefabs.Contains(x.Value),
 				Category = x.Value.Config.Category,

@@ -128,7 +128,7 @@
   }
 }
 
-.filters {
+.topBar {
   position: relative;
   height: 100%;
   flex: 1;
@@ -155,11 +155,18 @@
   justify-content: flex-start;
 }
 
-.searchBar {
-  width: 300rem;
+.filters {
+  width: auto;
   position: absolute;
   bottom: 5rem;
   right: 5rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.searchBar {
+  width: 300rem;
 }
 
 .closeButton {
