@@ -180,6 +180,9 @@ namespace RoadBuilder.Systems.UI
 				return LaneSectionType.Edges;
 			}
 
+			if (prefab.LinkedSections.Count == 0)
+				return LaneSectionType.Misc;
+
 			return prefab.LinkedSections.Min(GetSectionType);
 		}
 

@@ -1,3 +1,37 @@
+@use "../base.scss" as _base;
+
 .pagination {
   width: 100%;
+  padding: 16rem;
+
+  ul {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+
+  li {
+    padding: 6rem;
+
+    Button {
+      @include _base.basicButton(false, false);
+
+      width: 48rem;
+      height: 48rem;
+
+      &:not(.arrow) {
+        background-color: var(--accentColorDarker);
+
+        &:hover {
+          background-color: var(--panelColorDark);
+        }
+      }
+    }
+
+    .dots {
+      width: 48rem;
+      height: 48rem;
+    }
+  }
 }

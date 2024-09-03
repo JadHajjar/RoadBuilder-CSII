@@ -105,10 +105,15 @@ namespace RoadBuilder.Systems
 
 					foreach (var section in NetSections.Values)
 					{
-						if (section.TryGetExactly<RoadBuilderLaneGroup>(out var laneGroup) && laneGroup.GroupPrefab == item)
+						if (section.TryGetExactly<RoadBuilderLaneGroup>(out var laneGroup) && laneGroup.GroupPrefab.name == item.name)
 						{
 							item.LinkedSections.Add(section);
 						}
+					}
+
+					if (!item.LinkedSections.Any())
+					{
+						Mod.Log.Warn("Group with no sections found: " + item.name);
 					}
 				}
 

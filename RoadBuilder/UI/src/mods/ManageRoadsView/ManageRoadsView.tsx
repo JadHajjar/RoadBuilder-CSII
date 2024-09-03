@@ -10,6 +10,7 @@ import {
   DiscoverLoading$,
   DiscoverMaxPages$,
   fpsMeterLevel$,
+  RestrictPlayset$,
   roadBuilderToolMode$,
   roadListView$,
   setRoadListView,

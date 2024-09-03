@@ -77,7 +77,7 @@ namespace RoadBuilder.Systems.UI
 #else
 				Name = x.Value.Config.Name,
 #endif
-				IsNotInPlayset = (!Mod.Settings.NoPlaysetIsolation && (prefab.Config.Playsets?.Any() ?? false) && !prefab.Config.Playsets.Contains(PdxModsUtil.CurrentPlayset)),
+				IsNotInPlayset = (!Mod.Settings.NoPlaysetIsolation && (x.Value.Config.Playsets?.Any() ?? false) && !x.Value.Config.Playsets.Contains(PdxModsUtil.CurrentPlayset)),
 				Locked = !Mod.Settings.RemoveLockRequirements && GameManager.instance.gameMode == GameMode.Game && EntityManager.HasEnabledComponent<Locked>(prefabSystem.GetEntity(x.Value.Prefab)),
 				Used = roadBuilderRoadTrackerSystem.UsedNetworkPrefabs.Contains(x.Value),
 				Category = x.Value.Config.Category,

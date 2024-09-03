@@ -1,4 +1,19 @@
 .thumbnail {
   width: 200rem;
   height: 200rem;
+  margin: 10rem;
+}
+
+.name {
+  font-size: 20rem;
+  flex: 1;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--normalTextColor);
+
+  p {
+    text-align: center;
+    coh-font-fit-mode: shrink;
+  }
 }
