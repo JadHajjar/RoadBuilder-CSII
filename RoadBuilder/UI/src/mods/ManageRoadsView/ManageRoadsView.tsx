@@ -27,6 +27,7 @@ import { GetCategoryIcon, GetCategoryName, RoadCategory } from "domain/RoadCateg
 import { ManageRoadConfigListItem } from "mods/Components/RoadConfigListItem/ManageRoadConfigListItem";
 import { RoadConfiguration } from "domain/RoadConfiguration";
 import { ManageRoadPanel } from "./ManageRoadPanel";
+import { Pagination } from "./Pagination";
 
 export const ManageRoadsView = (props: { editor: boolean }) => {
   const { translate } = useLocalization();
@@ -67,7 +68,7 @@ export const ManageRoadsView = (props: { editor: boolean }) => {
               ))}
           </Scrollable>
 
-          <div className={styles.paging}>1</div>
+          <Pagination />
         </div>
       );
     }
