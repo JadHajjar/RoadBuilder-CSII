@@ -100,5 +100,10 @@
   "RoadBuilder.MyRoads": "我的道路",
   "RoadBuilder.Discover": "探索",
   "RoadBuilder.Download": "下載",
-  "RoadBuilder.AllRoads": "所有道路"
+  "RoadBuilder.AllRoads": "所有道路",
+  "RoadBuilder.ShowAllPlaysets": "Show roads from all playsets",
+  "RoadBuilder.Playset": "Playset",
+  "RoadBuilder.AddToPlayset": "Add To Playset",
+  "RoadBuilder.RemoveFromPlayset": "Remove From Playset",
+  "RoadBuilder.HideLockedRoads": "Hide Locked Roads"
 }
