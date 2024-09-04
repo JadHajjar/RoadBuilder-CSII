@@ -101,9 +101,9 @@
   "RoadBuilder.Discover": "Odkryj",
   "RoadBuilder.Download": "Pobierz",
   "RoadBuilder.AllRoads": "Wszystkie drogi",
-  "RoadBuilder.ShowAllPlaysets": "Show roads from all playsets",
-  "RoadBuilder.Playset": "Playset",
-  "RoadBuilder.AddToPlayset": "Add To Playset",
-  "RoadBuilder.RemoveFromPlayset": "Remove From Playset",
-  "RoadBuilder.HideLockedRoads": "Hide Locked Roads"
+  "RoadBuilder.ShowAllPlaysets": "Pokaż drogi ze wszystkich zestawów",
+  "RoadBuilder.Playset": "Zestaw",
+  "RoadBuilder.AddToPlayset": "Dodaj do zestawu",
+  "RoadBuilder.RemoveFromPlayset": "Usuń z zestawu",
+  "RoadBuilder.HideLockedRoads": "Ukryj zablokowane drogi"
 }
