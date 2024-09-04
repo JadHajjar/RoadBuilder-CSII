@@ -72,12 +72,12 @@ namespace RoadBuilder.Systems.UI
 			RoadConfigurations.Value = roadBuilderSystem.Configurations.Select(x => new RoadConfigurationUIBinder
 			{
 				ID = x.Key,
-#if DEBUG
-				Name = x.Value.Config.Name,//+ " - " + x.Value.Config.ID,
+#if DEBUG&&false
+				Name = x.Value.Config.Name + " - " + x.Value.Config.ID,
 #else
 				Name = x.Value.Config.Name,
 #endif
-				IsNotInPlayset = (!Mod.Settings.NoPlaysetIsolation && (x.Value.Config.Playsets?.Any() ?? false) && !x.Value.Config.Playsets.Contains(PdxModsUtil.CurrentPlayset)),
+				IsNotInPlayset = !x.Value.Config.IsInPlayset(),
 				Locked = !Mod.Settings.RemoveLockRequirements && GameManager.instance.gameMode == GameMode.Game && EntityManager.HasEnabledComponent<Locked>(prefabSystem.GetEntity(x.Value.Prefab)),
 				Used = roadBuilderRoadTrackerSystem.UsedNetworkPrefabs.Contains(x.Value),
 				Category = x.Value.Config.Category,

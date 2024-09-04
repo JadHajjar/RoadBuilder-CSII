@@ -1,3 +1,5 @@
+@use "../../base.scss" as _base;
+
 .sortIcon {
   height: 2.5em;
   width: 2.5em;
@@ -87,5 +89,18 @@
     border-bottom-left-radius: 4rem !important;
     margin-left: 2rem !important;
     border: none;
+  }
+}
+
+.optionContent.buttonOption > button {
+  @include _base.blackButton();
+
+  width: auto;
+  font-size: 16rem;
+
+  img {
+    width: 24rem;
+    height: 24rem;
+    margin-right: 6rem;
   }
 }

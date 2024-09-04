@@ -97,6 +97,8 @@ namespace RoadBuilder.Domain.Configurations
 			if (Version < VER_MANAGEMENT_REWORK)
 			{
 				Category &= ~RoadCategory.RaisedSidewalk;
+
+				Playsets ??= new();
 			}
 
 			if (Version < VER_FIX_PEDESTRIAN_ROADS)

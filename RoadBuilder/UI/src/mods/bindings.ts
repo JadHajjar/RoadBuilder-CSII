@@ -26,6 +26,7 @@ export const DiscoverCurrentPage$ = bindValue<number>(mod.id, "Discover.CurrentP
 export const DiscoverMaxPages$ = bindValue<number>(mod.id, "Discover.MaxPages", 1);
 export const DiscoverItems$ = bindValue<RoadConfiguration[]>(mod.id, "Discover.Items");
 export const RestrictPlayset$ = bindValue<RoadConfiguration[]>(mod.id, "Management.RestrictPlayset");
+export const managedRoadOptions$ = bindValue<OptionSection[]>(mod.id, "Management.GetRoadOptions");
 
 export const toggleTool = trigger.bind(null, mod.id, "ToggleTool");
 export const clearTool = trigger.bind(null, mod.id, "ClearTool");
@@ -54,8 +55,12 @@ export const laneOptionClicked = (optionIndex: number, netSectionId: number, opt
   trigger(mod.id, "OptionClicked", optionIndex, netSectionId, optionId, value);
 export const roadOptionClicked = (netSectionId: number, optionId: number, value: number) =>
   trigger(mod.id, "RoadOptionClicked", netSectionId, optionId, value);
+export const managedRoadOptionClicked = (netSectionId: number, optionId: number, value: number) =>
+  trigger(mod.id, "Management.RoadOptionClicked", netSectionId, optionId, value);
 export const setDiscoverPage = (p: number) => trigger(mod.id, "Discover.SetPage", p);
 export const setManagementSearchBinder = (q: string) => trigger(mod.id, "Management.SetSearchQuery", q);
 export const setManagementSetCategory = (s: number) => trigger(mod.id, "Management.SetCategory", s);
+export const setManagementRoad = (r: string | undefined) => trigger(mod.id, "Management.SetRoad", r);
+export const setManagedRoadName = (name: string) => trigger(mod.id, "Management.SetRoadName", name);
 export const setDiscoverSorting = (s: number) => trigger(mod.id, "Discover.SetSorting", s);
 export const downloadConfig = (id: string) => trigger(mod.id, "Discover.Download", id);

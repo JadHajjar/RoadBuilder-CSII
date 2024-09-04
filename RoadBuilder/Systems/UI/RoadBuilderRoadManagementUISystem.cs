@@ -1,32 +1,47 @@
 ﻿using RoadBuilder.Domain.Enums;
+using RoadBuilder.Domain.Prefabs;
 using RoadBuilder.Domain.UI;
 using RoadBuilder.Utilities;
 using RoadBuilder.Utilities.Online;
 
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+
+using Unity.Entities;
 
 namespace RoadBuilder.Systems.UI
 {
 	public partial class RoadBuilderRoadManagementUISystem : ExtendedUISystemBase
 	{
+		private enum ActionType
+		{
+			ShowInToolbar,
+			TogglePlayset
+		}
+
 		private readonly CancellationTokenSource _cancellationTokenSource = new();
 		private string query;
 		private RoadCategory? currentCategory;
 		private int sorting;
 		private RoadBuilderSystem roadBuilderSystem;
+		private RoadBuilderRoadTrackerSystem roadBuilderRoadTrackerSystem;
 		private RoadBuilderConfigurationsUISystem roadBuilderConfigurationsUISystem;
 		private ValueBindingHelper<bool> RestrictPlayset;
 		private ValueBindingHelper<bool> Loading;
 		private ValueBindingHelper<int> CurrentPage;
 		private ValueBindingHelper<int> MaxPages;
 		private ValueBindingHelper<RoadConfigurationUIBinder[]> Items;
+		private ValueBindingHelper<OptionSectionUIEntry[]> SelectedRoadOptions;
+		private INetworkBuilderPrefab SelectedRoad;
 
 		protected override void OnCreate()
 		{
 			base.OnCreate();
 
 			roadBuilderSystem = World.GetOrCreateSystemManaged<RoadBuilderSystem>();
+			roadBuilderRoadTrackerSystem = World.GetOrCreateSystemManaged<RoadBuilderRoadTrackerSystem>();
 			roadBuilderConfigurationsUISystem = World.GetOrCreateSystemManaged<RoadBuilderConfigurationsUISystem>();
 
 			RestrictPlayset = CreateBinding("Management.RestrictPlayset", true);
@@ -34,14 +49,121 @@ namespace RoadBuilder.Systems.UI
 			CurrentPage = CreateBinding("Discover.CurrentPage", 1);
 			MaxPages = CreateBinding("Discover.MaxPages", 1);
 			Items = CreateBinding("Discover.Items", new RoadConfigurationUIBinder[0]);
+			SelectedRoadOptions = CreateBinding("Management.GetRoadOptions", new OptionSectionUIEntry[0]);
 
 			CreateTrigger<int>("Discover.SetPage", SetDiscoverPage);
 			CreateTrigger<int>("Discover.SetSorting", SetDiscoverSorting);
 			CreateTrigger<string>("Discover.Download", DownloadConfig);
 			CreateTrigger<string>("Management.SetSearchQuery", SetSearchQuery);
 			CreateTrigger<int>("Management.SetCategory", SetCategory);
-			CreateTrigger<string>("Management.AddToPlayset", AddToPlayset);
-			CreateTrigger<string>("Management.RemovePlayset", RemoveToPlayset);
+			CreateTrigger<int, int, int>("Management.RoadOptionClicked", RoadOptionClicked);
+			CreateTrigger<string>("Management.SetRoad", UpdateSelectedRoadConfiguration);
+			CreateTrigger<string>("Management.SetRoadName", SetRoadName);
+		}
+
+		private void SetRoadName(string obj)
+		{
+			if (SelectedRoad != null)
+			{
+				SelectedRoad.Config.Name = obj;
+
+				roadBuilderSystem.UpdateRoad(SelectedRoad.Config, Entity.Null, false);
+			}
+		}
+
+		private void RoadOptionClicked(int option, int id, int value)
+		{
+			if (SelectedRoad == null)
+			{
+				return;
+			}
+
+			switch ((ActionType)option)
+			{
+				case ActionType.ShowInToolbar:
+					SelectedRoad.Config.ToolbarState = (ShowInToolbarState)id;
+					break;
+
+				case ActionType.TogglePlayset:
+					Mod.Log.Warn(PdxModsUtil.CurrentPlayset);
+					if (SelectedRoad.Config.IsInPlayset())
+					{
+						RemoveFromPlayset();
+					}
+					else
+					{
+						AddToPlayset();
+					}
+					break;
+			}
+
+			roadBuilderSystem.UpdateRoad(SelectedRoad.Config, Entity.Null, false);
+
+			UpdateSelectedRoadConfiguration(SelectedRoad.Config.ID);
+		}
+
+		private void UpdateSelectedRoadConfiguration(string id)
+		{
+			if (!roadBuilderSystem.Configurations.TryGetValue(id, out SelectedRoad))
+			{
+				return;
+			}
+
+			var config = SelectedRoad.Config;
+			var options = new List<OptionSectionUIEntry>();
+
+			if (!Mod.Settings.NoPlaysetIsolation)
+			{
+				var isInPlayset = config.IsInPlayset();
+				options.Add(new()
+				{
+					Id = (int)ActionType.TogglePlayset,
+					Name = LocaleHelper.Translate("RoadBuilder.Playset", "Playset"),
+					IsButton = true,
+					Options = new[]
+					{
+						new OptionItemUIEntry
+						{
+							Name = isInPlayset ? "RoadBuilder.RemoveFromPlayset" : "RoadBuilder.AddToPlayset",
+							Icon = isInPlayset ? "Media/Glyphs/Close.svg" : "Media/Glyphs/Plus.svg",
+							Disabled = roadBuilderRoadTrackerSystem.UsedNetworkPrefabs.Contains(SelectedRoad)
+						}
+					}
+				});
+			}
+
+			options.Add(new()
+			{
+				Id = (int)ActionType.ShowInToolbar,
+				Name = LocaleHelper.Translate("RoadBuilder.ShowInToolbar", "Toolbar View"),
+				IsToggle = true,
+				Options = new[]
+				{
+					new OptionItemUIEntry
+					{
+						Id = (int)ShowInToolbarState.Hide,
+						Name = $"RoadBuilder.ShowInToolbarState[{ShowInToolbarState.Hide}]",
+						Icon = "coui://roadbuildericons/RB_Hide.svg",
+						Selected = config.ToolbarState == ShowInToolbarState.Hide
+					},
+					new OptionItemUIEntry
+					{
+						Id = (int)ShowInToolbarState.Inherit,
+						Name = $"RoadBuilder.ShowInToolbarState[{ShowInToolbarState.Inherit}]",
+						Icon = "coui://roadbuildericons/RB_Any.svg",
+						Selected = config.ToolbarState == ShowInToolbarState.Inherit
+					},
+					new OptionItemUIEntry
+					{
+						Id = (int)ShowInToolbarState.Show,
+						Name = $"RoadBuilder.ShowInToolbarState[{ShowInToolbarState.Show}]",
+						Icon = "coui://roadbuildericons/RB_Show.svg",
+						Selected = config.ToolbarState == ShowInToolbarState.Show
+					},
+				}
+			});
+
+			SelectedRoadOptions.Value = options.ToArray();
 		}
 
 		protected override void OnUpdate()
@@ -51,27 +173,28 @@ namespace RoadBuilder.Systems.UI
 			base.OnUpdate();
 		}
 
-		private void AddToPlayset(string obj)
+		private void AddToPlayset()
 		{
-			if (roadBuilderSystem.Configurations.TryGetValue(obj, out var config)
-				&& PdxModsUtil.CurrentPlayset > 0
-				&& !config.Config.Playsets.Contains(PdxModsUtil.CurrentPlayset))
+			if (PdxModsUtil.CurrentPlayset > 0
+				&& !SelectedRoad.Config.Playsets.Contains(PdxModsUtil.CurrentPlayset))
 			{
-				config.Config.Playsets.Add(PdxModsUtil.CurrentPlayset);
-
-				roadBuilderConfigurationsUISystem.UpdateConfigurationList();
+				SelectedRoad.Config.Playsets.Remove(-PdxModsUtil.CurrentPlayset);
+				SelectedRoad.Config.Playsets.Add(PdxModsUtil.CurrentPlayset);
 			}
 		}
 
-		private void RemoveToPlayset(string obj)
+		private void RemoveFromPlayset()
 		{
-			if (roadBuilderSystem.Configurations.TryGetValue(obj, out var config)
-				&& PdxModsUtil.CurrentPlayset > 0
-				&& config.Config.Playsets.Contains(PdxModsUtil.CurrentPlayset))
+			if (PdxModsUtil.CurrentPlayset > 0)
 			{
-				config.Config.Playsets.Remove(PdxModsUtil.CurrentPlayset);
-
-				roadBuilderConfigurationsUISystem.UpdateConfigurationList();
+				if (SelectedRoad.Config.Playsets.Count == 0)
+				{
+					SelectedRoad.Config.Playsets.Add(-PdxModsUtil.CurrentPlayset);
+				}
+				else if (SelectedRoad.Config.Playsets.Contains(PdxModsUtil.CurrentPlayset))
+				{
+					SelectedRoad.Config.Playsets.Remove(PdxModsUtil.CurrentPlayset);
+				}
 			}
 		}
 

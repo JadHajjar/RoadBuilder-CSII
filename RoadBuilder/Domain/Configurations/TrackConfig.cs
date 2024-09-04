@@ -95,7 +95,12 @@ namespace RoadBuilder.Domain.Configurations
 
 		public void ApplyVersionChanges()
 		{
+			if (Version < VER_MANAGEMENT_REWORK)
+			{
+				Category &= ~RoadCategory.RaisedSidewalk;
 
+				Playsets ??= new();
+			}
 		}
 
 		public Type GetPrefabType()

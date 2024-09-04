@@ -15,12 +15,12 @@
     padding: 6rem;
 
     Button {
-      @include _base.basicButton(false, false);
+      @include _base.basicButton(false);
 
       width: 48rem;
       height: 48rem;
 
-      &:not(.arrow) {
+      &.arrow {
         background-color: var(--accentColorDarker);
 
         &:hover {

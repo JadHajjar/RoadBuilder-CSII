@@ -44,13 +44,15 @@ export const LaneListItem = ({ netSection, small }: { netSection: NetSectionItem
         <p>{netSection.DisplayName}</p>
       </div>
 
-      <div className={styles.rightSideContainer}>
+      <div className={classNames(styles.sideContainer, styles.left)}>
         {netSection.IsRestricted && (
           <Tooltip tooltip={translate("RoadBuilder.RestrictedLane")}>
             <img src="coui://gameui/Media/Game/Notifications/BuildingOnFire.svg"></img>
           </Tooltip>
         )}
+      </div>
 
+      <div className={classNames(styles.sideContainer, styles.right)}>
         {netSection.IsCustom && (
           <Tooltip tooltip={translate("RoadBuilder.CustomLane")}>
             <img src="coui://gameui/Media/Glyphs/ParadoxModsCloud.svg"></img>

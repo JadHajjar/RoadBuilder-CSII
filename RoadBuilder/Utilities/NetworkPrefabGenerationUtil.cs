@@ -538,7 +538,7 @@ namespace RoadBuilder.Utilities
 
 			var showInToolbar = NetworkPrefab.Config.ToolbarState is ShowInToolbarState.Show || (NetworkPrefab.Config.ToolbarState is ShowInToolbarState.Inherit && !Mod.Settings.HideRoadsFromToolbarByDefault);
 
-			if (!Mod.Settings.NoPlaysetIsolation && (NetworkPrefab.Config.Playsets?.Any() ?? false) && !NetworkPrefab.Config.Playsets.Contains(PdxModsUtil.CurrentPlayset))
+			if (!NetworkPrefab.Config.IsInPlayset())
 			{
 				showInToolbar = false;
 			}

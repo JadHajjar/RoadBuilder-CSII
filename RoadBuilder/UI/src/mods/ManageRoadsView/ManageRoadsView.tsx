@@ -1,4 +1,4 @@
-import { Button, Scrollable } from "cs2/ui";
+import { Button, Scrollable, Tooltip } from "cs2/ui";
 import { LaneListItem } from "../Components/LaneListItem/LaneListItem";
 import styles from "./ManageRoadsView.module.scss";
 import { useValue } from "cs2/api";
@@ -13,6 +13,7 @@ import {
   RestrictPlayset$,
   roadBuilderToolMode$,
   roadListView$,
+  setManagementRoad,
   setRoadListView,
   setSearchBinder,
 } from "mods/bindings";
@@ -41,8 +42,11 @@ export const ManageRoadsView = (props: { editor: boolean }) => {
   let [searchQuery, setSearchQuery] = useState<string>("");
   let [discoverView, setDiscoverView] = useState<boolean>(false);
   let [showAllPlaysets, setShowAllPlaysets] = useState<boolean>(false);
+  let [hideLocked, setHideLocked] = useState<boolean>(false);
   let [discoverViewLoaded, setDiscoverViewLoaded] = useState<boolean>(false);
-  let [workingConfiguration, setWorkingConfiguration] = useState<RoadConfiguration>(roadConfigurations[0]);
+  let [workingConfiguration, setWorkingConfiguration] = useState<RoadConfiguration | undefined>(
+    roadConfigurations.length > 0 ? roadConfigurations[0] : undefined
+  );
   let [selectedCategory, setSelectedCategory] = useState<string | RoadCategory | undefined>(undefined);
   let items: JSX.Element;
 
@@ -50,6 +54,13 @@ export const ManageRoadsView = (props: { editor: boolean }) => {
     setSearchQuery(query);
     setSearchBinder(query);
   }
+
+  function setSelectedRoad(road: RoadConfiguration) {
+    setWorkingConfiguration(road);
+    setManagementRoad(road.ID);
+  }
+
+  useEffect(() => setManagementRoad(workingConfiguration?.ID));
 
   useEffect(() => {
     // when the road list view changes value
@@ -78,16 +89,19 @@ export const ManageRoadsView = (props: { editor: boolean }) => {
       <div className={styles.localContainer}>
         <Scrollable className={styles.list} vertical smooth trackVisibility="scrollable">
           {roadConfigurations
-            .filter((val, idx) => (selectedCategory == undefined || selectedCategory == val.Category) && (!val.IsNotInPlayset || showAllPlaysets))
+            .filter(
+              (val, idx) =>
+                (selectedCategory == undefined || selectedCategory == val.Category) &&
+                (!val.IsNotInPlayset || showAllPlaysets) &&
+                (!val.Locked || !hideLocked)
+            )
             .filter((val, idx) => val.Name)
             .filter((val, idx) => searchQuery == undefined || searchQuery == "" || val.Name.toLowerCase().indexOf(searchQuery.toLowerCase()) >= 0)
             .map((val, idx) => (
-              <ManageRoadConfigListItem key={idx} road={val} selectRoad={setWorkingConfiguration} selected={workingConfiguration === val} />
+              <ManageRoadConfigListItem key={idx} road={val} selectRoad={setSelectedRoad} selected={workingConfiguration === val} />
             ))}
         </Scrollable>
-        <div className={styles.managePanel}>
-          <ManageRoadPanel road={workingConfiguration}></ManageRoadPanel>
-        </div>
+        <div className={styles.managePanel}>{workingConfiguration && <ManageRoadPanel road={workingConfiguration}></ManageRoadPanel>}</div>
       </div>
     );
   }
@@ -112,7 +126,7 @@ export const ManageRoadsView = (props: { editor: boolean }) => {
               <span>{translate("RoadBuilder.AllRoads")}</span>
             </Button>
             {Object.values(RoadCategory)
-              .filter((x) => GetCategoryIcon(x as RoadCategory) != undefined)
+              .filter((x) => GetCategoryIcon(x as RoadCategory) != undefined && roadConfigurations.some((r) => r.Category === x))
               .map((x) => (
                 <Button className={selectedCategory == x && styles.selected} variant="flat" onSelect={() => setSelectedCategory(x)}>
                   <img src={GetCategoryIcon(x as RoadCategory)} />
@@ -122,11 +136,22 @@ export const ManageRoadsView = (props: { editor: boolean }) => {
           </div>
 
           <div className={styles.filters}>
-            {RestrictPlayset && (
-              <Button variant="flat" selected={showAllPlaysets} onSelect={() => setShowAllPlaysets(!showAllPlaysets)}>
-                <img style={{ maskImage: "url()" }} />
-              </Button>
+            {RestrictPlayset && !discoverView && (
+              <Tooltip tooltip={translate("RoadBuilder.ShowAllPlaysets")}>
+                <Button variant="flat" selected={showAllPlaysets} onSelect={() => setShowAllPlaysets(!showAllPlaysets)}>
+                  <img style={{ maskImage: "url(coui://roadbuildericons/RB_Playset.svg)" }} />
+                </Button>
+              </Tooltip>
             )}
+
+            {roadConfigurations.some((x) => x.Locked) && (
+              <Tooltip tooltip={translate("RoadBuilder.HideLockedRoads")}>
+                <Button variant="flat" selected={hideLocked} onSelect={() => setHideLocked(!hideLocked)}>
+                  <img style={{ maskImage: "url(coui://roadbuildericons/RB_NoLock.svg)" }} />
+                </Button>
+              </Tooltip>
+            )}
+
             <div className={styles.searchBar}>
               <SearchTextBox value={searchQuery} onChange={setAndBindSearch} />
             </div>

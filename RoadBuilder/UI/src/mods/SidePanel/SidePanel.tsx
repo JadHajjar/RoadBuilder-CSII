@@ -100,7 +100,7 @@ export const SidePanel = (props: { editor: boolean }) => {
               </Button>
             </Tooltip>
             {Object.values(RoadCategory)
-              .filter((x) => GetCategoryIcon(x as RoadCategory) != undefined)
+              .filter((x) => GetCategoryIcon(x as RoadCategory) != undefined && roadConfigurations.some((r) => r.Category === x))
               .map((x) => (
                 <Tooltip tooltip={translate(GetCategoryName(x as RoadCategory))}>
                   <Button className={selectedCategory == x && styles.selected} variant="flat" onSelect={() => setSelectedCategory(x)}>

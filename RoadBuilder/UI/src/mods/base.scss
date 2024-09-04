@@ -65,7 +65,7 @@ $laneButtonSize: 64rem;
   }
 }
 
-@mixin basicButton($transparent: false, $hasText: true) {
+@mixin basicButton($hasText: true) {
   pointer-events: auto;
   padding: 8rem;
   border-radius: 4rem;
@@ -77,23 +77,14 @@ $laneButtonSize: 64rem;
   color: var(--menuText1Normal);
   opacity: 1;
   filter: brightness(1.1) saturate(0.8);
-
-  @if $transparent {
-    background-color: transparent;
-  } @else {
-    background-color: var(--panelColorDark);
-    backdrop-filter: blur(4px);
-  }
+  background-color: var(--panelColorDark);
+  backdrop-filter: blur(4px);
 
   &.hidden {
     display: none;
   }
   &:hover {
-    @if $transparent {
-      background-color: rgba(0, 0, 0, 0.3);
-    } @else {
-      background-color: var(--panelColorNormal);
-    }
+    background-color: var(--panelColorNormal);
   }
   &:active {
     background-image: none !important;
@@ -111,5 +102,36 @@ $laneButtonSize: 64rem;
     background-color: var(--menuText1Normal);
     mask-size: contain;
     mask-position: 50% 50%;
+  }
+}
+
+@mixin lightButton($hasText: true) {
+  @include basicButton($hasText);
+
+  background-color: rgba(255, 255, 255, 0.1);
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.35);
+  }
+}
+
+@mixin blackButton($hasText: true) {
+  @include basicButton($hasText);
+
+  background-color: rgba(15, 16, 19, 1);
+
+  &:hover {
+    background-color: rgba(29, 31, 37, 1);
+  }
+}
+
+@mixin transparentButton($hasText: true) {
+  @include basicButton($hasText);
+
+  background-color: transparent;
+  backdrop-filter: none;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.3);
   }
 }

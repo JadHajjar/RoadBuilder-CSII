@@ -26,7 +26,7 @@
 
 .gridItemLocked {
   margin: 4rem;
-  width: 295rem;
+  width: 100%;
   height: 95rem;
   overflow: hidden;
   display: flex;
@@ -127,6 +127,6 @@
     background-color: #ffaa00;
     mask-size: contain;
     mask-position: 50% 50%;
-    mask-image: url(coui://gameui/Media/Glyphs/Lock.svg);
+    mask-image: url(coui://roadbuildericons/RB_Lock.svg);
   }
 }

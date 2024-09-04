@@ -134,15 +134,22 @@
   margin-bottom: 5rem;
 }
 
-.rightSideContainer {
+.sideContainer {
   position: absolute;
   top: 5rem;
-  right: 5rem;
   display: flex;
   flex-direction: column;
+
+  &.left {
+    left: 5rem;
+  }
+
+  &.right {
+    right: 5rem;
+  }
 }
 
-.rightSideContainer > img {
+.sideContainer > img {
   width: 18rem;
   height: 18rem;
   margin-bottom: 6rem;
