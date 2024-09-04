@@ -78,7 +78,6 @@ namespace RoadBuilder.Domain.Configurations
 			writer.Write(MaxSlopeSteepness);
 			writer.Write((ulong)Category);
 			writer.Write((ulong)Addons);
-			writer.Write((int)ToolbarState);
 
 			writer.Write(Lanes.Count);
 
@@ -86,6 +85,8 @@ namespace RoadBuilder.Domain.Configurations
 			{
 				writer.Write(lane);
 			}
+
+			writer.Write((int)ToolbarState);
 		}
 
 		public void ApplyVersionChanges()
