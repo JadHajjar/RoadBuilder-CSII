@@ -100,5 +100,10 @@
   "RoadBuilder.MyRoads": "My Roads",
   "RoadBuilder.Discover": "Discover",
   "RoadBuilder.Download": "Download",
-  "RoadBuilder.AllRoads": "All Roads"
+  "RoadBuilder.AllRoads": "All Roads",
+  "RoadBuilder.ShowAllPlaysets": "Show roads from all playsets",
+  "RoadBuilder.Playset": "Playset",
+  "RoadBuilder.AddToPlayset": "Add To Playset",
+  "RoadBuilder.RemoveFromPlayset": "Remove From Playset",
+  "RoadBuilder.HideLockedRoads": "Hide Locked Roads"
 }
