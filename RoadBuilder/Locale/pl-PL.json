@@ -105,5 +105,7 @@
   "RoadBuilder.Playset": "Zestaw",
   "RoadBuilder.AddToPlayset": "Dodaj do zestawu",
   "RoadBuilder.RemoveFromPlayset": "Usuń z zestawu",
-  "RoadBuilder.HideLockedRoads": "Ukryj zablokowane drogi"
+  "RoadBuilder.HideLockedRoads": "Ukryj zablokowane drogi",
+  "RoadBuilder.Sharing": "Sharing",
+  "RoadBuilder.UploadRoad": "Upload Road"
 }
