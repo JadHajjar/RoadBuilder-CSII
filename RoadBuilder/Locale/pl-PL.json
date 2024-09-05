@@ -59,12 +59,12 @@
   "RoadBuilder.ShowInToolbarState[Show]": "Pokaż na pasku narzędzi",
   "RoadBuilder.ShowInToolbarState[Hide]": "Ukryj na pasku narzędzi",
   "RoadBuilder.Warning[MissingEdgeLane]": "Brak pobocza lub chodnika przy tej krawędzi może prowadzić do nieoczekiwanego zachowania.",
-  "RoadBuilder.DiscoverSorting[0]": "Most Popular",
-  "RoadBuilder.DiscoverSorting[1]": "Least Popular",
-  "RoadBuilder.DiscoverSorting[2]": "Most Downloads",
-  "RoadBuilder.DiscoverSorting[3]": "Least Downloads",
-  "RoadBuilder.DiscoverSorting[4]": "Most Recent",
-  "RoadBuilder.DiscoverSorting[5]": "Oldest",
+  "RoadBuilder.DiscoverSorting[0]": "Najpopularniejsze",
+  "RoadBuilder.DiscoverSorting[1]": "Najmniej popularne",
+  "RoadBuilder.DiscoverSorting[2]": "Najwięcej pobrań",
+  "RoadBuilder.DiscoverSorting[3]": "Najmniej pobrań",
+  "RoadBuilder.DiscoverSorting[4]": "Najnowsze",
+  "RoadBuilder.DiscoverSorting[5]": "Najstarsze",
   "RoadBuilder.UseAsTemplate": "Użyj jako szablonu",
   "RoadBuilder.DeleteRoad": "Usuń drogę",
   "RoadBuilder.PickOther": "Wybierz inną drogę",
@@ -114,6 +114,6 @@
   "RoadBuilder.HideLockedRoads": "Ukryj zablokowane drogi",
   "RoadBuilder.Sharing": "Udostępnianie",
   "RoadBuilder.UploadRoad": "Udostępnij drogę",
-  "RoadBuilder.NoResults": "No Results",
-  "RoadBuilder.ErrorLoading": "Failed to load the roads. Please try again later."
+  "RoadBuilder.NoResults": "Brak wyników",
+  "RoadBuilder.ErrorLoading": "Nie udało się pobrać dróg. Spróbuj ponownie później."
 }
