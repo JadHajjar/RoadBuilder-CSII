@@ -101,9 +101,9 @@
   "RoadBuilder.Discover": "Finden",
   "RoadBuilder.Download": "Herunterladen",
   "RoadBuilder.AllRoads": "Alle Straßen",
-  "RoadBuilder.ShowAllPlaysets": "Show roads from all playsets",
-  "RoadBuilder.Playset": "Playset",
-  "RoadBuilder.AddToPlayset": "Add To Playset",
-  "RoadBuilder.RemoveFromPlayset": "Remove From Playset",
-  "RoadBuilder.HideLockedRoads": "Hide Locked Roads"
+  "RoadBuilder.ShowAllPlaysets": "Straßen aus allen Spielsets anzeigen",
+  "RoadBuilder.Playset": "Spielset",
+  "RoadBuilder.AddToPlayset": "Zum Spielset hinzufügen",
+  "RoadBuilder.RemoveFromPlayset": "Aus dem Spielset entfernen",
+  "RoadBuilder.HideLockedRoads": "Gesperrte Straßen ausblenden"
 }
