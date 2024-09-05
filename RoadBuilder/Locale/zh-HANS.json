@@ -59,6 +59,12 @@
   "RoadBuilder.ShowInToolbarState[Show]": "在工具栏中显示",
   "RoadBuilder.ShowInToolbarState[Hide]": "在工具栏中隐藏",
   "RoadBuilder.Warning[MissingEdgeLane]": "此道路两侧没有路缘或人行道，可能会出现异常现象。",
+  "RoadBuilder.DiscoverSorting[0]": "Most Popular",
+  "RoadBuilder.DiscoverSorting[1]": "Least Popular",
+  "RoadBuilder.DiscoverSorting[2]": "Most Downloads",
+  "RoadBuilder.DiscoverSorting[3]": "Least Downloads",
+  "RoadBuilder.DiscoverSorting[4]": "Most Recent",
+  "RoadBuilder.DiscoverSorting[5]": "Oldest",
   "RoadBuilder.UseAsTemplate": "新建一个模板",
   "RoadBuilder.DeleteRoad": "删除道路",
   "RoadBuilder.PickOther": "选择另一条道路",
@@ -107,5 +113,7 @@
   "RoadBuilder.RemoveFromPlayset": "从 Playset 中移除",
   "RoadBuilder.HideLockedRoads": "隐藏未解锁道路",
   "RoadBuilder.Sharing": "分享",
-  "RoadBuilder.UploadRoad": "上传道路资产"
+  "RoadBuilder.UploadRoad": "上传道路资产",
+  "RoadBuilder.NoResults": "No Results",
+  "RoadBuilder.ErrorLoading": "Failed to load the roads. Please try again later."
 }
