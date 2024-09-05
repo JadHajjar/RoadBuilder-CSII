@@ -106,6 +106,6 @@
   "RoadBuilder.AddToPlayset": "添加到 Playset",
   "RoadBuilder.RemoveFromPlayset": "从 Playset 中移除",
   "RoadBuilder.HideLockedRoads": "隐藏未解锁道路",
-  "RoadBuilder.Sharing": "Sharing",
-  "RoadBuilder.UploadRoad": "Upload Road"
+  "RoadBuilder.Sharing": "分享",
+  "RoadBuilder.UploadRoad": "上传道路资产"
 }
