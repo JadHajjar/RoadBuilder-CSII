@@ -59,6 +59,12 @@
   "RoadBuilder.ShowInToolbarState[Show]": "Show in the toolbar",
   "RoadBuilder.ShowInToolbarState[Hide]": "Hide from the toolbar",
   "RoadBuilder.Warning[MissingEdgeLane]": "Bu kenarda kenar veya kaldırım şeriti bulunmaması beklenmedik sorunlara sebep olabilir.",
+  "RoadBuilder.DiscoverSorting[0]": "Most Popular",
+  "RoadBuilder.DiscoverSorting[1]": "Least Popular",
+  "RoadBuilder.DiscoverSorting[2]": "Most Downloads",
+  "RoadBuilder.DiscoverSorting[3]": "Least Downloads",
+  "RoadBuilder.DiscoverSorting[4]": "Most Recent",
+  "RoadBuilder.DiscoverSorting[5]": "Oldest",
   "RoadBuilder.UseAsTemplate": "Şablon Olarak Kullan",
   "RoadBuilder.DeleteRoad": "Yolu Sil",
   "RoadBuilder.PickOther": "Başka bir yol seç",
@@ -107,5 +113,7 @@
   "RoadBuilder.RemoveFromPlayset": "Remove From Playset",
   "RoadBuilder.HideLockedRoads": "Hide Locked Roads",
   "RoadBuilder.Sharing": "Sharing",
-  "RoadBuilder.UploadRoad": "Upload Road"
+  "RoadBuilder.UploadRoad": "Upload Road",
+  "RoadBuilder.NoResults": "No Results",
+  "RoadBuilder.ErrorLoading": "Failed to load the roads. Please try again later."
 }
