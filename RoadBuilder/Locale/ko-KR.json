@@ -59,6 +59,12 @@
   "RoadBuilder.ShowInToolbarState[Show]": "Show in the toolbar",
   "RoadBuilder.ShowInToolbarState[Hide]": "Hide from the toolbar",
   "RoadBuilder.Warning[MissingEdgeLane]": "이 가장자리에 도로변이나 보도가 없으면 예상치 못한 동작이 발생할 수 있습니다.",
+  "RoadBuilder.DiscoverSorting[0]": "Most Popular",
+  "RoadBuilder.DiscoverSorting[1]": "Least Popular",
+  "RoadBuilder.DiscoverSorting[2]": "Most Downloads",
+  "RoadBuilder.DiscoverSorting[3]": "Least Downloads",
+  "RoadBuilder.DiscoverSorting[4]": "Most Recent",
+  "RoadBuilder.DiscoverSorting[5]": "Oldest",
   "RoadBuilder.UseAsTemplate": "템플릿으로 저장",
   "RoadBuilder.DeleteRoad": "도로 삭제",
   "RoadBuilder.PickOther": "다른 도로 선택",
@@ -107,5 +113,7 @@
   "RoadBuilder.RemoveFromPlayset": "Remove From Playset",
   "RoadBuilder.HideLockedRoads": "Hide Locked Roads",
   "RoadBuilder.Sharing": "Sharing",
-  "RoadBuilder.UploadRoad": "Upload Road"
+  "RoadBuilder.UploadRoad": "Upload Road",
+  "RoadBuilder.NoResults": "No Results",
+  "RoadBuilder.ErrorLoading": "Failed to load the roads. Please try again later."
 }
