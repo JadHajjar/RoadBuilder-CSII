@@ -4,6 +4,8 @@
   width: 100%;
   padding: 16rem;
 
+  animation: entry 0.2s;
+
   ul {
     display: flex;
     flex-direction: row;
@@ -33,5 +35,16 @@
       width: 48rem;
       height: 48rem;
     }
+  }
+}
+
+@keyframes entry {
+  0% {
+    transform: translateY(50rem);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
   }
 }

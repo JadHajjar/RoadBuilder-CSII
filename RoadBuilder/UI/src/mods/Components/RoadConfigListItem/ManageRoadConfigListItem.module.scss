@@ -8,6 +8,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  transition: background-color 0.25s;
 
   &.active {
     background-color: var(--accentColorDark) !important;

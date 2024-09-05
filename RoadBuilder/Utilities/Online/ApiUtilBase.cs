@@ -69,7 +69,7 @@ namespace RoadBuilder.Utilities.Online
 				return JSON.MakeInto<T>(JSON.Load(response));
 			}
 
-			Mod.Log.Error($"[API] ({baseUrl}) failed: {httpResponse.ReasonPhrase}");
+			Mod.Log.Warn($"[API] ({baseUrl}) failed: {httpResponse.ReasonPhrase}");
 
 			return typeof(T) == typeof(ApiResponse)
 				? (T)(object)new ApiResponse
@@ -120,7 +120,7 @@ namespace RoadBuilder.Utilities.Online
 				return JSON.MakeInto<T>(JSON.Load(response));
 			}
 
-			Mod.Log.Error($"[API] ({baseUrl}) failed: {httpResponse.ReasonPhrase}");
+			Mod.Log.Warn($"[API] ({baseUrl}) failed: {httpResponse.ReasonPhrase}");
 
 			return typeof(T) == typeof(ApiResponse)
 				? (T)(object)new ApiResponse { message = httpResponse.ReasonPhrase }

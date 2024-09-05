@@ -7,7 +7,7 @@ import { DiscoverCurrentPage$, DiscoverMaxPages$, setDiscoverPage } from "mods/b
 export const Pagination = () => {
   const range = 2;
   const currentPage = useValue(DiscoverCurrentPage$);
-  const maxPages = useValue(DiscoverMaxPages$) + 32;
+  const maxPages = useValue(DiscoverMaxPages$);
   const getPageNumbers = () => {
     const pages = [];
     const startPage = Math.max(1, currentPage - range);

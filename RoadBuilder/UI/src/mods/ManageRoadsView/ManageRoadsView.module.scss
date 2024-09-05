@@ -19,14 +19,6 @@
   overflow: hidden;
 
   animation: entry 0.2s;
-
-  &.game {
-    bottom: 15%;
-  }
-
-  &.editor {
-    bottom: 20%;
-  }
 }
 
 .manageRoadsButton {
@@ -165,7 +157,7 @@
   flex-direction: row;
   align-items: center;
 
-  Button {
+  & > Button {
     @include _base.lightButton(false);
 
     padding: 6rem;
@@ -175,6 +167,12 @@
       width: 20rem;
       height: 20rem;
     }
+  }
+}
+
+.sortingDropdown {
+  & > div {
+    width: 200rem;
   }
 }
 
@@ -268,12 +266,41 @@
   flex-wrap: nowrap;
 }
 
+.loader {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  img {
+    width: 64rem;
+    height: 64rem;
+    animation: rotation 0.55s infinite linear;
+  }
+
+  .noResults {
+    font-size: 28rem;
+    color: var(--textColorDim);
+  }
+}
+
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}
+
 @keyframes entry {
   0% {
-    right: -10rem;
+    transform: translate(-50%, -47.5%);
     opacity: 0;
   }
   100% {
+    transform: translate(-50%, -50%);
     opacity: 1;
   }
 }

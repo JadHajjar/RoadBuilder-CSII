@@ -64,6 +64,10 @@
 .options {
   width: 85%;
 
+  & > div {
+    margin-bottom: 6rem;
+  }
+
   & > div > div > span {
     font-size: 18rem;
   }

@@ -27,8 +27,6 @@ import { OptionsPanelComponent } from "mods/Components/OptionsPanel/OptionsPanel
 
 export const ManageRoadPanel = ({ road }: { road: RoadConfiguration }) => {
   const { translate } = useLocalization();
-  const getRoadId = useValue(getRoadId$);
-  const RestrictPlayset = useValue(RestrictPlayset$);
   const managedRoadOptions = useValue(managedRoadOptions$);
   const nameRef = useRef(null);
   const [showNameTextbox, setTextboxVisibility] = useState<boolean>(false);

@@ -1,7 +1,7 @@
 import { Button, Tooltip } from "cs2/ui";
 import styles from "./DiscoverRoadConfigListItem.module.scss";
 import { NetSectionItem } from "domain/NetSectionItem";
-import { CSSProperties, MouseEventHandler, forwardRef, useContext } from "react";
+import { CSSProperties, MouseEventHandler, forwardRef, useContext, useState } from "react";
 import classNames from "classnames";
 import { DragContext } from "mods/Contexts/DragContext";
 import { MouseButtons } from "mods/util";
@@ -38,12 +38,17 @@ export const DiscoverRoadConfigListItem = ({ road }: { road: RoadConfiguration }
           <Button
             variant="flat"
             disabled={downloaded}
-            onSelect={() => {
-              setDownloaded(true);
-              downloadConfig(road.ID);
-            }}
+            onSelect={
+              downloaded
+                ? undefined
+                : () => {
+                    setDownloaded(true);
+                    downloadConfig(road.ID);
+                  }
+            }
           >
-            <img style={{ maskImage: "url(coui://roadbuildericons/RB_Package.svg)" }} /> {translate("RoadBuilder.Download")}
+            <img style={{ maskImage: downloaded ? "url(Media/Glyphs/Checkmark.svg)" : "url(coui://roadbuildericons/RB_Package.svg)" }} />
+            {translate("RoadBuilder.Download")}
           </Button>
         </div>
       </div>

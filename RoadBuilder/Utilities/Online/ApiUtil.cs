@@ -1,9 +1,9 @@
 ﻿using Colossal.PSI.Common;
-using Colossal.PSI.PdxSdk;
 
 using RoadBuilder.Domain.API;
+using RoadBuilder.Domain.Configurations;
 
-using System;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace RoadBuilder.Utilities.Online
@@ -22,6 +22,18 @@ namespace RoadBuilder.Utilities.Online
 		public async Task<ApiResponse> UploadRoad(RoadBuilderEntryPost road)
 		{
 			return await Post<RoadBuilderEntryPost, ApiResponse>("/SaveRoad", road);
+		}
+
+		public async Task<INetworkConfig> GetConfig(string id)
+		{
+			var data = await Get<byte[]>($"/RoadConfig/{id}.json");
+
+			if (data == null)
+			{
+				return null;
+			}
+
+			return LocalSaveUtil.LoadFromJson(Encoding.UTF8.GetString(data));
 		}
 
 		private async Task<T> Get<T>(string url, params (string, object)[] queryParams)

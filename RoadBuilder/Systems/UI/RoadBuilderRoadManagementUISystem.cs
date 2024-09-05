@@ -28,20 +28,23 @@ namespace RoadBuilder.Systems.UI
 			UploadRoad
 		}
 
-		private readonly CancellationTokenSource _cancellationTokenSource = new();
 		private string query;
 		private RoadCategory? currentCategory;
 		private int sorting;
 		private RoadBuilderSystem roadBuilderSystem;
 		private RoadBuilderRoadTrackerSystem roadBuilderRoadTrackerSystem;
 		private RoadBuilderConfigurationsUISystem roadBuilderConfigurationsUISystem;
+		private ValueBindingHelper<string> RoadId;
 		private ValueBindingHelper<bool> RestrictPlayset;
 		private ValueBindingHelper<bool> Loading;
+		private ValueBindingHelper<bool> ErrorLoading;
+		private ValueBindingHelper<bool> Uploading;
 		private ValueBindingHelper<int> CurrentPage;
 		private ValueBindingHelper<int> MaxPages;
 		private ValueBindingHelper<RoadConfigurationUIBinder[]> Items;
 		private ValueBindingHelper<OptionSectionUIEntry[]> SelectedRoadOptions;
 		private INetworkBuilderPrefab SelectedRoad;
+		private CancellationTokenSource cancellationTokenSource = new();
 
 		protected override void OnCreate()
 		{
@@ -51,8 +54,11 @@ namespace RoadBuilder.Systems.UI
 			roadBuilderRoadTrackerSystem = World.GetOrCreateSystemManaged<RoadBuilderRoadTrackerSystem>();
 			roadBuilderConfigurationsUISystem = World.GetOrCreateSystemManaged<RoadBuilderConfigurationsUISystem>();
 
+			RoadId = CreateBinding("Management.GetRoadId", string.Empty);
 			RestrictPlayset = CreateBinding("Management.RestrictPlayset", true);
 			Loading = CreateBinding("Discover.Loading", true);
+			ErrorLoading = CreateBinding("Discover.ErrorLoading", false);
+			Uploading = CreateBinding("Discover.Uploading", false);
 			CurrentPage = CreateBinding("Discover.CurrentPage", 1);
 			MaxPages = CreateBinding("Discover.MaxPages", 1);
 			Items = CreateBinding("Discover.Items", new RoadConfigurationUIBinder[0]);
@@ -61,11 +67,20 @@ namespace RoadBuilder.Systems.UI
 			CreateTrigger<int>("Discover.SetPage", SetDiscoverPage);
 			CreateTrigger<int>("Discover.SetSorting", SetDiscoverSorting);
 			CreateTrigger<string>("Discover.Download", DownloadConfig);
-			CreateTrigger<string>("Management.SetSearchQuery", SetSearchQuery);
+			CreateTrigger<string>("Discover.SetSearchQuery", SetSearchQuery);
 			CreateTrigger<int>("Management.SetCategory", SetCategory);
 			CreateTrigger<int, int, int>("Management.RoadOptionClicked", RoadOptionClicked);
 			CreateTrigger<string>("Management.SetRoad", UpdateSelectedRoadConfiguration);
 			CreateTrigger<string>("Management.SetRoadName", SetRoadName);
+			//CreateTrigger<string>("Management.SetSearchQuery", SetManagedmentSearchQuery);
+		}
+
+		protected override void OnUpdate()
+		{
+			RestrictPlayset.Value = !Mod.Settings.NoPlaysetIsolation;
+			RoadId.Value = SelectedRoad?.Config.ID ?? string.Empty;
+
+			base.OnUpdate();
 		}
 
 		private void SetRoadName(string obj)
@@ -74,7 +89,9 @@ namespace RoadBuilder.Systems.UI
 			{
 				SelectedRoad.Config.Name = obj;
 
-				roadBuilderSystem.UpdateRoad(SelectedRoad.Config, Entity.Null, false);
+				roadBuilderSystem.UpdateRoad(SelectedRoad.Config, Entity.Null, false, true);
+
+				roadBuilderConfigurationsUISystem.UpdateConfigurationList();
 			}
 		}
 
@@ -85,6 +102,8 @@ namespace RoadBuilder.Systems.UI
 				return;
 			}
 
+			Mod.Log.Debug((ActionType)option);
+
 			switch ((ActionType)option)
 			{
 				case ActionType.ShowInToolbar:
@@ -92,7 +111,6 @@ namespace RoadBuilder.Systems.UI
 					break;
 
 				case ActionType.TogglePlayset:
-					Mod.Log.Warn(PdxModsUtil.CurrentPlayset);
 					if (SelectedRoad.Config.IsInPlayset())
 					{
 						RemoveFromPlayset();
@@ -101,52 +119,19 @@ namespace RoadBuilder.Systems.UI
 					{
 						AddToPlayset();
 					}
+
 					break;
 
 				case ActionType.UploadRoad:
 					Task.Run(UploadRoad);
-					break;
+					return;
 			}
 
-			roadBuilderSystem.UpdateRoad(SelectedRoad.Config, Entity.Null, false);
+			roadBuilderSystem.UpdateRoad(SelectedRoad.Config, Entity.Null, false, true);
+
+			roadBuilderConfigurationsUISystem.UpdateConfigurationList();
 
 			UpdateSelectedRoadConfiguration(SelectedRoad.Config.ID);
-		}
-
-		private async Task UploadRoad()
-		{
-			Loading.Value = true;
-			try
-			{
-				var config = SelectedRoad.Config;
-				var svg = new ThumbnailGenerationUtil(SelectedRoad, World.GetExistingSystemManaged<RoadBuilderGenerationDataSystem>().RoadGenerationData).GenerateSvg();
-				using var memory = new MemoryStream();
-
-				svg.Save(memory, SaveOptions.DisableFormatting);
-
-				var result = await ApiUtil.Instance.UploadRoad(new()
-				{
-					ID = config.ID,
-					Category = (int)config.Category,
-					Name = config.Name,
-					Icon = Encoding.UTF8.GetString(memory.ToArray()),
-					Config = JSON.Dump(config, EncodeOptions.CompactPrint)
-				});
-
-				if (result.success)
-				{
-					config.Uploaded = true;
-				}
-				else
-				{
-					Mod.Log.Error("Failed to upload your road: " + result.message);
-				}
-			}
-			catch (Exception ex)
-			{
-				Mod.Log.Error(ex, "Failed to upload your road");
-			}
-			Loading.Value = false;
 		}
 
 		private void UpdateSelectedRoadConfiguration(string id)
@@ -224,20 +209,13 @@ namespace RoadBuilder.Systems.UI
 						{
 							Name = "RoadBuilder.UploadRoad",
 							Icon = "Media/Glyphs/Plus.svg",
-							Disabled = Loading
+							Disabled = Uploading
 						}
 					}
 				});
 			}
 
 			SelectedRoadOptions.Value = options.ToArray();
-		}
-
-		protected override void OnUpdate()
-		{
-			RestrictPlayset.Value = !Mod.Settings.NoPlaysetIsolation;
-
-			base.OnUpdate();
 		}
 
 		private void AddToPlayset()
@@ -295,54 +273,128 @@ namespace RoadBuilder.Systems.UI
 
 		private void StartLoad()
 		{
-			_cancellationTokenSource.Cancel();
+			cancellationTokenSource.Cancel();
+			cancellationTokenSource = new();
 
 			Loading.Value = true;
+			ErrorLoading.Value = false;
 
 			Task.Run(LoadPage);
 		}
 
 		private async Task LoadPage()
 		{
-			var token = _cancellationTokenSource.Token;
+			cancellationTokenSource.Cancel();
+			cancellationTokenSource = new();
 
-			await Task.Delay(200);
+			var token = cancellationTokenSource.Token;
 
-			if (token.IsCancellationRequested)
-			{
-				return;
-			}
-
-			var result = await ApiUtil.Instance.GetEntries(query, (int?)currentCategory, sorting, CurrentPage.Value);
+			await Task.Delay(250);
 
 			if (token.IsCancellationRequested)
 			{
 				return;
 			}
 
-			CurrentPage.Value = result.page;
-			MaxPages.Value = result.totalPages;
+			Mod.Log.Debug(nameof(LoadPage));
 
-			var items = new RoadConfigurationUIBinder[result.items.Count];
-
-			for (var i = 0; i < items.Length; i++)
+			try
 			{
-				var item = result.items[i];
-				items[i] = new RoadConfigurationUIBinder
+				var result = await ApiUtil.Instance.GetEntries(query, (int?)currentCategory, sorting, CurrentPage.Value);
+
+				if (token.IsCancellationRequested)
 				{
-					ID = item.iD,
-					Category = (RoadCategory)item.category,
-					Name = item.name,
-					Thumbnail = $"{KEYS.API_URL}/roadicon/{item.iD}.svg",
-				};
-			}
+					return;
+				}
 
-			Items.Value = items;
+				Mod.Log.Debug(result.items.Count + " entries");
+				CurrentPage.Value = result.page;
+				MaxPages.Value = result.totalPages;
+
+				var items = new RoadConfigurationUIBinder[result.items.Count];
+
+				for (var i = 0; i < items.Length; i++)
+				{
+					var item = result.items[i];
+					items[i] = new RoadConfigurationUIBinder
+					{
+						ID = item.id,
+						Category = (RoadCategory)item.category,
+						Name = item.name,
+						Author = item.author,
+						Thumbnail = $"{KEYS.API_URL}/roadicon/{item.id}.svg",
+					};
+				}
+
+				Items.Value = items;
+				Loading.Value = false;
+			}
+			catch
+			{
+				Loading.Value = false;
+				ErrorLoading.Value = true;
+			}
 		}
 
 		private void DownloadConfig(string obj)
 		{
-			Task.Run()
+			Task.Run(async () =>
+			{
+				var config = await ApiUtil.Instance.GetConfig(obj);
+
+				if (config is null)
+				{
+					return Task.CompletedTask;
+				}
+
+				config.ApplyVersionChanges();
+
+				roadBuilderSystem.AddPrefab(config);
+
+				return Task.CompletedTask;
+			});
+		}
+
+		private async Task UploadRoad()
+		{
+			Uploading.Value = true;
+			UpdateSelectedRoadConfiguration(SelectedRoad.Config.ID);
+
+			Mod.Log.Info(nameof(UploadRoad));
+
+			try
+			{
+				var config = SelectedRoad.Config;
+				var svg = new ThumbnailGenerationUtil(SelectedRoad, World.GetExistingSystemManaged<RoadBuilderGenerationDataSystem>().RoadGenerationData).GenerateSvg();
+				using var memory = new MemoryStream();
+
+				svg.Save(memory, SaveOptions.DisableFormatting);
+
+				var result = await ApiUtil.Instance.UploadRoad(new()
+				{
+					ID = config.ID,
+					Category = (int)config.Category,
+					Name = config.Name,
+					Icon = Encoding.UTF8.GetString(memory.ToArray()),
+					Config = JSON.Dump(config, EncodeOptions.CompactPrint)
+				});
+
+				if (result.success)
+				{
+					Mod.Log.Info("Upload Successful");
+					config.Uploaded = true;
+				}
+				else
+				{
+					Mod.Log.Error("Failed to upload your road: " + result.message);
+				}
+			}
+			catch (Exception ex)
+			{
+				Mod.Log.Error(ex, "Failed to upload your road");
+			}
+
+			Uploading.Value = false;
 		}
 	}
 }

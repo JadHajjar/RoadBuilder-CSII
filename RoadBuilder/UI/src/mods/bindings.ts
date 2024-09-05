@@ -22,11 +22,14 @@ export const fpsMeterLevel$ = bindValue<number>(mod.id, "FpsMeterLevel");
 export const roadListView$ = bindValue<boolean>(mod.id, "RoadListView");
 export const IsCustomRoadSelected$ = bindValue<boolean>(mod.id, "IsCustomRoadSelected", false);
 export const DiscoverLoading$ = bindValue<boolean>(mod.id, "Discover.Loading", true);
+export const DiscoverErrorLoading$ = bindValue<boolean>(mod.id, "Discover.ErrorLoading", false);
+export const DiscoverUploading$ = bindValue<boolean>(mod.id, "Discover.Uploading", false);
 export const DiscoverCurrentPage$ = bindValue<number>(mod.id, "Discover.CurrentPage", 1);
 export const DiscoverMaxPages$ = bindValue<number>(mod.id, "Discover.MaxPages", 1);
 export const DiscoverItems$ = bindValue<RoadConfiguration[]>(mod.id, "Discover.Items");
 export const RestrictPlayset$ = bindValue<RoadConfiguration[]>(mod.id, "Management.RestrictPlayset");
 export const managedRoadOptions$ = bindValue<OptionSection[]>(mod.id, "Management.GetRoadOptions");
+export const getManagedRoadId$ = bindValue<string>(mod.id, "Management.GetRoadId");
 
 export const toggleTool = trigger.bind(null, mod.id, "ToggleTool");
 export const clearTool = trigger.bind(null, mod.id, "ClearTool");
@@ -61,7 +64,7 @@ export const managedRoadOptionClicked = (netSectionId: number, optionId: number,
 export const setDiscoverPage = (p: number) => trigger(mod.id, "Discover.SetPage", p);
 export const setManagementSearchBinder = (q: string) => trigger(mod.id, "Management.SetSearchQuery", q);
 export const setManagementSetCategory = (s: number) => trigger(mod.id, "Management.SetCategory", s);
-export const setManagementRoad = (r: string | undefined) => trigger(mod.id, "Management.SetRoad", r);
+export const setManagementRoad = (r: string) => trigger(mod.id, "Management.SetRoad", r);
 export const setManagedRoadName = (name: string) => trigger(mod.id, "Management.SetRoadName", name);
 export const setDiscoverSearchBinder = (q: string) => trigger(mod.id, "Discover.SetSearchQuery", q);
 export const setDiscoverSorting = (s: number) => trigger(mod.id, "Discover.SetSorting", s);

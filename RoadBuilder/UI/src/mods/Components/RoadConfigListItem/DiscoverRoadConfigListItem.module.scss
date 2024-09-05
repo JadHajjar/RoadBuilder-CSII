@@ -10,6 +10,8 @@
   justify-content: space-between;
   color: var(--normalTextColor);
   background-color: rgba(255, 255, 255, 0.1) !important;
+
+  animation: entry 0.2s;
 }
 
 .itemInfo {
@@ -101,6 +103,14 @@
   }
 }
 
+.downloaded.downloaded button {
+  background-color: rgba(16, 189, 56, 0.25) !important;
+
+  &:active {
+    background-color: rgba(16, 189, 56, 0.25) !important;
+  }
+}
+
 .info {
   font-size: 14rem;
   color: var(--menuText1Normal);
@@ -126,5 +136,14 @@
       mask-size: contain;
       mask-position: 50% 50%;
     }
+  }
+}
+
+@keyframes entry {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
   }
 }

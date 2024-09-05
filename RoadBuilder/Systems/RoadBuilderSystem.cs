@@ -80,18 +80,24 @@ namespace RoadBuilder.Systems
 				}
 
 				var item = _updatedRoadPrefabsQueue.Dequeue();
-				var roadPrefabGeneration = new NetworkPrefabGenerationUtil(item.prefab, roadGenerationDataSystem.RoadGenerationData);
 
-				roadPrefabGeneration.GenerateRoad(item.generateId);
-
-				item.prefab.Prefab.name = item.prefab.Config.ID;
-
-				UpdatePrefab(item.prefab.Prefab);
+				DoUpdatePrefab(item.prefab, item.generateId);
 			}
 			while (_updatedRoadPrefabsQueue.Count > 0);
 		}
 
-		public void UpdateRoad(INetworkConfig config, Entity entity, bool createNewPrefab)
+		private void DoUpdatePrefab(INetworkBuilderPrefab prefab, bool generateId)
+		{
+			var roadPrefabGeneration = new NetworkPrefabGenerationUtil(prefab, roadGenerationDataSystem.RoadGenerationData);
+
+			roadPrefabGeneration.GenerateRoad(generateId);
+
+			prefab.Prefab.name = prefab.Config.ID;
+
+			UpdatePrefab(prefab.Prefab);
+		}
+
+		public void UpdateRoad(INetworkConfig config, Entity entity, bool createNewPrefab, bool now = false)
 		{
 			INetworkBuilderPrefab networkBuilderPrefab;
 
@@ -119,9 +125,16 @@ namespace RoadBuilder.Systems
 				networkBuilderPrefab = _networkBuilderPrefab;
 			}
 
-			lastUpdateRequest = DateTime.Now;
+			if (now)
+			{
+				DoUpdatePrefab(networkBuilderPrefab, true);
+			}
+			else
+			{
+				lastUpdateRequest = DateTime.Now;
 
-			_updatedRoadPrefabsQueue.Enqueue((networkBuilderPrefab, true));
+				_updatedRoadPrefabsQueue.Enqueue((networkBuilderPrefab, true));
+			}
 		}
 
 		public INetworkConfig GetOrGenerateConfiguration(Entity entity)

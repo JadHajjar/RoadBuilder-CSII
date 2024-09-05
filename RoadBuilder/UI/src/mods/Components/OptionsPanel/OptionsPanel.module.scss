@@ -60,7 +60,8 @@
 }
 
 .disabled {
-  opacity: 0.35;
+  background-color: rgba(15, 16, 19, 1) !important;
+  opacity: 0.35 !important;
 }
 
 .optionContent > .singleButton > img {
