@@ -59,6 +59,12 @@
   "RoadBuilder.ShowInToolbarState[Show]": "在工具列中顯示",
   "RoadBuilder.ShowInToolbarState[Hide]": "從工具列中隱藏",
   "RoadBuilder.Warning[MissingEdgeLane]": "在道路邊緣不設置路肩或人行道可能會導致未預期的行為。",
+  "RoadBuilder.DiscoverSorting[0]": "Most Popular",
+  "RoadBuilder.DiscoverSorting[1]": "Least Popular",
+  "RoadBuilder.DiscoverSorting[2]": "Most Downloads",
+  "RoadBuilder.DiscoverSorting[3]": "Least Downloads",
+  "RoadBuilder.DiscoverSorting[4]": "Most Recent",
+  "RoadBuilder.DiscoverSorting[5]": "Oldest",
   "RoadBuilder.UseAsTemplate": "設為預設模板",
   "RoadBuilder.DeleteRoad": "移除道路",
   "RoadBuilder.PickOther": "選擇另一條道路",
@@ -107,5 +113,7 @@
   "RoadBuilder.RemoveFromPlayset": "從遊玩集中移除",
   "RoadBuilder.HideLockedRoads": "隱藏鎖定道路",
   "RoadBuilder.Sharing": "Sharing",
-  "RoadBuilder.UploadRoad": "Upload Road"
+  "RoadBuilder.UploadRoad": "Upload Road",
+  "RoadBuilder.NoResults": "No Results",
+  "RoadBuilder.ErrorLoading": "Failed to load the roads. Please try again later."
 }
