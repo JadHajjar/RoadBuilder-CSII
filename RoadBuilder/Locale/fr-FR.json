@@ -59,6 +59,12 @@
   "RoadBuilder.ShowInToolbarState[Show]": "Show in the toolbar",
   "RoadBuilder.ShowInToolbarState[Hide]": "Hide from the toolbar",
   "RoadBuilder.Warning[MissingEdgeLane]": "Ne pas avoir de voie d'Accotement ou de Trottoir sur ce bord peut entraîner un résultat inattendu.",
+  "RoadBuilder.DiscoverSorting[0]": "Most Popular",
+  "RoadBuilder.DiscoverSorting[1]": "Least Popular",
+  "RoadBuilder.DiscoverSorting[2]": "Most Downloads",
+  "RoadBuilder.DiscoverSorting[3]": "Least Downloads",
+  "RoadBuilder.DiscoverSorting[4]": "Most Recent",
+  "RoadBuilder.DiscoverSorting[5]": "Oldest",
   "RoadBuilder.UseAsTemplate": "Utiliser comme modèle",
   "RoadBuilder.DeleteRoad": "Supprimer la Route",
   "RoadBuilder.PickOther": "Sélectionner une route différente",
@@ -107,5 +113,7 @@
   "RoadBuilder.RemoveFromPlayset": "Remove From Playset",
   "RoadBuilder.HideLockedRoads": "Hide Locked Roads",
   "RoadBuilder.Sharing": "Sharing",
-  "RoadBuilder.UploadRoad": "Upload Road"
+  "RoadBuilder.UploadRoad": "Upload Road",
+  "RoadBuilder.NoResults": "No Results",
+  "RoadBuilder.ErrorLoading": "Failed to load the roads. Please try again later."
 }
