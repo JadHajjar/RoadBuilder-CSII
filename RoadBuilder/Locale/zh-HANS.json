@@ -49,7 +49,7 @@
   "RoadBuilder.RoadAddon[GeneratesZoningBlocks]": "启用功能区",
   "RoadBuilder.RoadAddon[HasUndergroundWaterPipes]": "启用地下水管/污水管",
   "RoadBuilder.RoadAddon[HasUndergroundElectricityCable]": "启用地下电缆",
-  "RoadBuilder.RoadAddon[RequiresUpgradeForElectricity]": "Requires to be upgraded with \"Lightning\" road service to allow passing electricity",
+  "RoadBuilder.RoadAddon[RequiresUpgradeForElectricity]": "需要替换为带路灯的道路以允许道路通低压电。",
   "RoadBuilder.LaneSectionType[Vehicles]": "载具",
   "RoadBuilder.LaneSectionType[Tracks]": "轨道",
   "RoadBuilder.LaneSectionType[Medians]": "分隔带",
@@ -105,5 +105,7 @@
   "RoadBuilder.Playset": "Playset",
   "RoadBuilder.AddToPlayset": "添加到 Playset",
   "RoadBuilder.RemoveFromPlayset": "从 Playset 中移除",
-  "RoadBuilder.HideLockedRoads": "隐藏未解锁道路"
+  "RoadBuilder.HideLockedRoads": "隐藏未解锁道路",
+  "RoadBuilder.Sharing": "Sharing",
+  "RoadBuilder.UploadRoad": "Upload Road"
 }
