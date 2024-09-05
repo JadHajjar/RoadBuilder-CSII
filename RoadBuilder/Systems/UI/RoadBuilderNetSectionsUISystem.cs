@@ -20,7 +20,6 @@ namespace RoadBuilder.Systems.UI
 {
 	public partial class RoadBuilderNetSectionsUISystem : ExtendedUISystemBase
 	{
-		private PrefabSystem prefabSystem;
 		private PrefabUISystem prefabUISystem;
 		private RoadBuilderSystem roadBuilderSystem;
 		private RoadBuilderNetSectionsSystem netSectionsSystem;
@@ -32,15 +31,14 @@ namespace RoadBuilder.Systems.UI
 		protected override void OnCreate()
 		{
 			base.OnCreate();
-
-			prefabSystem = World.GetOrCreateSystemManaged<PrefabSystem>();
+			
 			prefabUISystem = World.GetOrCreateSystemManaged<PrefabUISystem>();
 			roadBuilderSystem = World.GetOrCreateSystemManaged<RoadBuilderSystem>();
 			netSectionsSystem = World.GetOrCreateSystemManaged<RoadBuilderNetSectionsSystem>();
 
 			_NetSections = CreateBinding("NetSections", new NetSectionGroup[0]);
 
-			CreateTrigger<string>("SetSearchQuery", SetSearchQuery);
+			CreateTrigger<string>("Lanes.SetSearchQuery", SetSearchQuery);
 
 			netSectionsSystem.SectionsAdded += () => RefreshEntries(activeConfig);
 		}
@@ -181,7 +179,9 @@ namespace RoadBuilder.Systems.UI
 			}
 
 			if (prefab.LinkedSections.Count == 0)
+			{
 				return LaneSectionType.Misc;
+			}
 
 			return prefab.LinkedSections.Min(GetSectionType);
 		}

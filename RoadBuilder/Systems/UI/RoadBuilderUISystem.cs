@@ -1,12 +1,10 @@
-﻿using Game;
-using Game.City;
+﻿using Game.City;
 using Game.Input;
 using Game.Prefabs;
 using Game.SceneFlow;
 using Game.Simulation;
 using Game.Tools;
 using Game.UI;
-using Game.UI.Editor;
 using Game.UI.InGame;
 
 using RoadBuilder.Domain.Components.Prefabs;
@@ -15,12 +13,10 @@ using RoadBuilder.Domain.Enums;
 using RoadBuilder.Domain.Prefabs;
 using RoadBuilder.Domain.UI;
 using RoadBuilder.Utilities;
-using RoadBuilder.Utilities.Online;
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 using Unity.Entities;
 
@@ -45,7 +41,7 @@ namespace RoadBuilder.Systems.UI
 		private RoadBuilderNetSectionsSystem netSectionsSystem;
 		private CityConfigurationSystem cityConfigurationSystem;
 		private RoadBuilderConfigurationsUISystem roadBuilderConfigurationsUISystem;
-		private EditorToolUISystem editorToolUISystem;
+		private RoadBuilderGenericFunctionsSystem roadBuilderGenericFunctionsSystem;
 		private ValueBindingHelper<RoadBuilderToolMode> RoadBuilderMode;
 		private ValueBindingHelper<string> RoadId;
 		private ValueBindingHelper<string> RoadName;
@@ -55,7 +51,7 @@ namespace RoadBuilder.Systems.UI
 		private ValueBindingHelper<OptionSectionUIEntry[]> RoadOptions;
 		private ValueBindingHelper<bool> RoadListView;
 		private ValueBindingHelper<bool> IsPaused;
-		private ValueBindingHelper<bool> IsLoggedIn;
+		private readonly ValueBindingHelper<bool> IsLoggedIn;
 		private ValueBindingHelper<int> FpsMeterLevel;
 		private ValueBindingHelper<bool> IsCustomRoadSelected;
 		private ProxyAction _toolKeyBinding;
@@ -82,7 +78,7 @@ namespace RoadBuilder.Systems.UI
 			netSectionsSystem = World.GetOrCreateSystemManaged<RoadBuilderNetSectionsSystem>();
 			cityConfigurationSystem = World.GetOrCreateSystemManaged<CityConfigurationSystem>();
 			roadBuilderConfigurationsUISystem = World.GetOrCreateSystemManaged<RoadBuilderConfigurationsUISystem>();
-			editorToolUISystem = World.GetOrCreateSystemManaged<EditorToolUISystem>();
+			roadBuilderGenericFunctionsSystem = World.GetOrCreateSystemManaged<RoadBuilderGenericFunctionsSystem>();
 
 			toolSystem.EventToolChanged += OnToolChanged;
 
@@ -208,11 +204,11 @@ namespace RoadBuilder.Systems.UI
 		{
 			if (workingEntity != Entity.Null && prefabSystem.TryGetPrefab<PrefabBase>(EntityManager.GetComponentData<PrefabRef>(workingEntity), out var prefab))
 			{
-				ActivateRoad(prefab);
+				roadBuilderGenericFunctionsSystem.ActivateRoad(prefab.name);
 			}
 			else if (roadBuilderSystem.Configurations.TryGetValue(GetWorkingId(), out var networkPrefab))
 			{
-				ActivateRoad(networkPrefab.Prefab);
+				roadBuilderGenericFunctionsSystem.ActivateRoad(networkPrefab.Config.ID);
 			}
 		}
 
@@ -733,20 +729,6 @@ namespace RoadBuilder.Systems.UI
 			}
 
 			return prefab.name.Replace('_', ' ').FormatWords();
-		}
-
-		public void ActivateRoad(PrefabBase prefab)
-		{
-			if (GameManager.instance.gameMode == GameMode.Editor)
-			{
-				editorToolUISystem.activeTool = editorToolUISystem.tools.First(x => x is EditorPrefabTool);
-
-				GameManager.instance.RegisterUpdater(() => toolSystem.ActivatePrefabTool(prefab));
-			}
-			else
-			{
-				toolSystem.ActivatePrefabTool(prefab);
-			}
 		}
 	}
 }

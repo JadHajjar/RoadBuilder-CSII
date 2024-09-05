@@ -21,7 +21,8 @@ namespace RoadBuilder.Domain.Configurations
 		string PillarPrefabName { get; set; }
 		ShowInToolbarState ToolbarState { get; set; }
 		List<int> Playsets { get; set; }
-		
+		bool Uploaded { get; set; }
+
 		void ApplyVersionChanges();
 		Type GetPrefabType();
 	}

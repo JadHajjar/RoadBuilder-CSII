@@ -26,6 +26,7 @@ namespace RoadBuilder.Domain.Configurations
 		public List<LaneConfig> Lanes { get; set; } = new();
 		public ShowInToolbarState ToolbarState { get; set; }
 		public List<int> Playsets { get; set; }
+		bool INetworkConfig.Uploaded { get; set; }
 
 		public void Deserialize<TReader>(TReader reader) where TReader : IReader
 		{

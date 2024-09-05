@@ -10,6 +10,7 @@ import {
   roadBuilderToolMode$,
   roadListView$,
   setRoadListView,
+  setRoadsSearchBinder,
   setSearchBinder,
 } from "mods/bindings";
 import { useEffect, useState } from "react";
@@ -34,7 +35,9 @@ export const SidePanel = (props: { editor: boolean }) => {
 
   function setAndBindSearch(query: string) {
     setSearchQuery(query);
-    setSearchBinder(query);
+
+    if (roadListView || toolMode == RoadBuilderToolModeEnum.Picker) setRoadsSearchBinder(query);
+    else setSearchBinder(query);
   }
 
   useEffect(() => {

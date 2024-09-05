@@ -3,6 +3,7 @@ using Colossal.PSI.PdxSdk;
 
 using RoadBuilder.Domain.API;
 
+using System;
 using System.Threading.Tasks;
 
 namespace RoadBuilder.Utilities.Online
@@ -18,7 +19,7 @@ namespace RoadBuilder.Utilities.Online
 			return await Get<PagedContent<RoadBuilderEntry>>("/Roads", (nameof(query), query), (nameof(category), category), (nameof(order), order), (nameof(page), page));
 		}
 
-		public async Task<ApiResponse> GetEntries(RoadBuilderEntryPost road)
+		public async Task<ApiResponse> UploadRoad(RoadBuilderEntryPost road)
 		{
 			return await Post<RoadBuilderEntryPost, ApiResponse>("/SaveRoad", road);
 		}

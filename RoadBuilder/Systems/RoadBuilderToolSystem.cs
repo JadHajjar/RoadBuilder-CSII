@@ -35,6 +35,7 @@ namespace RoadBuilder.Systems
 		private RoadBuilderSystem roadBuilderSystem;
 		private ToolSystem toolSystem;
 		private EditorToolUISystem editorToolUISystem;
+		private RoadBuilderGenericFunctionsSystem roadBuilderGenericFunctionsSystem;
 		private EntityQuery highlightedQuery;
 		private EntityQuery roadBuilderNetworkQuery;
 		private ProxyAction placeAction;
@@ -52,6 +53,7 @@ namespace RoadBuilder.Systems
 			roadBuilderSystem = World.GetOrCreateSystemManaged<RoadBuilderSystem>();
 			toolSystem = World.GetOrCreateSystemManaged<ToolSystem>();
 			editorToolUISystem = World.GetExistingSystemManaged<EditorToolUISystem>();
+			roadBuilderGenericFunctionsSystem = World.GetExistingSystemManaged<RoadBuilderGenericFunctionsSystem>();
 
 			highlightedQuery = SystemAPI.QueryBuilder().WithAny<Highlighted, RoadBuilderUpdateFlagComponent>().Build();
 			roadBuilderNetworkQuery = GetEntityQuery(ComponentType.ReadOnly<RoadBuilderNetwork>());
@@ -113,10 +115,7 @@ namespace RoadBuilder.Systems
 
 			if (placeAction.WasPerformedThisFrame())
 			{
-				if (roadBuilderSystem.Configurations.TryGetValue(roadBuilderUISystem.GetWorkingId(), out var prefab))
-				{
-					roadBuilderUISystem.ActivateRoad(prefab.Prefab);
-				}
+				roadBuilderGenericFunctionsSystem.ActivateRoad(roadBuilderUISystem.GetWorkingId());
 
 				return base.OnUpdate(inputDeps);
 			}

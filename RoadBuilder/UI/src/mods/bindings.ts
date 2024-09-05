@@ -43,7 +43,8 @@ export const editRoad = (id: string) => trigger(mod.id, "EditRoad", id);
 export const findRoad = (id: string) => trigger(mod.id, "FindRoad", id);
 export const deleteRoad = (id: string) => trigger(mod.id, "DeleteRoad", id);
 export const setIsUIDragging = (isDragging: boolean) => trigger(mod.id, "SetDragging", isDragging);
-export const setSearchBinder = (q: string) => trigger(mod.id, "SetSearchQuery", q);
+export const setSearchBinder = (q: string) => trigger(mod.id, "Lanes.SetSearchQuery", q);
+export const setRoadsSearchBinder = (q: string) => trigger(mod.id, "Roads.SetSearchQuery", q);
 export const setRoadLanes = (lanes: RoadLane[]) => {
   trigger(
     mod.id,
@@ -62,5 +63,6 @@ export const setManagementSearchBinder = (q: string) => trigger(mod.id, "Managem
 export const setManagementSetCategory = (s: number) => trigger(mod.id, "Management.SetCategory", s);
 export const setManagementRoad = (r: string | undefined) => trigger(mod.id, "Management.SetRoad", r);
 export const setManagedRoadName = (name: string) => trigger(mod.id, "Management.SetRoadName", name);
+export const setDiscoverSearchBinder = (q: string) => trigger(mod.id, "Discover.SetSearchQuery", q);
 export const setDiscoverSorting = (s: number) => trigger(mod.id, "Discover.SetSorting", s);
 export const downloadConfig = (id: string) => trigger(mod.id, "Discover.Download", id);

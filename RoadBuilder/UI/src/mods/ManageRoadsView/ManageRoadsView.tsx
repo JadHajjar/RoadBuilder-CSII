@@ -13,9 +13,12 @@ import {
   RestrictPlayset$,
   roadBuilderToolMode$,
   roadListView$,
+  setDiscoverSearchBinder,
   setManagementRoad,
+  setManagementSearchBinder,
   setRoadListView,
   setSearchBinder,
+  toggleTool,
 } from "mods/bindings";
 import { useEffect, useState } from "react";
 import { useLocalization } from "cs2/l10n";
@@ -52,7 +55,9 @@ export const ManageRoadsView = (props: { editor: boolean }) => {
 
   function setAndBindSearch(query: string) {
     setSearchQuery(query);
-    setSearchBinder(query);
+
+    if (discoverView) setDiscoverSearchBinder(query);
+    else setManagementSearchBinder(query);
   }
 
   function setSelectedRoad(road: RoadConfiguration) {
@@ -71,16 +76,23 @@ export const ManageRoadsView = (props: { editor: boolean }) => {
     {
       items = (
         <div className={styles.browseContainer}>
-          <Scrollable className={styles.list} vertical smooth trackVisibility="scrollable">
-            {roadConfigurations
-              .filter((val, idx) => val.Name)
-              .filter((val, idx) => searchQuery == undefined || searchQuery == "" || val.Name.toLowerCase().indexOf(searchQuery.toLowerCase()) >= 0)
-              .map((val, idx) => (
-                <DiscoverRoadConfigListItem key={idx} road={val} />
-              ))}
-          </Scrollable>
+          {DiscoverLoading && <img className={styles.loader} />}
 
-          <Pagination />
+          {!DiscoverLoading && (
+            <>
+              <Scrollable className={styles.list} vertical smooth trackVisibility="scrollable">
+                {roadConfigurations
+                  .filter((val, idx) => val.Name)
+                  .filter(
+                    (val, idx) => searchQuery == undefined || searchQuery == "" || val.Name.toLowerCase().indexOf(searchQuery.toLowerCase()) >= 0
+                  )
+                  .map((val, idx) => (
+                    <DiscoverRoadConfigListItem key={idx} road={val} />
+                  ))}
+              </Scrollable>
+              <Pagination />
+            </>
+          )}
         </div>
       );
     }
@@ -158,7 +170,14 @@ export const ManageRoadsView = (props: { editor: boolean }) => {
           </div>
         </div>
 
-        <Button className={styles.closeButton} variant="flat">
+        <Button
+          className={styles.closeButton}
+          variant="flat"
+          onSelect={() => {
+            toggleTool();
+            toggleTool();
+          }}
+        >
           <img style={{ maskImage: "url(Media/Glyphs/Close.svg)" }} />
         </Button>
       </div>

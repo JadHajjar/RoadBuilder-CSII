@@ -1,13 +1,19 @@
-﻿using RoadBuilder.Domain.Enums;
+﻿using Colossal.Json;
+
+using RoadBuilder.Domain.Enums;
 using RoadBuilder.Domain.Prefabs;
 using RoadBuilder.Domain.UI;
 using RoadBuilder.Utilities;
 using RoadBuilder.Utilities.Online;
 
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 using Unity.Entities;
 
@@ -18,7 +24,8 @@ namespace RoadBuilder.Systems.UI
 		private enum ActionType
 		{
 			ShowInToolbar,
-			TogglePlayset
+			TogglePlayset,
+			UploadRoad
 		}
 
 		private readonly CancellationTokenSource _cancellationTokenSource = new();
@@ -95,11 +102,51 @@ namespace RoadBuilder.Systems.UI
 						AddToPlayset();
 					}
 					break;
+
+				case ActionType.UploadRoad:
+					Task.Run(UploadRoad);
+					break;
 			}
 
 			roadBuilderSystem.UpdateRoad(SelectedRoad.Config, Entity.Null, false);
 
 			UpdateSelectedRoadConfiguration(SelectedRoad.Config.ID);
+		}
+
+		private async Task UploadRoad()
+		{
+			Loading.Value = true;
+			try
+			{
+				var config = SelectedRoad.Config;
+				var svg = new ThumbnailGenerationUtil(SelectedRoad, World.GetExistingSystemManaged<RoadBuilderGenerationDataSystem>().RoadGenerationData).GenerateSvg();
+				using var memory = new MemoryStream();
+
+				svg.Save(memory, SaveOptions.DisableFormatting);
+
+				var result = await ApiUtil.Instance.UploadRoad(new()
+				{
+					ID = config.ID,
+					Category = (int)config.Category,
+					Name = config.Name,
+					Icon = Encoding.UTF8.GetString(memory.ToArray()),
+					Config = JSON.Dump(config, EncodeOptions.CompactPrint)
+				});
+
+				if (result.success)
+				{
+					config.Uploaded = true;
+				}
+				else
+				{
+					Mod.Log.Error("Failed to upload your road: " + result.message);
+				}
+			}
+			catch (Exception ex)
+			{
+				Mod.Log.Error(ex, "Failed to upload your road");
+			}
+			Loading.Value = false;
 		}
 
 		private void UpdateSelectedRoadConfiguration(string id)
@@ -110,7 +157,39 @@ namespace RoadBuilder.Systems.UI
 			}
 
 			var config = SelectedRoad.Config;
-			var options = new List<OptionSectionUIEntry>();
+			var options = new List<OptionSectionUIEntry>
+			{
+				new()
+				{
+					Id = (int)ActionType.ShowInToolbar,
+					Name = LocaleHelper.Translate("RoadBuilder.ShowInToolbar", "Toolbar View"),
+					IsToggle = true,
+					Options = new[]
+					{
+						new OptionItemUIEntry
+						{
+							Id = (int)ShowInToolbarState.Hide,
+							Name = $"RoadBuilder.ShowInToolbarState[{ShowInToolbarState.Hide}]",
+							Icon = "coui://roadbuildericons/RB_Hide.svg",
+							Selected = config.ToolbarState == ShowInToolbarState.Hide
+						},
+						new OptionItemUIEntry
+						{
+							Id = (int)ShowInToolbarState.Inherit,
+							Name = $"RoadBuilder.ShowInToolbarState[{ShowInToolbarState.Inherit}]",
+							Icon = "coui://roadbuildericons/RB_Any.svg",
+							Selected = config.ToolbarState == ShowInToolbarState.Inherit
+						},
+						new OptionItemUIEntry
+						{
+							Id = (int)ShowInToolbarState.Show,
+							Name = $"RoadBuilder.ShowInToolbarState[{ShowInToolbarState.Show}]",
+							Icon = "coui://roadbuildericons/RB_Show.svg",
+							Selected = config.ToolbarState == ShowInToolbarState.Show
+						},
+					}
+				}
+			};
 
 			if (!Mod.Settings.NoPlaysetIsolation)
 			{
@@ -132,36 +211,24 @@ namespace RoadBuilder.Systems.UI
 				});
 			}
 
-			options.Add(new()
+			if (!config.Uploaded)
 			{
-				Id = (int)ActionType.ShowInToolbar,
-				Name = LocaleHelper.Translate("RoadBuilder.ShowInToolbar", "Toolbar View"),
-				IsToggle = true,
-				Options = new[]
+				options.Add(new()
 				{
-					new OptionItemUIEntry
+					Id = (int)ActionType.UploadRoad,
+					Name = LocaleHelper.Translate("RoadBuilder.Sharing", "Sharing"),
+					IsButton = true,
+					Options = new[]
 					{
-						Id = (int)ShowInToolbarState.Hide,
-						Name = $"RoadBuilder.ShowInToolbarState[{ShowInToolbarState.Hide}]",
-						Icon = "coui://roadbuildericons/RB_Hide.svg",
-						Selected = config.ToolbarState == ShowInToolbarState.Hide
-					},
-					new OptionItemUIEntry
-					{
-						Id = (int)ShowInToolbarState.Inherit,
-						Name = $"RoadBuilder.ShowInToolbarState[{ShowInToolbarState.Inherit}]",
-						Icon = "coui://roadbuildericons/RB_Any.svg",
-						Selected = config.ToolbarState == ShowInToolbarState.Inherit
-					},
-					new OptionItemUIEntry
-					{
-						Id = (int)ShowInToolbarState.Show,
-						Name = $"RoadBuilder.ShowInToolbarState[{ShowInToolbarState.Show}]",
-						Icon = "coui://roadbuildericons/RB_Show.svg",
-						Selected = config.ToolbarState == ShowInToolbarState.Show
-					},
-				}
-			});
+						new OptionItemUIEntry
+						{
+							Name = "RoadBuilder.UploadRoad",
+							Icon = "Media/Glyphs/Plus.svg",
+							Disabled = Loading
+						}
+					}
+				});
+			}
 
 			SelectedRoadOptions.Value = options.ToArray();
 		}
@@ -275,6 +342,7 @@ namespace RoadBuilder.Systems.UI
 
 		private void DownloadConfig(string obj)
 		{
+			Task.Run()
 		}
 	}
 }
