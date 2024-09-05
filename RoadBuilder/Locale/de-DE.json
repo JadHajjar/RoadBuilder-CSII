@@ -105,5 +105,7 @@
   "RoadBuilder.Playset": "Spielset",
   "RoadBuilder.AddToPlayset": "Zum Spielset hinzufügen",
   "RoadBuilder.RemoveFromPlayset": "Aus dem Spielset entfernen",
-  "RoadBuilder.HideLockedRoads": "Gesperrte Straßen ausblenden"
+  "RoadBuilder.HideLockedRoads": "Gesperrte Straßen ausblenden",
+  "RoadBuilder.Sharing": "Sharing",
+  "RoadBuilder.UploadRoad": "Upload Road"
 }
