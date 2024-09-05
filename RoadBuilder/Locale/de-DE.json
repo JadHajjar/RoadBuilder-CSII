@@ -59,6 +59,12 @@
   "RoadBuilder.ShowInToolbarState[Show]": "In der Toolbar anzeigen",
   "RoadBuilder.ShowInToolbarState[Hide]": "In der Toolbar ausblenden",
   "RoadBuilder.Warning[MissingEdgeLane]": "Wenn auf diesem Rand kein Randstreifen oder Gehweg vorhanden ist, kann es zu unerwartetem Verhalten kommen.",
+  "RoadBuilder.DiscoverSorting[0]": "Most Popular",
+  "RoadBuilder.DiscoverSorting[1]": "Least Popular",
+  "RoadBuilder.DiscoverSorting[2]": "Most Downloads",
+  "RoadBuilder.DiscoverSorting[3]": "Least Downloads",
+  "RoadBuilder.DiscoverSorting[4]": "Most Recent",
+  "RoadBuilder.DiscoverSorting[5]": "Oldest",
   "RoadBuilder.UseAsTemplate": "Als Vorlage verwenden",
   "RoadBuilder.DeleteRoad": "Straße löschen",
   "RoadBuilder.PickOther": "Wähle eine andere Straße",
@@ -107,5 +113,7 @@
   "RoadBuilder.RemoveFromPlayset": "Aus dem Spielset entfernen",
   "RoadBuilder.HideLockedRoads": "Gesperrte Straßen ausblenden",
   "RoadBuilder.Sharing": "Sharing",
-  "RoadBuilder.UploadRoad": "Upload Road"
+  "RoadBuilder.UploadRoad": "Upload Road",
+  "RoadBuilder.NoResults": "No Results",
+  "RoadBuilder.ErrorLoading": "Failed to load the roads. Please try again later."
 }
