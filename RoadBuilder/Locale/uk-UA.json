@@ -70,6 +70,7 @@
   "RoadBuilder.PickOther": "Pick a different road",
   "RoadBuilder.DragHere": "Drag Lanes Here",
   "RoadBuilder.CloseRoadBuilder": "Exit from Road Builder",
+  "RoadBuilder.Place": "Place",
   "RoadBuilder.Picker": "Place More",
   "RoadBuilder.EditAllInstances": "Edit All Instances",
   "RoadBuilder.PickerHint": "Click On A Road",
