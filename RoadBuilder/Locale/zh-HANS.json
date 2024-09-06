@@ -70,6 +70,7 @@
   "RoadBuilder.PickOther": "选择另一条道路",
   "RoadBuilder.DragHere": "把车道拖动到这里",
   "RoadBuilder.CloseRoadBuilder": "退出道路制造者",
+  "RoadBuilder.Place": "Place",
   "RoadBuilder.Picker": "放置更多",
   "RoadBuilder.EditAllInstances": "编辑所有实例",
   "RoadBuilder.PickerHint": "选择一条道路",
