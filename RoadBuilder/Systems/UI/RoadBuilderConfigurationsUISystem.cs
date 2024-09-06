@@ -13,6 +13,7 @@ using RoadBuilder.Domain.Enums;
 using RoadBuilder.Domain.UI;
 using RoadBuilder.Utilities;
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -28,6 +29,11 @@ namespace RoadBuilder.Systems.UI
 		private PrefabSystem prefabSystem;
 		private RoadBuilderGenericFunctionsSystem genericFunctionsSystem;
 		private ValueBindingHelper<RoadConfigurationUIBinder[]> RoadConfigurations;
+		private string query = string.Empty;
+
+		public event Action ConfigurationsUpdated;
+
+		public List<RoadConfigurationUIBinder> AvailableConfigurations { get; private set; }
 
 		protected override void OnCreate()
 		{
@@ -46,11 +52,26 @@ namespace RoadBuilder.Systems.UI
 			CreateTrigger<string>("EditRoad", genericFunctionsSystem.EditRoad);
 			CreateTrigger<string>("FindRoad", genericFunctionsSystem.FindRoad);
 			CreateTrigger<string>("DeleteRoad", genericFunctionsSystem.DeleteRoad);
+			CreateTrigger<string>("Roads.SetSearchQuery", SetSearchQuery);
+		}
+
+		private void SetSearchQuery(string obj)
+		{
+			query = obj;
+
+			RoadConfigurations.Value = AvailableConfigurations
+				.Where(x => Filter(x.Name))
+				.ToArray();
+		}
+
+		private bool Filter(string name)
+		{
+			return string.IsNullOrWhiteSpace(query) || query.SearchCheck(name);
 		}
 
 		public void UpdateConfigurationList()
 		{
-			RoadConfigurations.Value = roadBuilderSystem.Configurations.Select(x => new RoadConfigurationUIBinder
+			AvailableConfigurations = roadBuilderSystem.Configurations.Select(x => new RoadConfigurationUIBinder
 			{
 				ID = x.Key,
 #if DEBUG&&false
@@ -66,7 +87,11 @@ namespace RoadBuilder.Systems.UI
 			})
 				.OrderBy(x => x.Locked)
 				.ThenBy(x => x.Name)
-				.ToArray();
+				.ToList();
+
+			SetSearchQuery(query);
+
+			ConfigurationsUpdated?.Invoke();
 		}
 	}
 }

@@ -41,7 +41,7 @@ namespace RoadBuilder.Systems.UI
 		{
 			var binding = new GetterValueBinding<T>(Mod.Id, key, getterFunc, new GenericUIWriter<T>());
 
-			AddBinding(binding);
+			AddUpdateBinding(binding);
 
 			return binding;
 		}

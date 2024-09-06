@@ -28,7 +28,8 @@ namespace RoadBuilder.Systems.UI
 			UploadRoad
 		}
 
-		private string query;
+		private string query = string.Empty;
+		private string discoverQuery = string.Empty;
 		private RoadCategory? currentCategory;
 		private int sorting;
 		private RoadBuilderSystem roadBuilderSystem;
@@ -43,6 +44,7 @@ namespace RoadBuilder.Systems.UI
 		private ValueBindingHelper<int> MaxPages;
 		private ValueBindingHelper<RoadConfigurationUIBinder[]> Items;
 		private ValueBindingHelper<OptionSectionUIEntry[]> SelectedRoadOptions;
+		private ValueBindingHelper<RoadConfigurationUIBinder[]> RoadConfigurations;
 		private INetworkBuilderPrefab SelectedRoad;
 		private CancellationTokenSource cancellationTokenSource = new();
 
@@ -54,8 +56,11 @@ namespace RoadBuilder.Systems.UI
 			roadBuilderRoadTrackerSystem = World.GetOrCreateSystemManaged<RoadBuilderRoadTrackerSystem>();
 			roadBuilderConfigurationsUISystem = World.GetOrCreateSystemManaged<RoadBuilderConfigurationsUISystem>();
 
-			RoadId = CreateBinding("Management.GetRoadId", string.Empty);
-			RestrictPlayset = CreateBinding("Management.RestrictPlayset", true);
+			roadBuilderConfigurationsUISystem.ConfigurationsUpdated += () => SedSearchQuery(query);
+
+			CreateBinding("Management.RestrictPlayset", () => !Mod.Settings.NoPlaysetIsolation);
+			CreateBinding("Management.GetRoadId", () => SelectedRoad?.Config.ID ?? string.Empty);
+
 			Loading = CreateBinding("Discover.Loading", true);
 			ErrorLoading = CreateBinding("Discover.ErrorLoading", false);
 			Uploading = CreateBinding("Discover.Uploading", false);
@@ -63,24 +68,31 @@ namespace RoadBuilder.Systems.UI
 			MaxPages = CreateBinding("Discover.MaxPages", 1);
 			Items = CreateBinding("Discover.Items", new RoadConfigurationUIBinder[0]);
 			SelectedRoadOptions = CreateBinding("Management.GetRoadOptions", new OptionSectionUIEntry[0]);
+			RoadConfigurations = CreateBinding("Management.GetRoadConfigurations", new RoadConfigurationUIBinder[0]);
 
 			CreateTrigger<int>("Discover.SetPage", SetDiscoverPage);
 			CreateTrigger<int>("Discover.SetSorting", SetDiscoverSorting);
 			CreateTrigger<string>("Discover.Download", DownloadConfig);
-			CreateTrigger<string>("Discover.SetSearchQuery", SetSearchQuery);
+			CreateTrigger<string>("Discover.SetSearchQuery", SetDiscoverSearchQuery);
+			CreateTrigger<string>("Management.SetSearchQuery", SedSearchQuery);
 			CreateTrigger<int>("Management.SetCategory", SetCategory);
 			CreateTrigger<int, int, int>("Management.RoadOptionClicked", RoadOptionClicked);
 			CreateTrigger<string>("Management.SetRoad", UpdateSelectedRoadConfiguration);
 			CreateTrigger<string>("Management.SetRoadName", SetRoadName);
-			//CreateTrigger<string>("Management.SetSearchQuery", SetManagedmentSearchQuery);
 		}
 
-		protected override void OnUpdate()
+		private void SedSearchQuery(string obj)
 		{
-			RestrictPlayset.Value = !Mod.Settings.NoPlaysetIsolation;
-			RoadId.Value = SelectedRoad?.Config.ID ?? string.Empty;
+			query = obj;
 
-			base.OnUpdate();
+			RoadConfigurations.Value = roadBuilderConfigurationsUISystem.AvailableConfigurations
+				.Where(x => Filter(x.Name))
+				.ToArray();
+		}
+
+		private bool Filter(string name)
+		{
+			return string.IsNullOrWhiteSpace(query) || query.SearchCheck(name);
 		}
 
 		private void SetRoadName(string obj)
@@ -257,9 +269,9 @@ namespace RoadBuilder.Systems.UI
 			StartLoad();
 		}
 
-		private void SetSearchQuery(string obj)
+		private void SetDiscoverSearchQuery(string obj)
 		{
-			query = obj;
+			discoverQuery = obj;
 
 			StartLoad();
 		}
@@ -300,7 +312,7 @@ namespace RoadBuilder.Systems.UI
 
 			try
 			{
-				var result = await ApiUtil.Instance.GetEntries(query, (int?)currentCategory, sorting, CurrentPage.Value);
+				var result = await ApiUtil.Instance.GetEntries(discoverQuery, (int?)currentCategory, sorting, CurrentPage.Value);
 
 				if (token.IsCancellationRequested)
 				{

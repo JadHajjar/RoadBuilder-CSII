@@ -51,7 +51,6 @@ namespace RoadBuilder.Systems.UI
 		private ValueBindingHelper<OptionSectionUIEntry[]> RoadOptions;
 		private ValueBindingHelper<bool> RoadListView;
 		private ValueBindingHelper<bool> IsPaused;
-		private readonly ValueBindingHelper<bool> IsLoggedIn;
 		private ValueBindingHelper<int> FpsMeterLevel;
 		private ValueBindingHelper<bool> IsCustomRoadSelected;
 		private ProxyAction _toolKeyBinding;
