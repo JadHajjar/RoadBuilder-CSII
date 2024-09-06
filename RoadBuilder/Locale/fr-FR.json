@@ -70,6 +70,7 @@
   "RoadBuilder.PickOther": "Sélectionner une route différente",
   "RoadBuilder.DragHere": "Glissez les Voies Ici",
   "RoadBuilder.CloseRoadBuilder": "Quitter Road Builder",
+  "RoadBuilder.Place": "Place",
   "RoadBuilder.Picker": "Placer Plus de Routes de ce type",
   "RoadBuilder.EditAllInstances": "Modifier Toutes les Instances",
   "RoadBuilder.PickerHint": "Cliquez Sur Une Route",
