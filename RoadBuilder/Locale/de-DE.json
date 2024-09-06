@@ -88,6 +88,7 @@
   "RoadBuilder.Edit": "Bearbeiten",
   "RoadBuilder.Find": "Suchen",
   "RoadBuilder.Delete": "Löschen",
+  "RoadBuilder.PlaceTooltip": "Place more of this road configuration",
   "RoadBuilder.EditTooltip": "Diese Straßenkonfiguration bearbeiten",
   "RoadBuilder.FindTooltip": "Straße auf der Karte suchen",
   "RoadBuilder.DeleteTooltip": "Lösche diese Straßenkonfiguration und alle Segmente welche diese nutzen",
