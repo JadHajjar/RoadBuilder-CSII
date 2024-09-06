@@ -10,6 +10,7 @@ namespace RoadBuilder.Domain.API
 		public string tags { get; set; }
 		public int category { get; set; }
 		public int downloads { get; set; }
+		public string icon { get; set; }
 		public DateTime uploadTime { get; set; }
 	}
 }

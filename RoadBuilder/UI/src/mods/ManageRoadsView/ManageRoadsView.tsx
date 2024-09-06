@@ -186,7 +186,12 @@ export const ManageRoadsView = (props: { editor: boolean }) => {
                   }}
                   onSelect={() => setUsedFilter(usedFilter == undefined ? true : usedFilter ? false : undefined)}
                 >
-                  <img style={{ maskImage: "url(coui://roadbuildericons/RB_Location.svg)" }} />
+                  <img
+                    style={{
+                      maskImage:
+                        usedFilter === false ? "url(coui://roadbuildericons/RB_NoLocation.svg)" : "url(coui://roadbuildericons/RB_Location.svg)",
+                    }}
+                  />
                 </Button>
               </Tooltip>
             )}

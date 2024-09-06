@@ -118,7 +118,8 @@ namespace RoadBuilder.Systems.UI
 
 		public T Value
 		{
-			get => dirty ? valueToUpdate : Binding.value; set
+			get => dirty ? valueToUpdate : Binding.value;
+			set
 			{
 				dirty = true;
 				valueToUpdate = value;

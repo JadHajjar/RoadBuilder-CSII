@@ -339,14 +339,22 @@ namespace RoadBuilder.Systems.UI
 				for (var i = 0; i < items.Length; i++)
 				{
 					var item = result.items[i];
+
 					items[i] = new RoadConfigurationUIBinder
 					{
 						ID = item.id,
 						Category = (RoadCategory)item.category,
 						Name = item.name,
 						Author = item.author,
-						Thumbnail = $"{KEYS.API_URL}/roadicon/{item.id}.svg",
+						Thumbnail = $"coui://roadbuilderthumbnails/{item.id}.svg",
 					};
+
+					var path = Path.Combine(FoldersUtil.TempFolder, item.id + ".svg");
+
+					if (!File.Exists(path))
+					{
+						File.WriteAllText(path, item.icon);
+					}
 				}
 
 				Items.Value = items;
