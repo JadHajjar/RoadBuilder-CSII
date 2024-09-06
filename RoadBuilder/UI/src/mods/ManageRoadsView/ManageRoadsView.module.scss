@@ -57,24 +57,6 @@
   border-bottom-color: var(--accentColorDark);
 }
 
-.subHeader {
-  display: flex;
-  justify-content: space-between;
-  padding: 2rem 10rem;
-}
-
-.title {
-  color: var(--accentColorNormal);
-  text-transform: uppercase;
-  font-size: 13rem;
-}
-
-.roadCount {
-  color: var(--menuText1Normal);
-  text-align: center;
-  font-size: 14rem;
-}
-
 .mode {
   display: flex;
 
@@ -174,6 +156,10 @@
   & > div {
     width: 200rem;
   }
+
+  button {
+    @include _base.textInputBasic();
+  }
 }
 
 .searchBar {
@@ -248,7 +234,7 @@
   width: 100%;
   flex: 1;
 
-  & > div:first-child() {
+  & > div:first-child {
     flex: 1;
   }
 }
@@ -273,7 +259,7 @@
   justify-content: center;
   align-items: center;
 
-  img {
+  & > img {
     width: 64rem;
     height: 64rem;
     animation: rotation 0.55s infinite linear;
@@ -282,6 +268,15 @@
   .noResults {
     font-size: 28rem;
     color: var(--textColorDim);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    img {
+      width: 64rem;
+      height: 64rem;
+      margin-bottom: 24rem;
+    }
   }
 }
 

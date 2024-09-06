@@ -92,17 +92,13 @@
 }
 
 .buttons Button {
-  @include base.basicButton();
+  @include base.transparentButton();
 
   flex: 1;
   border-radius: 0;
   padding: 4rem;
   backdrop-filter: none;
   background: none;
-
-  &:hover {
-    background-color: var(--hoverColorBright);
-  }
 
   &.danger:active {
     background-color: var(--animation-curve-active-n1-stroke) !important;
@@ -111,6 +107,10 @@
   img {
     width: 20rem;
     height: 20rem;
+  }
+
+  &.disabled {
+    @include base.disabledTransparentButton();
   }
 }
 

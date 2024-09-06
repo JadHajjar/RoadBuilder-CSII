@@ -28,15 +28,17 @@ namespace RoadBuilder.Systems.UI
 			UploadRoad
 		}
 
+		private int sorting;
 		private string query = string.Empty;
 		private string discoverQuery = string.Empty;
 		private RoadCategory? currentCategory;
-		private int sorting;
+		private INetworkBuilderPrefab SelectedRoad;
+		private CancellationTokenSource cancellationTokenSource = new();
+
 		private RoadBuilderSystem roadBuilderSystem;
 		private RoadBuilderRoadTrackerSystem roadBuilderRoadTrackerSystem;
 		private RoadBuilderConfigurationsUISystem roadBuilderConfigurationsUISystem;
-		private ValueBindingHelper<string> RoadId;
-		private ValueBindingHelper<bool> RestrictPlayset;
+
 		private ValueBindingHelper<bool> Loading;
 		private ValueBindingHelper<bool> ErrorLoading;
 		private ValueBindingHelper<bool> Uploading;
@@ -45,8 +47,7 @@ namespace RoadBuilder.Systems.UI
 		private ValueBindingHelper<RoadConfigurationUIBinder[]> Items;
 		private ValueBindingHelper<OptionSectionUIEntry[]> SelectedRoadOptions;
 		private ValueBindingHelper<RoadConfigurationUIBinder[]> RoadConfigurations;
-		private INetworkBuilderPrefab SelectedRoad;
-		private CancellationTokenSource cancellationTokenSource = new();
+		private ValueBindingHelper<RoadConfigurationUIBinder> ManagedRoad;
 
 		protected override void OnCreate()
 		{
@@ -56,10 +57,9 @@ namespace RoadBuilder.Systems.UI
 			roadBuilderRoadTrackerSystem = World.GetOrCreateSystemManaged<RoadBuilderRoadTrackerSystem>();
 			roadBuilderConfigurationsUISystem = World.GetOrCreateSystemManaged<RoadBuilderConfigurationsUISystem>();
 
-			roadBuilderConfigurationsUISystem.ConfigurationsUpdated += () => SedSearchQuery(query);
+			roadBuilderConfigurationsUISystem.ConfigurationsUpdated += RoadBuilderConfigurationsUISystem_ConfigurationsUpdated;
 
 			CreateBinding("Management.RestrictPlayset", () => !Mod.Settings.NoPlaysetIsolation);
-			CreateBinding("Management.GetRoadId", () => SelectedRoad?.Config.ID ?? string.Empty);
 
 			Loading = CreateBinding("Discover.Loading", true);
 			ErrorLoading = CreateBinding("Discover.ErrorLoading", false);
@@ -69,6 +69,7 @@ namespace RoadBuilder.Systems.UI
 			Items = CreateBinding("Discover.Items", new RoadConfigurationUIBinder[0]);
 			SelectedRoadOptions = CreateBinding("Management.GetRoadOptions", new OptionSectionUIEntry[0]);
 			RoadConfigurations = CreateBinding("Management.GetRoadConfigurations", new RoadConfigurationUIBinder[0]);
+			ManagedRoad = CreateBinding("Management.ManagedRoad", new RoadConfigurationUIBinder());
 
 			CreateTrigger<int>("Discover.SetPage", SetDiscoverPage);
 			CreateTrigger<int>("Discover.SetSorting", SetDiscoverSorting);
@@ -79,6 +80,13 @@ namespace RoadBuilder.Systems.UI
 			CreateTrigger<int, int, int>("Management.RoadOptionClicked", RoadOptionClicked);
 			CreateTrigger<string>("Management.SetRoad", UpdateSelectedRoadConfiguration);
 			CreateTrigger<string>("Management.SetRoadName", SetRoadName);
+		}
+
+		private void RoadBuilderConfigurationsUISystem_ConfigurationsUpdated()
+		{
+			SedSearchQuery(query);
+
+			ManagedRoad.Value = roadBuilderConfigurationsUISystem.GetRoadBinder(SelectedRoad);
 		}
 
 		private void SedSearchQuery(string obj)
@@ -114,8 +122,6 @@ namespace RoadBuilder.Systems.UI
 				return;
 			}
 
-			Mod.Log.Debug((ActionType)option);
-
 			switch ((ActionType)option)
 			{
 				case ActionType.ShowInToolbar:
@@ -143,16 +149,19 @@ namespace RoadBuilder.Systems.UI
 
 			roadBuilderConfigurationsUISystem.UpdateConfigurationList();
 
-			UpdateSelectedRoadConfiguration(SelectedRoad.Config.ID);
+			UpdateSelectedRoadOptions();
 		}
 
 		private void UpdateSelectedRoadConfiguration(string id)
 		{
-			if (!roadBuilderSystem.Configurations.TryGetValue(id, out SelectedRoad))
+			if (roadBuilderSystem.Configurations.TryGetValue(id, out SelectedRoad))
 			{
-				return;
+				UpdateSelectedRoadOptions();
 			}
+		}
 
+		private void UpdateSelectedRoadOptions()
+		{
 			var config = SelectedRoad.Config;
 			var options = new List<OptionSectionUIEntry>
 			{
@@ -201,7 +210,7 @@ namespace RoadBuilder.Systems.UI
 						new OptionItemUIEntry
 						{
 							Name = isInPlayset ? "RoadBuilder.RemoveFromPlayset" : "RoadBuilder.AddToPlayset",
-							Icon = isInPlayset ? "Media/Glyphs/Close.svg" : "Media/Glyphs/Plus.svg",
+							Icon = isInPlayset ? "coui://roadbuildericons/RB_Remove.svg" : "coui://roadbuildericons/RB_Add.svg",
 							Disabled = roadBuilderRoadTrackerSystem.UsedNetworkPrefabs.Contains(SelectedRoad)
 						}
 					}
@@ -220,13 +229,14 @@ namespace RoadBuilder.Systems.UI
 						new OptionItemUIEntry
 						{
 							Name = "RoadBuilder.UploadRoad",
-							Icon = "Media/Glyphs/Plus.svg",
+							Icon = "coui://roadbuildericons/RB_Upload.svg",
 							Disabled = Uploading
 						}
 					}
 				});
 			}
 
+			ManagedRoad.Value = roadBuilderConfigurationsUISystem.GetRoadBinder(SelectedRoad);
 			SelectedRoadOptions.Value = options.ToArray();
 		}
 
@@ -320,6 +330,7 @@ namespace RoadBuilder.Systems.UI
 				}
 
 				Mod.Log.Debug(result.items.Count + " entries");
+
 				CurrentPage.Value = result.page;
 				MaxPages.Value = result.totalPages;
 
@@ -370,7 +381,7 @@ namespace RoadBuilder.Systems.UI
 		private async Task UploadRoad()
 		{
 			Uploading.Value = true;
-			UpdateSelectedRoadConfiguration(SelectedRoad.Config.ID);
+			UpdateSelectedRoadOptions();
 
 			Mod.Log.Info(nameof(UploadRoad));
 

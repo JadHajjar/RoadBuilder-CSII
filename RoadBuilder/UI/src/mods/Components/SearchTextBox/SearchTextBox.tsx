@@ -48,11 +48,11 @@ export const SearchTextBox = (props: { onChange?: (val: string) => void; value?:
             onSelect={clearText}
             focusKey={VanillaComponentResolver.instance.FOCUS_DISABLED}
           >
-            <img src={arrowLeftClear}></img>
+            <img style={{ maskImage: `url(${arrowLeftClear})` }} />
           </Button>
         ) : (
           <div className={classNames(VanillaComponentResolver.instance.assetGridTheme.item, styles.searchIcon)}>
-            <img src={magnifierIcon}></img>
+            <img style={{ maskImage: `url(${magnifierIcon})` }} />
           </div>
         )}
       </div>

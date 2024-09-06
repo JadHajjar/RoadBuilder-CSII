@@ -1,15 +1,10 @@
 ﻿using Colossal.Entities;
 
 using Game;
-using Game.Common;
-using Game.Net;
 using Game.Prefabs;
-using Game.Rendering;
 using Game.SceneFlow;
 using Game.UI;
 
-using RoadBuilder.Domain.Components;
-using RoadBuilder.Domain.Enums;
 using RoadBuilder.Domain.UI;
 using RoadBuilder.Utilities;
 
@@ -71,20 +66,8 @@ namespace RoadBuilder.Systems.UI
 
 		public void UpdateConfigurationList()
 		{
-			AvailableConfigurations = roadBuilderSystem.Configurations.Select(x => new RoadConfigurationUIBinder
-			{
-				ID = x.Key,
-#if DEBUG&&false
-				Name = x.Value.Config.Name + " - " + x.Value.Config.ID,
-#else
-				Name = x.Value.Config.Name,
-#endif
-				IsNotInPlayset = !x.Value.Config.IsInPlayset(),
-				Locked = !Mod.Settings.RemoveLockRequirements && GameManager.instance.gameMode == GameMode.Game && EntityManager.HasEnabledComponent<Locked>(prefabSystem.GetEntity(x.Value.Prefab)),
-				Used = roadBuilderRoadTrackerSystem.UsedNetworkPrefabs.Contains(x.Value),
-				Category = x.Value.Config.Category,
-				Thumbnail = ImageSystem.GetIcon(x.Value.Prefab)
-			})
+			AvailableConfigurations = roadBuilderSystem.Configurations
+				.Select(x => GetRoadBinder(x.Value))
 				.OrderBy(x => x.Locked)
 				.ThenBy(x => x.Name)
 				.ToList();
@@ -92,6 +75,29 @@ namespace RoadBuilder.Systems.UI
 			SetSearchQuery(query);
 
 			ConfigurationsUpdated?.Invoke();
+		}
+
+		public RoadConfigurationUIBinder GetRoadBinder(Domain.Prefabs.INetworkBuilderPrefab value)
+		{
+			if (value is null)
+			{
+				return null;
+			}
+
+			return new RoadConfigurationUIBinder
+			{
+				ID = value.Config.ID,
+#if DEBUG && false
+				Name = value.Config.Name + " - " + value.Config.ID,
+#else
+				Name = value.Config.Name,
+#endif
+				IsNotInPlayset = !value.Config.IsInPlayset(),
+				Locked = !Mod.Settings.RemoveLockRequirements && GameManager.instance.gameMode == GameMode.Game && EntityManager.HasEnabledComponent<Locked>(prefabSystem.GetEntity(value.Prefab)),
+				Used = roadBuilderRoadTrackerSystem.UsedNetworkPrefabs.Contains(value),
+				Category = value.Config.Category,
+				Thumbnail = ImageSystem.GetIcon(value.Prefab)
+			};
 		}
 	}
 }

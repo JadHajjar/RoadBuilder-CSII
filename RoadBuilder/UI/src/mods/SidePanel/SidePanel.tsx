@@ -45,7 +45,7 @@ export const SidePanel = (props: { editor: boolean }) => {
     setAndBindSearch("");
   }, [roadListView]);
 
-  if (toolMode == RoadBuilderToolModeEnum.Picker && roadConfigurations.length === 0) return <></>;
+  //if (toolMode == RoadBuilderToolModeEnum.Picker && searchQuery === "" && roadConfigurations.length === 0) return <></>;
 
   if (roadListView || toolMode == RoadBuilderToolModeEnum.Picker) {
     items = roadConfigurations

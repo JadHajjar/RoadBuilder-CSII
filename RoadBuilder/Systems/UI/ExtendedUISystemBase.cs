@@ -17,11 +17,25 @@ namespace RoadBuilder.Systems.UI
 {
 	public abstract partial class ExtendedUISystemBase : UISystemBase
 	{
+		private readonly List<Action> _updateCallbacks = new();
+
+		protected override void OnUpdate()
+		{
+			foreach (var action in _updateCallbacks)
+			{
+				action();
+			}
+
+			base.OnUpdate();
+		}
+
 		public ValueBindingHelper<T> CreateBinding<T>(string key, T initialValue)
 		{
 			var helper = new ValueBindingHelper<T>(new(Mod.Id, key, initialValue, new GenericUIWriter<T>()));
 
 			AddBinding(helper.Binding);
+
+			_updateCallbacks.Add(helper.ForceUpdate);
 
 			return helper;
 		}
@@ -33,6 +47,8 @@ namespace RoadBuilder.Systems.UI
 
 			AddBinding(helper.Binding);
 			AddBinding(trigger);
+
+			_updateCallbacks.Add(helper.ForceUpdate);
 
 			return helper;
 		}
@@ -95,15 +111,34 @@ namespace RoadBuilder.Systems.UI
 	public class ValueBindingHelper<T>
 	{
 		private readonly Action<T> _updateCallBack;
+		private T valueToUpdate;
+		private bool dirty;
 
 		public ValueBinding<T> Binding { get; }
 
-		public T Value { get => Binding.value; set => Binding.Update(value); }
+		public T Value
+		{
+			get => dirty ? valueToUpdate : Binding.value; set
+			{
+				dirty = true;
+				valueToUpdate = value;
+			}
+		}
 
 		public ValueBindingHelper(ValueBinding<T> binding, Action<T> updateCallBack = null)
 		{
 			Binding = binding;
 			_updateCallBack = updateCallBack;
+		}
+
+		public void ForceUpdate()
+		{
+			if (dirty)
+			{
+				Binding.Update(valueToUpdate);
+
+				dirty = false;
+			}
 		}
 
 		public void UpdateCallback(T value)

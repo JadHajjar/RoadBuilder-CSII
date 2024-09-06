@@ -47,7 +47,7 @@ export const ManageRoadPanel = ({ road }: { road: RoadConfiguration }) => {
     console.log((nameRef.current as any).firstChild.firstChild);
     (nameRef.current as any).firstChild.firstChild.focus();
     (nameRef.current as any).firstChild.firstChild.select();
-  });
+  }, [showNameTextbox]);
 
   return (
     <>
@@ -78,6 +78,32 @@ export const ManageRoadPanel = ({ road }: { road: RoadConfiguration }) => {
 
       <div className={styles.options}>
         <OptionsPanelComponent OnChange={managedRoadOptionClicked} options={managedRoadOptions} />
+      </div>
+
+      <div className={styles.divider} />
+
+      <div className={styles.buttons}>
+        <Tooltip tooltip={translate("RoadBuilder.PlaceTooltip")}>
+          <Button variant="flat" onSelect={() => activateRoad(road.ID)}>
+            <img style={{ maskImage: "url(coui://roadbuildericons/RB_PlaceMore.svg)", width: "24rem", height: "24rem", marginRight: "6rem" }} />{" "}
+            {translate("RoadBuilder.Place")}
+          </Button>
+        </Tooltip>
+        <Tooltip tooltip={translate("RoadBuilder.EditTooltip")}>
+          <Button variant="flat" onSelect={() => editRoad(road.ID)}>
+            <img style={{ maskImage: "url(coui://roadbuildericons/RB_Edit.svg)" }} /> {translate("RoadBuilder.Edit")}
+          </Button>
+        </Tooltip>
+        <Tooltip tooltip={translate("RoadBuilder.FindTooltip")}>
+          <Button disabled={!road.Used} variant="flat" onSelect={() => findRoad(road.ID)} className={!road.Used && styles.disabled}>
+            <img style={{ maskImage: "url(coui://roadbuildericons/RB_Location.svg)" }} /> {translate("RoadBuilder.Find")}
+          </Button>
+        </Tooltip>
+        <Tooltip tooltip={translate("RoadBuilder.DeleteTooltip")}>
+          <Button variant="flat" onSelect={() => deleteRoad(road.ID)} className={styles.danger}>
+            <img style={{ maskImage: "url(coui://roadbuildericons/RB_Trash.svg)" }} /> {translate("RoadBuilder.Delete")}
+          </Button>
+        </Tooltip>
       </div>
     </>
   );

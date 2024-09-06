@@ -48,13 +48,13 @@ export const RoadConfigListItem = ({ road }: { road: RoadConfiguration }) => {
       </div>
 
       <div className={styles.buttons}>
-        <Tooltip tooltip={translate("RoadBuilder.EditTooltip/RB_Edit.svg")}>
+        <Tooltip tooltip={translate("RoadBuilder.EditTooltip")}>
           <Button variant="flat" onSelect={() => editRoad(road.ID)}>
             <img style={{ maskImage: "url(coui://roadbuildericons/RB_Edit.svg)" }} /> {translate("RoadBuilder.Edit")}
           </Button>
         </Tooltip>
         <Tooltip tooltip={translate("RoadBuilder.FindTooltip")}>
-          <Button disabled={!road.Used} variant="flat" onSelect={() => findRoad(road.ID)}>
+          <Button disabled={!road.Used} variant="flat" onSelect={() => findRoad(road.ID)} className={!road.Used && styles.disabled}>
             <img style={{ maskImage: "url(coui://roadbuildericons/RB_Location.svg)" }} /> {translate("RoadBuilder.Find")}
           </Button>
         </Tooltip>

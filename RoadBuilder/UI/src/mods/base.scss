@@ -135,3 +135,63 @@ $laneButtonSize: 64rem;
     background-color: rgba(0, 0, 0, 0.3);
   }
 }
+
+@mixin disabledBasicButton() {
+  color: var(--normalTextColorLocked) !important;
+  background-color: var(--panelColorDark) !important;
+  &:hover {
+    background-color: var(--panelColorDark) !important;
+  }
+  &:active {
+    background-color: var(--panelColorDark) !important;
+  }
+  img {
+    background-color: var(--normalTextColorLocked) !important;
+    filter: none !important;
+  }
+}
+
+@mixin disabledLightButton() {
+  color: var(--normalTextColorLocked) !important;
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+  }
+  &:active {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+  }
+  img {
+    background-color: var(--normalTextColorLocked) !important;
+    filter: none !important;
+  }
+}
+
+@mixin disabledBlackButton() {
+  color: var(--normalTextColorLocked) !important;
+  background-color: rgba(15, 16, 19, 1) !important;
+  &:hover {
+    background-color: rgba(15, 16, 19, 1) !important;
+  }
+  &:active {
+    background-color: rgba(15, 16, 19, 1) !important;
+  }
+  img {
+    background-color: var(--normalTextColorLocked) !important;
+    filter: none !important;
+  }
+}
+
+@mixin disabledTransparentButton() {
+  color: var(--normalTextColorLocked) !important;
+  background-color: transparent !important;
+  &:hover {
+    background-color: transparent !important;
+  }
+  &:active {
+    background-color: transparent !important;
+  }
+  img {
+    background-color: var(--normalTextColorLocked) !important;
+    filter: none !important;
+  }
+}

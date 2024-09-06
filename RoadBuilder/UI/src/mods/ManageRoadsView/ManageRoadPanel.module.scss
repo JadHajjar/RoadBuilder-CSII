@@ -72,3 +72,25 @@
     font-size: 18rem;
   }
 }
+
+.buttons {
+  width: 90%;
+  display: flex;
+  flex: 1;
+  align-items: flex-end;
+
+  button {
+    @include _base.transparentButton();
+    flex: 1;
+    margin: 6rem;
+
+    img {
+      width: 20rem;
+      height: 20rem;
+    }
+
+    &.disabled {
+      @include _base.disabledTransparentButton();
+    }
+  }
+}

@@ -27,9 +27,9 @@ export const DiscoverUploading$ = bindValue<boolean>(mod.id, "Discover.Uploading
 export const DiscoverCurrentPage$ = bindValue<number>(mod.id, "Discover.CurrentPage", 1);
 export const DiscoverMaxPages$ = bindValue<number>(mod.id, "Discover.MaxPages", 1);
 export const DiscoverItems$ = bindValue<RoadConfiguration[]>(mod.id, "Discover.Items");
-export const RestrictPlayset$ = bindValue<RoadConfiguration[]>(mod.id, "Management.RestrictPlayset");
+export const RestrictPlayset$ = bindValue<boolean>(mod.id, "Management.RestrictPlayset");
+export const managedRoad$ = bindValue<RoadConfiguration | undefined>(mod.id, "Management.ManagedRoad");
 export const managedRoadOptions$ = bindValue<OptionSection[]>(mod.id, "Management.GetRoadOptions");
-export const getManagedRoadId$ = bindValue<string>(mod.id, "Management.GetRoadId");
 
 export const toggleTool = trigger.bind(null, mod.id, "ToggleTool");
 export const clearTool = trigger.bind(null, mod.id, "ClearTool");

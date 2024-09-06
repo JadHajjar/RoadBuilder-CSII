@@ -1,3 +1,4 @@
+import styles from "./DropDown.module.scss";
 import { Theme } from "cs2/bindings";
 import { getModule } from "cs2/modding";
 import { Dropdown, DropdownItem, DropdownToggle, FOCUS_AUTO } from "cs2/ui";
@@ -5,6 +6,7 @@ import { Dropdown, DropdownItem, DropdownToggle, FOCUS_AUTO } from "cs2/ui";
 export interface DropdownItems<T> {
   SelectedItem: T;
   Items: T[];
+  Icon?: string;
   OnItemSelected: (item: T) => void;
   ToString: (item: T) => string | null;
 }
@@ -29,7 +31,12 @@ export const CustomDropdown = <T,>(props: DropdownItems<T>) => {
   return (
     <div style={{ padding: "5rem" }}>
       <Dropdown focusKey={FOCUS_AUTO} theme={DropdownStyle} content={dropDownItems}>
-        <DropdownToggle>{props.ToString(props.SelectedItem)}</DropdownToggle>
+        <DropdownToggle>
+          <span>
+            {props.Icon && <img className={styles.icon} style={{ maskImage: `url(${props.Icon})` }} />}
+            {props.ToString(props.SelectedItem)}
+          </span>
+        </DropdownToggle>
       </Dropdown>
     </div>
   );
