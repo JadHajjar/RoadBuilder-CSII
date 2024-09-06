@@ -88,6 +88,7 @@
   "RoadBuilder.Edit": "Düzenle",
   "RoadBuilder.Find": "Ara",
   "RoadBuilder.Delete": "Sil",
+  "RoadBuilder.PlaceTooltip": "Place more of this road configuration",
   "RoadBuilder.EditTooltip": "Bu yol yapılandırmasını düzenle",
   "RoadBuilder.FindTooltip": "Bu yolun haritada nerede kullanıldığını bul",
   "RoadBuilder.DeleteTooltip": "Bu yol yapılandırmasını sil ve bunu kullanan tüm yolları kaldır",
