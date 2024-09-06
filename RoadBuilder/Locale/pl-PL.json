@@ -88,7 +88,7 @@
   "RoadBuilder.Edit": "Edytuj",
   "RoadBuilder.Find": "Znajdź",
   "RoadBuilder.Delete": "Usuń",
-  "RoadBuilder.PlaceTooltip": "Place more of this road configuration",
+  "RoadBuilder.PlaceTooltip": "Umieść więcej tej konfiguracji drogi",
   "RoadBuilder.EditTooltip": "Edytuj konfigurację tej drogi",
   "RoadBuilder.FindTooltip": "Znajdź miejsce umieszczenia tej drogi na mapie",
   "RoadBuilder.DeleteTooltip": "Usuń tę konfigurację drogi i wszystkie umieszczone segmenty tej drogi na mapie",
@@ -117,5 +117,7 @@
   "RoadBuilder.Sharing": "Udostępnianie",
   "RoadBuilder.UploadRoad": "Udostępnij drogę",
   "RoadBuilder.NoResults": "Brak wyników",
-  "RoadBuilder.ErrorLoading": "Nie udało się pobrać dróg. Spróbuj ponownie później."
+  "RoadBuilder.ErrorLoading": "Nie udało się pobrać dróg. Spróbuj ponownie później.",
+  "RoadBuilder.ShowHidePlaced": "Show/Hide roads that are placed in your city or not",
+  "RoadBuilder.UploadTooltip": "Share your road with the community in the Discover tab"
 }
