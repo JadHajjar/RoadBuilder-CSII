@@ -118,6 +118,6 @@
   "RoadBuilder.UploadRoad": "Udostępnij drogę",
   "RoadBuilder.NoResults": "Brak wyników",
   "RoadBuilder.ErrorLoading": "Nie udało się pobrać dróg. Spróbuj ponownie później.",
-  "RoadBuilder.ShowHidePlaced": "Show/Hide roads that are placed in your city or not",
-  "RoadBuilder.UploadTooltip": "Share your road with the community in the Discover tab"
+  "RoadBuilder.ShowHidePlaced": "Pokaż/Ukryj drogi, które są umieszczone w Twoim mieście lub nie",
+  "RoadBuilder.UploadTooltip": "Udostępnij swoją drogę społeczności w zakładce Odkryj"
 }
