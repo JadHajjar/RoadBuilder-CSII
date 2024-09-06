@@ -88,6 +88,7 @@
   "RoadBuilder.Edit": "편집",
   "RoadBuilder.Find": "찾기",
   "RoadBuilder.Delete": "삭제",
+  "RoadBuilder.PlaceTooltip": "Place more of this road configuration",
   "RoadBuilder.EditTooltip": "이 도로 구성을 수정합니다",
   "RoadBuilder.FindTooltip": "지도에 이 도로가 설치된 곳을 찾습니다",
   "RoadBuilder.DeleteTooltip": "지도에서 이 도로 구성을 사용하는 모든 도로를 삭제합니다",
