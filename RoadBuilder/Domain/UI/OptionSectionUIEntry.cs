@@ -13,6 +13,7 @@ namespace RoadBuilder.Domain.UI
 		public string Name { get; set; }
 		public bool IsToggle { get; set; }
 		public bool IsButton { get; set; }
+		public bool IsCheckbox { get; set; }
 		public IEnumerable<OptionItemUIEntry> Options
 		{
 			get => _options;
@@ -34,6 +35,9 @@ namespace RoadBuilder.Domain.UI
 
 			writer.PropertyName("isButton");
 			writer.Write(IsButton);
+
+			writer.PropertyName("isCheckbox");
+			writer.Write(IsCheckbox);
 
 			writer.PropertyName("options");
 			writer.ArrayBegin(_options.Length);

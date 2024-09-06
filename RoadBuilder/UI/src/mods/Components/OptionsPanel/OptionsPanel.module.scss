@@ -105,3 +105,11 @@
     margin-right: 6rem;
   }
 }
+
+.optionContent.checkboxOption > .unselected {
+  border: 3rem solid black;
+  border-top-color: var(--menuControlBorder);
+  border-left-color: var(--menuControlBorder);
+  border-bottom-color: var(--menuControlBorder);
+  border-right-color: var(--menuControlBorder);
+}

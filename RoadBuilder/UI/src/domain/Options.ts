@@ -3,6 +3,7 @@ export interface OptionSection {
   name: string;
   isToggle: boolean;
   isButton: boolean;
+  isCheckbox: boolean;
   options: OptionItem[];
 }
 

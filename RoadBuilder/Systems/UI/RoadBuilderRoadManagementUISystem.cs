@@ -420,6 +420,7 @@ namespace RoadBuilder.Systems.UI
 				if (result.success)
 				{
 					Mod.Log.Info("Upload Successful");
+
 					config.Uploaded = true;
 				}
 				else

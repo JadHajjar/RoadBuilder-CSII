@@ -14,6 +14,7 @@ using System.Globalization;
 using System.Linq;
 
 using Unity.Entities;
+using Unity.Entities.UniversalDelegates;
 
 namespace RoadBuilder.Utilities
 {
@@ -68,7 +69,7 @@ namespace RoadBuilder.Utilities
 					continue;
 				}
 
-				var entries = new OptionItemUIEntry[option.Type is LaneOptionType.Decoration or LaneOptionType.TwoWay ? 2 : option.Type is LaneOptionType.ValueUpDown or LaneOptionType.LaneWidth ? 1 : option.Options.Length];
+				var entries = new OptionItemUIEntry[option.Type is LaneOptionType.Decoration or LaneOptionType.TwoWay ? 2 : option.Type is LaneOptionType.ValueUpDown or LaneOptionType.LaneWidth or LaneOptionType.Checkbox ? 1 : option.Options.Length];
 				var value = GetSelectedOptionValue(config, lane, option);
 
 				if (option.Type is LaneOptionType.Decoration)
@@ -89,6 +90,18 @@ namespace RoadBuilder.Utilities
 						Name = "RoadBuilder.Trees",
 						Icon = "coui://roadbuildericons/RB_TreeWhite.svg",
 						Selected = value is "GT" or "T",
+						Disabled = !available,
+					};
+				}
+				else if (option.Type is LaneOptionType.Checkbox)
+				{
+					var available = remainingSections.Any(x => x.GetComponent<RoadBuilderLaneGroup>().Combination.Any(x => x.OptionName == option.Name && string.IsNullOrEmpty(x.Value) != string.IsNullOrEmpty(value)));
+
+					entries[0] = new()
+					{
+						Id = string.IsNullOrEmpty(value) ? 0 : 1,
+						Name = LocaleHelper.Translate($"{group.name}.Options[{option.Name}][{option.Options[0].Value}]", option.Options[0].Value),
+						Selected = !string.IsNullOrEmpty(value),
 						Disabled = !available,
 					};
 				}
@@ -126,6 +139,7 @@ namespace RoadBuilder.Utilities
 					Id = --index,
 					Options = entries,
 					IsToggle = option.Type is LaneOptionType.Toggle,
+					IsCheckbox = option.Type is LaneOptionType.Checkbox,
 					Name = option.Type is LaneOptionType.Decoration
 					? LocaleHelper.Translate("RoadBuilder.Decoration", "Decoration")
 					: LocaleHelper.Translate($"{group.name}.Options[{option.Name}]", option.Name)
