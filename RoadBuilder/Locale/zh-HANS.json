@@ -117,5 +117,7 @@
   "RoadBuilder.Sharing": "分享",
   "RoadBuilder.UploadRoad": "上传道路资产",
   "RoadBuilder.NoResults": "No Results",
-  "RoadBuilder.ErrorLoading": "Failed to load the roads. Please try again later."
+  "RoadBuilder.ErrorLoading": "Failed to load the roads. Please try again later.",
+  "RoadBuilder.ShowHidePlaced": "Show/Hide roads that are placed in your city or not",
+  "RoadBuilder.UploadTooltip": "Share your road with the community in the Discover tab"
 }
