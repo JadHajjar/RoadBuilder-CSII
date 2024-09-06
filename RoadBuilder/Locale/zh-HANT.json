@@ -117,5 +117,7 @@
   "RoadBuilder.Sharing": "分享",
   "RoadBuilder.UploadRoad": "上傳道路",
   "RoadBuilder.NoResults": "沒有結果",
-  "RoadBuilder.ErrorLoading": "載入道路失敗。請稍後重試。"
+  "RoadBuilder.ErrorLoading": "載入道路失敗。請稍後重試。",
+  "RoadBuilder.ShowHidePlaced": "Show/Hide roads that are placed in your city or not",
+  "RoadBuilder.UploadTooltip": "Share your road with the community in the Discover tab"
 }
