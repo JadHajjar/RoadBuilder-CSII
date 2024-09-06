@@ -50,7 +50,6 @@ export const SidePanel = (props: { editor: boolean }) => {
   if (roadListView || toolMode == RoadBuilderToolModeEnum.Picker) {
     items = roadConfigurations
       .filter((val, idx) => (selectedCategory == undefined || selectedCategory == val.Category) && !val.IsNotInPlayset)
-      .filter((val, idx) => searchQuery == undefined || searchQuery == "" || val.Name.toLowerCase().indexOf(searchQuery.toLowerCase()) >= 0)
       .map((val, idx) => <RoadConfigListItem key={idx} road={val} />);
   } else {
     const small = netSections.map((x) => x.Sections.length).reduce((x, s) => x + s, 0) >= 15;
@@ -78,7 +77,7 @@ export const SidePanel = (props: { editor: boolean }) => {
         {toolMode == RoadBuilderToolModeEnum.Picker && (
           <div className={styles.subHeader}>
             <div className={styles.title}>{translate("RoadBuilder.CreatedRoads")}</div>
-            <div className={styles.roadCount}>{translate("RoadBuilder.RoadCount")?.replace("{0}", roadConfigurations.length.toString())}</div>
+            <div className={styles.roadCount}>{translate("RoadBuilder.RoadCount")?.replace("{0}", items.length.toString())}</div>
           </div>
         )}
         {toolMode != RoadBuilderToolModeEnum.Picker && (
@@ -102,7 +101,7 @@ export const SidePanel = (props: { editor: boolean }) => {
               </Button>
             </Tooltip>
             {Object.values(RoadCategory)
-              .filter((x) => GetCategoryIcon(x as RoadCategory) != undefined && roadConfigurations.some((r) => r.Category === x))
+              .filter((x) => GetCategoryIcon(x as RoadCategory) != undefined && roadConfigurations.some((r) => r.Category === x && !r.IsNotInPlayset))
               .map((x) => (
                 <Tooltip tooltip={translate(GetCategoryName(x as RoadCategory))}>
                   <Button className={selectedCategory == x && styles.selected} variant="flat" onSelect={() => setSelectedCategory(x)}>

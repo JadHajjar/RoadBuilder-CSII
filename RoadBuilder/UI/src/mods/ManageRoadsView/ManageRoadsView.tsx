@@ -62,7 +62,7 @@ export const ManageRoadsView = (props: { editor: boolean }) => {
     if (discoverView) setDiscoverSorting(value);
   }
 
-  if (!managedRoad) setManagementRoad(roadConfigurations[0].ID);
+  if (!managedRoad && roadConfigurations.length > 0) setManagementRoad(roadConfigurations[0].ID);
 
   useEffect(() => {
     setAndBindSearch("");

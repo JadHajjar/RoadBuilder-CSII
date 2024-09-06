@@ -141,6 +141,9 @@ namespace RoadBuilder.Systems.UI
 					break;
 
 				case ActionType.UploadRoad:
+					Uploading.Value = true;
+					UpdateSelectedRoadOptions();
+
 					Task.Run(UploadRoad);
 					return;
 			}
@@ -217,7 +220,7 @@ namespace RoadBuilder.Systems.UI
 				});
 			}
 
-			if (!config.Uploaded)
+			if (!config.Uploaded && !string.IsNullOrEmpty(PdxModsUtil.UserId))
 			{
 				options.Add(new()
 				{
@@ -360,8 +363,10 @@ namespace RoadBuilder.Systems.UI
 				Items.Value = items;
 				Loading.Value = false;
 			}
-			catch
+			catch (Exception ex) 
 			{
+				Mod.Log.Warn(ex, "Failed to load discover items");
+
 				Loading.Value = false;
 				ErrorLoading.Value = true;
 			}
@@ -379,6 +384,7 @@ namespace RoadBuilder.Systems.UI
 				}
 
 				config.ApplyVersionChanges();
+				config.Playsets = new() { PdxModsUtil.CurrentPlayset };
 
 				roadBuilderSystem.AddPrefab(config);
 
@@ -388,9 +394,6 @@ namespace RoadBuilder.Systems.UI
 
 		private async Task UploadRoad()
 		{
-			Uploading.Value = true;
-			UpdateSelectedRoadOptions();
-
 			Mod.Log.Info(nameof(UploadRoad));
 
 			try
@@ -400,6 +403,10 @@ namespace RoadBuilder.Systems.UI
 				using var memory = new MemoryStream();
 
 				svg.Save(memory, SaveOptions.DisableFormatting);
+
+				config.Version = RoadBuilderSerializeSystem.CURRENT_VERSION;
+				config.OriginalID = config.ID;
+				config.Type = config.GetType().Name;
 
 				var result = await ApiUtil.Instance.UploadRoad(new()
 				{
@@ -426,6 +433,7 @@ namespace RoadBuilder.Systems.UI
 			}
 
 			Uploading.Value = false;
+			UpdateSelectedRoadOptions();
 		}
 	}
 }
