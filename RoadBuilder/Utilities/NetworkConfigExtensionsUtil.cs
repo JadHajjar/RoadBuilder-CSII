@@ -22,7 +22,7 @@ namespace RoadBuilder.Utilities
 
 		public static bool GetEdgeLaneInfo(NetSectionPrefab section, LaneGroupPrefab groupPrefab, out RoadBuilderEdgeLaneInfo sectionEdgeInfo)
 		{
-			if (section.TryGet(out sectionEdgeInfo))
+			if (section != null && section.TryGet(out sectionEdgeInfo))
 			{
 				return true;
 			}
@@ -32,6 +32,7 @@ namespace RoadBuilder.Utilities
 				return true;
 			}
 
+			sectionEdgeInfo = null;
 			return false;
 		}
 

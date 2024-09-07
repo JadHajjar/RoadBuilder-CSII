@@ -1,4 +1,6 @@
-﻿using Colossal.PSI.Common;
+﻿using cohtml.Net;
+
+using Colossal.PSI.Common;
 
 using Game.Prefabs;
 using Game.SceneFlow;
@@ -466,6 +468,16 @@ namespace RoadBuilder.Utilities
 
 					var selectedValue = LaneOptionsUtil.GetSelectedOptionValue(config, lane, option);
 					var combination = groupItem.Combination.FirstOrDefault(x => x.OptionName.Equals(option.Name, StringComparison.InvariantCultureIgnoreCase))?.Value;
+
+					if (option.Type is LaneOptionType.Checkbox)
+					{
+						if (string.IsNullOrEmpty(combination) != string.IsNullOrEmpty(selectedValue))
+						{
+							matched = false;
+						}
+
+						continue;
+					}
 
 					if (option.Type is LaneOptionType.TwoWay)
 					{

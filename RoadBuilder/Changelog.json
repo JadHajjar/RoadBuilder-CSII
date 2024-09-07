@@ -19,7 +19,7 @@
         "Name": "Road Sharing",
         "Changes": [
           "Added a Discover tab, found in the new management UI, to share and find player-made roads.",
-          "Browse, search, and download roads made by others in the community with a few clicks."
+          "Browse, search, and download roads made by others in the community with a few clicks.",
           "You can upload your own roads from the 'My Roads' tab."
         ]
       },
@@ -35,6 +35,7 @@
         "Name": "Other Changes",
         "Changes": [
           "Added fuzzy search for lane and road searches.",
+          "Improved sizing of UI elements when translated.",
           "Fixed the right-side panel overlapping the fps meter.",
           "Fixed roads sometimes not getting fixed with the automatic vanilla reverting."
         ]

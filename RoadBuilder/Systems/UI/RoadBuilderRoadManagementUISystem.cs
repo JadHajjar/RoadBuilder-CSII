@@ -354,9 +354,16 @@ namespace RoadBuilder.Systems.UI
 
 					var path = Path.Combine(FoldersUtil.TempFolder, item.id + ".svg");
 
-					if (!File.Exists(path))
+					try
 					{
-						File.WriteAllText(path, item.icon);
+						if (!File.Exists(path))
+						{
+							File.WriteAllText(path, item.icon);
+						}
+					}
+					catch (Exception ex)
+					{
+						Mod.Log.Warn(ex, "Failed to save thumbnail");
 					}
 				}
 

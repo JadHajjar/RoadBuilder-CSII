@@ -124,13 +124,13 @@ namespace RoadBuilder.Systems.UI
 					DisplayName = GetAssetName(prefab),
 					Thumbnail = ImageSystem.GetIcon(prefab),
 					IsEdge = prefab.Has<RoadBuilderEdgeLaneInfo>(),
-					IsRestricted = false,
+					IsRestricted = restricted,
 					IsCustom = !prefab.RoadBuilder,
 					SectionType = GetSectionType(prefab),
 				});
 			}
 
-			sections.Sort((x, y) => GetUseCount(y) - GetUseCount(x));
+			sections.Sort((x, y) => string.Compare(x.DisplayName, y.DisplayName));
 
 			return sections;
 		}

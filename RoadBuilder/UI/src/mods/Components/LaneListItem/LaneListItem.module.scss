@@ -33,8 +33,9 @@
       margin-bottom: 20rem;
     }
 
-    .rightSideContainer > img {
+    .sideContainer > img {
       filter: grayscale(0.85);
+      opacity: 0.85;
     }
 
     .gridItemText {
@@ -172,12 +173,12 @@
     height: 50rem;
   }
 
-  .rightSideContainer {
+  .sideContainer {
     top: 3.5rem;
     right: 3.5rem;
   }
 
-  .rightSideContainer > img {
+  .sideContainer > img {
     width: 14rem;
     height: 14rem;
     margin-bottom: 4rem;

@@ -100,7 +100,6 @@ namespace RoadBuilder.Utilities
 					entries[0] = new()
 					{
 						Id = string.IsNullOrEmpty(value) ? 0 : 1,
-						Name = LocaleHelper.Translate($"{group.name}.Options[{option.Name}][{option.Options[0].Value}]", option.Options[0].Value),
 						Selected = !string.IsNullOrEmpty(value),
 						Disabled = !available,
 					};
@@ -168,9 +167,14 @@ namespace RoadBuilder.Utilities
 		{
 			var value = section.GetComponent<RoadBuilderLaneGroup>().Combination.FirstOrDefault(x => x.OptionName == option.Name)?.Value;
 
+			if (option.Type is LaneOptionType.Checkbox)
+			{
+				return string.IsNullOrEmpty(currentValue) == string.IsNullOrEmpty(value);
+			}
+
 			if (option.Type is LaneOptionType.Decoration or LaneOptionType.TwoWay)
 			{
-				return currentValue is null || value is not null;
+				return currentValue is null or "" || value is not null and not "";
 			}
 
 			return value is not null && value == currentValue;
@@ -271,6 +275,13 @@ namespace RoadBuilder.Utilities
 					{
 						config.Addons |= addon;
 					}
+
+					return;
+				}
+
+				if (option.Type is LaneOptionType.Checkbox)
+				{
+					lane.GroupOptions[option.Name] = id == 0 ? "checked" : "";
 
 					return;
 				}
