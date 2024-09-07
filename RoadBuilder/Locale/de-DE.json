@@ -24,7 +24,7 @@
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.PlaceToggle]": "Bestimmt die Tastenkombination, mit der das Platzieren der Straße gestartet wird, die du gerade bearbeitest.",
   "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.DoNotAddSides]": "Automatische Seiten auf Tunneln und Brücken entfernen.",
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.DoNotAddSides]": "Ermöglicht die Straßenkreation ohne Tunnel- oder Brückenseiten, wenn keine Randstreifen oder Gehweg am Rand hinzugefügt wird.",
-  "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.HideRoadsFromToolbarByDefault]": "Straßen standardmäßig aus der Asset-Toolbar ausblenden.",
+  "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.HideRoadsFromToolbarByDefault]": "Straßen standardmäßig aus der Asset-Toolbar ausblenden",
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.HideRoadsFromToolbarByDefault]": "Straßen, denen kein Toolbar-Status zugewiesen ist, werden standardmäßig ausgeblendet.\n\nEin Neustart ist erforderlich, damit die Änderung wirksam wird.",
   "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.NoPlaysetIsolation]": "Spielset-Beschränkung deaktivieren",
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.NoPlaysetIsolation]": "Schaltet alle Straßen in allen Spielsets frei, anstatt die Straßen auf das Spielset zu beschränken, in dem sie erstellt wurden.",
@@ -118,6 +118,6 @@
   "RoadBuilder.UploadRoad": "Straße hochladen",
   "RoadBuilder.NoResults": "Keine Ergebnisse",
   "RoadBuilder.ErrorLoading": "Das Laden der Straßen ist fehlgeschlagen. Bitte versuchen Sie es später erneut.",
-  "RoadBuilder.ShowHidePlaced": "Show/Hide roads that are placed in your city or not",
-  "RoadBuilder.UploadTooltip": "Share your road with the community in the Discover tab"
+  "RoadBuilder.ShowHidePlaced": "Zeige/Verstecke Straßen die in deiner Stadt platziert sind oder nicht",
+  "RoadBuilder.UploadTooltip": "Lade deine Straße in den Entdeckungs Tab hoch"
 }
