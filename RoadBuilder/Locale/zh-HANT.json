@@ -88,7 +88,7 @@
   "RoadBuilder.Edit": "編輯",
   "RoadBuilder.Find": "搜尋",
   "RoadBuilder.Delete": "刪除",
-  "RoadBuilder.PlaceTooltip": "Place more of this road configuration",
+  "RoadBuilder.PlaceTooltip": "放置更多此配置的道路",
   "RoadBuilder.EditTooltip": "編輯此道路設定",
   "RoadBuilder.FindTooltip": "在地圖上尋找此道路的位置",
   "RoadBuilder.DeleteTooltip": "刪除此道路設定並移除地圖上所有使用本設定的路段",
@@ -118,6 +118,6 @@
   "RoadBuilder.UploadRoad": "上傳道路",
   "RoadBuilder.NoResults": "沒有結果",
   "RoadBuilder.ErrorLoading": "載入道路失敗。請稍後重試。",
-  "RoadBuilder.ShowHidePlaced": "Show/Hide roads that are placed in your city or not",
-  "RoadBuilder.UploadTooltip": "Share your road with the community in the Discover tab"
+  "RoadBuilder.ShowHidePlaced": "顯示/隱藏該存檔内已放置/未放置的道路",
+  "RoadBuilder.UploadTooltip": "在“搜尋”標簽中和社區分享您的道路"
 }
