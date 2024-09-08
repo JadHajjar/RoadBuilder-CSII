@@ -118,6 +118,6 @@
   "RoadBuilder.UploadRoad": "Cargar Carretera",
   "RoadBuilder.NoResults": "Sin Resultados",
   "RoadBuilder.ErrorLoading": "Error al cargar las carreteras. Inténtalo de nuevo más tarde.",
-  "RoadBuilder.ShowHidePlaced": "Show/Hide roads that are placed in your city or not",
-  "RoadBuilder.UploadTooltip": "Share your road with the community in the Discover tab"
+  "RoadBuilder.ShowHidePlaced": "Mostrar/Ocultar carreteras que se encuentren o no en tu ciudad",
+  "RoadBuilder.UploadTooltip": "Comparte tu carretera con la comunidad en la pestaña Descubrir"
 }

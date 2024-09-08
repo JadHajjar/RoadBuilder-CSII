@@ -118,6 +118,6 @@
   "RoadBuilder.UploadRoad": "Straße hochladen",
   "RoadBuilder.NoResults": "Keine Ergebnisse",
   "RoadBuilder.ErrorLoading": "Das Laden der Straßen ist fehlgeschlagen. Bitte versuchen Sie es später erneut.",
-  "RoadBuilder.ShowHidePlaced": "Zeige/Verstecke Straßen die in deiner Stadt platziert sind oder nicht",
-  "RoadBuilder.UploadTooltip": "Lade deine Straße in den Entdeckungs Tab hoch"
+  "RoadBuilder.ShowHidePlaced": "Straßen anzeigen/ausblenden, die in deiner Stadt platziert sind oder nicht",
+  "RoadBuilder.UploadTooltip": "Teile deine Straße mit der Community im Entdecken-Tab"
 }
