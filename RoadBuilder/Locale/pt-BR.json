@@ -13,7 +13,7 @@
   "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.HideArrowsOnThumbnails]": "Hide arrows on thumbnails",
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.HideArrowsOnThumbnails]": "Disables arrows on the generated roads' thumbnails.",
   "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.NoImitateLaneOptionsOnPlace]": "Make new lanes always have the default options",
-  "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.NoImitateLaneOptionsOnPlace]": "Dragging new lanes will always have the default lane options instead of copying the nearest lane's settings.",
+  "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.NoImitateLaneOptionsOnPlace]": ".",
   "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.ToolToggle]": "Enable Tool Hotkey",
   "Options.OPTION[RoadBuilder.RoadBuilder.Mod/ToolToggle/binding]": "Enable Tool Hotkey",
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.ToolToggle]": "Determines the hot-key to activate the Road Builder tool.",
