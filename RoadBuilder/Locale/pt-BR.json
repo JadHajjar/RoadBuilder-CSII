@@ -79,7 +79,7 @@
   "RoadBuilder.Grass": "Grass",
   "RoadBuilder.Forward": "Forward",
   "RoadBuilder.Backward": "Backward",
-  "RoadBuilder.TwoWay": "Two-Way",
+  "RoadBuilder.TwoWay": "Duas vias",
   "RoadBuilder.CopyLane": "Copy Lane",
   "RoadBuilder.DeleteLane": "Delete Lane",
   "RoadBuilder.AvailableLanes": "Available Lanes",
