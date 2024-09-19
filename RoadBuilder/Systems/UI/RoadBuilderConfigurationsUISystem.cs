@@ -96,6 +96,7 @@ namespace RoadBuilder.Systems.UI
 				Locked = !Mod.Settings.RemoveLockRequirements && GameManager.instance.gameMode == GameMode.Game && EntityManager.HasEnabledComponent<Locked>(prefabSystem.GetEntity(value.Prefab)),
 				Used = roadBuilderRoadTrackerSystem.UsedNetworkPrefabs.Contains(value),
 				Category = value.Config.Category,
+				Available = roadBuilderSystem.Configurations.ContainsKey(value.Config.ID),
 				Thumbnail = ImageSystem.GetIcon(value.Prefab)
 			};
 		}

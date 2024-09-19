@@ -106,8 +106,12 @@
 .downloaded.downloaded button {
   background-color: rgba(16, 189, 56, 0.25) !important;
 
+  &:hover {
+    background-color: rgba(16, 189, 56, 0.5) !important;
+  }
+
   &:active {
-    background-color: rgba(16, 189, 56, 0.25) !important;
+    background-color: rgba(16, 189, 56, 0.75) !important;
   }
 }
 

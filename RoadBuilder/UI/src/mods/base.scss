@@ -43,29 +43,7 @@ $laneButtonSize: 64rem;
   }
 }
 
-@mixin basicLightButton($hasImage: false) {
-  border-radius: 50%;
-  padding: 4rem;
-  color: var(--normalTextColor);
-  background-color: rgba(255, 255, 255, 0.3);
-  text-align: center;
-  border: none;
-
-  @if $hasImage {
-    img {
-      filter: invert(1);
-    }
-  }
-
-  &:hover {
-    background-color: rgba(255, 255, 255, 0.4);
-  }
-  &:active {
-    background: rgba(255, 255, 255, 0.5);
-  }
-}
-
-@mixin basicButton($hasText: true) {
+@mixin baseButton($hasText: true) {
   pointer-events: auto;
   padding: 8rem;
   border-radius: 4rem;
@@ -75,21 +53,23 @@ $laneButtonSize: 64rem;
   align-items: center;
   justify-content: center;
   color: var(--menuText1Normal);
-  opacity: 1;
-  filter: brightness(1.1) saturate(0.8);
-  background-color: var(--panelColorDark);
-  backdrop-filter: blur(4px);
+
+  &[disabled] {
+    pointer-events: none !important;
+
+    img {
+      filter: none !important;
+    }
+  }
 
   &.hidden {
     display: none;
   }
-  &:hover {
-    background-color: var(--panelColorNormal);
-  }
+
   &:active {
     background-image: none !important;
-    background-color: var(--accentColorDark-focused) !important;
   }
+
   img {
     @if $hasText {
       width: 30rem;
@@ -105,93 +85,120 @@ $laneButtonSize: 64rem;
   }
 }
 
+@mixin basicButton($hasText: true) {
+  @include baseButton($hasText);
+
+  filter: brightness(1.1) saturate(0.8);
+  background-color: var(--panelColorDark);
+  backdrop-filter: blur(4px);
+
+  &:hover {
+    background-color: var(--panelColorNormal);
+  }
+
+  &:active {
+    background-color: var(--accentColorDark-focused) !important;
+  }
+
+  img {
+    background-color: var(--menuText1Normal);
+  }
+
+  &[disabled],
+  &.disabled {
+    pointer-events: none !important;
+
+    color: var(--normalTextColorLocked) !important;
+    background-color: var(--panelColorDark) !important;
+
+    img {
+      background-color: var(--normalTextColorLocked) !important;
+    }
+  }
+}
+
 @mixin lightButton($hasText: true) {
-  @include basicButton($hasText);
+  @include baseButton($hasText);
 
   background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(4px);
 
   &:hover {
     background-color: rgba(255, 255, 255, 0.35);
   }
+
+  &:active {
+    background-color: var(--accentColorDark-focused) !important;
+  }
+
+  img {
+    background-color: var(--menuText1Normal);
+  }
+
+  &[disabled],
+  &.disabled {
+    color: var(--normalTextColorLocked) !important;
+    background-color: rgba(255, 255, 255, 0.1) !important;
+
+    img {
+      background-color: var(--normalTextColorLocked) !important;
+    }
+  }
 }
 
 @mixin blackButton($hasText: true) {
-  @include basicButton($hasText);
+  @include baseButton($hasText);
 
   background-color: rgba(15, 16, 19, 1);
+  backdrop-filter: blur(4px);
 
   &:hover {
     background-color: rgba(29, 31, 37, 1);
   }
+
+  &:active {
+    background-color: var(--accentColorDark-focused) !important;
+  }
+
+  img {
+    background-color: var(--menuText1Normal);
+  }
+
+  &[disabled],
+  &.disabled {
+    color: var(--normalTextColorLocked) !important;
+    background-color: rgba(15, 16, 19, 1) !important;
+
+    img {
+      background-color: var(--normalTextColorLocked) !important;
+    }
+  }
 }
 
 @mixin transparentButton($hasText: true) {
-  @include basicButton($hasText);
+  @include baseButton($hasText);
 
   background-color: transparent;
-  backdrop-filter: none;
 
   &:hover {
     background-color: rgba(0, 0, 0, 0.3);
   }
-}
 
-@mixin disabledBasicButton() {
-  color: var(--normalTextColorLocked) !important;
-  background-color: var(--panelColorDark) !important;
-  &:hover {
-    background-color: var(--panelColorDark) !important;
-  }
   &:active {
-    background-color: var(--panelColorDark) !important;
+    background-color: var(--accentColorDark-focused) !important;
   }
-  img {
-    background-color: var(--normalTextColorLocked) !important;
-    filter: none !important;
-  }
-}
 
-@mixin disabledLightButton() {
-  color: var(--normalTextColorLocked) !important;
-  background-color: rgba(255, 255, 255, 0.1) !important;
-  &:hover {
-    background-color: rgba(255, 255, 255, 0.1) !important;
-  }
-  &:active {
-    background-color: rgba(255, 255, 255, 0.1) !important;
-  }
   img {
-    background-color: var(--normalTextColorLocked) !important;
-    filter: none !important;
+    background-color: var(--menuText1Normal);
   }
-}
 
-@mixin disabledBlackButton() {
-  color: var(--normalTextColorLocked) !important;
-  background-color: rgba(15, 16, 19, 1) !important;
-  &:hover {
-    background-color: rgba(15, 16, 19, 1) !important;
-  }
-  &:active {
-    background-color: rgba(15, 16, 19, 1) !important;
-  }
-  img {
-    background-color: var(--normalTextColorLocked) !important;
-    filter: none !important;
-  }
-}
-
-@mixin disabledTransparentButton() {
-  color: var(--normalTextColorLocked) !important;
-  background-color: transparent !important;
-  &:hover {
+  &[disabled],
+  &.disabled {
+    color: var(--normalTextColorLocked) !important;
     background-color: transparent !important;
-  }
-  &:active {
-    background-color: transparent !important;
-  }
-  img {
-    background-color: var(--normalTextColorLocked) !important;
-    filter: none !important;
+
+    img {
+      background-color: var(--normalTextColorLocked) !important;
+    }
   }
 }

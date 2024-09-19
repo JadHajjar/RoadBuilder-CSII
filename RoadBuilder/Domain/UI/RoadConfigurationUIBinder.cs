@@ -11,6 +11,7 @@ namespace RoadBuilder.Domain.UI
 		public bool Locked;
 		public bool Used;
 		public bool IsNotInPlayset;
+		public bool Available;
 		public RoadCategory Category;
 		public string[] Tags;
 	}

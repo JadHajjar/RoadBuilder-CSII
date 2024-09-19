@@ -9,6 +9,7 @@ import {
   DiscoverLoading$,
   managedRoad$,
   RestrictPlayset$,
+  setDiscoverPage,
   setDiscoverSearchBinder,
   setDiscoverSorting,
   setManagementRoad,
@@ -36,6 +37,7 @@ export const ManageRoadsView = (props: { editor: boolean }) => {
   const roadConfigurations = useValue(allRoadConfigurations$);
   const managedRoad = useValue(managedRoad$);
   let [searchQuery, setSearchQuery] = useState<string>("");
+  let [pageChanging, setPageChanging] = useState<boolean>(false);
   let [discoverView, setDiscoverView] = useState<boolean>(false);
   let [showAllPlaysets, setShowAllPlaysets] = useState<boolean>(false);
   let [hideLocked, setHideLocked] = useState<boolean>(false);
@@ -47,19 +49,34 @@ export const ManageRoadsView = (props: { editor: boolean }) => {
   function setAndBindSearch(query: string) {
     setSearchQuery(query);
 
-    if (discoverView) setDiscoverSearchBinder(query);
-    else setManagementSearchBinder(query);
+    if (discoverView) {
+      setDiscoverSearchBinder(query);
+      setDiscoverPage(1);
+    } else {
+      setManagementSearchBinder(query);
+    }
   }
 
   function setAndBindCategory(cat: RoadCategory | undefined) {
     setSelectedCategory(cat);
 
-    if (discoverView) setManagementSetCategory(cat ?? -1);
+    if (discoverView) {
+      setManagementSetCategory(cat ?? -1);
+      setDiscoverPage(1);
+    }
   }
 
   function setAndBindSorting(value: number) {
     setSorting(value);
-    if (discoverView) setDiscoverSorting(value);
+    if (discoverView) {
+      setDiscoverSorting(value);
+      setDiscoverPage(1);
+    }
+  }
+
+  function setPage(page: number) {
+    setPageChanging(true);
+    setDiscoverPage(page);
   }
 
   if (!managedRoad && roadConfigurations.length > 0) setManagementRoad(roadConfigurations[0].ID);
@@ -68,17 +85,24 @@ export const ManageRoadsView = (props: { editor: boolean }) => {
     setAndBindSearch("");
     setAndBindCategory(undefined);
     setAndBindSorting(0);
+    setDiscoverPage(1);
     setUsedFilter(undefined);
   }, [discoverView]);
+
+  useEffect(() => {
+    if (pageChanging && !DiscoverLoading) setPageChanging(false);
+  }, [DiscoverLoading]);
 
   if (discoverView) {
     {
       items = (
         <div className={styles.browseContainer}>
           {DiscoverLoading && (
-            <div className={styles.loader}>
-              <img src="coui://roadbuildericons/RB_Loader.svg" />
-            </div>
+            <>
+              <div className={styles.loader}>
+                <img src="coui://roadbuildericons/RB_Loader.svg" />
+              </div>
+            </>
           )}
 
           {!DiscoverLoading && (DiscoverErrorLoading || DiscoverItems.length === 0) && (
@@ -97,9 +121,9 @@ export const ManageRoadsView = (props: { editor: boolean }) => {
                   <DiscoverRoadConfigListItem key={idx} road={val} />
                 ))}
               </Scrollable>
-              <Pagination />
             </>
           )}
+          {!DiscoverErrorLoading && DiscoverItems.length > 0 && (!DiscoverLoading || pageChanging) && <Pagination setPage={setPage} />}
         </div>
       );
     }

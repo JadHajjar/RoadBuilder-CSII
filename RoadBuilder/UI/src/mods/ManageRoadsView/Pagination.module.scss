@@ -23,19 +23,45 @@
       height: 48rem;
 
       &.arrow {
-        background-color: var(--accentColorDarker);
+        background-color: var(--accentColorLight);
+
+        img {
+          background-color: var(--menuControl1);
+        }
 
         &:hover {
-          background-color: var(--panelColorDark);
+          background-color: var(--accentColorNormal-pressed);
         }
+      }
+
+      &.selected {
+        background-color: var(--accentColorDark) !important;
       }
     }
 
     .dots {
+      opacity: 0.75;
       width: 48rem;
       height: 48rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      img {
+        width: 24rem;
+        height: 24rem;
+      }
     }
   }
+}
+
+.disabled {
+  opacity: 0.5;
+}
+
+.hidden {
+  opacity: 0;
+  pointer-events: none;
 }
 
 @keyframes entry {

@@ -2,9 +2,10 @@ import { Button, Scrollable } from "cs2/ui";
 import { LaneListItem } from "../Components/LaneListItem/LaneListItem";
 import styles from "./Pagination.module.scss";
 import { useValue } from "cs2/api";
-import { DiscoverCurrentPage$, DiscoverMaxPages$, setDiscoverPage } from "mods/bindings";
+import { DiscoverCurrentPage$, DiscoverMaxPages$ } from "mods/bindings";
+import classNames from "classnames";
 
-export const Pagination = () => {
+export const Pagination = (props: { setPage: (page: number) => void }) => {
   const range = 2;
   const currentPage = useValue(DiscoverCurrentPage$);
   const maxPages = useValue(DiscoverMaxPages$);
@@ -13,9 +14,11 @@ export const Pagination = () => {
     const startPage = Math.max(1, currentPage - range);
     const endPage = Math.min(maxPages, currentPage + range);
 
-    for (let i = startPage; i <= endPage; i++) {
-      pages.push(i);
+    for (let i = currentPage - range; i <= currentPage + range; i++) {
+      pages.push(i > maxPages ? -1 : i);
     }
+
+    console.log(pages);
 
     return pages;
   };
@@ -25,39 +28,57 @@ export const Pagination = () => {
   return (
     <div className={styles.pagination}>
       <ul>
-        {currentPage > 1 && (
-          <li>
-            <Button variant="flat" onSelect={() => setDiscoverPage(currentPage - 1)} className={styles.arrow}>
-              <img style={{ maskImage: "url(Media/Glyphs/ArrowLeft.svg)" }} />
-            </Button>
-          </li>
-        )}
+        <li className={currentPage <= 3 && styles.hidden}>
+          <Button variant="flat" onSelect={() => props.setPage(1)}>
+            <span>1</span>
+          </Button>
+        </li>
+        <li className={currentPage <= 3 && styles.hidden}>
+          <div className={styles.dots}>
+            <img src="coui://roadbuildericons/RB_Dots.svg" />
+          </div>
+        </li>
+        <li>
+          <Button
+            variant="flat"
+            disabled={currentPage <= 1}
+            onSelect={() => props.setPage(currentPage - 1)}
+            className={classNames(styles.arrow, currentPage <= 1 && styles.disabled)}
+          >
+            <img style={{ maskImage: "url(Media/Glyphs/ArrowLeft.svg)" }} />
+          </Button>
+        </li>
         {pageNumbers.map((page) => (
-          <li key={page}>
-            <Button variant="flat" selected={page === currentPage} onSelect={() => setDiscoverPage(page)}>
-              <span>{page}</span>
-            </Button>
+          <li>
+            {page <= 0 ? (
+              <div className={styles.dots} />
+            ) : (
+              <Button variant="flat" className={page === currentPage && styles.selected} onSelect={() => props.setPage(page)}>
+                <span>{page}</span>
+              </Button>
+            )}
           </li>
         ))}
-        {currentPage < maxPages && (
-          <li>
-            <Button variant="flat" onSelect={() => setDiscoverPage(currentPage + 1)} className={styles.arrow}>
-              <img style={{ maskImage: "url(Media/Glyphs/ArrowRight.svg)" }} />
-            </Button>
-          </li>
-        )}
-        {currentPage + range < maxPages && (
-          <>
-            <li>
-              <div className={styles.dots}></div>
-            </li>
-            <li>
-              <Button variant="flat" onSelect={() => setDiscoverPage(maxPages)}>
-                <span>{maxPages}</span>
-              </Button>
-            </li>
-          </>
-        )}
+        <li>
+          <Button
+            variant="flat"
+            disabled={currentPage >= maxPages}
+            onSelect={() => props.setPage(currentPage + 1)}
+            className={classNames(styles.arrow, currentPage >= maxPages && styles.disabled)}
+          >
+            <img style={{ maskImage: "url(Media/Glyphs/ArrowRight.svg)" }} />
+          </Button>
+        </li>
+        <li className={currentPage + range >= maxPages && styles.hidden}>
+          <div className={styles.dots}>
+            <img src="coui://roadbuildericons/RB_Dots.svg" />
+          </div>
+        </li>
+        <li className={currentPage + range >= maxPages && styles.hidden}>
+          <Button variant="flat" onSelect={() => props.setPage(maxPages)}>
+            <span>{maxPages}</span>
+          </Button>
+        </li>
       </ul>
     </div>
   );

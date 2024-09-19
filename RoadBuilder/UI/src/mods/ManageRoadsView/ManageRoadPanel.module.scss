@@ -88,9 +88,5 @@
       width: 20rem;
       height: 20rem;
     }
-
-    &.disabled {
-      @include _base.disabledTransparentButton();
-    }
   }
 }

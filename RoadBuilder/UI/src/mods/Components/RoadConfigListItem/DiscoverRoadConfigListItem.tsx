@@ -7,7 +7,7 @@ import { DragContext } from "mods/Contexts/DragContext";
 import { MouseButtons } from "mods/util";
 import { VanillaComponentResolver } from "vanillacomponentresolver";
 import { RoadConfiguration } from "domain/RoadConfiguration";
-import { downloadConfig } from "mods/bindings";
+import { activateRoad, downloadConfig } from "mods/bindings";
 import { useValue } from "cs2/api";
 import { useLocalization } from "cs2/l10n";
 import { GetCategoryIcon } from "domain/RoadCategory";
@@ -17,7 +17,7 @@ export const DiscoverRoadConfigListItem = ({ road }: { road: RoadConfiguration }
   const { translate } = useLocalization();
 
   return (
-    <div className={classNames(VanillaComponentResolver.instance.assetGridTheme.item, styles.gridItem)}>
+    <div className={classNames(VanillaComponentResolver.instance.assetGridTheme.item, styles.gridItem)} onDoubleClick={() => activateRoad(road.ID)}>
       <div className={styles.itemInfo}>
         <img className={classNames(styles.gridThumbnail)} src={road.Thumbnail ?? "coui://roadbuildericons/RB_Unknown.svg"} />
 
@@ -34,21 +34,25 @@ export const DiscoverRoadConfigListItem = ({ road }: { road: RoadConfiguration }
             <span>{road.Author}</span>
           </div>
         </div>
-        <div className={classNames(styles.buttons, downloaded && styles.downloaded)}>
+        <div className={classNames(styles.buttons, !road.Available && !downloaded && styles.downloaded)}>
           <Button
             variant="flat"
-            disabled={downloaded}
             onSelect={
-              downloaded
-                ? undefined
+              road.Available || downloaded
+                ? () => activateRoad(road.ID)
                 : () => {
                     setDownloaded(true);
                     downloadConfig(road.ID);
                   }
             }
           >
-            <img style={{ maskImage: downloaded ? "url(Media/Glyphs/Checkmark.svg)" : "url(coui://roadbuildericons/RB_Package.svg)" }} />
-            {translate("RoadBuilder.Download")}
+            <img
+              style={{
+                maskImage:
+                  road.Available || downloaded ? "url(coui://roadbuildericons/RB_PlaceMore.svg)" : "url(coui://roadbuildericons/RB_Package.svg)",
+              }}
+            />
+            {translate(road.Available || downloaded ? "RoadBuilder.Place" : "RoadBuilder.Download")}
           </Button>
         </div>
       </div>

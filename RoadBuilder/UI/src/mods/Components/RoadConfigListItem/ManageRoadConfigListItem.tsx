@@ -43,6 +43,7 @@ export const ManageRoadConfigListItem = ({
   return (
     <div
       className={classNames(VanillaComponentResolver.instance.assetGridTheme.item, styles.gridItem, selected && styles.active)}
+      onDoubleClick={() => activateRoad(road.ID)}
       onClick={() => selectRoad(road)}
     >
       <div className={styles.itemInfo}>
@@ -50,6 +51,27 @@ export const ManageRoadConfigListItem = ({
 
         <div className={classNames(styles.gridItemText)}>
           <p>{road.Name}</p>
+        </div>
+
+        <div className={styles.sideIcons}>
+          {road.Used && (
+            <img
+              className={styles.masked}
+              style={{
+                maskImage: "url(coui://roadbuildericons/RB_Location.svg)",
+                backgroundColor: "rgba(69, 215, 91)",
+              }}
+            />
+          )}
+          {road.IsNotInPlayset && (
+            <img
+              className={styles.masked}
+              style={{
+                maskImage: "url(coui://roadbuildericons/RB_Playset.svg)",
+                backgroundColor: "rgba(253, 43, 77, 0.9)",
+              }}
+            />
+          )}
         </div>
       </div>
     </div>

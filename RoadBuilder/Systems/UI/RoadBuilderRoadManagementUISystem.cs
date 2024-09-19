@@ -233,7 +233,7 @@ namespace RoadBuilder.Systems.UI
 						{
 							Name = "RoadBuilder.UploadRoad",
 							Icon = "coui://roadbuildericons/RB_Upload.svg",
-							Disabled = Uploading
+							Disabled = Uploading || config.Name.StartsWith("Copy of") || config.Name.StartsWith("Custom ")
 						}
 					}
 				});
@@ -349,6 +349,7 @@ namespace RoadBuilder.Systems.UI
 						Category = (RoadCategory)item.category,
 						Name = item.name,
 						Author = item.author,
+						Available = roadBuilderSystem.Configurations.ContainsKey(item.id),
 						Thumbnail = $"coui://roadbuilderthumbnails/{item.id}.svg",
 					};
 

@@ -1,6 +1,36 @@
 [
   {
     "Beta": true,
+    "Version": "0.4.2",
+    "Date": "2024-09-19",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Updated the paging system in the Discover tab. The UI is now always centered and navigating the discover tab now properly resets to page 1.",
+          "Added two icons on the roads in the management panel to signal if they're placed, or if they're not in your active playset.",
+          "Changed the download button to a 'Place' button in the discover tab if it is locally available or after downloading it.",
+          "Double-click on a road in the management and discover panels to start placing it."
+        ]
+      }
+    ]
+  },
+  {
+    "Beta": true,
+    "Version": "0.4.1",
+    "Date": "2024-08-31",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Disabled uploading for roads without a proper name.",
+          "Updated translations."
+        ]
+      }
+    ]
+  },
+  {
+    "Beta": true,
     "Version": "0.4.0",
     "Date": "2024-09-07",
     "Tagline": "The road management update",
