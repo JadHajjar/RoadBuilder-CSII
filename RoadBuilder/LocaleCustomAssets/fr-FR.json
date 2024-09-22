@@ -56,7 +56,7 @@
   "RoadBuilder.LaneGroups.EmptyGroupPrefab.Options[Ground Type][Train]": "Train",
   "RoadBuilder.LaneGroups.EmptyGroupPrefab.Options[Ground Type][Gravel]": "Gravier",
   "RoadBuilder.LaneGroups.EmptyGroupPrefab.Options[Ground Type][Tiled]": "Tiled",
-  "Assets.NAME[Sound Barrier 1]": "Barrière Sonore",
+  "Assets.NAME[RB Sound Barrier 1]": "Sound Barrier",
   "Assets.NAME[Pavement Path Section 3]": "Chaussée Piétonne",
   "Assets.NAME[Tiled Pedestrian Section 3]": "Piéton Pavée",
   "Assets.NAME[RB Tiled Median 2]": "Séparateur Carrelé"

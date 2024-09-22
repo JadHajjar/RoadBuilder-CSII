@@ -56,7 +56,7 @@
   "RoadBuilder.LaneGroups.EmptyGroupPrefab.Options[Ground Type][Train]": "Trem",
   "RoadBuilder.LaneGroups.EmptyGroupPrefab.Options[Ground Type][Gravel]": "Sem asfalto",
   "RoadBuilder.LaneGroups.EmptyGroupPrefab.Options[Ground Type][Tiled]": "Revestido",
-  "Assets.NAME[Sound Barrier 1]": "Barreira sonora",
+  "Assets.NAME[RB Sound Barrier 1]": "Sound Barrier",
   "Assets.NAME[Pavement Path Section 3]": "Faixa de Paralelepípedo",
   "Assets.NAME[Tiled Pedestrian Section 3]": "Faixa Pedestre",
   "Assets.NAME[RB Tiled Median 2]": "Canteiro Revestido"

@@ -56,7 +56,7 @@
   "RoadBuilder.LaneGroups.EmptyGroupPrefab.Options[Ground Type][Train]": "Pociąg",
   "RoadBuilder.LaneGroups.EmptyGroupPrefab.Options[Ground Type][Gravel]": "Żwir",
   "RoadBuilder.LaneGroups.EmptyGroupPrefab.Options[Ground Type][Tiled]": "Kostka",
-  "Assets.NAME[Sound Barrier 1]": "Bariera akustyczna",
+  "Assets.NAME[RB Sound Barrier 1]": "Sound Barrier",
   "Assets.NAME[Pavement Path Section 3]": "Droga dla pieszych",
   "Assets.NAME[Tiled Pedestrian Section 3]": "Deptak",
   "Assets.NAME[RB Tiled Median 2]": "Mediana deptaku"
