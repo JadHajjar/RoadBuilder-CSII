@@ -1,4 +1,6 @@
-﻿using Colossal.PSI.Common;
+﻿using cohtml.Net;
+
+using Colossal.PSI.Common;
 
 using Game.Prefabs;
 using Game.SceneFlow;
@@ -467,6 +469,16 @@ namespace RoadBuilder.Utilities
 					var selectedValue = LaneOptionsUtil.GetSelectedOptionValue(config, lane, option);
 					var combination = groupItem.Combination.FirstOrDefault(x => x.OptionName.Equals(option.Name, StringComparison.InvariantCultureIgnoreCase))?.Value;
 
+					if (option.Type is LaneOptionType.Checkbox)
+					{
+						if (string.IsNullOrEmpty(combination) != string.IsNullOrEmpty(selectedValue))
+						{
+							matched = false;
+						}
+
+						continue;
+					}
+
 					if (option.Type is LaneOptionType.TwoWay)
 					{
 						if (combination != null != (selectedValue == "1"))
@@ -536,7 +548,14 @@ namespace RoadBuilder.Utilities
 
 			GetUIGroupAndRequirement(out var service, out var group, out var requirements, out var unlocks);
 
-			if (service != null)
+			var showInToolbar = NetworkPrefab.Config.ToolbarState is ShowInToolbarState.Show || (NetworkPrefab.Config.ToolbarState is ShowInToolbarState.Inherit && !Mod.Settings.HideRoadsFromToolbarByDefault);
+
+			if (!NetworkPrefab.Config.IsInPlayset())
+			{
+				showInToolbar = false;
+			}
+
+			if (service != null && showInToolbar)
 			{
 				var serviceObject = ScriptableObject.CreateInstance<ServiceObject>();
 				serviceObject.m_Service = _roadGenerationData.ServicePrefabs[service];
@@ -555,15 +574,12 @@ namespace RoadBuilder.Utilities
 				yield return undergroundNetSections;
 			}
 
-			if (group != null)
-			{
-				var uIObject = ScriptableObject.CreateInstance<UIObject>();
-				uIObject.m_Group = _roadGenerationData.UIGroupPrefabs[group];
-				uIObject.m_Icon = _roadGenerationData.UIGroupPrefabs[group].GetComponent<UIObject>().m_Icon;
-				uIObject.m_LargeIcon = string.Empty;
-				uIObject.m_Priority = 999999;
-				yield return uIObject;
-			}
+			var uIObject = ScriptableObject.CreateInstance<UIObject>();
+			uIObject.m_Group = showInToolbar && group != null ? _roadGenerationData.UIGroupPrefabs[group] : null;
+			uIObject.m_Icon = group != null ? _roadGenerationData.UIGroupPrefabs[group].GetComponent<UIObject>().m_Icon : string.Empty;
+			uIObject.m_LargeIcon = string.Empty;
+			uIObject.m_Priority = 999999;
+			yield return uIObject;
 
 			if (NetworkPrefab.Config.Addons.HasFlag(RoadAddons.HasUndergroundWaterPipes))
 			{

@@ -51,13 +51,13 @@
   "RoadBuilder.LaneGroups.ShoulderGroupPrefab.Options[Ground Type][Train]": "Tren",
   "RoadBuilder.LaneGroups.ShoulderGroupPrefab.Options[Ground Type][Subway]": "Metro",
   "RoadBuilder.LaneGroups.ShoulderGroupPrefab.Options[Ground Type][Gravel]": "Gravilla",
-  "RoadBuilder.LaneGroups.ShoulderGroupPrefab.Options[Ground Type][Tiled]": "Mosaico",
+  "RoadBuilder.LaneGroups.ShoulderGroupPrefab.Options[Ground Type][Tiled]": "Alicatado",
   "RoadBuilder.LaneGroups.EmptyGroupPrefab.Options[Ground Type][Asphalt]": "Asfalto",
   "RoadBuilder.LaneGroups.EmptyGroupPrefab.Options[Ground Type][Train]": "Tren",
   "RoadBuilder.LaneGroups.EmptyGroupPrefab.Options[Ground Type][Gravel]": "Gravilla",
-  "RoadBuilder.LaneGroups.EmptyGroupPrefab.Options[Ground Type][Tiled]": "Mosaico",
-  "Assets.NAME[Sound Barrier 1]": "Barrera Acústica",
-  "Assets.NAME[Pavement Path Section 3]": "Camino Peatonal",
-  "Assets.NAME[Tiled Pedestrian Section 3]": "Camino Peatonal de Mosaicos",
-  "Assets.NAME[RB Tiled Median 2]": "Mediana de Mosaicos"
+  "RoadBuilder.LaneGroups.EmptyGroupPrefab.Options[Ground Type][Tiled]": "Alicatado",
+  "Assets.NAME[RB Sound Barrier 1]": "Sound Barrier",
+  "Assets.NAME[Pavement Path Section 3]": "Peatonal Pavimentado",
+  "Assets.NAME[Tiled Pedestrian Section 3]": "Camino Peatonal Alicatado",
+  "Assets.NAME[RB Tiled Median 2]": "Mediana Alicatada"
 }

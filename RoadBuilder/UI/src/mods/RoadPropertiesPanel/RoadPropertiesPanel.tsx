@@ -52,6 +52,7 @@ export const RoadPropertiesPanel = (props: { editor: boolean }) => {
           className={styles.textInput}
           onBlur={onFinishEditRoadName}
           onFocus={onStartEditRoadName}
+          maxLength={250}
         />
       </OptionsSection>
 

@@ -1,0 +1,92 @@
+@use "../base.scss" as _base;
+
+.thumbnail {
+  width: 200rem;
+  height: 200rem;
+  margin: 10rem;
+}
+
+.itemInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.nameBox {
+  width: 80%;
+}
+
+.name {
+  max-width: 80%;
+  font-size: 20rem;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--normalTextColor);
+  cursor: text;
+  padding: 4rem;
+  border-radius: 4rem;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+
+  p {
+    text-align: center;
+    coh-font-fit-mode: shrink;
+  }
+}
+
+.roadType {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  margin: 6rem;
+  padding: 4rem 8rem;
+  border-radius: 4rem;
+  background-color: var(--menuPanel2);
+  font-size: 14rem;
+
+  img {
+    width: 20rem;
+    height: 20rem;
+    margin-right: 6rem;
+  }
+}
+
+.divider {
+  border-top: 2rem solid rgba(255, 255, 255, 0.4);
+  margin: 20rem;
+  width: 80%;
+}
+
+.options {
+  width: 85%;
+
+  & > div {
+    margin-bottom: 6rem;
+  }
+
+  & > div > div > span {
+    font-size: 18rem;
+  }
+}
+
+.buttons {
+  width: 90%;
+  display: flex;
+  flex: 1;
+  align-items: flex-end;
+
+  button {
+    @include _base.transparentButton();
+    flex: 1;
+    margin: 6rem;
+
+    img {
+      width: 20rem;
+      height: 20rem;
+    }
+  }
+}

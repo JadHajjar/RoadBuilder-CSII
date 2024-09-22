@@ -14,6 +14,7 @@ using System.Globalization;
 using System.Linq;
 
 using Unity.Entities;
+using Unity.Entities.UniversalDelegates;
 
 namespace RoadBuilder.Utilities
 {
@@ -34,7 +35,7 @@ namespace RoadBuilder.Utilities
 			{
 				if ((group is not null || !(section?.SupportsTwoWay() ?? false)) && !(section.TryGet<RoadBuilderLaneInfo>(out var laneInfo) && laneInfo.NoDirection) && !((group?.TryGet<RoadBuilderLaneInfo>(out var groupInfo) ?? false) && groupInfo.NoDirection))
 				{
-					options.Add(GetInvertOption(roadGenerationData, config, lane, group?.Options?.FirstOrDefault(x => x.Type is LaneOptionType.TwoWay)));
+					options.Add(GetInvertOption(config, lane, group?.Options?.FirstOrDefault(x => x.Type is LaneOptionType.TwoWay)));
 				}
 			}
 
@@ -68,7 +69,7 @@ namespace RoadBuilder.Utilities
 					continue;
 				}
 
-				var entries = new OptionItemUIEntry[option.Type is LaneOptionType.Decoration or LaneOptionType.TwoWay ? 2 : option.Type is LaneOptionType.ValueUpDown or LaneOptionType.LaneWidth ? 1 : option.Options.Length];
+				var entries = new OptionItemUIEntry[option.Type is LaneOptionType.Decoration or LaneOptionType.TwoWay ? 2 : option.Type is LaneOptionType.ValueUpDown or LaneOptionType.LaneWidth or LaneOptionType.Checkbox ? 1 : option.Options.Length];
 				var value = GetSelectedOptionValue(config, lane, option);
 
 				if (option.Type is LaneOptionType.Decoration)
@@ -89,6 +90,17 @@ namespace RoadBuilder.Utilities
 						Name = "RoadBuilder.Trees",
 						Icon = "coui://roadbuildericons/RB_TreeWhite.svg",
 						Selected = value is "GT" or "T",
+						Disabled = !available,
+					};
+				}
+				else if (option.Type is LaneOptionType.Checkbox)
+				{
+					var available = remainingSections.Any(x => x.GetComponent<RoadBuilderLaneGroup>().Combination.Any(x => x.OptionName == option.Name && string.IsNullOrEmpty(x.Value) != string.IsNullOrEmpty(value)));
+
+					entries[0] = new()
+					{
+						Id = string.IsNullOrEmpty(value) ? 0 : 1,
+						Selected = !string.IsNullOrEmpty(value),
 						Disabled = !available,
 					};
 				}
@@ -126,6 +138,7 @@ namespace RoadBuilder.Utilities
 					Id = --index,
 					Options = entries,
 					IsToggle = option.Type is LaneOptionType.Toggle,
+					IsCheckbox = option.Type is LaneOptionType.Checkbox,
 					Name = option.Type is LaneOptionType.Decoration
 					? LocaleHelper.Translate("RoadBuilder.Decoration", "Decoration")
 					: LocaleHelper.Translate($"{group.name}.Options[{option.Name}]", option.Name)
@@ -154,15 +167,20 @@ namespace RoadBuilder.Utilities
 		{
 			var value = section.GetComponent<RoadBuilderLaneGroup>().Combination.FirstOrDefault(x => x.OptionName == option.Name)?.Value;
 
+			if (option.Type is LaneOptionType.Checkbox)
+			{
+				return string.IsNullOrEmpty(currentValue) == string.IsNullOrEmpty(value);
+			}
+
 			if (option.Type is LaneOptionType.Decoration or LaneOptionType.TwoWay)
 			{
-				return currentValue is null || value is not null;
+				return currentValue is null or "" || value is not null and not "";
 			}
 
 			return value is not null && value == currentValue;
 		}
 
-		private static OptionSectionUIEntry GetInvertOption(RoadGenerationData roadGenerationData, INetworkConfig config, LaneConfig lane, RoadBuilderLaneOption twoWayOption)
+		private static OptionSectionUIEntry GetInvertOption(INetworkConfig config, LaneConfig lane, RoadBuilderLaneOption twoWayOption)
 		{
 			var isTwoWaySelected = twoWayOption is not null && GetSelectedOptionValue(config, lane, twoWayOption) == "1";
 
@@ -257,6 +275,13 @@ namespace RoadBuilder.Utilities
 					{
 						config.Addons |= addon;
 					}
+
+					return;
+				}
+
+				if (option.Type is LaneOptionType.Checkbox)
+				{
+					lane.GroupOptions[option.Name] = id == 0 ? "checked" : "";
 
 					return;
 				}

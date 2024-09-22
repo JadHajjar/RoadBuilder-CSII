@@ -1,0 +1,101 @@
+@use "../../base.scss";
+
+.gridItem {
+  margin: 5rem !important;
+  width: 100rem;
+  height: 120rem;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: background-color 0.25s;
+
+  &.active {
+    background-color: var(--accentColorDark) !important;
+  }
+}
+
+.gridItemLocked {
+  margin: 5rem !important;
+  width: 100rem;
+  height: 120rem;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: rgba(255, 255, 255, 0.1) !important;
+
+  .gridThumbnail {
+    filter: grayscale(100%) contrast(80%) brightness(0%);
+  }
+}
+
+.itemInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.gridThumbnail {
+  width: 70rem;
+  height: 70rem;
+  margin: 4rem;
+}
+
+.gridItemText {
+  flex: 1;
+  font-size: 14rem;
+  padding: 3rem;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--normalTextColor);
+
+  p {
+    text-align: center;
+    coh-font-fit-mode: shrink;
+  }
+}
+
+.thumbnailContainer {
+  position: relative;
+
+  .lockIcon {
+    position: absolute;
+    z-index: 1;
+    bottom: 10rem;
+    right: 5rem;
+    width: 20rem;
+    height: 20rem;
+    background-color: #ffaa00;
+    mask-size: contain;
+    mask-position: 50% 50%;
+    mask-image: url(coui://roadbuildericons/RB_Lock.svg);
+  }
+}
+
+.sideIcons {
+  position: absolute;
+  right: 4rem;
+  top: 4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+
+  img {
+    width: 20rem;
+    height: 20rem;
+    margin-bottom: 8rem;
+    filter: drop-shadow(0px 0px 2rem rgba(0, 0, 0, 0.5));
+
+    &.masked {
+      mask-size: contain;
+      mask-position: 50% 50%;
+      mask-image: url(coui://roadbuildericons/RB_Lock.svg);
+      background-color: var(--normalTextColor);
+    }
+  }
+}

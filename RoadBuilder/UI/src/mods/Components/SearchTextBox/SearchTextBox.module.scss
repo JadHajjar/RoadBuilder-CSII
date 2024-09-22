@@ -9,12 +9,12 @@
 .searchArea {
   flex: 1;
   position: relative;
-  margin: 0 0.5em;
+  margin: 0 8rem;
 }
 
 .placeholder {
   pointer-events: none;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.8);
   position: absolute;
   top: 50%;
   left: 10rem;
@@ -23,17 +23,20 @@
 
 .clearIcon,
 .searchIcon {
-  height: 1.9em;
-  width: 1.9em;
+  height: 24rem;
+  width: 24rem;
   padding: 0.5rem;
   background: none;
   position: absolute;
   top: 50%;
-  right: 0.2em;
+  right: 3.2rem;
   transform: translate(0, -50%);
   img {
-    height: 1.5em;
-    width: 1.5em;
+    height: 22rem;
+    width: 22rem;
+    background-color: var(--menuText1Normal);
+    mask-size: contain;
+    mask-position: 50% 50%;
   }
 }
 .searchIcon {

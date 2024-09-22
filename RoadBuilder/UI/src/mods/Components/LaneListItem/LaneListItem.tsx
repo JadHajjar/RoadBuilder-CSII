@@ -8,7 +8,7 @@ import { MouseButtons } from "mods/util";
 import { VanillaComponentResolver } from "vanillacomponentresolver";
 import { useLocalization } from "cs2/l10n";
 
-export const LaneListItem = ({ netSection }: { netSection: NetSectionItem }) => {
+export const LaneListItem = ({ netSection, small }: { netSection: NetSectionItem; small: boolean }) => {
   // let [dragging, setDragging] = useState(false);
   let dragContext = useContext(DragContext);
   let { translate } = useLocalization();
@@ -34,7 +34,7 @@ export const LaneListItem = ({ netSection }: { netSection: NetSectionItem }) => 
   return (
     <div
       onMouseDown={onMouseDown}
-      className={classNames(VanillaComponentResolver.instance.assetGridTheme.item, styles.gridItem, dragging && styles.moving)}
+      className={classNames(VanillaComponentResolver.instance.assetGridTheme.item, styles.gridItem, dragging && styles.moving, small && styles.small)}
     >
       <div className={classNames(styles.gridThumbnail)}>
         <img src={netSection.Thumbnail ?? "coui://roadbuildericons/RB_Unknown.svg"} />
@@ -44,19 +44,15 @@ export const LaneListItem = ({ netSection }: { netSection: NetSectionItem }) => 
         <p>{netSection.DisplayName}</p>
       </div>
 
-      <div className={styles.rightSideContainer}>
-        {netSection.IsEdge && (
-          <Tooltip tooltip={translate("RoadBuilder.EdgeLane")}>
-            <img className={styles.edgeIcon} src="coui://roadbuildericons/RB_Edge.svg"></img>
-          </Tooltip>
-        )}
-
+      <div className={classNames(styles.sideContainer, styles.left)}>
         {netSection.IsRestricted && (
           <Tooltip tooltip={translate("RoadBuilder.RestrictedLane")}>
             <img src="coui://gameui/Media/Game/Notifications/BuildingOnFire.svg"></img>
           </Tooltip>
         )}
+      </div>
 
+      <div className={classNames(styles.sideContainer, styles.right)}>
         {netSection.IsCustom && (
           <Tooltip tooltip={translate("RoadBuilder.CustomLane")}>
             <img src="coui://gameui/Media/Glyphs/ParadoxModsCloud.svg"></img>

@@ -43,58 +43,163 @@ $laneButtonSize: 64rem;
   }
 }
 
-@mixin basicLightButton($hasImage: false) {
-  border-radius: 50%;
-  padding: 4rem;
-  color: var(--normalTextColor);
-  background-color: rgba(255, 255, 255, 0.3);
-  text-align: center;
-  border: none;
-
-  @if $hasImage {
-    img {
-      filter: invert(1);
-    }
-  }
-
-  &:hover {
-    background-color: rgba(255, 255, 255, 0.4);
-  }
-  &:active {
-    background: rgba(255, 255, 255, 0.5);
-  }
-}
-
-@mixin basicButton() {
+@mixin baseButton($hasText: true) {
+  pointer-events: auto;
   padding: 8rem;
   border-radius: 4rem;
-  backdrop-filter: blur(4px);
   border: none;
   transition: background-color 0.15s, color 0.15s;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--panelColorDark);
   color: var(--menuText1Normal);
-  opacity: 1;
-  filter: brightness(1.1) saturate(0.8);
+
+  &[disabled] {
+    pointer-events: none !important;
+
+    img {
+      filter: none !important;
+    }
+  }
 
   &.hidden {
     display: none;
   }
-  &:hover {
-    background-color: var(--panelColorNormal);
-  }
+
   &:active {
     background-image: none !important;
-    background-color: var(--accentColorDark-focused) !important;
   }
+
   img {
-    width: 30rem;
-    height: 30rem;
-    margin-right: 10rem;
+    @if $hasText {
+      width: 30rem;
+      height: 30rem;
+      margin-right: 10rem;
+    } @else {
+      width: 24rem;
+      height: 24rem;
+    }
     background-color: var(--menuText1Normal);
     mask-size: contain;
     mask-position: 50% 50%;
+  }
+}
+
+@mixin basicButton($hasText: true) {
+  @include baseButton($hasText);
+
+  filter: brightness(1.1) saturate(0.8);
+  background-color: var(--panelColorDark);
+  backdrop-filter: blur(4px);
+
+  &:hover {
+    background-color: var(--panelColorNormal);
+  }
+
+  &:active {
+    background-color: var(--accentColorDark-focused) !important;
+  }
+
+  img {
+    background-color: var(--menuText1Normal);
+  }
+
+  &[disabled],
+  &.disabled {
+    pointer-events: none !important;
+
+    color: var(--normalTextColorLocked) !important;
+    background-color: var(--panelColorDark) !important;
+
+    img {
+      background-color: var(--normalTextColorLocked) !important;
+    }
+  }
+}
+
+@mixin lightButton($hasText: true) {
+  @include baseButton($hasText);
+
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(4px);
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.35);
+  }
+
+  &:active {
+    background-color: var(--accentColorDark-focused) !important;
+  }
+
+  img {
+    background-color: var(--menuText1Normal);
+  }
+
+  &[disabled],
+  &.disabled {
+    color: var(--normalTextColorLocked) !important;
+    background-color: rgba(255, 255, 255, 0.1) !important;
+
+    img {
+      background-color: var(--normalTextColorLocked) !important;
+    }
+  }
+}
+
+@mixin blackButton($hasText: true) {
+  @include baseButton($hasText);
+
+  background-color: rgba(15, 16, 19, 1);
+  backdrop-filter: blur(4px);
+
+  &:hover {
+    background-color: rgba(29, 31, 37, 1);
+  }
+
+  &:active {
+    background-color: var(--accentColorDark-focused) !important;
+  }
+
+  img {
+    background-color: var(--menuText1Normal);
+  }
+
+  &[disabled],
+  &.disabled {
+    color: var(--normalTextColorLocked) !important;
+    background-color: rgba(15, 16, 19, 1) !important;
+
+    img {
+      background-color: var(--normalTextColorLocked) !important;
+    }
+  }
+}
+
+@mixin transparentButton($hasText: true) {
+  @include baseButton($hasText);
+
+  background-color: transparent;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.3);
+  }
+
+  &:active {
+    background-color: var(--accentColorDark-focused) !important;
+  }
+
+  img {
+    background-color: var(--menuText1Normal);
+  }
+
+  &[disabled],
+  &.disabled {
+    color: var(--normalTextColorLocked) !important;
+    background-color: transparent !important;
+    opacity: 0.75;
+
+    img {
+      background-color: var(--normalTextColorLocked) !important;
+    }
   }
 }

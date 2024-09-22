@@ -1,12 +1,10 @@
-﻿using Game;
-using Game.City;
+﻿using Game.City;
 using Game.Input;
 using Game.Prefabs;
 using Game.SceneFlow;
 using Game.Simulation;
 using Game.Tools;
 using Game.UI;
-using Game.UI.Editor;
 using Game.UI.InGame;
 
 using RoadBuilder.Domain.Components.Prefabs;
@@ -43,7 +41,7 @@ namespace RoadBuilder.Systems.UI
 		private RoadBuilderNetSectionsSystem netSectionsSystem;
 		private CityConfigurationSystem cityConfigurationSystem;
 		private RoadBuilderConfigurationsUISystem roadBuilderConfigurationsUISystem;
-		private EditorToolUISystem editorToolUISystem;
+		private RoadBuilderGenericFunctionsSystem roadBuilderGenericFunctionsSystem;
 		private ValueBindingHelper<RoadBuilderToolMode> RoadBuilderMode;
 		private ValueBindingHelper<string> RoadId;
 		private ValueBindingHelper<string> RoadName;
@@ -53,6 +51,7 @@ namespace RoadBuilder.Systems.UI
 		private ValueBindingHelper<OptionSectionUIEntry[]> RoadOptions;
 		private ValueBindingHelper<bool> RoadListView;
 		private ValueBindingHelper<bool> IsPaused;
+		private ValueBindingHelper<int> FpsMeterLevel;
 		private ValueBindingHelper<bool> IsCustomRoadSelected;
 		private ProxyAction _toolKeyBinding;
 
@@ -78,7 +77,7 @@ namespace RoadBuilder.Systems.UI
 			netSectionsSystem = World.GetOrCreateSystemManaged<RoadBuilderNetSectionsSystem>();
 			cityConfigurationSystem = World.GetOrCreateSystemManaged<CityConfigurationSystem>();
 			roadBuilderConfigurationsUISystem = World.GetOrCreateSystemManaged<RoadBuilderConfigurationsUISystem>();
-			editorToolUISystem = World.GetOrCreateSystemManaged<EditorToolUISystem>();
+			roadBuilderGenericFunctionsSystem = World.GetOrCreateSystemManaged<RoadBuilderGenericFunctionsSystem>();
 
 			toolSystem.EventToolChanged += OnToolChanged;
 
@@ -90,6 +89,7 @@ namespace RoadBuilder.Systems.UI
 			RoadLanes = CreateBinding("GetRoadLanes", new RoadLaneUIBinder[0]);
 			RoadOptions = CreateBinding("GetRoadOptions", new OptionSectionUIEntry[0]);
 			IsPaused = CreateBinding("IsPaused", simulationSystem.selectedSpeed == 0f);
+			FpsMeterLevel = CreateBinding("FpsMeterLevel", 0);
 			RoadListView = CreateBinding("RoadListView", "SetRoadListView", true);
 			IsCustomRoadSelected = CreateBinding("IsCustomRoadSelected", false);
 
@@ -103,12 +103,14 @@ namespace RoadBuilder.Systems.UI
 			CreateTrigger("ClearTool", ClearTool);
 			CreateTrigger("PickPrefab", PickPrefab);
 			CreateTrigger("EditPrefab", EditPrefab);
+			CreateTrigger("ManageRoads", ManageRoads);
 			CreateTrigger("CancelActionPopup", CancelActionPopup);
 		}
 
 		protected override void OnUpdate()
 		{
 			IsPaused.Value = simulationSystem.selectedSpeed == 0f;
+			FpsMeterLevel.Value = (int)(GameManager.instance?.settings?.general?.fpsMode ?? Game.Settings.GeneralSettings.FPSMode.Off);
 			RoadId.Value = GetWorkingId();
 
 			if (_toolKeyBinding.WasPerformedThisFrame())
@@ -152,9 +154,15 @@ namespace RoadBuilder.Systems.UI
 			toolSystem.activeTool = defaultToolSystem;
 		}
 
+		private void ManageRoads()
+		{
+			RoadBuilderMode.Value = RoadBuilderToolMode.ManageRoads;
+		}
+
 		public void ShowActionPopup(Entity entity, PrefabBase prefab)
 		{
 			IsCustomRoadSelected.Value = prefab is INetworkBuilderPrefab;
+
 			SetWorkingEntity(entity, RoadBuilderToolMode.ActionSelection);
 		}
 
@@ -195,11 +203,11 @@ namespace RoadBuilder.Systems.UI
 		{
 			if (workingEntity != Entity.Null && prefabSystem.TryGetPrefab<PrefabBase>(EntityManager.GetComponentData<PrefabRef>(workingEntity), out var prefab))
 			{
-				ActivateRoad(prefab);
+				roadBuilderGenericFunctionsSystem.ActivateRoad(prefab.name);
 			}
 			else if (roadBuilderSystem.Configurations.TryGetValue(GetWorkingId(), out var networkPrefab))
 			{
-				ActivateRoad(networkPrefab.Prefab);
+				roadBuilderGenericFunctionsSystem.ActivateRoad(networkPrefab.Config.ID);
 			}
 		}
 
@@ -720,20 +728,6 @@ namespace RoadBuilder.Systems.UI
 			}
 
 			return prefab.name.Replace('_', ' ').FormatWords();
-		}
-
-		public void ActivateRoad(PrefabBase prefab)
-		{
-			if (GameManager.instance.gameMode == GameMode.Editor)
-			{
-				editorToolUISystem.activeTool = editorToolUISystem.tools.First(x => x is EditorPrefabTool);
-
-				GameManager.instance.RegisterUpdater(() => toolSystem.ActivatePrefabTool(prefab));
-			}
-			else
-			{
-				toolSystem.ActivatePrefabTool(prefab);
-			}
 		}
 	}
 }

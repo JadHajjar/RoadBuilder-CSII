@@ -56,7 +56,7 @@
   "RoadBuilder.LaneGroups.EmptyGroupPrefab.Options[Ground Type][Train]": "Zug",
   "RoadBuilder.LaneGroups.EmptyGroupPrefab.Options[Ground Type][Gravel]": "Schotter",
   "RoadBuilder.LaneGroups.EmptyGroupPrefab.Options[Ground Type][Tiled]": "Gefliest",
-  "Assets.NAME[Sound Barrier 1]": "Lärmschutzwand",
+  "Assets.NAME[RB Sound Barrier 1]": "Sound Barrier",
   "Assets.NAME[Pavement Path Section 3]": "Gehweg für Fußgänger",
   "Assets.NAME[Tiled Pedestrian Section 3]": "Gefliester Gehweg",
   "Assets.NAME[RB Tiled Median 2]": "Gefliester Mittelstreifen"

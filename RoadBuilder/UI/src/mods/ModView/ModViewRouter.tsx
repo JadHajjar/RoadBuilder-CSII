@@ -9,6 +9,7 @@ import { SidePanel } from "mods/SidePanel/SidePanel";
 import styles from "./ModView.module.scss";
 
 import RB_ClickOnRoad from "images/RB_ClickOnRoad.svg";
+import { ManageRoadsView } from "mods/ManageRoadsView/ManageRoadsView";
 
 export const Router = (props: { editor: boolean }) => {
   const roadBuilderToolMode = useValue(roadBuilderToolMode$);
@@ -26,6 +27,13 @@ export const Router = (props: { editor: boolean }) => {
             </span>
           </div>
           <SidePanel editor={props.editor} />
+        </>
+      );
+      break;
+    case RoadBuilderToolModeEnum.ManageRoads:
+      content = (
+        <>
+          <ManageRoadsView editor={props.editor} />
         </>
       );
       break;

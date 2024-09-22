@@ -61,6 +61,7 @@ namespace RoadBuilder.Utilities
 				throw new Exception("Invalid Prefab");
 			}
 
+			config.Playsets = new() { PdxModsUtil.CurrentPlayset };
 			config.Name = $"Custom {GetAssetName(NetworkPrefab)}";
 			config.MaxSlopeSteepness = NetworkPrefab.m_MaxSlopeSteepness;
 			config.PillarPrefabName = FindPillarPrefab(NetworkPrefab);
@@ -82,12 +83,12 @@ namespace RoadBuilder.Utilities
 
 			if (NetworkPrefab.m_EdgeStates.Any(x => x.m_SetState.Any(y => y == NetPieceRequirements.Gravel) && x.m_RequireAny.Length == 0 && x.m_RequireAll.Length == 0))
 			{
-				config.Category |= RoadCategory.Gravel;
+				config.Category = RoadCategory.Gravel;
 			}
 
 			if (NetworkPrefab.m_EdgeStates.Any(x => x.m_SetState.Any(y => y == NetPieceRequirements.Tiles) && x.m_RequireAny.Length == 0 && x.m_RequireAll.Length == 0))
 			{
-				config.Category |= RoadCategory.Tiled;
+				config.Category = RoadCategory.Tiled;
 			}
 
 			config.Lanes.AddRange(NetworkPrefab.m_Sections
@@ -116,6 +117,7 @@ namespace RoadBuilder.Utilities
 			config.ID = string.Empty;
 			config.OriginalID = null;
 			config.Name = $"Copy of {config.Name}";
+			config.Playsets = new() { PdxModsUtil.CurrentPlayset };
 
 			return config;
 		}
@@ -160,7 +162,7 @@ namespace RoadBuilder.Utilities
 
 			if (roadPrefab.m_HighwayRules)
 			{
-				config.Category |= RoadCategory.Highway;
+				config.Category = RoadCategory.Highway;
 			}
 
 			if (roadPrefab.m_TrafficLights)
@@ -176,7 +178,7 @@ namespace RoadBuilder.Utilities
 			switch (roadPrefab.m_RoadType)
 			{
 				case RoadType.PublicTransport:
-					config.Category |= RoadCategory.PublicTransport;
+					config.Category = RoadCategory.PublicTransport;
 					break;
 			}
 
@@ -222,17 +224,17 @@ namespace RoadBuilder.Utilities
 
 			if (trackPrefab.m_TrackType.HasFlag(Game.Net.TrackTypes.Train))
 			{
-				config.Category |= RoadCategory.Train;
+				config.Category = RoadCategory.Train;
 			}
 
 			if (trackPrefab.m_TrackType.HasFlag(Game.Net.TrackTypes.Tram))
 			{
-				config.Category |= RoadCategory.Tram;
+				config.Category = RoadCategory.Tram;
 			}
 
 			if (trackPrefab.m_TrackType.HasFlag(Game.Net.TrackTypes.Subway))
 			{
-				config.Category |= RoadCategory.Subway;
+				config.Category = RoadCategory.Subway;
 			}
 
 			return config;

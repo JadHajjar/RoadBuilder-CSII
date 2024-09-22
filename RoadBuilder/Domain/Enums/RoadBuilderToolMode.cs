@@ -4,9 +4,10 @@
 	{
 		None = 0,
 		Picker = 1,
-		ActionSelection = 2,
-		Editing = 3,
-		EditingSingle = 4,
-		EditingNonExistent = 5
+		ManageRoads = 2,
+		ActionSelection = 3,
+		Editing = 4,
+		EditingSingle = 5,
+		EditingNonExistent = 6,
 	}
 }

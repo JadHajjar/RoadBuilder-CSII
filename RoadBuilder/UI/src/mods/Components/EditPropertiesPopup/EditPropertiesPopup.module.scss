@@ -3,15 +3,15 @@
 .viewContainer {
   position: absolute;
   width: 320rem;
-  bottom: -20rem;//240rem;
+  bottom: -20rem; //240rem;
   padding: 10rem;
-  background-color: rgba(255, 255, 255, 0.0);
+  background-color: rgba(255, 255, 255, 0);
   transform: translateX(-160rem);
   pointer-events: auto;
 }
 
 .view {
-  width: 100%;  
+  width: 100%;
   background-color: var(--panelColorNormal);
   backdrop-filter: var(--panelBlur);
   color: var(--textColorDim);
@@ -26,7 +26,7 @@
   transform-origin: bottom center;
 
   //animation: enter 0.2s;
-  color: rgba($color: #fff, $alpha: 1);  
+  color: rgba($color: #fff, $alpha: 1);
 }
 
 .topBar {
@@ -115,7 +115,7 @@
     mask-image: url(coui://gameui/Media/Misc/BalloonArrowBottom.svg#1);
     mask-size: 100% 80rem;
     mask-position: 50% 95%;
-  }  
+  }
 }
 
 // .exitDetector {

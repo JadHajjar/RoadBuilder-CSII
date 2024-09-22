@@ -1,0 +1,301 @@
+@use "../base.scss" as _base;
+
+.panel {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 1550rem;
+  height: 750rem;
+  display: flex;
+  flex-direction: column;
+
+  background-color: var(--panelColorNormal);
+  backdrop-filter: var(--panelBlur);
+  border-radius: 8rem;
+
+  pointer-events: auto;
+
+  overflow: hidden;
+
+  animation: entry 0.2s;
+}
+
+.manageRoadsButton {
+  @include _base.basicButton();
+
+  position: absolute;
+  width: 330rem;
+  height: 38rem;
+  right: 10rem;
+  font-size: 16rem;
+  text-transform: uppercase;
+  font-weight: bold;
+  background-color: var(--panelColorNormal);
+
+  &:hover {
+    background-color: var(--panelColorDark);
+  }
+
+  &.game {
+    bottom: 10rem + _base.$bottomBarOffset + _base.$bottomBarHeight - 48rem;
+  }
+
+  &.editor {
+    bottom: 10rem + _base.$bottomBarOffsetEditor + _base.$bottomBarHeight - 48rem;
+  }
+}
+
+.header {
+  background-color: var(--panelColorDark);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom-style: solid;
+  border-bottom-width: var(--stroke2);
+  border-bottom-color: var(--accentColorDark);
+}
+
+.mode {
+  display: flex;
+
+  > div {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: var(--textColorDim);
+    padding: 6rem;
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 14rem;
+    transition: background-color 0.25s;
+    width: 120rem;
+    height: 64rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    img {
+      width: 20rem;
+      height: 20rem;
+      margin: 4rem;
+      background-color: var(--textColorDim);
+      mask-size: contain;
+      mask-position: 50% 50%;
+    }
+
+    span {
+      font-size: 14rem;
+      font-weight: bold;
+      max-width: 90%;
+      max-height: 50%;
+      coh-font-fit-mode: shrink;
+    }
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.35);
+    }
+
+    &.selected {
+      background-color: var(--accentColorDark) !important;
+    }
+  }
+}
+
+.topBar {
+  position: relative;
+  height: 100%;
+  flex: 1;
+}
+
+.browseContainer {
+  flex: 1;
+
+  .paging {
+    height: 60rem;
+  }
+}
+
+.list {
+  margin: 6rem 0 6rem 6rem;
+  flex: 1;
+}
+
+.list > div {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.filters {
+  width: auto;
+  position: absolute;
+  top: 5rem;
+  bottom: 5rem;
+  right: 5rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  & > Button {
+    @include _base.lightButton(false);
+
+    padding: 6rem;
+    margin: 1rem 6rem 1rem 2rem;
+
+    img {
+      width: 20rem;
+      height: 20rem;
+    }
+  }
+}
+
+.sortingDropdown {
+  & > div {
+    width: 200rem;
+  }
+
+  button {
+    @include _base.textInputBasic();
+  }
+}
+
+.searchBar {
+  width: 300rem;
+
+  & > div {
+    margin: 0;
+  }
+}
+
+.closeButton {
+  @include _base.transparentButton(false);
+
+  width: 42rem;
+  height: 42rem;
+  margin: 10rem 20rem;
+}
+
+.categories {
+  display: flex;
+  position: absolute;
+  bottom: 0;
+  left: 20rem;
+
+  Button {
+    @include _base.basicButton();
+
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    margin: 0 3rem;
+    padding: 4rem;
+    width: 32rem;
+    height: 32rem;
+    backdrop-filter: none;
+    transition: width 0.2s;
+    background-color: rgba(255, 255, 255, 0.1);
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.35);
+    }
+
+    img {
+      width: 22rem;
+      height: 22rem;
+      background: inherit;
+      margin: 0;
+    }
+
+    span {
+      opacity: 0;
+      width: 0;
+      transition: opacity 0.2s, width 0.2s;
+      coh-font-fit-mode: shrink;
+      max-height: 24rem;
+    }
+
+    &.selected {
+      width: 200rem;
+      background-color: var(--accentColorDark) !important;
+
+      span {
+        margin-left: 6rem;
+        width: 160rem;
+        opacity: 1;
+      }
+    }
+  }
+}
+
+.localContainer {
+  display: flex;
+  width: 100%;
+  flex: 1;
+
+  & > div:first-child {
+    flex: 1;
+  }
+}
+
+.managePanel {
+  background-color: var(--menuPanel1);
+  color: var(--menuText1Normal);
+  width: 425rem;
+  height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: nowrap;
+}
+
+.loader {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  & > img {
+    width: 64rem;
+    height: 64rem;
+    animation: rotation 0.55s infinite linear;
+  }
+
+  .noResults {
+    font-size: 28rem;
+    color: var(--textColorDim);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    img {
+      width: 64rem;
+      height: 64rem;
+      margin-bottom: 24rem;
+    }
+  }
+}
+
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}
+
+@keyframes entry {
+  0% {
+    transform: translate(-50%, -47.5%);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(-50%, -50%);
+    opacity: 1;
+  }
+}

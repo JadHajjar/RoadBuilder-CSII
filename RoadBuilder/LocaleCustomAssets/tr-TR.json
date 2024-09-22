@@ -56,7 +56,7 @@
   "RoadBuilder.LaneGroups.EmptyGroupPrefab.Options[Ground Type][Train]": "Tren",
   "RoadBuilder.LaneGroups.EmptyGroupPrefab.Options[Ground Type][Gravel]": "Çakıl",
   "RoadBuilder.LaneGroups.EmptyGroupPrefab.Options[Ground Type][Tiled]": "Döşeli",
-  "Assets.NAME[Sound Barrier 1]": "Ses Bariyeri",
+  "Assets.NAME[RB Sound Barrier 1]": "Sound Barrier",
   "Assets.NAME[Pavement Path Section 3]": "Yaya Kaldırımı",
   "Assets.NAME[Tiled Pedestrian Section 3]": "Döşenmiş Yaya Yolu",
   "Assets.NAME[RB Tiled Median 2]": "Döşenmiş Refüj"

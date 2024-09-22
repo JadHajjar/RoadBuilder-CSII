@@ -11,9 +11,18 @@ namespace RoadBuilder.Utilities
 {
 	public static class NetworkConfigExtensionsUtil
 	{
+		public static bool IsInPlayset(this INetworkConfig config)
+		{
+			return Mod.Settings.NoPlaysetIsolation
+				|| config.Playsets is null
+				|| ((!config.Playsets.Any(x => x > 0)
+				|| config.Playsets.Contains(PdxModsUtil.CurrentPlayset))
+				&& !config.Playsets.Contains(-PdxModsUtil.CurrentPlayset));
+		}
+
 		public static bool GetEdgeLaneInfo(NetSectionPrefab section, LaneGroupPrefab groupPrefab, out RoadBuilderEdgeLaneInfo sectionEdgeInfo)
 		{
-			if (section.TryGet(out sectionEdgeInfo))
+			if (section != null && section.TryGet(out sectionEdgeInfo))
 			{
 				return true;
 			}
@@ -23,6 +32,7 @@ namespace RoadBuilder.Utilities
 				return true;
 			}
 
+			sectionEdgeInfo = null;
 			return false;
 		}
 

@@ -1,8 +1,7 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg width="100%" height="100%" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
-    <g id="surface1">
-        <path d="M49.918,38.008L43.602,31.902L50.398,25.332C51.227,24.59 51.273,23.32 50.504,22.516L49.102,21.16C48.273,20.418 46.957,20.465 46.188,21.266L39.387,27.832L33.07,21.73C32.242,20.988 30.926,21.035 30.156,21.836L28.645,23.293C27.816,24.039 27.77,25.309 28.539,26.113L34.855,32.215L28.055,38.785C27.227,39.527 27.176,40.797 27.945,41.602L29.352,42.957C30.18,43.699 31.496,43.652 32.266,42.855L39.066,36.281L45.383,42.387C46.211,43.133 47.527,43.086 48.301,42.285L49.809,40.824C50.637,40.078 50.688,38.809 49.918,38.008Z" style="fill:#f3f4f4;fill-rule:nonzero;"/>
-        <path d="M24.387,13.477C24.387,13.477 10.078,28.398 7.121,31.484C6.824,31.793 6.824,32.281 7.121,32.594C9.859,35.434 22.273,48.336 24.141,50.281C24.293,50.438 24.5,50.523 24.719,50.523L57.371,50.523C57.582,50.523 57.785,50.441 57.934,50.293C58.086,50.141 58.168,49.938 58.168,49.727L58.168,14.273C58.168,14.063 58.086,13.859 57.934,13.707C57.785,13.559 57.582,13.477 57.371,13.477L24.387,13.477M22.871,10.895C23.023,10.738 23.23,10.648 23.449,10.648L60.293,10.648C60.504,10.648 60.707,10.734 60.859,10.883C61.008,11.035 61.094,11.238 61.094,11.449L61.094,52.551C61.094,52.992 60.734,53.352 60.293,53.352L23.445,53.352C23.227,53.352 23.02,53.262 22.867,53.105C20.824,50.98 6.125,35.711 3.129,32.598C2.832,32.285 2.832,31.797 3.129,31.488C6.125,28.363 20.828,13.027 22.871,10.895Z" style="fill:#f3f4f4;fill-rule:nonzero;"/>
-    </g>
-</svg>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Transformed by: SVG Repo Mixer Tools -->
+<svg width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="SVGRepo_bgCarrier" stroke-width="0"/>
+<g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
+<g id="SVGRepo_iconCarrier"> <path d="M17 15L11 9.00001M17 9L11 15" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/> <path d="M7.4 4.8C7.77771 4.29639 8.37049 4 9 4H20C21.1046 4 22 4.89543 22 6V18C22 19.1046 21.1046 20 20 20H9C8.37049 20 7.77771 19.7036 7.4 19.2L2.9 13.2C2.36667 12.4889 2.36667 11.5111 2.9 10.8L7.4 4.8Z" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> </g>
+</svg>

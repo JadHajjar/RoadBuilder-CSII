@@ -56,6 +56,18 @@ namespace RoadBuilder.Utilities
 
 		public string GenerateThumbnail()
 		{
+			var combinedXml = GenerateSvg();
+
+			if (combinedXml is null)
+				return null;
+
+			combinedXml.Save(Path.Combine(FoldersUtil.TempFolder, NetworkPrefab.Config.ID + ".svg"));
+
+			return $"coui://roadbuilderthumbnails/{NetworkPrefab.Config.ID}.svg";
+		}
+
+		public XDocument GenerateSvg()
+		{
 			try
 			{
 				var svgs = GetSvgItems();
@@ -145,9 +157,7 @@ namespace RoadBuilder.Utilities
 					combinedSvg
 				);
 
-				combinedXml.Save(Path.Combine(FoldersUtil.TempFolder, NetworkPrefab.Config.ID + ".svg"));
-
-				return $"coui://roadbuilderthumbnails/{NetworkPrefab.Config.ID}.svg";
+				return combinedXml;
 			}
 			catch (Exception ex)
 			{

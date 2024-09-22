@@ -5,7 +5,7 @@
 		<LangVersion>9</LangVersion>
 		<TargetFramework>net472</TargetFramework>
 		<Configurations>Debug;Release</Configurations>
-		<Version>0.3.3.2</Version>
+		<Version>0.4.3</Version>
 		<FileVersion>$(Version)</FileVersion>
 		<AssemblyVersion>$(Version)</AssemblyVersion>
 		<Company>T. D. W. and Trejak</Company>
@@ -19,7 +19,7 @@
 	<PropertyGroup>
 		<StartAction>Program</StartAction>
 		<StartProgram>C:\program files (x86)\steam\Steam.exe</StartProgram>
-		<StartArguments>-applaunch 949230 --developerMode --burst-disable-compilation</StartArguments>
+		<StartArguments>-applaunch 949230 --developerMode --uiDeveloperMode --burst-disable-compilation</StartArguments>
 		<StartWorkingDirectory>C:\program files (x86)\steam</StartWorkingDirectory>
 	</PropertyGroup>
 	
@@ -44,11 +44,11 @@
 
 	<Target Name="CopyFiles" AfterTargets="DeployWIP">
 		<ItemGroup>
-			<IconFiles Include=".\PrefabIcons\*.*" />
+			<IconFiles Include=".\CustomIcons\*.*" />
 			<BadgesFiles Include=".\Properties\Badges\*.*" />
 		</ItemGroup>
 
-		<Copy SourceFiles="@(IconFiles)" DestinationFiles="@(IconFiles->'$(DeployDir)\PrefabIcons\%(RecursiveDir)%(Filename)%(Extension)')" />
+		<Copy SourceFiles="@(IconFiles)" DestinationFiles="@(IconFiles->'$(DeployDir)\Icons\%(RecursiveDir)%(Filename)%(Extension)')" />
 		<Copy SourceFiles="@(BadgesFiles)" DestinationFiles="@(BadgesFiles->'$(DeployDir)\Badges\%(RecursiveDir)%(Filename)%(Extension)')" />
 	</Target>
 
@@ -88,6 +88,9 @@
 		<Reference Include="Colossal.PSI.Common">
 			<Private>false</Private>
 		</Reference>
+		<Reference Include="Colossal.PSI.PdxSdk">
+			<Private>false</Private>
+		</Reference>
 		<Reference Include="Colossal.UI">
 			<Private>false</Private>
 		</Reference>
@@ -98,6 +101,12 @@
 			<Private>false</Private>
 		</Reference>
 		<Reference Include="cohtml.Net">
+			<Private>false</Private>
+		</Reference>
+		<Reference Include="PDX.SDK">
+			<Private>false</Private>
+		</Reference>
+		<Reference Include="System.Net.Http">
 			<Private>false</Private>
 		</Reference>
 		<Reference Include="UnityEngine.CoreModule">

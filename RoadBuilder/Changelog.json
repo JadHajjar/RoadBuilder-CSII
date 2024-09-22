@@ -1,6 +1,95 @@
 [
   {
     "Beta": true,
+    "Version": "0.4.3",
+    "Date": "2024-09-22",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Updated the roads list UI in the side panel. Double-click on a road to start placing it. Single-click to view more options (Edit/Find/Delete).",
+          "Added two icons on the roads in the side panel to signal if they're placed, or if they're not in your active playset.",
+          "Fixed the sound barrier mesh going down to the ground on elevated segments.",
+          "Updated translations."
+        ]
+      }
+    ]
+  },
+  {
+    "Beta": true,
+    "Version": "0.4.2",
+    "Date": "2024-09-19",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Updated the paging system in the Discover tab. The UI is now always centered and navigating the discover tab now properly resets to page 1.",
+          "Added two icons on the roads in the management panel to signal if they're placed, or if they're not in your active playset.",
+          "Changed the download button to a 'Place' button in the discover tab if it is locally available or after downloading it.",
+          "Double-click on a road in the management and discover panels to start placing it."
+        ]
+      }
+    ]
+  },
+  {
+    "Beta": true,
+    "Version": "0.4.1",
+    "Date": "2024-08-31",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Disabled uploading for roads without a proper name.",
+          "Updated translations."
+        ]
+      }
+    ]
+  },
+  {
+    "Beta": true,
+    "Version": "0.4.0",
+    "Date": "2024-09-07",
+    "Tagline": "The road management update",
+    "ChangeGroups": [
+      {
+        "Name": "New Management Features",
+        "Changes": [
+          "Added a new button in the road list panel on the right to open a larger management UI to easily manage your roads and discover new ones.",
+          "Added a toggle on roads allowing you to hide a road from the toolbar, show it, or use the default visibility set in the mod options.",
+          "Added Playset isolation features; created roads are now linked to the playset that you're using them on. Previously created roads are visible in all playsets by default.",
+          "Added an option to disable Playset isolation in the mod options.",
+          "Added a category filter to the road list view."
+        ]
+      },
+      {
+        "Name": "Road Sharing",
+        "Changes": [
+          "Added a Discover tab, found in the new management UI, to share and find player-made roads.",
+          "Browse, search, and download roads made by others in the community with a few clicks.",
+          "You can upload your own roads from the 'My Roads' tab."
+        ]
+      },
+      {
+        "Name": "Lane Grouping",
+        "Changes": [
+          "Added automatic grouping of lanes by their category.",
+          "Each category section is collapsable to easily hide unwated lanes.",
+          "Lane list automatically shrinks when there's a lot of items being shown."
+        ]
+      },
+      {
+        "Name": "Other Changes",
+        "Changes": [
+          "Added fuzzy search for lane and road searches.",
+          "Improved sizing of UI elements when translated.",
+          "Fixed the right-side panel overlapping the fps meter.",
+          "Fixed roads sometimes not getting fixed with the automatic vanilla reverting."
+        ]
+      }
+    ]
+  },
+  {
+    "Beta": true,
     "Version": "0.3.3.2",
     "Date": "2024-08-31",
     "ChangeGroups": [

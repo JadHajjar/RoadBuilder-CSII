@@ -2,10 +2,11 @@
 
 using RoadBuilder.Domain.Enums;
 using RoadBuilder.Domain.Prefabs;
-using RoadBuilder.Systems;
 
 using System;
 using System.Collections.Generic;
+
+using static RoadBuilder.Systems.RoadBuilderSerializeSystem;
 
 namespace RoadBuilder.Domain.Configurations
 {
@@ -22,13 +23,16 @@ namespace RoadBuilder.Domain.Configurations
 		public RoadCategory Category { get; set; }
 		public RoadAddons Addons { get; set; }
 		public List<LaneConfig> Lanes { get; set; } = new();
+		public ShowInToolbarState ToolbarState { get; set; }
+		public List<int> Playsets { get; set; }
+		bool INetworkConfig.Uploaded { get; set; }
 
 		public void Deserialize<TReader>(TReader reader) where TReader : IReader
 		{
 			reader.Read(out string iD);
 			reader.Read(out string name);
 
-			if (Version < RoadBuilderSerializeSystem.VER_REMOVE_AGGREGATE_TYPE)
+			if (Version < VER_REMOVE_AGGREGATE_TYPE)
 			{
 				reader.Read(out string _);
 			}
@@ -46,6 +50,7 @@ namespace RoadBuilder.Domain.Configurations
 			MaxSlopeSteepness = maxSlopeSteepness;
 			Category = (RoadCategory)category;
 			Addons = (RoadAddons)addons;
+			OriginalID = ID;
 
 			reader.Read(out int laneCount);
 
@@ -58,7 +63,14 @@ namespace RoadBuilder.Domain.Configurations
 				Lanes.Add(lane);
 			}
 
-			OriginalID = ID;
+			if (Version < VER_MANAGEMENT_REWORK)
+			{
+				return;
+			}
+
+			reader.Read(out int toolbarState);
+
+			ToolbarState = (ShowInToolbarState)toolbarState;
 		}
 
 		public void Serialize<TWriter>(TWriter writer) where TWriter : IWriter
@@ -77,11 +89,20 @@ namespace RoadBuilder.Domain.Configurations
 			{
 				writer.Write(lane);
 			}
+
+			writer.Write((int)ToolbarState);
 		}
 
 		public void ApplyVersionChanges()
 		{
-			if (Version <= RoadBuilderSerializeSystem.VER_FIX_PEDESTRIAN_ROADS)
+			if (Version < VER_MANAGEMENT_REWORK)
+			{
+				Category &= ~RoadCategory.RaisedSidewalk;
+
+				Playsets ??= new();
+			}
+
+			if (Version < VER_FIX_PEDESTRIAN_ROADS)
 			{
 				Addons |= RoadAddons.HasUndergroundElectricityCable;
 
@@ -95,6 +116,17 @@ namespace RoadBuilder.Domain.Configurations
 					if (lane.SectionPrefabName is "Tiled Median Pedestrian 2" or "Tiled Median 2")
 					{
 						lane.SectionPrefabName = "RB Tiled Median 2";
+					}
+				}
+			}
+
+			if (Version < VER_CHANGE_SOUND_BARRIER)
+			{
+				foreach (var item in Lanes)
+				{
+					if (item.SectionPrefabName is "Sound Barrier 1")
+					{
+						item.SectionPrefabName = "RB Sound Barrier 1";
 					}
 				}
 			}

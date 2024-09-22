@@ -1,0 +1,76 @@
+@use "../base.scss" as _base;
+
+.pagination {
+  width: 100%;
+  padding: 16rem;
+
+  animation: entry 0.2s;
+
+  ul {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+
+  li {
+    padding: 6rem;
+
+    Button {
+      @include _base.basicButton(false);
+
+      width: 48rem;
+      height: 48rem;
+
+      &.arrow {
+        background-color: var(--accentColorLight);
+
+        img {
+          background-color: var(--menuControl1);
+        }
+
+        &:hover {
+          background-color: var(--accentColorNormal-pressed);
+        }
+      }
+
+      &.selected {
+        background-color: var(--accentColorDark) !important;
+      }
+    }
+
+    .dots {
+      opacity: 0.75;
+      width: 48rem;
+      height: 48rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      img {
+        width: 24rem;
+        height: 24rem;
+      }
+    }
+  }
+}
+
+.disabled {
+  opacity: 0.5;
+}
+
+.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+@keyframes entry {
+  0% {
+    transform: translateY(50rem);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
