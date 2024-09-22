@@ -1,6 +1,22 @@
 [
   {
     "Beta": true,
+    "Version": "0.4.3",
+    "Date": "2024-09-22",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Updated the roads list UI in the side panel. Double-click on a road to start placing it. Single-click to view more options (Edit/Find/Delete).",
+          "Added two icons on the roads in the side panel to signal if they're placed, or if they're not in your active playset.",
+          "Fixed the sound barrier mesh going down to the ground on elevated segments.",
+          "Updated translations."
+        ]
+      }
+    ]
+  },
+  {
+    "Beta": true,
     "Version": "0.4.2",
     "Date": "2024-09-19",
     "ChangeGroups": [

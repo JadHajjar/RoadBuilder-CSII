@@ -1,59 +1,117 @@
 @use "../../base.scss";
 
+.container {
+  margin: 3rem !important;
+  width: 92rem;
+  height: 110rem;
+  position: relative;
+
+  .gridItem {
+    width: 92rem;
+  }
+
+  &.expanded .gridItem {
+    width: 288rem;
+
+    filter: var(--tooltipFilter);
+    background-color: var(--tooltipColor) !important;
+    z-index: 3;
+  }
+
+  &.i1.expanded .gridItem {
+    left: -98rem;
+  }
+
+  &.i2.expanded .gridItem {
+    left: -196rem;
+  }
+
+  &.large {
+    margin: 5rem !important;
+    width: 100rem;
+    height: 130rem;
+
+    .gridItem {
+      width: 100rem;
+    }
+
+    &.expanded .gridItem {
+      width: 320rem;
+    }
+
+    &.i1.expanded .gridItem {
+      left: -110rem;
+    }
+
+    &.i2.expanded .gridItem {
+      left: -220rem;
+    }
+  }
+}
+
 .gridItem {
-  margin: 4rem !important;
-  width: 100%;
-  height: 95rem;
+  position: absolute;
+  left: 0rem;
+  top: 0;
+  height: 100%;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  box-shadow: none;
+  z-index: 0;
+  transition: background-color 0.25s, width 0.25s, left 0.25s, z-index 0.25s;
 
   &.active {
     background-color: var(--accentColorDark) !important;
   }
 
-  &:hover .itemInfo,
-  &:active .itemInfo {
-    height: 65rem;
-  }
+  &.locked {
+    background-color: rgba(255, 255, 255, 0.1) !important;
 
-  &:hover .gridThumbnail,
-  &:active .gridThumbnail {
-    height: 55rem;
-  }
-}
-
-.gridItemLocked {
-  margin: 4rem;
-  width: 100%;
-  height: 95rem;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  background-color: rgba(255, 255, 255, 0.1) !important;
-
-  .gridThumbnail {
-    filter: grayscale(100%) contrast(80%) brightness(0%);
+    .gridThumbnail {
+      filter: grayscale(100%) contrast(80%) brightness(0%);
+    }
   }
 }
 
 .itemInfo {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  height: 95rem;
-  transition: height 0.15s;
+  height: 100%;
+}
+
+.expanded .itemInfo {
+  height: auto;
+  flex-direction: row;
+  justify-content: flex-start;
 }
 
 .gridThumbnail {
-  width: 75rem;
-  height: 75rem;
+  width: 55rem;
+  height: 55rem;
   margin: 4rem;
-  transition: width 0.15s, height 0.15s;
+}
+
+.large .gridThumbnail {
+  width: 70rem;
+  height: 70rem;
+  margin: 4rem;
+}
+
+.container.expanded .gridItem .gridThumbnail {
+  width: 30rem;
+  height: 30rem;
+  margin: 6rem;
+}
+
+.container.expanded.large .gridItem .gridThumbnail {
+  width: 40rem;
+  height: 40rem;
+  margin: 8rem;
 }
 
 .gridItemText {
@@ -71,45 +129,6 @@
   }
 }
 
-.jpgThumb {
-  border-radius: 5rem;
-  margin-bottom: 5rem;
-}
-
-.buttons {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-.gridItem:hover .buttons,
-.gridItem:active .buttons {
-  opacity: 1;
-}
-
-.buttons Button {
-  @include base.transparentButton();
-
-  flex: 1;
-  border-radius: 0;
-  padding: 4rem;
-  backdrop-filter: none;
-  background: none;
-
-  &.danger:active {
-    background-color: var(--animation-curve-active-n1-stroke) !important;
-  }
-
-  img {
-    width: 20rem;
-    height: 20rem;
-  }
-}
-
 .thumbnailContainer {
   position: relative;
 
@@ -124,5 +143,65 @@
     mask-size: contain;
     mask-position: 50% 50%;
     mask-image: url(coui://roadbuildericons/RB_Lock.svg);
+  }
+}
+
+.sideIcons {
+  position: absolute;
+  right: 4rem;
+  top: 4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+
+  img {
+    width: 20rem;
+    height: 20rem;
+    margin-bottom: 8rem;
+    filter: drop-shadow(0px 0px 2rem rgba(0, 0, 0, 0.5));
+
+    &.masked {
+      mask-size: contain;
+      mask-position: 50% 50%;
+      mask-image: url(coui://roadbuildericons/RB_Lock.svg);
+      background-color: var(--normalTextColor);
+    }
+  }
+}
+
+.buttons {
+  display: none;
+  opacity: 0;
+  transition: opacity 0.45s;
+  width: 100%;
+  flex: 1;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  flex-basis: auto;
+  flex-wrap: wrap;
+}
+
+.expanded .buttons {
+  display: flex;
+  opacity: 1;
+}
+
+.buttons Button {
+  @include base.transparentButton();
+
+  width: 50%;
+  border-radius: 0;
+  padding: 4rem;
+  backdrop-filter: none;
+  background: none;
+
+  &.danger:active {
+    background-color: var(--animation-curve-active-n1-stroke) !important;
+  }
+
+  img {
+    width: 20rem;
+    height: 20rem;
   }
 }

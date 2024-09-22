@@ -21,12 +21,13 @@ namespace RoadBuilder.Systems
 {
 	public partial class RoadBuilderSerializeSystem : GameSystemBase
 	{
-		public const ushort CURRENT_VERSION = 4;
+		public const ushort CURRENT_VERSION = 5;
 
 		// Version History
 		public const ushort VER_REMOVE_AGGREGATE_TYPE = 2;
 		public const ushort VER_FIX_PEDESTRIAN_ROADS = 3;
 		public const ushort VER_MANAGEMENT_REWORK = 4;
+		public const ushort VER_CHANGE_SOUND_BARRIER = 5;
 
 		private static RoadBuilderSystem roadBuilderSystem;
 		private static PrefabSystem prefabSystem;

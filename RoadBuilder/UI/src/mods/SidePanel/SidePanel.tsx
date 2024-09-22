@@ -29,8 +29,10 @@ export const SidePanel = (props: { editor: boolean }) => {
   const roadConfigurations = useValue(allRoadConfigurations$);
   const netSections = useValue(allNetSections$);
   const fpsMeterLevel = useValue(fpsMeterLevel$);
-  let [selectedCategory, setSelectedCategory] = useState<string | RoadCategory | undefined>(undefined);
-  let [searchQuery, setSearchQuery] = useState<string>("");
+  const [selectedCategory, setSelectedCategory] = useState<string | RoadCategory | undefined>(undefined);
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [selectedItemId, setSelectedItemId] = useState<number | undefined>(); // state to track selected child
+
   let items: JSX.Element[];
 
   function setAndBindSearch(query: string) {
@@ -50,7 +52,7 @@ export const SidePanel = (props: { editor: boolean }) => {
   if (roadListView || toolMode == RoadBuilderToolModeEnum.Picker) {
     items = roadConfigurations
       .filter((val, idx) => (selectedCategory == undefined || selectedCategory == val.Category) && !val.IsNotInPlayset)
-      .map((val, idx) => <RoadConfigListItem key={idx} road={val} />);
+      .map((val, idx) => <RoadConfigListItem key={idx} road={val} index={idx} selected={selectedItemId == idx} onSelect={setSelectedItemId} />);
   } else {
     const small = netSections.map((x) => x.Sections.length).reduce((x, s) => x + s, 0) >= 15;
     items = netSections
@@ -112,7 +114,12 @@ export const SidePanel = (props: { editor: boolean }) => {
           </div>
         )}
       </div>
-      <Scrollable className={styles.list} vertical smooth trackVisibility="scrollable">
+      <Scrollable
+        className={classNames(styles.list, roadListView || toolMode == RoadBuilderToolModeEnum.Picker ? styles.roads : styles.lanes)}
+        vertical
+        smooth
+        trackVisibility="scrollable"
+      >
         {items}
       </Scrollable>
       {toolMode == RoadBuilderToolModeEnum.Picker && (

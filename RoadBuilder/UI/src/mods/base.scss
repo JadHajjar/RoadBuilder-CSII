@@ -196,6 +196,7 @@ $laneButtonSize: 64rem;
   &.disabled {
     color: var(--normalTextColorLocked) !important;
     background-color: transparent !important;
+    opacity: 0.75;
 
     img {
       background-color: var(--normalTextColorLocked) !important;

@@ -102,6 +102,17 @@ namespace RoadBuilder.Domain.Configurations
 
 				Playsets ??= new();
 			}
+
+			if (Version < VER_CHANGE_SOUND_BARRIER)
+			{
+				foreach (var item in Lanes)
+				{
+					if (item.SectionPrefabName is "Sound Barrier 1")
+					{
+						item.SectionPrefabName = "RB Sound Barrier 1";
+					}
+				}
+			}
 		}
 
 		public Type GetPrefabType()

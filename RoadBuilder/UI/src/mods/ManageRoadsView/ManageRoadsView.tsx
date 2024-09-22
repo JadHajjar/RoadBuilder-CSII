@@ -85,7 +85,7 @@ export const ManageRoadsView = (props: { editor: boolean }) => {
     setAndBindSearch("");
     setAndBindCategory(undefined);
     setAndBindSorting(0);
-    setDiscoverPage(1);
+    if (discoverView) setDiscoverPage(1);
     setUsedFilter(undefined);
   }, [discoverView]);
 

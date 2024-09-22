@@ -176,6 +176,12 @@ namespace RoadBuilder.Systems
 			CreateSidewalkPieces();
 
 			CreatePolePieces();
+
+			var elevatedBarrier = NetPieces["Sound Barrier 1"].Clone("Elevated Sound Barrier 1") as NetPiecePrefab;
+
+			elevatedBarrier.Remove<MovePieceVertices>();
+
+			prefabSystem.AddPrefab(elevatedBarrier);
 		}
 
 		private void DoNetSectionCreation()
@@ -201,6 +207,8 @@ namespace RoadBuilder.Systems
 			CreateEmptyNetSection("RB Tram Pole Section {0}", "RB Tram Pole Piece", 1f, 2f);
 
 			GenerateSidewalkSections();
+
+			GenerateSoundBarrier();
 		}
 
 		private void DoNetGroupsCreation()
@@ -947,6 +955,93 @@ namespace RoadBuilder.Systems
 			}
 		}
 
+		private void GenerateSoundBarrier()
+		{
+			var barrier = NetSections["Sound Barrier 1"].Clone("RB Sound Barrier 1") as NetSectionPrefab;
+			var width = 1;
+
+			barrier.AddComponent<RoadBuilderEdgeLaneInfo>().DoNotRequireBeingOnEdge = true;
+			barrier.m_Pieces = new[]
+			{
+				new NetPieceInfo
+				{
+					m_Piece = NetPieces["Sound Barrier 1"],
+					m_RequireNone = new[] { NetPieceRequirements.Tunnel, NetPieceRequirements.Elevated, NetPieceRequirements.HighTransition, NetPieceRequirements.LowTransition },
+					m_RequireAll = new NetPieceRequirements[0],
+					m_RequireAny = new NetPieceRequirements[0],
+				},
+				new NetPieceInfo
+				{
+					m_Piece = NetPieces["Elevated Sound Barrier 1"],
+					m_RequireNone = new[] { NetPieceRequirements.Tunnel },
+					m_RequireAny = new[] { NetPieceRequirements.Elevated, NetPieceRequirements.HighTransition, NetPieceRequirements.LowTransition },
+					m_RequireAll = new NetPieceRequirements[0],
+				},
+				new NetPieceInfo
+				{
+					m_Piece = NetPieces[string.Format("Elevated Bottom Piece {0}", width)],
+					m_RequireAll = new[] { NetPieceRequirements.Elevated },
+					m_RequireAny = new NetPieceRequirements[0] ,
+					m_RequireNone = new[] { NetPieceRequirements.Intersection, NetPieceRequirements.HighTransition, NetPieceRequirements.LowTransition },
+				},
+				new NetPieceInfo
+				{
+					m_Piece = NetPieces[string.Format("Elevated Bottom Piece {0} - Ending", width)],
+					m_RequireAll = new[] { NetPieceRequirements.Elevated },
+					m_RequireAny = new[] { NetPieceRequirements.HighTransition, NetPieceRequirements.LowTransition },
+					m_RequireNone = new NetPieceRequirements[0],
+				},
+				new NetPieceInfo
+				{
+					m_Piece = NetPieces[string.Format("Elevated Bottom Piece {0}", width)],
+					m_RequireAll = new[] { NetPieceRequirements.Elevated, NetPieceRequirements.Intersection },
+					m_RequireAny = new NetPieceRequirements[0] ,
+					m_RequireNone = new[] { NetPieceRequirements.Median, NetPieceRequirements.HighTransition, NetPieceRequirements.LowTransition },
+				},
+				new NetPieceInfo
+				{
+					m_Piece = NetPieces[string.Format("Elevated Bottom Piece {0} - Intersection Middle", width)],
+					m_RequireAll = new[] { NetPieceRequirements.Elevated, NetPieceRequirements.Intersection, NetPieceRequirements.Median },
+					m_RequireAny = new NetPieceRequirements[0] ,
+					m_RequireNone = new[] { NetPieceRequirements.HighTransition, NetPieceRequirements.LowTransition },
+				},
+				new NetPieceInfo
+				{
+					m_Piece = NetPieces[string.Format("Tunnel Top Piece {0}", width)],
+					m_RequireAll = new[] { NetPieceRequirements.Tunnel },
+					m_RequireAny = new NetPieceRequirements[0] ,
+					m_RequireNone = new[] { NetPieceRequirements.Intersection, NetPieceRequirements.HighTransition, NetPieceRequirements.LowTransition },
+				},
+				new NetPieceInfo
+				{
+					m_Piece = NetPieces[string.Format("Tunnel Top Piece {0} - Ending", width)],
+					m_RequireAll = new[] { NetPieceRequirements.Tunnel },
+					m_RequireAny = new[] { NetPieceRequirements.HighTransition, NetPieceRequirements.LowTransition },
+					m_RequireNone = new NetPieceRequirements[0],
+				},
+				new NetPieceInfo
+				{
+					m_Piece = NetPieces[string.Format("Tunnel Top Piece {0}", width)],
+					m_RequireAll = new[] { NetPieceRequirements.Tunnel, NetPieceRequirements.Intersection },
+					m_RequireAny = new NetPieceRequirements[0] ,
+					m_RequireNone = new[] { NetPieceRequirements.Median, NetPieceRequirements.HighTransition, NetPieceRequirements.LowTransition },
+				},
+				new NetPieceInfo
+				{
+					m_Piece = NetPieces[string.Format("Tunnel Top Piece {0} - Intersection Middle", width)],
+					m_RequireAll = new[] { NetPieceRequirements.Tunnel, NetPieceRequirements.Intersection, NetPieceRequirements.Median },
+					m_RequireAny = new NetPieceRequirements[0] ,
+					m_RequireNone = new[] { NetPieceRequirements.HighTransition, NetPieceRequirements.LowTransition },
+				},
+			};
+
+			NetSections[barrier.name] = barrier;
+
+			prefabSystem.AddPrefab(barrier);
+
+			SetUp("RB Sound Barrier 1", "coui://roadbuildericons/RB_SoundBarrier.svg").AddLaneThumbnail("coui://roadbuildericons/Thumb_SoundBarrier.svg");
+		}
+
 		private void AddParkingNetSections()
 		{
 			var sections = new[]
@@ -1077,10 +1172,7 @@ namespace RoadBuilder.Systems
 			SetUp("Pavement Path Section 3", "coui://roadbuildericons/RB_PedestrianLane.svg").WithRequireAll(RoadCategory.Pathway).AddLaneThumbnail("coui://roadbuildericons/Thumb_PedestrianLaneWide.svg");
 			SetUp("Tiled Pedestrian Section 3", "coui://roadbuildericons/RB_PedestrianOnly.svg").WithRequireAll(RoadCategory.Tiled).AddLaneThumbnail("coui://roadbuildericons/Thumb_TiledSmall.svg");
 			SetUp("RB Tiled Median 2", "coui://roadbuildericons/RB_TiledMedian_Centered.svg").WithRequireAll(RoadCategory.Tiled).WithThumbnail("coui://roadbuildericons/RB_TiledMedian.svg").AddLaneThumbnail("coui://roadbuildericons/Thumb_PedestrianLaneSmall.svg");
-			SetUp("Sound Barrier 1", "coui://roadbuildericons/RB_SoundBarrier.svg").AddLaneThumbnail("coui://roadbuildericons/Thumb_SoundBarrier.svg");
-
-			NetSections["Sound Barrier 1"].AddComponent<RoadBuilderEdgeLaneInfo>().DoNotRequireBeingOnEdge = true;
-
+			
 			var pathEdgeInfo = NetSections["Pavement Path Section 3"].AddComponent<RoadBuilderEdgeLaneInfo>();
 			pathEdgeInfo.SidePrefab = NetSections["Pavement Path Side Section 0"];
 			pathEdgeInfo.AddSidewalkStateOnNode = true;
