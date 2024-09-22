@@ -126,15 +126,15 @@ This helps us better assist you and avoids your message from getting lost in the
   <Screenshot Value="Properties/Screenshot_07.png" />
   <Tag Value="Code Mod" />
   <ForumLink Value="https://forum.paradoxplaza.com/forum/threads/road-builder.1698661/" />
-  <ModVersion Value="0.4.2" />
+  <ModVersion Value="0.4.3" />
   <GameVersion Value="1.1.*" />
   <ChangeLog>
-# v0.4.2
+# v0.4.3
 ## Changes
-* Updated the paging system in the Discover tab. The UI is now always centered and navigating the discover tab now properly resets to page 1.
-* Added two icons on the roads in the management panel to signal if they're placed, or if they're not in your active playset.
-* Changed the download button to a 'Place' button in the discover tab if it is locally available or after downloading it.
-* Double-click on a road in the management and discover panels to start placing it.
+* Updated the roads list UI in the side panel. Double-click on a road to start placing it. Single-click to view more options (Edit/Find/Delete).
+* Added two icons on the roads in the side panel to signal if they're placed, or if they're not in your active playset.
+* Fixed the sound barrier mesh going down to the ground on elevated segments.
+* Updated translations.
 </ChangeLog>
   <ExternalLink Type="discord" Url="https://discord.gg/E4k8ZEtRxd" />
   <ExternalLink Type="github" Url="https://github.com/JadHajjar/RoadBuilder-CSII" />
