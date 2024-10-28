@@ -1,6 +1,21 @@
 [
   {
     "Beta": true,
+    "Version": "0.4.4",
+    "Date": "2024-09-22",
+    "ChangeGroups": [
+      {
+        "Name": "Hotfix",
+        "Changes": [
+          "Fixed train outside connections not working properly.",
+          "Fixed outside connections not always having the correct one-way/two-way type.",
+          "Compatibility with patch 1.1.10f1"
+        ]
+      }
+    ]
+  },
+  {
+    "Beta": true,
     "Version": "0.4.3",
     "Date": "2024-09-22",
     "ChangeGroups": [

@@ -24,8 +24,6 @@ using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
 
-using UnityEngine.InputSystem;
-
 namespace RoadBuilder.Systems
 {
 	public partial class RoadBuilderToolSystem : ToolBaseSystem
@@ -39,8 +37,8 @@ namespace RoadBuilder.Systems
 		private EntityQuery highlightedQuery;
 		private EntityQuery roadBuilderNetworkQuery;
 		private ProxyAction placeAction;
-		private ProxyAction applyAction;
-		private ProxyAction cancelAction;
+		private new ProxyAction applyAction;
+		private new ProxyAction cancelAction;
 
 		public override string toolID { get; } = "RoadBuilderTool";
 
@@ -63,15 +61,15 @@ namespace RoadBuilder.Systems
 			cancelAction = Mod.Settings.GetAction(nameof(RoadBuilder) + "Cancel");
 
 			var builtInApplyAction = InputManager.instance.FindAction(InputManager.kToolMap, "Apply");
-			var mimicApplyBinding = applyAction.bindings.FirstOrDefault(b => b.group == nameof(Mouse));
-			var builtInApplyBinding = builtInApplyAction.bindings.FirstOrDefault(b => b.group == nameof(Mouse));
+			var mimicApplyBinding = applyAction.bindings.FirstOrDefault(b => b.device == InputManager.DeviceType.Mouse);
+			var builtInApplyBinding = builtInApplyAction.bindings.FirstOrDefault(b => b.device == InputManager.DeviceType.Mouse);
 
 			mimicApplyBinding.path = builtInApplyBinding.path;
 			mimicApplyBinding.modifiers = builtInApplyBinding.modifiers;
 
-			var builtInCancelAction = InputManager.instance.FindAction(InputManager.kToolMap, "Mouse Cancel");
-			var mimicCancelBinding = cancelAction.bindings.FirstOrDefault(b => b.group == nameof(Mouse));
-			var builtInCancelBinding = builtInCancelAction.bindings.FirstOrDefault(b => b.group == nameof(Mouse));
+			var builtInCancelAction = InputManager.instance.FindAction(InputManager.kToolMap, "Cancel");
+			var mimicCancelBinding = cancelAction.bindings.FirstOrDefault(b => b.device == InputManager.DeviceType.Mouse);
+			var builtInCancelBinding = builtInCancelAction.bindings.FirstOrDefault(b => b.device == InputManager.DeviceType.Mouse);
 
 			mimicCancelBinding.path = builtInCancelBinding.path;
 			mimicCancelBinding.modifiers = builtInCancelBinding.modifiers;
@@ -186,12 +184,8 @@ namespace RoadBuilder.Systems
 
 		private bool IsWorkingPrefab(Entity entity, string workingId)
 		{
-			if (!EntityManager.TryGetComponent<PrefabRef>(entity, out var prefabRef))
-			{
-				return false;
-			}
-
-			return workingId == prefabSystem.GetPrefabName(prefabRef);
+			return EntityManager.TryGetComponent<PrefabRef>(entity, out var prefabRef)
+&& workingId == prefabSystem.GetPrefabName(prefabRef);
 		}
 
 		private bool HandlePicker(out Entity entity)
