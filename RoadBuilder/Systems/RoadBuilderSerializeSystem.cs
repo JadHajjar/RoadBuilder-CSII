@@ -123,7 +123,7 @@ namespace RoadBuilder.Systems
 
 			Mod.Log.WarnFormat("{0} invalid edges found", invalidEntities.Count);
 
-			GameManager.instance.userInterface.appBindings.ShowConfirmationDialog(new ConfirmationDialog("Options.SECTION[RoadBuilder.RoadBuilder.Mod]", "RoadBuilder.DIALOG_MESSAGE[FixInvalidEdges]", "Common.DIALOG_ACTION[Yes]", "Common.DIALOG_ACTION[No]"), msg =>
+			GameManager.instance.RegisterUpdater(() => GameManager.instance.userInterface.appBindings.ShowConfirmationDialog(new ConfirmationDialog("Options.SECTION[RoadBuilder.RoadBuilder.Mod]", "RoadBuilder.DIALOG_MESSAGE[FixInvalidEdges]", "Common.DIALOG_ACTION[Yes]", "Common.DIALOG_ACTION[No]"), msg =>
 			{
 				if (msg == 0)
 				{
@@ -168,7 +168,7 @@ namespace RoadBuilder.Systems
 						}
 					}
 				}
-			});
+			}));
 		}
 
 		private HashSet<string> CreateNetworksList()

@@ -76,12 +76,22 @@ namespace RoadBuilder.Systems
 				{
 					if (prefab.name == "Road Outside Connection - Oneway")
 					{
-						roadGenerationData.OutsideConnectionOneWay = prefab;
+						roadGenerationData.RoadOutsideConnectionOneWay = prefab;
 					}
 
 					if (prefab.name == "Road Outside Connection - Twoway")
 					{
-						roadGenerationData.OutsideConnectionTwoWay = prefab;
+						roadGenerationData.RoadOutsideConnectionTwoWay = prefab;
+					}
+
+					if (prefab.name == "Train Outside Connection - Oneway")
+					{
+						roadGenerationData.TrainOutsideConnectionOneWay = prefab;
+					}
+
+					if (prefab.name == "Train Outside Connection - Twoway")
+					{
+						roadGenerationData.TrainOutsideConnectionTwoWay = prefab;
 					}
 				}
 			}

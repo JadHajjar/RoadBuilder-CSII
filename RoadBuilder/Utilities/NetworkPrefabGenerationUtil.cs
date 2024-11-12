@@ -577,7 +577,6 @@ namespace RoadBuilder.Utilities
 			var uIObject = ScriptableObject.CreateInstance<UIObject>();
 			uIObject.m_Group = showInToolbar && group != null ? _roadGenerationData.UIGroupPrefabs[group] : null;
 			uIObject.m_Icon = group != null ? _roadGenerationData.UIGroupPrefabs[group].GetComponent<UIObject>().m_Icon : string.Empty;
-			uIObject.m_LargeIcon = string.Empty;
 			uIObject.m_Priority = 999999;
 			yield return uIObject;
 
@@ -697,15 +696,36 @@ namespace RoadBuilder.Utilities
 
 			if (!NetworkPrefab.Config.Category.HasFlag(RoadCategory.Pathway))
 			{
-				var isOneWay = NetworkPrefab.Config.IsOneWay();
-				yield return new NetSubObjectInfo
+				var carLanes = NetworkPrefab.Prefab.m_Sections.Where(x => x.m_Section.FindLanes<CarLane>().Count > 0).ToList();
+				var trackLanes = NetworkPrefab.Prefab.m_Sections.Where(x => x.m_Section.FindLanes<TrackLane>().Any(x => x.m_TrackType is Game.Net.TrackTypes.Train)).ToList();
+
+				if (carLanes.Count > 0)
 				{
-					m_Object = isOneWay ? _roadGenerationData.OutsideConnectionOneWay : _roadGenerationData.OutsideConnectionTwoWay,
-					m_Position = new float3(0, 5, 0),
-					m_Rotation = new quaternion(0, 0, 0, 1),
-					m_Placement = NetObjectPlacement.Node,
-					m_RequireOutsideConnection = true,
-				};
+					var isOneWay = carLanes.All(x => x.m_Invert == carLanes[0].m_Invert);
+
+					yield return new NetSubObjectInfo
+					{
+						m_Object = isOneWay ? _roadGenerationData.RoadOutsideConnectionOneWay : _roadGenerationData.RoadOutsideConnectionTwoWay,
+						m_Position = new float3(0, 5, 0),
+						m_Rotation = new quaternion(0, 0, 0, 1),
+						m_Placement = NetObjectPlacement.Node,
+						m_RequireOutsideConnection = true,
+					};
+				}
+
+				if (trackLanes.Count > 0)
+				{
+					var isOneWay = trackLanes.All(x => x.m_Invert == trackLanes[0].m_Invert);
+
+					yield return new NetSubObjectInfo
+					{
+						m_Object = isOneWay ? _roadGenerationData.TrainOutsideConnectionOneWay : _roadGenerationData.TrainOutsideConnectionTwoWay,
+						m_Position = new float3(0, 5, 0),
+						m_Rotation = new quaternion(0, 0, 0, 1),
+						m_Placement = NetObjectPlacement.Node,
+						m_RequireOutsideConnection = true,
+					};
+				}
 			}
 		}
 
