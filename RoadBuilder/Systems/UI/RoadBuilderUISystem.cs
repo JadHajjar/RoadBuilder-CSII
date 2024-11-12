@@ -720,7 +720,7 @@ namespace RoadBuilder.Systems.UI
 
 		private string GetAssetName(PrefabBase prefab)
 		{
-			prefabUISystem.GetTitleAndDescription(prefab, out var titleId, out var _);
+			GetTitleAndDescription(prefab, out var titleId, out var _);
 
 			if (GameManager.instance.localizationManager.activeDictionary.TryGetValue(titleId, out var name))
 			{
@@ -728,6 +728,11 @@ namespace RoadBuilder.Systems.UI
 			}
 
 			return prefab.name.Replace('_', ' ').FormatWords();
+		}
+
+		public void GetTitleAndDescription(PrefabBase prefab, out string titleId, out string descriptionId)
+		{
+			prefabUISystem.GetTitleAndDescription(prefabSystem.GetEntity(prefab), out titleId, out descriptionId);
 		}
 	}
 }

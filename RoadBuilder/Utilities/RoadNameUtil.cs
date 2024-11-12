@@ -16,14 +16,12 @@ namespace RoadBuilder.Utilities
 	{
 		private readonly RoadBuilderSystem _roadBuilderSystem;
 		private readonly RoadBuilderUISystem _roadBuilderUISystem;
-		private readonly PrefabUISystem _prefabUISystem;
 		private readonly RoadBuilderNetSectionsSystem _netSectionsSystem;
 
-		public RoadNameUtil(RoadBuilderSystem roadBuilderSystem, RoadBuilderUISystem roadBuilderUISystem, PrefabUISystem prefabUISystem, RoadBuilderNetSectionsSystem netSectionsSystem)
+		public RoadNameUtil(RoadBuilderSystem roadBuilderSystem, RoadBuilderUISystem roadBuilderUISystem, RoadBuilderNetSectionsSystem netSectionsSystem)
 		{
 			_roadBuilderSystem = roadBuilderSystem;
 			_roadBuilderUISystem = roadBuilderUISystem;
-			_prefabUISystem = prefabUISystem;
 			_netSectionsSystem = netSectionsSystem;
 
 			foreach (var localeId in GameManager.instance.localizationManager.GetSupportedLocales())
@@ -36,7 +34,7 @@ namespace RoadBuilder.Utilities
 		{
 			foreach (var item in _roadBuilderSystem.Configurations.Values)
 			{
-				_prefabUISystem.GetTitleAndDescription(item.Prefab, out var titleId, out var descriptionId);
+				_roadBuilderUISystem.GetTitleAndDescription(item.Prefab, out var titleId, out var descriptionId);
 
 				yield return new(titleId, item.Config.Name);
 				yield return new(descriptionId, GetRoadDescription(item));

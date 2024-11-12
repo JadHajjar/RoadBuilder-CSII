@@ -20,7 +20,7 @@ namespace RoadBuilder.Systems.UI
 {
 	public partial class RoadBuilderNetSectionsUISystem : ExtendedUISystemBase
 	{
-		private PrefabUISystem prefabUISystem;
+		private RoadBuilderUISystem roadBuilderUISystem;
 		private RoadBuilderSystem roadBuilderSystem;
 		private RoadBuilderNetSectionsSystem netSectionsSystem;
 		private ValueBindingHelper<NetSectionGroup[]> _NetSections;
@@ -31,8 +31,8 @@ namespace RoadBuilder.Systems.UI
 		protected override void OnCreate()
 		{
 			base.OnCreate();
-			
-			prefabUISystem = World.GetOrCreateSystemManaged<PrefabUISystem>();
+
+			roadBuilderUISystem = World.GetOrCreateSystemManaged<RoadBuilderUISystem>();
 			roadBuilderSystem = World.GetOrCreateSystemManaged<RoadBuilderSystem>();
 			netSectionsSystem = World.GetOrCreateSystemManaged<RoadBuilderNetSectionsSystem>();
 
@@ -218,7 +218,7 @@ namespace RoadBuilder.Systems.UI
 
 		private string GetAssetName(PrefabBase prefab)
 		{
-			prefabUISystem.GetTitleAndDescription(prefab, out var titleId, out var _);
+			roadBuilderUISystem.GetTitleAndDescription(prefab, out var titleId, out var _);
 
 			if (GameManager.instance.localizationManager.activeDictionary.TryGetValue(titleId, out var name))
 			{

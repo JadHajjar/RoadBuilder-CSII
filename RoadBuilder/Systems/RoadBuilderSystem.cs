@@ -27,7 +27,7 @@ namespace RoadBuilder.Systems
 		private readonly Queue<(INetworkBuilderPrefab prefab, bool generateId)> _updatedRoadPrefabsQueue = new();
 
 		private PrefabSystem prefabSystem;
-		private PrefabUISystem prefabUISystem;
+		private RoadBuilderUISystem roadBuilderUISystem;
 		private RoadBuilderNetSectionsSystem netSectionsSystem;
 		private RoadBuilderSerializeSystem roadBuilderSerializeSystem;
 		private CityConfigurationSystem cityConfigurationSystem;
@@ -46,14 +46,14 @@ namespace RoadBuilder.Systems
 			base.OnCreate();
 
 			prefabSystem = World.GetOrCreateSystemManaged<PrefabSystem>();
-			prefabUISystem = World.GetOrCreateSystemManaged<PrefabUISystem>();
+			roadBuilderUISystem = World.GetOrCreateSystemManaged<RoadBuilderUISystem>();
 			netSectionsSystem = World.GetOrCreateSystemManaged<RoadBuilderNetSectionsSystem>();
 			roadBuilderSerializeSystem = World.GetOrCreateSystemManaged<RoadBuilderSerializeSystem>();
 			cityConfigurationSystem = World.GetOrCreateSystemManaged<CityConfigurationSystem>();
 			roadGenerationDataSystem = World.GetOrCreateSystemManaged<RoadBuilderGenerationDataSystem>();
 			modificationBarrier = World.GetOrCreateSystemManaged<ModificationBarrier1>();
 
-			new RoadNameUtil(this, World.GetOrCreateSystemManaged<RoadBuilderUISystem>(), prefabUISystem, netSectionsSystem);
+			new RoadNameUtil(this, roadBuilderUISystem, netSectionsSystem);
 
 			// Delay getting the toolbar ui system assets for the next frame
 			GameManager.instance.RegisterUpdater(() => toolbarUISystemLastSelectedAssets ??= typeof(ToolbarUISystem).GetField("m_LastSelectedAssets", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(World.GetOrCreateSystemManaged<ToolbarUISystem>()) as Dictionary<Entity, Entity>);
@@ -159,7 +159,7 @@ namespace RoadBuilder.Systems
 				return null;
 			}
 
-			return new NetworkConfigGenerationUtil(roadPrefab, roadGenerationDataSystem.RoadGenerationData, prefabUISystem).GenerateConfiguration();
+			return new NetworkConfigGenerationUtil(roadPrefab, roadGenerationDataSystem.RoadGenerationData, roadBuilderUISystem).GenerateConfiguration();
 		}
 
 		public INetworkConfig GenerateConfiguration(Entity entity)
@@ -179,7 +179,7 @@ namespace RoadBuilder.Systems
 				return null;
 			}
 
-			return new NetworkConfigGenerationUtil(roadPrefab, roadGenerationDataSystem.RoadGenerationData, prefabUISystem).GenerateConfiguration();
+			return new NetworkConfigGenerationUtil(roadPrefab, roadGenerationDataSystem.RoadGenerationData, roadBuilderUISystem).GenerateConfiguration();
 		}
 
 		private void CreateNewRoadPrefab(INetworkConfig config, Entity entity)

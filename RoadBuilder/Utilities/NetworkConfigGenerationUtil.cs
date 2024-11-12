@@ -10,6 +10,7 @@ using RoadBuilder.Domain.Configurations;
 using RoadBuilder.Domain.Enums;
 using RoadBuilder.Domain.Prefabs;
 using RoadBuilder.Systems;
+using RoadBuilder.Systems.UI;
 
 using System;
 using System.Linq;
@@ -19,14 +20,14 @@ namespace RoadBuilder.Utilities
 	public class NetworkConfigGenerationUtil
 	{
 		private readonly RoadGenerationData _roadGenerationData;
-		private readonly PrefabUISystem _prefabUISystem;
+		private readonly RoadBuilderUISystem _roadBuilderUISystem;
 
 		public NetGeometryPrefab NetworkPrefab { get; }
 
-		public NetworkConfigGenerationUtil(NetGeometryPrefab prefab, RoadGenerationData roadGenerationData, PrefabUISystem prefabUISystem)
+		public NetworkConfigGenerationUtil(NetGeometryPrefab prefab, RoadGenerationData roadGenerationData, RoadBuilderUISystem roadBuilderUISystem)
 		{
 			_roadGenerationData = roadGenerationData;
-			_prefabUISystem = prefabUISystem;
+			_roadBuilderUISystem = roadBuilderUISystem;
 
 			NetworkPrefab = prefab;
 		}
@@ -286,7 +287,7 @@ namespace RoadBuilder.Utilities
 
 		private string GetAssetName(PrefabBase prefab)
 		{
-			_prefabUISystem.GetTitleAndDescription(prefab, out var titleId, out var _);
+			_roadBuilderUISystem.GetTitleAndDescription(prefab, out var titleId, out var _);
 
 			if (GameManager.instance.localizationManager.activeDictionary.TryGetValue(titleId, out var name))
 			{
