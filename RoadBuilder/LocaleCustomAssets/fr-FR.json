@@ -1,7 +1,7 @@
 {
   "Assets.NAME[RoadBuilder.LaneGroups.BusGroupPrefab]": "Bus",
   "Assets.NAME[RoadBuilder.LaneGroups.CarGroupPrefab]": "Voiture",
-  "Assets.NAME[RoadBuilder.LaneGroups.MedianGroupPrefab]": "Séparateur",
+  "Assets.NAME[RoadBuilder.LaneGroups.MedianGroupPrefab]": "Terre-pleins",
   "Assets.NAME[RoadBuilder.LaneGroups.ShoulderGroupPrefab]": "Accotement",
   "Assets.NAME[RoadBuilder.LaneGroups.EmptyGroupPrefab]": "Voie Vide",
   "Assets.NAME[RoadBuilder.LaneGroups.SidewalkGroupPrefab]": "Trottoir",
@@ -16,7 +16,7 @@
   "RoadBuilder.LaneGroups.CarGroupPrefab.Options[Lane Width]": "Largeur de Voie",
   "RoadBuilder.LaneGroups.CarGroupPrefab.Options[Transport Option]": "Modes de Transport",
   "RoadBuilder.LaneGroups.CarGroupPrefab.Options[Markings]": "Marquage au sol",
-  "RoadBuilder.LaneGroups.MedianGroupPrefab.Options[Median Width]": "Largeur du Séparateur",
+  "RoadBuilder.LaneGroups.MedianGroupPrefab.Options[Median Width]": "Largeur du terre-pleins",
   "RoadBuilder.LaneGroups.ShoulderGroupPrefab.Options[Lane Width]": "Largeur de Voie",
   "RoadBuilder.LaneGroups.ShoulderGroupPrefab.Options[Ground Type]": "Type de Sol",
   "RoadBuilder.LaneGroups.EmptyGroupPrefab.Options[Lane Width]": "Largeur de Voie",
@@ -56,8 +56,8 @@
   "RoadBuilder.LaneGroups.EmptyGroupPrefab.Options[Ground Type][Train]": "Train",
   "RoadBuilder.LaneGroups.EmptyGroupPrefab.Options[Ground Type][Gravel]": "Gravier",
   "RoadBuilder.LaneGroups.EmptyGroupPrefab.Options[Ground Type][Tiled]": "Tiled",
-  "Assets.NAME[RB Sound Barrier 1]": "Sound Barrier",
+  "Assets.NAME[RB Sound Barrier 1]": "Barrière acoustique",
   "Assets.NAME[Pavement Path Section 3]": "Chaussée Piétonne",
   "Assets.NAME[Tiled Pedestrian Section 3]": "Piéton Pavée",
-  "Assets.NAME[RB Tiled Median 2]": "Séparateur Carrelé"
+  "Assets.NAME[RB Tiled Median 2]": "Terre-pleins carrelé"
 }
