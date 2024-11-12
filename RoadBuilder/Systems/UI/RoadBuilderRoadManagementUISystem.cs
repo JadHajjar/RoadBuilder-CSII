@@ -165,6 +165,11 @@ namespace RoadBuilder.Systems.UI
 
 		private void UpdateSelectedRoadOptions()
 		{
+			if (SelectedRoad is null)
+			{
+				return;
+			}
+
 			var config = SelectedRoad.Config;
 			var options = new List<OptionSectionUIEntry>
 			{
@@ -246,6 +251,7 @@ namespace RoadBuilder.Systems.UI
 		private void AddToPlayset()
 		{
 			if (PdxModsUtil.CurrentPlayset > 0
+				&& SelectedRoad?.Config is not null
 				&& !SelectedRoad.Config.Playsets.Contains(PdxModsUtil.CurrentPlayset))
 			{
 				SelectedRoad.Config.Playsets.Remove(-PdxModsUtil.CurrentPlayset);
@@ -255,7 +261,7 @@ namespace RoadBuilder.Systems.UI
 
 		private void RemoveFromPlayset()
 		{
-			if (PdxModsUtil.CurrentPlayset > 0)
+			if (PdxModsUtil.CurrentPlayset > 0 && SelectedRoad?.Config is not null)
 			{
 				if (SelectedRoad.Config.Playsets.Count == 0)
 				{
