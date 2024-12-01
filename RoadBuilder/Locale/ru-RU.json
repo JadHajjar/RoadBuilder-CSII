@@ -1,6 +1,7 @@
 {
   "Editor.TOOL[RoadBuilderTool]": "Дорожный строитель",
   "Options.SECTION[RoadBuilder.RoadBuilder.Mod]": "Дорожный строитель",
+  "Options.INPUT_MAP[RoadBuilder.RoadBuilder.Mod]": "Дорожный строитель",
   "Options.GROUP[RoadBuilder.RoadBuilder.Mod.Hotkey]": "Hot-key Settings",
   "Options.GROUP[RoadBuilder.RoadBuilder.Mod.Main]": "Общие настройки",
   "Options.GROUP[RoadBuilder.RoadBuilder.Mod.Advanced]": "Дополнительные настройки",
