@@ -1,6 +1,7 @@
 {
   "Editor.TOOL[RoadBuilderTool]": "道路制造者",
   "Options.SECTION[RoadBuilder.RoadBuilder.Mod]": "道路制造者",
+  "Options.INPUT_MAP[RoadBuilder.RoadBuilder.Mod]": "道路制造者",
   "Options.GROUP[RoadBuilder.RoadBuilder.Mod.Hotkey]": "快捷键设置",
   "Options.GROUP[RoadBuilder.RoadBuilder.Mod.Main]": "常规设置",
   "Options.GROUP[RoadBuilder.RoadBuilder.Mod.Advanced]": "高级设置",
