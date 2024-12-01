@@ -8,9 +8,9 @@ namespace RoadBuilder.Domain.Components.Prefabs
 	public class RoadBuilderLaneOption
 	{
 		public LaneOptionType Type;
-		public string Name;
-		public string DefaultValue;
+		public string? Name;
+		public string? DefaultValue;
 		public bool IgnoreForSimilarDuplicate;
-		public RoadBuilderLaneOptionValue[] Options;
+		public RoadBuilderLaneOptionValue[]? Options;
 	}
 }

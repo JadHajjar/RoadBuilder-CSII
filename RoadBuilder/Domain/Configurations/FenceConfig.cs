@@ -2,7 +2,6 @@
 
 using RoadBuilder.Domain.Enums;
 using RoadBuilder.Domain.Prefabs;
-using RoadBuilder.Systems;
 
 using System;
 using System.Collections.Generic;
@@ -13,18 +12,18 @@ namespace RoadBuilder.Domain.Configurations
 {
 	public class FenceConfig : INetworkConfig
 	{
-		public string Type { get; set; }
+		public string? Type { get; set; }
 		public ushort Version { get; set; }
-		public string OriginalID { get; set; }
-		public string ID { get; set; }
-		public string Name { get; set; }
-		public string PillarPrefabName { get; set; }
+		public string? OriginalID { get; set; }
+		public string? ID { get; set; }
+		public string? Name { get; set; }
+		public string? PillarPrefabName { get; set; }
 		public float MaxSlopeSteepness { get; set; }
 		public RoadCategory Category { get; set; }
 		public RoadAddons Addons { get; set; }
 		public List<LaneConfig> Lanes { get; set; } = new();
 		public ShowInToolbarState ToolbarState { get; set; }
-		public List<int> Playsets { get; set; }
+		public List<int>? Playsets { get; set; }
 		bool INetworkConfig.Uploaded { get; set; }
 
 		public void Deserialize<TReader>(TReader reader) where TReader : IReader

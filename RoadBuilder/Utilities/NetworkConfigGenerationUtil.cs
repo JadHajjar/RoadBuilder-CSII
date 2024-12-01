@@ -2,7 +2,6 @@
 
 using Game.Prefabs;
 using Game.SceneFlow;
-using Game.UI.InGame;
 
 using RoadBuilder.Domain;
 using RoadBuilder.Domain.Components.Prefabs;
@@ -34,7 +33,7 @@ namespace RoadBuilder.Utilities
 
 		public INetworkConfig GenerateConfiguration()
 		{
-			if (NetworkPrefab is INetworkBuilderPrefab customPrefab)
+			if (NetworkPrefab is INetworkBuilderPrefab customPrefab && customPrefab.Config is not null)
 			{
 				return JsonClone(customPrefab.Config);
 			}
@@ -112,7 +111,7 @@ namespace RoadBuilder.Utilities
 		{
 			config.Type = config.GetType().Name;
 
-			config = LocalSaveUtil.LoadFromJson(JSON.Dump(config));
+			config = LocalSaveUtil.LoadFromJson(JSON.Dump(config))!;
 
 			config.Version = RoadBuilderSerializeSystem.CURRENT_VERSION;
 			config.ID = string.Empty;
@@ -129,8 +128,8 @@ namespace RoadBuilder.Utilities
 			{
 				return new LaneConfig
 				{
-					GroupPrefabName = groupItem.GroupPrefab.name,
-					GroupOptions = groupItem.Combination.ToDictionary(x => x.OptionName, x => x.Value),
+					GroupPrefabName = groupItem.GroupPrefab?.name,
+					GroupOptions = groupItem.Combination?.ToDictionary(x => x.OptionName ?? string.Empty, x => x.Value) ?? new(),
 					Invert = section.m_Invert
 				};
 			}
@@ -243,23 +242,25 @@ namespace RoadBuilder.Utilities
 
 		private INetworkConfig GenerateFenceConfig(FencePrefab _)
 		{
-			var config = new FenceConfig();
-
-			config.Category = RoadCategory.Fence;
+			var config = new FenceConfig
+			{
+				Category = RoadCategory.Fence
+			};
 
 			return config;
 		}
 
 		private INetworkConfig GeneratePathConfig(PathwayPrefab _)
 		{
-			var config = new PathConfig();
-
-			config.Category = RoadCategory.Pathway;
+			var config = new PathConfig
+			{
+				Category = RoadCategory.Pathway
+			};
 
 			return config;
 		}
 
-		private string FindPillarPrefab(NetGeometryPrefab RoadPrefab)
+		private string? FindPillarPrefab(NetGeometryPrefab RoadPrefab)
 		{
 			if (!RoadPrefab.TryGet<NetSubObjects>(out var netSubObjects))
 			{

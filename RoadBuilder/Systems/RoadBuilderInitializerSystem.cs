@@ -8,8 +8,10 @@ namespace RoadBuilder.Systems
 {
 	public partial class RoadBuilderInitializerSystem : GameSystemBase
 	{
+#nullable disable
 		private RoadBuilderSystem roadBuilderSystem;
 		private RoadBuilderGenerationDataSystem roadGenerationDataSystem;
+#nullable enable
 
 		protected override void OnCreate()
 		{

@@ -9,9 +9,9 @@ namespace RoadBuilder.Domain.Configurations
 		private const string NULL = "<NULL>";
 
 		public uint Version { get; set; }
-		public string SectionPrefabName { get; set; }
-		public string GroupPrefabName { get; set; }
-		public Dictionary<string, string> GroupOptions { get; set; } = new();
+		public string? SectionPrefabName { get; set; }
+		public string? GroupPrefabName { get; set; }
+		public Dictionary<string, string?> GroupOptions { get; set; } = new();
 		public bool Invert { get; set; }
 
 		public void Deserialize<TReader>(TReader reader) where TReader : IReader

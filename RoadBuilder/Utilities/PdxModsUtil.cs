@@ -10,19 +10,24 @@ namespace RoadBuilder.Utilities
 	public static class PdxModsUtil
 	{
 		private static readonly PdxSdkPlatform _pdxPlatform;
-		private static readonly IContext _context;
+		private static readonly IContext? _context;
 
 		public static int CurrentPlayset { get; private set; }
-		public static string UserId { get; private set; }
+		public static string? UserId { get; private set; }
 
 		static PdxModsUtil()
 		{
 			_pdxPlatform = PlatformManager.instance.GetPSI<PdxSdkPlatform>("PdxSdk");
-			_context = typeof(PdxSdkPlatform).GetField("m_SDKContext", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(_pdxPlatform) as PDX.SDK.Contracts.IContext;
+			_context = typeof(PdxSdkPlatform).GetField("m_SDKContext", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(_pdxPlatform) as IContext;
 		}
 
 		public static async Task Start()
 		{
+			if (_context is null)
+			{
+				return;
+			}
+
 			var currentPlaysetResult = await _context.Mods.GetActivePlayset();
 			var profileResult = await _context.Profile.Get();
 
@@ -35,6 +40,11 @@ namespace RoadBuilder.Utilities
 
 		private static async void PdxPlatform_onLoggedIn(string firstName, string lastName, string email, AccountLinkState accountLinkState, bool firstTime)
 		{
+			if (_context is null)
+			{
+				return;
+			}
+
 			var profileResult = await _context.Profile.Get();
 
 			UserId = profileResult.Social?.DisplayName;
@@ -42,6 +52,11 @@ namespace RoadBuilder.Utilities
 
 		private static async void PdxPlatform_onActivePlaysetChanged()
 		{
+			if (_context is null)
+			{
+				return;
+			}
+
 			var currentPlaysetResult = await _context.Mods.GetActivePlayset();
 
 			CurrentPlayset = currentPlaysetResult.PlaysetId;

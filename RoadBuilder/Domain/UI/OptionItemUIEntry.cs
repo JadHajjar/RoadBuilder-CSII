@@ -6,14 +6,14 @@ namespace RoadBuilder.Domain.UI
 {
 	public class OptionItemUIEntry : IJsonWritable
 	{
-		private string _name;
+		private string? _name;
 
 		public int Id { get; set; }
-		public string Name { get => _name; set => _name = LocaleHelper.Translate(value); }
-		public string Icon { get; set; }
+		public string? Name { get => _name; set => _name = LocaleHelper.Translate(value); }
+		public string? Icon { get; set; }
 		public bool Selected { get; set; }
 		public bool IsValue { get; set; }
-		public string Value { get; set; }
+		public string? Value { get; set; }
 		public bool Hidden { get; set; }
 		public bool Disabled { get; set; }
 

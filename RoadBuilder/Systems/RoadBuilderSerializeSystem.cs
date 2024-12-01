@@ -29,9 +29,11 @@ namespace RoadBuilder.Systems
 		public const ushort VER_MANAGEMENT_REWORK = 4;
 		public const ushort VER_CHANGE_SOUND_BARRIER = 5;
 
+#nullable disable
 		private static RoadBuilderSystem roadBuilderSystem;
 		private static PrefabSystem prefabSystem;
 		private static readonly List<INetworkBuilderPrefab> _prefabsToUpdate = new();
+#nullable enable
 
 		protected override void OnCreate()
 		{
@@ -56,12 +58,15 @@ namespace RoadBuilder.Systems
 
 			foreach (var config in roadBuilderSystem.Configurations.Values)
 			{
-				if (Mod.Settings.SaveUsedRoadsOnly && !placedNetworks.Contains(config.Config.ID))
+				if (Mod.Settings!.SaveUsedRoadsOnly && !placedNetworks.Contains(config.Config?.ID ?? string.Empty))
 				{
 					continue;
 				}
 
-				LocalSaveUtil.Save(config.Config);
+				if (config.Config is not null)
+				{
+					LocalSaveUtil.Save(config.Config);
+				}
 			}
 		}
 
@@ -185,14 +190,14 @@ namespace RoadBuilder.Systems
 					continue;
 				}
 
-				if (builderPrefab.Prefab.name != builderPrefab.Config.ID)
+				if (builderPrefab.Prefab.name != builderPrefab.Config?.ID)
 				{
-					Mod.Log.Error($"ANOMALY - NAME <> ID: {builderPrefab.Prefab.name} - {builderPrefab.Config.ID}");
+					Mod.Log.Error($"ANOMALY - NAME <> ID: {builderPrefab.Prefab.name} - {builderPrefab.Config?.ID}");
 				}
 
 				if (!list.Contains(builderPrefab.Prefab.name))
 				{
-					Mod.Log.Debug("Adding for save: " + builderPrefab.Config.Name + " - " + builderPrefab.Config.ID);
+					Mod.Log.Debug("Adding for save: " + builderPrefab.Config?.Name + " - " + builderPrefab.Config?.ID);
 
 					list.Add(builderPrefab.Prefab.name);
 				}
@@ -233,7 +238,7 @@ namespace RoadBuilder.Systems
 
 		public static void SerializeNetwork<TWriter>(TWriter writer, string networkId) where TWriter : IWriter
 		{
-			if (!roadBuilderSystem.Configurations.TryGetValue(networkId, out var prefab))
+			if (!roadBuilderSystem.Configurations.TryGetValue(networkId, out var prefab) || prefab.Config is null)
 			{
 				Mod.Log.Error("Trying to save a prefab that has no configuration: " + networkId);
 

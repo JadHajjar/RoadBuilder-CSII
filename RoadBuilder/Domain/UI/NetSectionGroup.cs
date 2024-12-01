@@ -5,6 +5,6 @@ namespace RoadBuilder.Domain.UI
 	public class NetSectionGroup
 	{
 		public LaneSectionType Type;
-		public NetSectionItem[] Sections;
+		public NetSectionItem[]? Sections;
 	}
 }

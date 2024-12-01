@@ -12,7 +12,7 @@ namespace RoadBuilder.LaneGroups
 
 		public override void Initialize()
 		{
-			Prefab.Options = new RoadBuilderLaneOption[]
+			Prefab!.Options = new RoadBuilderLaneOption[]
 			{
 				new()
 				{
@@ -51,7 +51,7 @@ namespace RoadBuilder.LaneGroups
 
 			Prefab.AddComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_Shoulder.svg";
 
-			SetUp(Sections["Alley Shoulder 1"], Sections["Alley Side 0"], "1m", "Asphalt").WithThumbnail("coui://roadbuildericons/RB_ShoulderLight.svg");
+			SetUp(Sections!["Alley Shoulder 1"], Sections["Alley Side 0"], "1m", "Asphalt").WithThumbnail("coui://roadbuildericons/RB_ShoulderLight.svg");
 			SetUp(Sections["Highway Shoulder 2"], Sections["Highway Side 0"], "2m", "Asphalt").WithThumbnail("coui://roadbuildericons/RB_ShoulderLight.svg");
 			SetUp(Sections["Public Transport Shoulder 1"], Sections["Alley Side 0"], "1m", "Bus").WithThumbnail("coui://roadbuildericons/RB_ShoulderLight.svg");
 			SetUp(Sections["Gravel Shoulder 1"], Sections["Gravel Side 0"], "1m", "Gravel").WithThumbnail("coui://roadbuildericons/RB_Empty.svg").WithGroundTexture(LaneGroundType.Gravel).WithColor(143, 131, 97).AddLaneThumbnail("coui://roadbuildericons/Thumb_ShoulderGravel.svg");

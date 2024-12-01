@@ -11,7 +11,7 @@ namespace RoadBuilder.LaneGroups
 
 		public override void Initialize()
 		{
-			Prefab.Options = new RoadBuilderLaneOption[]
+			Prefab!.Options = new RoadBuilderLaneOption[]
 			{
 				new()
 				{
@@ -29,7 +29,7 @@ namespace RoadBuilder.LaneGroups
 
 			Prefab.AddComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_TrainFront.svg";
 
-			SetUp(Sections["Train Track Section 4"], false);
+			SetUp(Sections!["Train Track Section 4"], false);
 			SetUp(Sections["Train Track Twoway Section 4"], true);
 		}
 

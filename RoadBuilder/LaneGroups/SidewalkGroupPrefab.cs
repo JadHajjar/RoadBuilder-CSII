@@ -12,7 +12,7 @@ namespace RoadBuilder.LaneGroups
 
 		public override void Initialize()
 		{
-			Prefab.Options = new RoadBuilderLaneOption[]
+			Prefab!.Options = new RoadBuilderLaneOption[]
 			{
 				new()
 				{
@@ -68,7 +68,7 @@ namespace RoadBuilder.LaneGroups
 
 			var edgeInfo = Prefab.AddComponent<RoadBuilderEdgeLaneInfo>();
 			edgeInfo.AddSidewalkStateOnNode = true;
-			edgeInfo.SidePrefab = Sections["Road Side 0"];
+			edgeInfo.SidePrefab = Sections!["Road Side 0"];
 
 			SetUp(Sections["Sidewalk 1"], "", "1m", false);
 			SetUp(Sections["Sidewalk 1.5"], "", "1.5m", false);

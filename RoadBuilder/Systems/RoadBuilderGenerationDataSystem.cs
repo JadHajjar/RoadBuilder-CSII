@@ -14,11 +14,13 @@ namespace RoadBuilder.Systems
 {
 	public partial class RoadBuilderGenerationDataSystem : RoadBuilderNetSectionsSystem
 	{
+#nullable disable
 		private PrefabSystem prefabSystem;
 		private CityConfigurationSystem cityConfigurationSystem;
 		private bool firstTimeRun;
+#nullable enable
 
-		public RoadGenerationData RoadGenerationData { get; private set; }
+		public RoadGenerationData? RoadGenerationData { get; private set; }
 
 		protected override void OnCreate()
 		{
@@ -142,17 +144,17 @@ namespace RoadBuilder.Systems
 
 			if (prefabSystem.TryGetPrefab(new PrefabID(nameof(StaticObjectPrefab), "Train Pillar Placeholder"), out var trainPillar))
 			{
-				roadGenerationData.PillarPrefabs[trainPillar.name] = trainPillar as StaticObjectPrefab;
+				roadGenerationData.PillarPrefabs[trainPillar.name] = (trainPillar as StaticObjectPrefab)!;
 			}
 
 			if (prefabSystem.TryGetPrefab(new PrefabID(nameof(StaticObjectPrefab), "Subway Pillar Placeholder"), out var subwayPillar))
 			{
-				roadGenerationData.PillarPrefabs[subwayPillar.name] = subwayPillar as StaticObjectPrefab;
+				roadGenerationData.PillarPrefabs[subwayPillar.name] = (subwayPillar as StaticObjectPrefab)!;
 			}
 
 			if (prefabSystem.TryGetPrefab(new PrefabID(nameof(StaticObjectPrefab), "Pillar Pedestrian Placeholder"), out var pedestrianPillar))
 			{
-				roadGenerationData.PillarPrefabs[pedestrianPillar.name] = pedestrianPillar as StaticObjectPrefab;
+				roadGenerationData.PillarPrefabs[pedestrianPillar.name] = (pedestrianPillar as StaticObjectPrefab)!;
 			}
 
 			var uIGroupElementQuery = SystemAPI.QueryBuilder().WithAll<UIGroupElement>().Build();
@@ -209,18 +211,23 @@ namespace RoadBuilder.Systems
 
 			for (var i = 0; i < stops.Length; i++)
 			{
-				if (prefabSystem.TryGetPrefab<MarkerObjectPrefab>(stops[i], out var stop) && stop?.name is "Integrated Passenger Train Stop" or "Integrated Cargo Train Stop" or "Integrated Subway Stop - Side" or "Integrated Subway Stop - Middle")
+				if (!prefabSystem.TryGetPrefab<MarkerObjectPrefab>(stops[i], out var stop) || stop?.name is not "Integrated Passenger Train Stop" and not "Integrated Cargo Train Stop" and not "Integrated Subway Stop - Side" and not "Integrated Subway Stop - Middle")
 				{
-					var newStop = stop.Clone(stop.name.Substring(11)) as MarkerObjectPrefab;
-
-					newStop.AddComponent<ServiceObject>().m_Service = RoadGenerationData.ServicePrefabs["Transportation"];
-
-					newStop.AddOrGetComponent<UIObject>().m_Group = stop.name is "Integrated Passenger Train Stop" or "Integrated Cargo Train Stop"
-						? RoadGenerationData.UIGroupPrefabs["TransportationTrain"]
-						: RoadGenerationData.UIGroupPrefabs["TransportationSubway"];
-
-					prefabSystem.AddPrefab(newStop);
+					continue;
 				}
+
+				if (stop.Clone(stop.name.Substring(11)) is not MarkerObjectPrefab newStop)
+				{
+					continue;
+				}
+
+				newStop.AddComponent<ServiceObject>().m_Service = RoadGenerationData?.ServicePrefabs["Transportation"];
+
+				newStop.AddOrGetComponent<UIObject>().m_Group = stop.name is "Integrated Passenger Train Stop" or "Integrated Cargo Train Stop"
+					? RoadGenerationData?.UIGroupPrefabs["TransportationTrain"]
+					: RoadGenerationData?.UIGroupPrefabs["TransportationSubway"];
+
+				prefabSystem.AddPrefab(newStop);
 			}
 		}
 	}

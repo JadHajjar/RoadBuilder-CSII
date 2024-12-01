@@ -11,7 +11,7 @@ namespace RoadBuilder.LaneGroups
 
 		public override void Initialize()
 		{
-			Prefab.Options = new RoadBuilderLaneOption[]
+			Prefab!.Options = new RoadBuilderLaneOption[]
 			{
 				new()
 				{
@@ -40,7 +40,7 @@ namespace RoadBuilder.LaneGroups
 
 			Prefab.AddOrGetComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_Median_Centered.svg";
 
-			var decoInfo = Sections["RB Median 5"].AddOrGetComponent<RoadBuilderLaneDecorationInfo>();
+			var decoInfo = Sections!["RB Median 5"].AddOrGetComponent<RoadBuilderLaneDecorationInfo>();
 			decoInfo.GrassThumbnail = "coui://roadbuildericons/RB_GrassMedian.svg";
 			decoInfo.TreeThumbnail = "coui://roadbuildericons/RB_TreeMedian.svg";
 			decoInfo.GrassAndTreeThumbnail = "coui://roadbuildericons/RB_TreeGrassMedian.svg";

@@ -11,7 +11,7 @@ namespace RoadBuilder.Domain.Prefabs
 {
 	public class LaneGroupPrefab : PrefabBase
 	{
-		public RoadBuilderLaneOption[] Options;
+		public RoadBuilderLaneOption[]? Options;
 
 		internal List<NetSectionPrefab> LinkedSections { get; set; } = new();
 		internal bool RoadBuilder { get; set; }

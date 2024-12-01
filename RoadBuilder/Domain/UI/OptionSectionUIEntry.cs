@@ -7,16 +7,16 @@ namespace RoadBuilder.Domain.UI
 {
 	public class OptionSectionUIEntry : IJsonWritable
 	{
-		private OptionItemUIEntry[] _options;
+		private OptionItemUIEntry[]? _options;
 
 		public int Id { get; set; }
-		public string Name { get; set; }
+		public string? Name { get; set; }
 		public bool IsToggle { get; set; }
 		public bool IsButton { get; set; }
 		public bool IsCheckbox { get; set; }
 		public IEnumerable<OptionItemUIEntry> Options
 		{
-			get => _options;
+			get => _options ?? Enumerable.Empty<OptionItemUIEntry>();
 			set => _options = value.Where(x => !x.Hidden).ToArray();
 		}
 
@@ -40,13 +40,20 @@ namespace RoadBuilder.Domain.UI
 			writer.Write(IsCheckbox);
 
 			writer.PropertyName("options");
-			writer.ArrayBegin(_options.Length);
-			for (var i = 0; i < _options.Length; i++)
+			if (_options != null)
 			{
-				_options[i].Write(writer);
-			}
+				writer.ArrayBegin(_options.Length);
+				for (var i = 0; i < _options.Length; i++)
+				{
+					_options[i].Write(writer);
+				}
 
-			writer.ArrayEnd();
+				writer.ArrayEnd();
+			}
+			else
+			{
+				writer.WriteEmptyArray();
+			}
 
 			writer.TypeEnd();
 		}

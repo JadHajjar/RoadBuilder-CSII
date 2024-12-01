@@ -22,7 +22,7 @@ namespace RoadBuilder
 		public const string Id = nameof(RoadBuilder);
 
 		public static ILog Log { get; } = LogManager.GetLogger(nameof(RoadBuilder)).SetShowsErrorsInUI(true);
-		public static Setting Settings { get; private set; }
+		public static Setting? Settings { get; private set; }
 
 		public void OnLoad(UpdateSystem updateSystem)
 		{

@@ -10,7 +10,7 @@ namespace RoadBuilder.Domain.Components.Prefabs
 	[ComponentMenu("RoadBuilder/", new Type[] { typeof(NetSectionPrefab) })]
 	public class RoadBuilderEdgeLaneInfo : ComponentBase
 	{
-		public NetSectionPrefab SidePrefab;
+		public NetSectionPrefab? SidePrefab;
 		public bool AddSidewalkStateOnNode;
 		public bool DoNotRequireBeingOnEdge;
 

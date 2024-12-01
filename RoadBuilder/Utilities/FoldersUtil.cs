@@ -19,7 +19,7 @@ namespace RoadBuilder.Utilities
 
 			TempFolder = Path.Combine(EnvPath.kTempDataPath, nameof(RoadBuilder));
 
-			GameUIPath = Path.Combine(EnvPath.kStreamingDataPath, "~UI~", "GameUI");
+			GameUIPath = Path.Combine(EnvPath.kContentPath, "Game", "~UI~");
 
 			if (Directory.Exists(TempFolder))
 			{

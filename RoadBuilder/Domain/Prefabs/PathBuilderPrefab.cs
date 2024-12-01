@@ -11,10 +11,10 @@ namespace RoadBuilder.Domain.Prefabs
 {
 	public class PathBuilderPrefab : PathwayPrefab, INetworkBuilderPrefab
 	{
-		public PathConfig Config { get; set; }
+		public PathConfig? Config { get; set; }
 		public bool Deleted { get; set; }
 		NetGeometryPrefab INetworkBuilderPrefab.Prefab => this;
-		INetworkConfig INetworkBuilderPrefab.Config { get => Config; set => Config = value as PathConfig; }
+		INetworkConfig? INetworkBuilderPrefab.Config { get => Config; set => Config = value as PathConfig; }
 
 		public override void GetPrefabComponents(HashSet<ComponentType> components)
 		{

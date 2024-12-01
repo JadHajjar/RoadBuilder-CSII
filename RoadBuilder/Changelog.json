@@ -1,6 +1,20 @@
 [
   {
     "Beta": true,
+    "Version": "0.4.6",
+    "Date": "2024-11-12",
+    "ChangeGroups": [
+      {
+        "Name": "Hotfix",
+        "Changes": [
+          "Potential fixes for some crashes.",
+          "Compatibility with patch 1.1.12f1."
+        ]
+      }
+    ]
+  },
+  {
+    "Beta": true,
     "Version": "0.4.5",
     "Date": "2024-11-12",
     "ChangeGroups": [

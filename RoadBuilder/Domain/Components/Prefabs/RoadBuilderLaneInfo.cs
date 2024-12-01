@@ -22,9 +22,9 @@ namespace RoadBuilder.Domain.Components.Prefabs
 		public LaneGroundType GroundTexture;
 		public Color LaneColor;
 		public bool NoDirection;
-		public string BackThumbnail;
-		public string FrontThumbnail;
-		public string[] LaneThumbnails;
+		public string? BackThumbnail;
+		public string? FrontThumbnail;
+		public string[]? LaneThumbnails;
 
 		internal bool RoadBuilder { get; set; }
 

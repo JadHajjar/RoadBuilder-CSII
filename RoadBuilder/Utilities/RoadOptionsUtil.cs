@@ -238,6 +238,7 @@ namespace RoadBuilder.Utilities
 					{
 						trackConfig.SpeedLimit = Mathf.Max(trackConfig.SpeedLimit + (value * multiplier), multiplier);
 					}
+
 					break;
 
 				case ActionType.RoadCategory:
@@ -249,6 +250,7 @@ namespace RoadBuilder.Utilities
 					{
 						config.Category = (RoadCategory)id;
 					}
+
 					break;
 
 				case ActionType.Addons:
@@ -262,6 +264,7 @@ namespace RoadBuilder.Utilities
 					{
 						config.Addons |= addon;
 					}
+
 					break;
 
 				case ActionType.ShowInToolbar:

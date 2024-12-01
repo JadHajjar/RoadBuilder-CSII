@@ -13,14 +13,14 @@ namespace RoadBuilder.Utilities
 	{
 		public static bool IsInPlayset(this INetworkConfig config)
 		{
-			return Mod.Settings.NoPlaysetIsolation
+			return Mod.Settings!.NoPlaysetIsolation
 				|| config.Playsets is null
 				|| ((!config.Playsets.Any(x => x > 0)
 				|| config.Playsets.Contains(PdxModsUtil.CurrentPlayset))
 				&& !config.Playsets.Contains(-PdxModsUtil.CurrentPlayset));
 		}
 
-		public static bool GetEdgeLaneInfo(NetSectionPrefab section, LaneGroupPrefab groupPrefab, out RoadBuilderEdgeLaneInfo sectionEdgeInfo)
+		public static bool GetEdgeLaneInfo(NetSectionPrefab? section, LaneGroupPrefab? groupPrefab, out RoadBuilderEdgeLaneInfo? sectionEdgeInfo)
 		{
 			if (section != null && section.TryGet(out sectionEdgeInfo))
 			{
@@ -56,7 +56,7 @@ namespace RoadBuilder.Utilities
 			return true;
 		}
 
-		public static float CalculateWidth(this NetSectionPrefab netSection, LaneGroupPrefab groupPrefab = null)
+		public static float CalculateWidth(this NetSectionPrefab netSection, LaneGroupPrefab? groupPrefab = null)
 		{
 			var subSectionsWidth = netSection.m_SubSections.Sum(x =>
 				x.m_RequireAll.Length == 0 &&
@@ -64,7 +64,7 @@ namespace RoadBuilder.Utilities
 
 			if (groupPrefab is not null && (netSection.TryGet<RoadBuilderLaneAggregate>(out var aggregate) || groupPrefab.TryGet(out aggregate)))
 			{
-				subSectionsWidth += (aggregate.LeftSections?.Sum(x => x.Section.CalculateWidth()) ?? 0) + (aggregate.RightSections?.Sum(x => x.Section.CalculateWidth()) ?? 0);
+				subSectionsWidth += (aggregate?.LeftSections?.Sum(x => x.Section?.CalculateWidth() ?? 0) ?? 0) + (aggregate?.RightSections?.Sum(x => x.Section?.CalculateWidth() ?? 0) ?? 0);
 			}
 
 			if (netSection.m_Pieces.Length == 0)
@@ -143,7 +143,7 @@ namespace RoadBuilder.Utilities
 			return list;
 		}
 
-		private static TLane FindLane<TLane>(NetPieceInfo piece) where TLane : ComponentBase
+		private static TLane? FindLane<TLane>(NetPieceInfo piece) where TLane : ComponentBase
 		{
 			if (piece.m_RequireAll.Length > 0 || piece.m_RequireAny.Length > 0)
 			{
