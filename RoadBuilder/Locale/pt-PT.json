@@ -1,6 +1,7 @@
 {
   "Editor.TOOL[RoadBuilderTool]": "Road Builder",
   "Options.SECTION[RoadBuilder.RoadBuilder.Mod]": "Road Builder",
+  "Options.INPUT_MAP[RoadBuilder.RoadBuilder.Mod]": "Road Builder",
   "Options.GROUP[RoadBuilder.RoadBuilder.Mod.Hotkey]": "Definições de atalhos de teclado",
   "Options.GROUP[RoadBuilder.RoadBuilder.Mod.Main]": "Definições",
   "Options.GROUP[RoadBuilder.RoadBuilder.Mod.Advanced]": "Definições avançadas",
