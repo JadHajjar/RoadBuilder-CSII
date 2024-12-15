@@ -1,6 +1,7 @@
 {
   "Editor.TOOL[RoadBuilderTool]": "도로 빌더(Road Builder)",
   "Options.SECTION[RoadBuilder.RoadBuilder.Mod]": "도로 빌더(Road Builder)",
+  "Options.INPUT_MAP[RoadBuilder.RoadBuilder.Mod]": "도로 빌더(Road Builder)",
   "Options.GROUP[RoadBuilder.RoadBuilder.Mod.Hotkey]": "단축키 설정",
   "Options.GROUP[RoadBuilder.RoadBuilder.Mod.Main]": "일반 설정",
   "Options.GROUP[RoadBuilder.RoadBuilder.Mod.Advanced]": "고급 설정",
