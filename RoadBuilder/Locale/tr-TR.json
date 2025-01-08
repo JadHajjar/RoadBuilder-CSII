@@ -1,5 +1,6 @@
 {
   "Editor.TOOL[RoadBuilderTool]": "Road Builder",
+  "Assets.NAME[RoadBuilderPack]": "Road Builder",
   "Options.SECTION[RoadBuilder.RoadBuilder.Mod]": "Road Builder",
   "Options.INPUT_MAP[RoadBuilder.RoadBuilder.Mod]": "Road Builder",
   "Options.GROUP[RoadBuilder.RoadBuilder.Mod.Hotkey]": "Klavye Kısayolu Ayarları",
@@ -29,6 +30,8 @@
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.HideRoadsFromToolbarByDefault]": "Herhangi bir araç çubuğu durumu atanmayan yollar varsayılan olarak gizlenecektir.\n\nUygulanması için yeniden başlatma gerekiyor.",
   "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.NoPlaysetIsolation]": "Oyun Seti Yalıtımını Devre Dışı Bırak",
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.NoPlaysetIsolation]": "Oluşturulan yolların sadece oluşturuldukları oyun setleri yerine tüm oyun setlerinde kullanılmasının kilidini açar.",
+  "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.AskToResetRoads]": "Ask to reset faulty roads on load",
+  "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.AskToResetRoads]": "Asks for confirmation, instead of automatically applying the fix, in cases where road builder detects faulty roads in your city when loading into it.",
   "RoadBuilder.DIALOG_MESSAGE[DELETE]": "Bu yolu silmek istediğinizden emin misiniz? Şehrinizde bu yolun kullanıldığı tüm kısımlar kaldırılacaktır.",
   "RoadBuilder.DIALOG_MESSAGE[ReloadSave]": "Bu şehirde sizde mevcut olmayan yollar bulunuyor. Bu kayıt dosyasını oyunu kapatmadan şimdi yeniden yükleyin, aksi takdirde kavşaklarda yaptığınız değişiklikler kaybolabilir.",
   "RoadBuilder.DIALOG_MESSAGE[FixInvalidEdges]": "Bu şehirdeki bazı yollar veya raylar geçersiz.\n\nBu geçersiz yolları standart yollarla değiştirerek düzeltmek ister misiniz?",
