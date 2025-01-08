@@ -3,5 +3,6 @@
   "StableThumbnailUrl": "https://imgur.com/XH3O1Lv.png",
   "BetaThumbnailUrl": "https://imgur.com/98UrABa.png",
   "PublishConfigurationFile": "Properties\\PublishConfiguration.xml",
-  "ChangelogFile": "Changelog.json"
+  "ChangelogFile": "Changelog.json",
+  "Color": "66, 163, 237"
 }

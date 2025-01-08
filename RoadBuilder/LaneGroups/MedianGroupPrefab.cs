@@ -48,18 +48,19 @@ namespace RoadBuilder.LaneGroups
 			decoInfo.LaneTreeThumbnail = new[] { "coui://roadbuildericons/Thumb_SidewalkTree.svg" };
 			decoInfo.LaneGrassAndTreeThumbnail = new[] { "coui://roadbuildericons/Thumb_SidewalkGrassTree.svg" };
 
-			SetUp(Sections["RB Median 1"], true, "1m");
-			SetUp(Sections["RB Median 2"], true, "2m");
-			SetUp(Sections["RB Median 5"], true, "5m", true).AddOrGetComponent<RoadBuilderLaneInfo>().AddLaneThumbnail("coui://roadbuildericons/Thumb_MedianWide.svg");
+			SetUp<RoadBuilderLaneGroup>(Sections["RB Median 1"], "1m");
+			SetUp<RoadBuilderLaneGroup>(Sections["RB Median 2"], "2m");
+			SetUp<RoadBuilderLaneGroup>(Sections["RB Median 5"], "5m", true).AddOrGetComponent<RoadBuilderLaneInfo>().AddLaneThumbnail("coui://roadbuildericons/Thumb_MedianWide.svg");
 
-			SetUp(Sections["Road Median 1"], false, "1m");
-			SetUp(Sections["Road Median 2"], false, "2m");
-			SetUp(Sections["Road Median 5"], false, "5m", true);
+			SetUp<RoadBuilderVanillaLaneGroup>(Sections["Road Median 1"], "1m");
+			SetUp<RoadBuilderVanillaLaneGroup>(Sections["Road Median 2"], "2m");
+			SetUp<RoadBuilderVanillaLaneGroup>(Sections["Road Median 5"], "5m", true);
+			SetUp<RoadBuilderVanillaLaneGroup>(Sections["Parking Road Median 5"], "5m", true);
 		}
 
-		private NetSectionPrefab SetUp(NetSectionPrefab prefab, bool link, string value, bool hasGrass = false)
+		private NetSectionPrefab SetUp<T>(NetSectionPrefab prefab, string value, bool hasGrass = false) where T : RoadBuilderLaneGroup
 		{
-			var laneInfo = link ? prefab.AddComponent<RoadBuilderLaneGroup>() : prefab.AddComponent<RoadBuilderVanillaLaneGroup>();
+			var laneInfo = prefab.AddComponent<T>();
 			laneInfo.GroupPrefab = Prefab;
 			laneInfo.Combination = hasGrass
 			? new LaneOptionCombination[]

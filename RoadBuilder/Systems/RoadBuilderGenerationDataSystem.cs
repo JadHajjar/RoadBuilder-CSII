@@ -10,6 +10,8 @@ using RoadBuilder.Domain;
 using Unity.Collections;
 using Unity.Entities;
 
+using UnityEngine;
+
 namespace RoadBuilder.Systems
 {
 	public partial class RoadBuilderGenerationDataSystem : RoadBuilderNetSectionsSystem
@@ -186,6 +188,10 @@ namespace RoadBuilder.Systems
 			if (!firstTimeRun)
 			{
 				//AddStops();
+				roadGenerationData.RoadBuilderPack = ScriptableObject.CreateInstance<AssetPackPrefab>();
+				roadGenerationData.RoadBuilderPack.name = "RoadBuilderPack";
+				roadGenerationData.RoadBuilderPack.AddComponent<UIObject>().m_Icon = "coui://roadbuildericons/Pack.svg";
+				prefabSystem.AddPrefab(roadGenerationData.RoadBuilderPack);
 
 				Mod.Log.Debug("RoadGenerationData First Created");
 

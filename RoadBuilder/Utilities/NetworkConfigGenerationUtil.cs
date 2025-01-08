@@ -92,7 +92,7 @@ namespace RoadBuilder.Utilities
 			}
 
 			config.Lanes.AddRange(NetworkPrefab.m_Sections
-				.Where(x => x.m_RequireAll.Length == 0 && x.m_RequireAny.Length == 0)
+				.Where(x => x.m_RequireAll.Length == 0 && x.m_RequireAny.Length == 0 && !x.m_Section.Has<RoadBuilderIgnoreSection>())
 				.Select(x => GetLaneConfig(x)));
 
 			// remove sides

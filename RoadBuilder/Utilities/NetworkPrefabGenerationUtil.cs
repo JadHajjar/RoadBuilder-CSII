@@ -371,6 +371,10 @@ namespace RoadBuilder.Utilities
 					};
 				}
 
+				RoadBuilderLaneInfo? laneInfo = null;
+
+				section?.TryGet<RoadBuilderLaneInfo>(out laneInfo);
+
 				if (section?.TryGet<RoadBuilderLaneAggregate>(out var aggregate) == true || (groupPrefab?.TryGet(out aggregate) ?? false))
 				{
 					var sections = new List<NetSectionInfo>();
@@ -381,6 +385,9 @@ namespace RoadBuilder.Utilities
 						{
 							m_Section = x.Section,
 							m_Invert = x.Invert ? !lane.Invert : lane.Invert,
+							m_RequireAll = x.PieceRequireAll,
+							m_RequireAny = x.PieceRequireAny,
+							m_RequireNone = x.PieceRequireNone,
 						}));
 					}
 
@@ -388,6 +395,9 @@ namespace RoadBuilder.Utilities
 					{
 						m_Section = section,
 						m_Invert = lane.Invert,
+						m_RequireAll = laneInfo?.PieceRequireAll ?? new NetPieceRequirements[0],
+						m_RequireAny = laneInfo?.PieceRequireAny ?? new NetPieceRequirements[0],
+						m_RequireNone = laneInfo?.PieceRequireNone ?? new NetPieceRequirements[0],
 					});
 
 					if (aggregate?.RightSections != null)
@@ -396,6 +406,9 @@ namespace RoadBuilder.Utilities
 						{
 							m_Section = x.Section,
 							m_Invert = x.Invert ? !lane.Invert : lane.Invert,
+							m_RequireAll = x.PieceRequireAll,
+							m_RequireAny = x.PieceRequireAny,
+							m_RequireNone = x.PieceRequireNone,
 						}));
 					}
 
@@ -415,6 +428,9 @@ namespace RoadBuilder.Utilities
 					{
 						m_Section = section,
 						m_Invert = lane.Invert,
+						m_RequireAll = laneInfo?.PieceRequireAll ?? new NetPieceRequirements[0],
+						m_RequireAny = laneInfo?.PieceRequireAny ?? new NetPieceRequirements[0],
+						m_RequireNone = laneInfo?.PieceRequireNone ?? new NetPieceRequirements[0],
 					};
 				}
 
@@ -611,6 +627,10 @@ namespace RoadBuilder.Utilities
 			{
 				yield return unlockOnBuild;
 			}
+
+			var assetPackItem = ScriptableObject.CreateInstance<AssetPackItem>();
+			assetPackItem.m_Packs = new[] { _roadGenerationData.RoadBuilderPack };
+			yield return assetPackItem;
 		}
 
 		private IEnumerable<NetSectionInfo> GenerateUndergroundNetSections()

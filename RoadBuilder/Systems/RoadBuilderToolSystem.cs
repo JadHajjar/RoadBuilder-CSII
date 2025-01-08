@@ -86,7 +86,7 @@ namespace RoadBuilder.Systems
 
 			if (mode == GameMode.Editor)
 			{
-				if (editorToolUISystem.tools.Any(t => t.id == toolID))
+				if (editorToolUISystem?.tools?.Any(t => t?.id == toolID) ?? true)
 				{
 					return;
 				}

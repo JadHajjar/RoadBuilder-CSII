@@ -75,7 +75,7 @@ namespace RoadBuilder.Systems.UI
 
 			foreach (var prefab in netSectionsSystem.NetSections.Values)
 			{
-				if (prefab.Has<RoadBuilderLaneGroup>() || !prefab.Has<RoadBuilderLaneInfo>())
+				if (prefab.Has<RoadBuilderLaneGroup>() || prefab.Has<RoadBuilderVanillaLaneGroup>() || !prefab.Has<RoadBuilderLaneInfo>())
 				{
 					continue;
 				}

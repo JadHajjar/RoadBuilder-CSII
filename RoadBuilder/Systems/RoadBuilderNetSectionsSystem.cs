@@ -382,25 +382,25 @@ namespace RoadBuilder.Systems
 					}
 				};
 
-				if (item.Item1 == "RB Parking Piece Parallel")
-				{
-					newPiece.AddOrGetComponent<NetPieceObjects>().m_PieceObjects = new[]
-					{
-						new NetPieceObjectInfo
-						{
-							m_Object = prefabSystem.TryGetPrefab(new PrefabID(nameof(StaticObjectPrefab), "ParkingLotSidewaysDecal01"), out var prefab)?prefab as ObjectPrefab : default,
-							m_RequireAll = new []{NetPieceRequirements.Edge},
-							m_RequireAny = new NetPieceRequirements[0],
-							m_RequireNone = new NetPieceRequirements[0],
-							m_Probability = 100,
-							m_FlipWhenInverted = true,
-							m_EvenSpacing = true,
-							m_Rotation = Quaternion.Euler(0, 180, 0),
-							m_Offset = new float3(0, 0, -6f / 2f),
-							m_Spacing = new float3(2f, 0f, 6f)
-						}
-					};
-				}
+				//if (item.Item1 == "RB Parking Piece Parallel")
+				//{
+				//	newPiece.AddOrGetComponent<NetPieceObjects>().m_PieceObjects = new[]
+				//	{
+				//		new NetPieceObjectInfo
+				//		{
+				//			m_Object = prefabSystem.TryGetPrefab(new PrefabID(nameof(StaticObjectPrefab), "ParkingLotSidewaysDecal01"), out var prefab)?prefab as ObjectPrefab : default,
+				//			m_RequireAll = new [] { NetPieceRequirements.Edge },
+				//			m_RequireAny = new NetPieceRequirements[0],
+				//			m_RequireNone = new NetPieceRequirements[0],
+				//			m_Probability = 100,
+				//			m_FlipWhenInverted = true,
+				//			m_EvenSpacing = true,
+				//			m_Rotation = Quaternion.Euler(0, 180, 0),
+				//			m_Offset = new float3(0, 0, -6f / 2f),
+				//			m_Spacing = new float3(2f, 0f, 6f)
+				//		}
+				//	};
+				//}
 
 				prefabSystem.AddPrefab(NetPieces[newPiece.name] = newPiece);
 
@@ -419,25 +419,25 @@ namespace RoadBuilder.Systems
 					}
 				};
 
-				if (item.Item1 == "RB Parking Piece Parallel")
-				{
-					newPiece.AddOrGetComponent<NetPieceObjects>().m_PieceObjects = new[]
-					{
-						new NetPieceObjectInfo
-						{
-							m_Object = prefabSystem.TryGetPrefab(new PrefabID(nameof(StaticObjectPrefab), "ParkingLotSidewaysDecal01"), out var prefab)?prefab as ObjectPrefab : default,
-							m_RequireAll = new []{NetPieceRequirements.Edge},
-							m_RequireAny = new NetPieceRequirements[0],
-							m_RequireNone = new NetPieceRequirements[0],
-							m_Probability = 100,
-							m_FlipWhenInverted = true,
-							m_EvenSpacing = true,
-							m_Rotation = Quaternion.Euler(0, 180, 0),
-							m_Offset = new float3(0, 0, -6f / 2f),
-							m_Spacing = new float3(2f, 0f, 6f)
-						}
-					};
-				}
+				//if (item.Item1 == "RB Parking Piece Parallel")
+				//{
+				//	newPiece.AddOrGetComponent<NetPieceObjects>().m_PieceObjects = new[]
+				//	{
+				//		new NetPieceObjectInfo
+				//		{
+				//			m_Object = prefabSystem.TryGetPrefab(new PrefabID(nameof(StaticObjectPrefab), "ParkingLotSidewaysDecal01"), out var prefab)?prefab as ObjectPrefab : default,
+				//			m_RequireAll = new []{NetPieceRequirements.Edge},
+				//			m_RequireAny = new NetPieceRequirements[0],
+				//			m_RequireNone = new NetPieceRequirements[0],
+				//			m_Probability = 100,
+				//			m_FlipWhenInverted = true,
+				//			m_EvenSpacing = true,
+				//			m_Rotation = Quaternion.Euler(0, 180, 0),
+				//			m_Offset = new float3(0, 0, -6f / 2f),
+				//			m_Spacing = new float3(2f, 0f, 6f)
+				//		}
+				//	};
+				//}
 
 				prefabSystem.AddPrefab(NetPieces[newPiece.name] = newPiece);
 			}
@@ -927,7 +927,7 @@ namespace RoadBuilder.Systems
 				new NetPieceInfo
 				{
 					m_Piece = NetPieces["Sound Barrier 1"],
-					m_RequireNone = new[] { NetPieceRequirements.Tunnel, NetPieceRequirements.Elevated, NetPieceRequirements.HighTransition, NetPieceRequirements.LowTransition },
+					m_RequireNone = new[] { NetPieceRequirements.Elevated, NetPieceRequirements.HighTransition, NetPieceRequirements.LowTransition },
 					m_RequireAll = new NetPieceRequirements[0],
 					m_RequireAny = new NetPieceRequirements[0],
 				},

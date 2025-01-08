@@ -13,6 +13,7 @@ namespace RoadBuilder.Domain
 		public ObjectPrefab? RoadOutsideConnectionTwoWay { get; set; }
 		public ObjectPrefab? TrainOutsideConnectionOneWay { get; set; }
 		public ObjectPrefab? TrainOutsideConnectionTwoWay { get; set; }
+		public AssetPackPrefab? RoadBuilderPack { get; set; }
 		public Dictionary<string, AggregateNetPrefab> AggregateNetPrefabs { get; set; } = new();
 		public Dictionary<string, NetSectionPrefab> NetSectionPrefabs { get; set; } = new();
 		public Dictionary<string, ServicePrefab> ServicePrefabs { get; set; } = new();

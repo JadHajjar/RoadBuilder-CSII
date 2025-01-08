@@ -25,6 +25,9 @@ namespace RoadBuilder.Domain.Components.Prefabs
 		public string? BackThumbnail;
 		public string? FrontThumbnail;
 		public string[]? LaneThumbnails;
+		public NetPieceRequirements[] PieceRequireAll = new NetPieceRequirements[0];
+		public NetPieceRequirements[] PieceRequireAny = new NetPieceRequirements[0];
+		public NetPieceRequirements[] PieceRequireNone = new NetPieceRequirements[0];
 
 		internal bool RoadBuilder { get; set; }
 
@@ -49,6 +52,24 @@ namespace RoadBuilder.Domain.Components.Prefabs
 		public RoadBuilderLaneInfo WithRequireNone(RoadCategory roadCategory)
 		{
 			RequireNone = roadCategory;
+			return this;
+		}
+
+		public RoadBuilderLaneInfo WithPieceRequireAll(params NetPieceRequirements[] array)
+		{
+			PieceRequireAll = array;
+			return this;
+		}
+
+		public RoadBuilderLaneInfo WithPieceRequireAny(params NetPieceRequirements[] array)
+		{
+			PieceRequireAny = array;
+			return this;
+		}
+
+		public RoadBuilderLaneInfo WithPieceRequireNone(params NetPieceRequirements[] array)
+		{
+			PieceRequireNone = array;
 			return this;
 		}
 
