@@ -1,5 +1,6 @@
 {
   "Editor.TOOL[RoadBuilderTool]": "Road Builder",
+  "Assets.NAME[RoadBuilderPack]": "Road Builder",
   "Options.SECTION[RoadBuilder.RoadBuilder.Mod]": "Road Builder",
   "Options.INPUT_MAP[RoadBuilder.RoadBuilder.Mod]": "Road Builder",
   "Options.GROUP[RoadBuilder.RoadBuilder.Mod.Hotkey]": "Definições de atalhos de teclado",
@@ -29,6 +30,8 @@
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.HideRoadsFromToolbarByDefault]": "Estradas que não têm um estado atribuído na barra de ferramentas serão escondidas por defeito.\n\nÉ necessário reiniciar para fazer efeito.",
   "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.NoPlaysetIsolation]": "Desativar isolamento do playset",
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.NoPlaysetIsolation]": "Desbloqueia todas as estradas em todos os playsets em vez de restringir as estradas no jogo em que foram criadas.",
+  "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.AskToResetRoads]": "Ask to reset faulty roads on load",
+  "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.AskToResetRoads]": "Asks for confirmation, instead of automatically applying the fix, in cases where road builder detects faulty roads in your city when loading into it.",
   "RoadBuilder.DIALOG_MESSAGE[DELETE]": "Tens a certeza de que queres eliminar esta estrada? Isto vai remover todos os segmentos colocados na tua cidade que a utilizem.",
   "RoadBuilder.DIALOG_MESSAGE[ReloadSave]": "Esta cidade contém estradas que não tinhas anteriormente. Recarrega este jogo guardado imediatamente, sem fechar o jogo, para que as tuas alterações nos cruzamentos não sejam perdidas.",
   "RoadBuilder.DIALOG_MESSAGE[FixInvalidEdges]": "Algumas estradas ou faixas nesta cidade são inválidas.\n\nQueres corrigir isto ao repô-las para as redes básicas?",
