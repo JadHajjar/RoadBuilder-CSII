@@ -44,7 +44,7 @@
   "RoadBuilder.LaneGroups.ParkingGroupPrefab.Options[Parking Angle][Parallel]": "Równolegle",
   "RoadBuilder.LaneGroups.ParkingGroupPrefab.Options[Parking Angle][Angled]": "Skośnie",
   "RoadBuilder.LaneGroups.ParkingGroupPrefab.Options[Parking Angle][Perpendicular]": "Prostopadle",
-  "RoadBuilder.LaneGroups.SidewalkGroupPrefab.Options[Parking Angle][Parallel]": "Równolegle",
+  "RoadBuilder.LaneGroups.SidewalkGroupPrefab.Options[Parking Angle][]": "Równolegle",
   "RoadBuilder.LaneGroups.SidewalkGroupPrefab.Options[Parking Angle][Angled]": "Skośnie",
   "RoadBuilder.LaneGroups.SidewalkGroupPrefab.Options[Parking Angle][Perpendicular]": "Prostopadle",
   "RoadBuilder.LaneGroups.ParkingGroupPrefab.Options[Markings][1]": "Z oznakowaniem",
