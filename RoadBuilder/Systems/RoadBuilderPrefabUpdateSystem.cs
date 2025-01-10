@@ -19,11 +19,12 @@ namespace RoadBuilder.Systems
 {
 	public partial class RoadBuilderPrefabUpdateSystem : GameSystemBase
 	{
+#nullable disable
 		private RoadBuilderSystem roadBuilderSystem;
+		private PrefabSystem prefabSystem;
 		private EntityQuery queryUpdated;
 		private EntityQuery queryAll;
 		private EntityQuery prefabRefQuery;
-		private PrefabSystem prefabSystem;
 		private Dictionary<PrefabID, int> prefabSystem_PrefabIndices;
 		private List<PrefabBase> prefabSystem_Prefabs;
 

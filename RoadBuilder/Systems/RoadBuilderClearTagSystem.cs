@@ -16,8 +16,10 @@ namespace RoadBuilder.Systems
 {
 	public partial class RoadBuilderClearTagSystem : GameSystemBase
 	{
+#nullable disable
 		private PrefabSystem prefabSystem;
 		private EntityQuery segmentQuery;
+#nullable enable
 
 		protected override void OnCreate()
 		{

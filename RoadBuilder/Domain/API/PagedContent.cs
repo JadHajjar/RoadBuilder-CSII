@@ -7,6 +7,6 @@ namespace RoadBuilder.Domain.API
 		public int page { get; set; }
 		public int pageSize { get; set; }
 		public int totalPages { get; set; }
-		public List<T> items { get; set; }
+		public List<T>? items { get; set; }
 	}
 }

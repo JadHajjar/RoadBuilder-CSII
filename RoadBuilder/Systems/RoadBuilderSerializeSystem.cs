@@ -1,6 +1,7 @@
 ﻿using Colossal.Serialization.Entities;
 
 using Game;
+using Game.Common;
 using Game.Net;
 using Game.Prefabs;
 using Game.SceneFlow;
@@ -29,9 +30,11 @@ namespace RoadBuilder.Systems
 		public const ushort VER_MANAGEMENT_REWORK = 4;
 		public const ushort VER_CHANGE_SOUND_BARRIER = 5;
 
+#nullable disable
 		private static RoadBuilderSystem roadBuilderSystem;
 		private static PrefabSystem prefabSystem;
 		private static readonly List<INetworkBuilderPrefab> _prefabsToUpdate = new();
+#nullable enable
 
 		protected override void OnCreate()
 		{
@@ -56,12 +59,15 @@ namespace RoadBuilder.Systems
 
 			foreach (var config in roadBuilderSystem.Configurations.Values)
 			{
-				if (Mod.Settings.SaveUsedRoadsOnly && !placedNetworks.Contains(config.Config.ID))
+				if (Mod.Settings!.SaveUsedRoadsOnly && !placedNetworks.Contains(config.Config?.ID ?? string.Empty))
 				{
 					continue;
 				}
 
-				LocalSaveUtil.Save(config.Config);
+				if (config.Config is not null)
+				{
+					LocalSaveUtil.Save(config.Config);
+				}
 			}
 		}
 
@@ -81,6 +87,28 @@ namespace RoadBuilder.Systems
 				_prefabsToUpdate.Clear();
 
 				GameManager.instance.userInterface.appBindings.ShowMessageDialog(new MessageDialog("Options.SECTION[RoadBuilder.RoadBuilder.Mod]", "RoadBuilder.DIALOG_MESSAGE[ReloadSave]", "RoadBuilder.DIALOG_MESSAGE[Ok]"), null);
+			}
+
+			var sections = SystemAPI.QueryBuilder().WithAll<Edge, RoadBuilderNetwork, Game.Objects.SubObject>().Build().ToEntityArray(Allocator.Temp);
+
+			for (var i = 0; i < sections.Length; i++)
+			{
+				var subObjects = EntityManager.GetBuffer<Game.Objects.SubObject>(sections[i]);
+
+				for (var j = 0; j < subObjects.Length;)
+				{
+					var subobject = subObjects[j];
+
+					if (prefabSystem.TryGetPrefab<PrefabBase>(EntityManager.GetComponentData<PrefabRef>(subobject.m_SubObject), out var prefab) && prefab?.name is "ParkingLotSidewaysDecal01" or "ParkingLotDiagonalDecal01")
+					{
+						EntityManager.AddComponent<Deleted>(subobject.m_SubObject);
+						subObjects.RemoveAt(j);
+					}
+					else
+					{
+						j++;
+					}
+				}
 			}
 
 			roadBuilderSystem.UpdateConfigurationList(true);
@@ -115,60 +143,72 @@ namespace RoadBuilder.Systems
 				return;
 			}
 
+			Mod.Log.WarnFormat("{0} invalid edges found", invalidEntities.Count);
+
+			if (Mod.Settings?.AskToResetRoads == true)
+			{
+				FixEdges(invalidEntities);
+			}
+			else
+			{
+				GameManager.instance.RegisterUpdater(() => GameManager.instance.userInterface.appBindings.ShowConfirmationDialog(new ConfirmationDialog("Options.SECTION[RoadBuilder.RoadBuilder.Mod]", "RoadBuilder.DIALOG_MESSAGE[FixInvalidEdges]", "Common.DIALOG_ACTION[Yes]", "Common.DIALOG_ACTION[No]"), msg =>
+				{
+					if (msg == 0)
+					{
+						FixEdges(invalidEntities);
+					}
+				}));
+			}
+		}
+
+		private void FixEdges(List<Entity> invalidEntities)
+		{
 			var updateSystem = World.GetOrCreateSystemManaged<RoadBuilderPrefabUpdateSystem>();
 			var smallRoadId = prefabSystem.TryGetPrefab(new PrefabID(nameof(RoadPrefab), "Small Road"), out var smallRoad) ? prefabSystem.GetEntity(smallRoad) : Entity.Null;
 			var trainTrackId = prefabSystem.TryGetPrefab(new PrefabID(nameof(TrackPrefab), "Double Train Track"), out var trainTrack) ? prefabSystem.GetEntity(trainTrack) : Entity.Null;
 			var tramTrackId = prefabSystem.TryGetPrefab(new PrefabID(nameof(TrackPrefab), "Double Tram Track"), out var tramTrack) ? prefabSystem.GetEntity(tramTrack) : Entity.Null;
 			var subwayTrackId = prefabSystem.TryGetPrefab(new PrefabID(nameof(TrackPrefab), "Double Subway Track"), out var subwayTrack) ? prefabSystem.GetEntity(subwayTrack) : Entity.Null;
 
-			Mod.Log.WarnFormat("{0} invalid edges found", invalidEntities.Count);
-
-			GameManager.instance.RegisterUpdater(() => GameManager.instance.userInterface.appBindings.ShowConfirmationDialog(new ConfirmationDialog("Options.SECTION[RoadBuilder.RoadBuilder.Mod]", "RoadBuilder.DIALOG_MESSAGE[FixInvalidEdges]", "Common.DIALOG_ACTION[Yes]", "Common.DIALOG_ACTION[No]"), msg =>
+			foreach (var entity in invalidEntities)
 			{
-				if (msg == 0)
-				{
-					foreach (var entity in invalidEntities)
-					{
-						updateSystem.UpdateEdge(entity);
+				updateSystem.UpdateEdge(entity);
 
-						if (EntityManager.HasComponent<Road>(entity))
-						{
-							EntityManager.SetComponentData(entity, new PrefabRef
-							{
-								m_Prefab = smallRoadId
-							});
-						}
-						else if (EntityManager.HasComponent<TrainTrack>(entity))
-						{
-							EntityManager.SetComponentData(entity, new PrefabRef
-							{
-								m_Prefab = trainTrackId
-							});
-						}
-						else if (EntityManager.HasComponent<TramTrack>(entity))
-						{
-							EntityManager.SetComponentData(entity, new PrefabRef
-							{
-								m_Prefab = tramTrackId
-							});
-						}
-						else if (EntityManager.HasComponent<SubwayTrack>(entity))
-						{
-							EntityManager.SetComponentData(entity, new PrefabRef
-							{
-								m_Prefab = subwayTrackId
-							});
-						}
-						else
-						{
-							EntityManager.SetComponentData(entity, new PrefabRef
-							{
-								m_Prefab = smallRoadId
-							});
-						}
-					}
+				if (EntityManager.HasComponent<Road>(entity))
+				{
+					EntityManager.SetComponentData(entity, new PrefabRef
+					{
+						m_Prefab = smallRoadId
+					});
 				}
-			}));
+				else if (EntityManager.HasComponent<TrainTrack>(entity))
+				{
+					EntityManager.SetComponentData(entity, new PrefabRef
+					{
+						m_Prefab = trainTrackId
+					});
+				}
+				else if (EntityManager.HasComponent<TramTrack>(entity))
+				{
+					EntityManager.SetComponentData(entity, new PrefabRef
+					{
+						m_Prefab = tramTrackId
+					});
+				}
+				else if (EntityManager.HasComponent<SubwayTrack>(entity))
+				{
+					EntityManager.SetComponentData(entity, new PrefabRef
+					{
+						m_Prefab = subwayTrackId
+					});
+				}
+				else
+				{
+					EntityManager.SetComponentData(entity, new PrefabRef
+					{
+						m_Prefab = smallRoadId
+					});
+				}
+			}
 		}
 
 		private HashSet<string> CreateNetworksList()
@@ -185,14 +225,14 @@ namespace RoadBuilder.Systems
 					continue;
 				}
 
-				if (builderPrefab.Prefab.name != builderPrefab.Config.ID)
+				if (builderPrefab.Prefab.name != builderPrefab.Config?.ID)
 				{
-					Mod.Log.Error($"ANOMALY - NAME <> ID: {builderPrefab.Prefab.name} - {builderPrefab.Config.ID}");
+					Mod.Log.Error($"ANOMALY - NAME <> ID: {builderPrefab.Prefab.name} - {builderPrefab.Config?.ID}");
 				}
 
 				if (!list.Contains(builderPrefab.Prefab.name))
 				{
-					Mod.Log.Debug("Adding for save: " + builderPrefab.Config.Name + " - " + builderPrefab.Config.ID);
+					Mod.Log.Debug("Adding for save: " + builderPrefab.Config?.Name + " - " + builderPrefab.Config?.ID);
 
 					list.Add(builderPrefab.Prefab.name);
 				}
@@ -233,7 +273,7 @@ namespace RoadBuilder.Systems
 
 		public static void SerializeNetwork<TWriter>(TWriter writer, string networkId) where TWriter : IWriter
 		{
-			if (!roadBuilderSystem.Configurations.TryGetValue(networkId, out var prefab))
+			if (!roadBuilderSystem.Configurations.TryGetValue(networkId, out var prefab) || prefab.Config is null)
 			{
 				Mod.Log.Error("Trying to save a prefab that has no configuration: " + networkId);
 

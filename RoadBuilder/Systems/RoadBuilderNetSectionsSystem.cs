@@ -1,5 +1,4 @@
-﻿using Colossal.IO.AssetDatabase;
-using Colossal.IO.AssetDatabase.Internal;
+﻿using Colossal.IO.AssetDatabase.Internal;
 
 using Game;
 using Game.Common;
@@ -26,13 +25,15 @@ namespace RoadBuilder.Systems
 {
 	public partial class RoadBuilderNetSectionsSystem : GameSystemBase
 	{
+#nullable disable
 		private PrefabSystem prefabSystem;
 		private EntityQuery prefabQuery;
 		private EntityQuery allPrefabQuery;
 		private NetPrefabGenerationPhase prefabGenerationPhase;
 		protected bool InitialSetupFinished;
+#nullable enable
 
-		public event Action SectionsAdded;
+		public event Action? SectionsAdded;
 
 		public Dictionary<string, NetSectionPrefab> NetSections { get; } = new();
 		public Dictionary<string, NetPiecePrefab> NetPieces { get; } = new();
@@ -105,7 +106,7 @@ namespace RoadBuilder.Systems
 
 					foreach (var section in NetSections.Values)
 					{
-						if (section.TryGetExactly<RoadBuilderLaneGroup>(out var laneGroup) && laneGroup.GroupPrefab.name == item.name)
+						if (section.TryGetExactly<RoadBuilderLaneGroup>(out var laneGroup) && laneGroup.GroupPrefab?.name == item.name)
 						{
 							item.LinkedSections.Add(section);
 						}
@@ -177,9 +178,9 @@ namespace RoadBuilder.Systems
 
 			CreatePolePieces();
 
-			var elevatedBarrier = NetPieces["Sound Barrier 1"].Clone("Elevated Sound Barrier 1") as NetPiecePrefab;
+			var elevatedBarrier = (NetPieces["Sound Barrier 1"].Clone("Elevated Sound Barrier 1") as NetPiecePrefab)!;
 
-			elevatedBarrier.Remove<MovePieceVertices>();
+			elevatedBarrier?.Remove<MovePieceVertices>();
 
 			prefabSystem.AddPrefab(elevatedBarrier);
 		}
@@ -219,7 +220,7 @@ namespace RoadBuilder.Systems
 				{
 					var prefab = ScriptableObject.CreateInstance<LaneGroupPrefab>();
 
-					var groupPrefab = Activator.CreateInstance(type) as BaseLaneGroupPrefab;
+					var groupPrefab = (Activator.CreateInstance(type) as BaseLaneGroupPrefab)!;
 
 					groupPrefab.Prefab = prefab;
 					groupPrefab.Sections = NetSections;
@@ -244,7 +245,7 @@ namespace RoadBuilder.Systems
 
 			foreach (var oldPrefab in median5Pieces)
 			{
-				var prefab = oldPrefab.Clone("RB " + oldPrefab.name) as NetPiecePrefab;
+				var prefab = (oldPrefab.Clone("RB " + oldPrefab.name) as NetPiecePrefab)!;
 				var objects = prefab.GetComponent<NetPieceObjects>();
 				var tree = objects.m_PieceObjects.FirstOrDefault(x => x.m_Object.name == "Road Tree Placeholder");
 
@@ -259,13 +260,11 @@ namespace RoadBuilder.Systems
 
 		private void CreateTiledMedian0Piece()
 		{
-			var medianTiledIntersectionPiece0 = NetPieces["Median Intersection Piece 0"].Clone("RB Tiled Median Intersection Piece 0") as NetPiecePrefab;
-			var medianTiledIntersectionPiece0Flat = NetPieces["Median Intersection Piece 0 - Flat"].Clone("RB Tiled Median Intersection Piece 0 - Flat") as NetPiecePrefab;
+			var medianTiledIntersectionPiece0 = (NetPieces["Tiled Side 0"].Clone("RB Tiled Median Intersection Piece 0") as NetPiecePrefab)!;
+			var medianTiledIntersectionPiece0Flat = (NetPieces["Tiled Side 0 - Flat"].Clone("RB Tiled Median Intersection Piece 0 - Flat") as NetPiecePrefab)!;
 
-			medianTiledIntersectionPiece0.geometryAsset = AssetDatabase.game.GetAsset<GeometryAsset>("6a5ebd30da0e34986c320b4cdc2014df"); // TiledMedianIntersection2
-			medianTiledIntersectionPiece0.surfaceAssets = new[] { AssetDatabase.game.GetAsset<SurfaceAsset>("40dd255c63eb8f65f96c5333d7d28afb") }; // TiledRoad
-			medianTiledIntersectionPiece0Flat.geometryAsset = AssetDatabase.game.GetAsset<GeometryAsset>("2549026d2a35f5fce401702b40c90258"); // TiledMedianIntersectionFlat2
-			medianTiledIntersectionPiece0Flat.surfaceAssets = new[] { AssetDatabase.game.GetAsset<SurfaceAsset>("40dd255c63eb8f65f96c5333d7d28afb") }; // TiledRoad
+			medianTiledIntersectionPiece0.components.Clear();
+			medianTiledIntersectionPiece0Flat.components.Clear();
 
 			prefabSystem.AddPrefab(NetPieces[medianTiledIntersectionPiece0.name] = medianTiledIntersectionPiece0);
 			prefabSystem.AddPrefab(NetPieces[medianTiledIntersectionPiece0Flat.name] = medianTiledIntersectionPiece0Flat);
@@ -347,7 +346,7 @@ namespace RoadBuilder.Systems
 
 		private void CreateTiledTramPiece()
 		{
-			var newPiece = NetPieces["Tiled Drive Piece 3 - Tram"].Clone("RB Tiled Tram Piece 3") as NetPiecePrefab;
+			var newPiece = (NetPieces["Tiled Drive Piece 3 - Tram"].Clone("RB Tiled Tram Piece 3") as NetPiecePrefab)!;
 
 			newPiece.GetComponent<NetPieceLanes>().m_Lanes[0].m_Lane = NetLanes["Oneway Tram Lane 3"];
 
@@ -360,15 +359,15 @@ namespace RoadBuilder.Systems
 			{
 				("RB Parking Piece Parallel", "Parking Lane 2", 3f, "Car Drive Piece 3", "Car Drive Piece 3"),
 				("RB Parking Piece Parallel NoMarking", "Parking Lane 2", 2f, "Car Drive Piece 3", "Car Drive Piece 3"),
-				("RB Parking Piece Angled", "Invisible Parking Lane - Angled67 2.9x5.9", 6f, "Subway Middle Piece 8", "Highway Drive Piece 4"),
+				("RB Parking Piece Angled", "Alley Parking Lane - Angled67 2.9x5.5", 6f, "Subway Middle Piece 8", "Highway Drive Piece 4"),
 				("RB Parking Piece Angled NoMarking", "Invisible Parking Lane - Angled67 2.9x5.9", 6f, "Subway Middle Piece 8", "Highway Drive Piece 4"),
-				("RB Parking Piece Perpendicular", "Invisible Parking Lane - Perpendicular 3x5.5", 6f, "Subway Middle Piece 8", "Highway Drive Piece 4"),
+				("RB Parking Piece Perpendicular", "Alley Parking Lane - Perpendicular 3x5.5", 6f, "Subway Middle Piece 8", "Highway Drive Piece 4"),
 				("RB Parking Piece Perpendicular NoMarking", "Invisible Parking Lane - Perpendicular 4.7x5.9", 6f, "Subway Middle Piece 8", "Highway Drive Piece 4"),
 			};
 
 			foreach (var item in pieces)
 			{
-				var newPiece = NetPieces["Car Drive Piece 3"].Clone(item.Item1) as NetPiecePrefab;
+				var newPiece = (NetPieces["Car Drive Piece 3"].Clone(item.Item1) as NetPiecePrefab)!;
 				newPiece.geometryAsset = NetPieces[item.Item4].geometryAsset;
 				newPiece.surfaceAssets = NetPieces[item.Item5].surfaceAssets;
 				newPiece.m_Width = item.Item3;
@@ -383,48 +382,29 @@ namespace RoadBuilder.Systems
 					}
 				};
 
-				if (item.Item1 == "RB Parking Piece Parallel")
-				{
-					newPiece.AddOrGetComponent<NetPieceObjects>().m_PieceObjects = new[]
-					{
-						new NetPieceObjectInfo
-						{
-							m_Object = prefabSystem.TryGetPrefab(new PrefabID(nameof(StaticObjectPrefab), "ParkingLotSidewaysDecal01"), out var prefab)?prefab as ObjectPrefab : default,
-							m_RequireAll = new []{NetPieceRequirements.Edge},
-							m_RequireAny = new NetPieceRequirements[0],
-							m_RequireNone = new NetPieceRequirements[0],
-							m_Probability = 100,
-							m_FlipWhenInverted = true,
-							m_EvenSpacing = true,
-							m_Rotation = Quaternion.Euler(0, 180, 0),
-							m_Offset = new float3(0, 0, -6f / 2f),
-							m_Spacing = new float3(2f, 0f, 6f)
-						}
-					};
-				}
-
-				if (item.Item1 == "RB Parking Piece Angled")
-				{
-					newPiece.AddOrGetComponent<NetPieceObjects>().m_PieceObjects = new[]
-					{
-						new NetPieceObjectInfo
-						{
-							m_Object = prefabSystem.TryGetPrefab(new PrefabID(nameof(StaticObjectPrefab), "ParkingLotDiagonalDecal01"), out var prefab)?prefab as ObjectPrefab : default,
-							m_RequireAll = new []{NetPieceRequirements.Edge},
-							m_RequireAny = new NetPieceRequirements[0],
-							m_RequireNone = new NetPieceRequirements[0],
-							m_Probability = 100,
-							m_FlipWhenInverted = true,
-							m_Rotation = Quaternion.Euler(0, 90, 0),
-							m_Offset = new float3(-3.1f / 2f, 0, 0),
-							m_Spacing = new float3(5.9f, 0f, 3.1f)
-						}
-					};
-				}
+				//if (item.Item1 == "RB Parking Piece Parallel")
+				//{
+				//	newPiece.AddOrGetComponent<NetPieceObjects>().m_PieceObjects = new[]
+				//	{
+				//		new NetPieceObjectInfo
+				//		{
+				//			m_Object = prefabSystem.TryGetPrefab(new PrefabID(nameof(StaticObjectPrefab), "ParkingLotSidewaysDecal01"), out var prefab)?prefab as ObjectPrefab : default,
+				//			m_RequireAll = new [] { NetPieceRequirements.Edge },
+				//			m_RequireAny = new NetPieceRequirements[0],
+				//			m_RequireNone = new NetPieceRequirements[0],
+				//			m_Probability = 100,
+				//			m_FlipWhenInverted = true,
+				//			m_EvenSpacing = true,
+				//			m_Rotation = Quaternion.Euler(0, 180, 0),
+				//			m_Offset = new float3(0, 0, -6f / 2f),
+				//			m_Spacing = new float3(2f, 0f, 6f)
+				//		}
+				//	};
+				//}
 
 				prefabSystem.AddPrefab(NetPieces[newPiece.name] = newPiece);
 
-				newPiece = NetPieces["Car Drive Piece 3 - Flat"].Clone(item.Item1 + " - Flat") as NetPiecePrefab;
+				newPiece = (NetPieces["Car Drive Piece 3 - Flat"].Clone(item.Item1 + " - Flat") as NetPiecePrefab)!;
 				newPiece.geometryAsset = NetPieces[item.Item4].geometryAsset;
 				newPiece.surfaceAssets = NetPieces[item.Item5].surfaceAssets;
 				newPiece.m_Width = item.Item3;
@@ -439,44 +419,25 @@ namespace RoadBuilder.Systems
 					}
 				};
 
-				if (item.Item1 == "RB Parking Piece Parallel")
-				{
-					newPiece.AddOrGetComponent<NetPieceObjects>().m_PieceObjects = new[]
-					{
-						new NetPieceObjectInfo
-						{
-							m_Object = prefabSystem.TryGetPrefab(new PrefabID(nameof(StaticObjectPrefab), "ParkingLotSidewaysDecal01"), out var prefab)?prefab as ObjectPrefab : default,
-							m_RequireAll = new []{NetPieceRequirements.Edge},
-							m_RequireAny = new NetPieceRequirements[0],
-							m_RequireNone = new NetPieceRequirements[0],
-							m_Probability = 100,
-							m_FlipWhenInverted = true,
-							m_EvenSpacing = true,
-							m_Rotation = Quaternion.Euler(0, 180, 0),
-							m_Offset = new float3(0, 0, -6f / 2f),
-							m_Spacing = new float3(2f, 0f, 6f)
-						}
-					};
-				}
-
-				if (item.Item1 == "RB Parking Piece Angled")
-				{
-					newPiece.AddOrGetComponent<NetPieceObjects>().m_PieceObjects = new[]
-					{
-						new NetPieceObjectInfo
-						{
-							m_Object = prefabSystem.TryGetPrefab(new PrefabID(nameof(StaticObjectPrefab), "ParkingLotDiagonalDecal01"), out var prefab)?prefab as ObjectPrefab : default,
-							m_RequireAll = new []{NetPieceRequirements.Edge},
-							m_RequireAny = new NetPieceRequirements[0],
-							m_RequireNone = new NetPieceRequirements[0],
-							m_Probability = 100,
-							m_FlipWhenInverted = true,
-							m_Rotation = Quaternion.Euler(0, 90, 0),
-							m_Offset = new float3(-3.1f / 2f, 0, 0),
-							m_Spacing = new float3(5.9f, 0f, 3.1f)
-						}
-					};
-				}
+				//if (item.Item1 == "RB Parking Piece Parallel")
+				//{
+				//	newPiece.AddOrGetComponent<NetPieceObjects>().m_PieceObjects = new[]
+				//	{
+				//		new NetPieceObjectInfo
+				//		{
+				//			m_Object = prefabSystem.TryGetPrefab(new PrefabID(nameof(StaticObjectPrefab), "ParkingLotSidewaysDecal01"), out var prefab)?prefab as ObjectPrefab : default,
+				//			m_RequireAll = new []{NetPieceRequirements.Edge},
+				//			m_RequireAny = new NetPieceRequirements[0],
+				//			m_RequireNone = new NetPieceRequirements[0],
+				//			m_Probability = 100,
+				//			m_FlipWhenInverted = true,
+				//			m_EvenSpacing = true,
+				//			m_Rotation = Quaternion.Euler(0, 180, 0),
+				//			m_Offset = new float3(0, 0, -6f / 2f),
+				//			m_Spacing = new float3(2f, 0f, 6f)
+				//		}
+				//	};
+				//}
 
 				prefabSystem.AddPrefab(NetPieces[newPiece.name] = newPiece);
 			}
@@ -486,12 +447,12 @@ namespace RoadBuilder.Systems
 		{
 			foreach (var width in new float[] { 3, 2.5f, 2, 1.5f, 1 })
 			{
-				setUpSidewalk(NetPieces["Sidewalk Piece 3.5"].Clone("Sidewalk Piece " + width.ToString(CultureInfo.InvariantCulture)) as NetPiecePrefab, width);
-				setUpSidewalk(NetPieces["Sidewalk Piece 3.5 - Flat"].Clone($"Sidewalk Piece {width.ToString(CultureInfo.InvariantCulture)} - Flat") as NetPiecePrefab, width);
+				setUpSidewalk((NetPieces["Sidewalk Piece 3.5"].Clone("Sidewalk Piece " + width.ToString(CultureInfo.InvariantCulture)) as NetPiecePrefab)!, width);
+				setUpSidewalk((NetPieces["Sidewalk Piece 3.5 - Flat"].Clone($"Sidewalk Piece {width.ToString(CultureInfo.InvariantCulture)} - Flat") as NetPiecePrefab)!, width);
 			}
 
-			setUpSidewalk(NetPieces["Sidewalk Piece 4.5"].Clone("Sidewalk Piece 4") as NetPiecePrefab, 4);
-			setUpSidewalk(NetPieces["Sidewalk Piece 4.5 - Flat"].Clone($"Sidewalk Piece 4 - Flat") as NetPiecePrefab, 4);
+			setUpSidewalk((NetPieces["Sidewalk Piece 4.5"].Clone("Sidewalk Piece 4") as NetPiecePrefab)!, 4);
+			setUpSidewalk((NetPieces["Sidewalk Piece 4.5 - Flat"].Clone($"Sidewalk Piece 4 - Flat") as NetPiecePrefab)!, 4);
 
 			void setUpSidewalk(NetPiecePrefab sidewalk, float width)
 			{
@@ -534,7 +495,7 @@ namespace RoadBuilder.Systems
 			{
 				foreach (var pieceName in new[] { "Piece {0}", "Piece Flat {0}", "Piece Middle {0}", "Piece Middle Flat {0}" })
 				{
-					var newPiece = NetPieces[string.Format("RB Empty " + pieceName, width.ToString(CultureInfo.InvariantCulture))].Clone(string.Format("RB Tram Pole " + pieceName, width.ToString(CultureInfo.InvariantCulture))) as NetPiecePrefab;
+					var newPiece = (NetPieces[string.Format("RB Empty " + pieceName, width.ToString(CultureInfo.InvariantCulture))].Clone(string.Format("RB Tram Pole " + pieceName, width.ToString(CultureInfo.InvariantCulture))) as NetPiecePrefab)!;
 
 					newPiece.Remove<NetPieceObjects>();
 					newPiece.AddComponentFrom(tramPolePiece.GetComponent<NetPieceObjects>());
@@ -550,7 +511,7 @@ namespace RoadBuilder.Systems
 			{
 				foreach (var pieceName in new[] { "Piece {0}", "Piece Flat {0}", "Piece Middle {0}", "Piece Middle Flat {0}" })
 				{
-					var newPiece = NetPieces[string.Format("RB Train Empty " + pieceName, width.ToString(CultureInfo.InvariantCulture))].Clone(string.Format("RB Train Pole " + pieceName, width.ToString(CultureInfo.InvariantCulture))) as NetPiecePrefab;
+					var newPiece = (NetPieces[string.Format("RB Train Empty " + pieceName, width.ToString(CultureInfo.InvariantCulture))].Clone(string.Format("RB Train Pole " + pieceName, width.ToString(CultureInfo.InvariantCulture))) as NetPiecePrefab)!;
 
 					newPiece.Remove<NetPieceObjects>();
 					newPiece.AddComponentFrom(trainPolePiece.GetComponent<NetPieceObjects>());
@@ -567,7 +528,7 @@ namespace RoadBuilder.Systems
 			{
 				foreach (var width in item.widths)
 				{
-					var newPiece = NetPieces[item.Name].Clone(string.Format(newName, width.ToString(CultureInfo.InvariantCulture))) as NetPiecePrefab;
+					var newPiece = (NetPieces[item.Name].Clone(string.Format(newName, width.ToString(CultureInfo.InvariantCulture))) as NetPiecePrefab)!;
 
 					newPiece.m_Width = width;
 
@@ -582,7 +543,7 @@ namespace RoadBuilder.Systems
 
 		private void CreateAndAddEmptyTunnelAndBridgePieces(string name, string newName, float width)
 		{
-			var newPiece = NetPieces[name].Clone(string.Format(newName, width.ToString(CultureInfo.InvariantCulture))) as NetPiecePrefab;
+			var newPiece = (NetPieces[name].Clone(string.Format(newName, width.ToString(CultureInfo.InvariantCulture))) as NetPiecePrefab)!;
 
 			newPiece.m_Width = width;
 
@@ -593,7 +554,7 @@ namespace RoadBuilder.Systems
 
 		private void CreateTiledMedian0Section()
 		{
-			var tiledMedian0 = NetSections["Road Median 0"].Clone("RB Tiled Median 0") as NetSectionPrefab;
+			var tiledMedian0 = (NetSections["Road Median 0"].Clone("RB Tiled Median 0") as NetSectionPrefab)!;
 
 			tiledMedian0.m_Pieces[0].m_RequireAll = Add(tiledMedian0.m_Pieces[0].m_RequireAll, NetPieceRequirements.Pavement);
 			tiledMedian0.m_Pieces[1].m_RequireAll = Add(tiledMedian0.m_Pieces[1].m_RequireAll, NetPieceRequirements.Pavement);
@@ -618,8 +579,8 @@ namespace RoadBuilder.Systems
 
 		private void CreateBusOnlySection()
 		{
-			var newSection3 = NetSections["Public Transport Lane Section 3 - Tram Option"].Clone("RB Public Transport Lane Section 3") as NetSectionPrefab;
-			var newSection4 = NetSections["Public Transport Lane Section 4 - Tram Option"].Clone("RB Public Transport Lane Section 4") as NetSectionPrefab;
+			var newSection3 = (NetSections["Public Transport Lane Section 3 - Tram Option"].Clone("RB Public Transport Lane Section 3") as NetSectionPrefab)!;
+			var newSection4 = (NetSections["Public Transport Lane Section 4 - Tram Option"].Clone("RB Public Transport Lane Section 4") as NetSectionPrefab)!;
 
 			foreach (var item in new[] { newSection3, newSection4 })
 			{
@@ -649,8 +610,8 @@ namespace RoadBuilder.Systems
 
 		private void CreateCarOnlyTiledSection()
 		{
-			var newSectionCarOnly = NetSections["Tiled Drive Section 3"].Clone("RB Tiled Drive Section 3 - Car") as NetSectionPrefab;
-			var newSectionTramOnly = NetSections["Tiled Drive Section 3"].Clone("RB Tiled Tram Section 3") as NetSectionPrefab;
+			var newSectionCarOnly = (NetSections["Tiled Drive Section 3"].Clone("RB Tiled Drive Section 3 - Car") as NetSectionPrefab)!;
+			var newSectionTramOnly = (NetSections["Tiled Drive Section 3"].Clone("RB Tiled Tram Section 3") as NetSectionPrefab)!;
 
 			var sections1 = new List<NetPieceInfo>();
 
@@ -696,10 +657,10 @@ namespace RoadBuilder.Systems
 
 		private void FixMedianSections()
 		{
-			var median1 = NetSections["Road Median 1"].Clone("RB Median 1") as NetSectionPrefab;
-			var median2 = NetSections["Road Median 2"].Clone("RB Median 2") as NetSectionPrefab;
-			var median5 = NetSections["Road Median 5"].Clone("RB Median 5") as NetSectionPrefab;
-			var tiledMedian2 = NetSections["Tiled Median 2"].Clone("RB Tiled Median 2") as NetSectionPrefab;
+			var median1 = (NetSections["Road Median 1"].Clone("RB Median 1") as NetSectionPrefab)!;
+			var median2 = (NetSections["Road Median 2"].Clone("RB Median 2") as NetSectionPrefab)!;
+			var median5 = (NetSections["Road Median 5"].Clone("RB Median 5") as NetSectionPrefab)!;
+			var tiledMedian2 = (NetSections["Tiled Median 2"].Clone("RB Tiled Median 2") as NetSectionPrefab)!;
 			var median5Pieces = new[]
 			{
 				"Median Piece 5",
@@ -778,7 +739,7 @@ namespace RoadBuilder.Systems
 
 			foreach (var oldPrefab in subwayPlatformSections)
 			{
-				var prefab = oldPrefab.Clone("RB " + oldPrefab.name) as NetSectionPrefab;
+				var prefab = (oldPrefab.Clone("RB " + oldPrefab.name) as NetSectionPrefab)!;
 
 				foreach (var piece in prefab.m_Pieces)
 				{
@@ -911,7 +872,7 @@ namespace RoadBuilder.Systems
 			foreach (var width in new float[] { 4, 3, 2.5f, 2, 1.5f, 1 })
 			{
 				var originalSize = width > 3 ? "4.5" : "3.5";
-				var sidewalk = NetSections["Sidewalk " + originalSize].Clone("Sidewalk " + width.ToString(CultureInfo.InvariantCulture)) as NetSectionPrefab;
+				var sidewalk = (NetSections["Sidewalk " + originalSize].Clone("Sidewalk " + width.ToString(CultureInfo.InvariantCulture)) as NetSectionPrefab)!;
 
 				foreach (var item in sidewalk.m_Pieces)
 				{
@@ -957,7 +918,7 @@ namespace RoadBuilder.Systems
 
 		private void GenerateSoundBarrier()
 		{
-			var barrier = NetSections["Sound Barrier 1"].Clone("RB Sound Barrier 1") as NetSectionPrefab;
+			var barrier = (NetSections["Sound Barrier 1"].Clone("RB Sound Barrier 1") as NetSectionPrefab)!;
 			var width = 1;
 
 			barrier.AddComponent<RoadBuilderEdgeLaneInfo>().DoNotRequireBeingOnEdge = true;
@@ -966,7 +927,7 @@ namespace RoadBuilder.Systems
 				new NetPieceInfo
 				{
 					m_Piece = NetPieces["Sound Barrier 1"],
-					m_RequireNone = new[] { NetPieceRequirements.Tunnel, NetPieceRequirements.Elevated, NetPieceRequirements.HighTransition, NetPieceRequirements.LowTransition },
+					m_RequireNone = new[] { NetPieceRequirements.Elevated, NetPieceRequirements.HighTransition, NetPieceRequirements.LowTransition },
 					m_RequireAll = new NetPieceRequirements[0],
 					m_RequireAny = new NetPieceRequirements[0],
 				},
@@ -1172,7 +1133,7 @@ namespace RoadBuilder.Systems
 			SetUp("Pavement Path Section 3", "coui://roadbuildericons/RB_PedestrianLane.svg").WithRequireAll(RoadCategory.Pathway).AddLaneThumbnail("coui://roadbuildericons/Thumb_PedestrianLaneWide.svg");
 			SetUp("Tiled Pedestrian Section 3", "coui://roadbuildericons/RB_PedestrianOnly.svg").WithRequireAll(RoadCategory.Tiled).AddLaneThumbnail("coui://roadbuildericons/Thumb_TiledSmall.svg");
 			SetUp("RB Tiled Median 2", "coui://roadbuildericons/RB_TiledMedian_Centered.svg").WithRequireAll(RoadCategory.Tiled).WithThumbnail("coui://roadbuildericons/RB_TiledMedian.svg").AddLaneThumbnail("coui://roadbuildericons/Thumb_PedestrianLaneSmall.svg");
-			
+
 			var pathEdgeInfo = NetSections["Pavement Path Section 3"].AddComponent<RoadBuilderEdgeLaneInfo>();
 			pathEdgeInfo.SidePrefab = NetSections["Pavement Path Side Section 0"];
 			pathEdgeInfo.AddSidewalkStateOnNode = true;

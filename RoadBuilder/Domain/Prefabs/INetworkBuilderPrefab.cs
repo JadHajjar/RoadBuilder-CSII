@@ -6,7 +6,7 @@ namespace RoadBuilder.Domain.Prefabs
 {
 	public interface INetworkBuilderPrefab
 	{
-		INetworkConfig Config { get; set; }
+		INetworkConfig? Config { get; set; }
 		NetGeometryPrefab Prefab { get; }
 		bool Deleted { get; set; }
 	}

@@ -7,18 +7,18 @@ namespace RoadBuilder.LaneGroups
 {
 	public class ParkingGroupPrefab : BaseLaneGroupPrefab
 	{
-		private const string OptionName = "Parking Angle";
+		private const string OptionName1 = "Parking Angle";
 		private const string OptionName2 = "Markings";
 
 		public override void Initialize()
 		{
-			Prefab.Options = new RoadBuilderLaneOption[]
+			Prefab!.Options = new RoadBuilderLaneOption[]
 			{
 				new()
 				{
 					DefaultValue = "Parallel",
 					Type = LaneOptionType.SingleSelectionButtons,
-					Name = OptionName,
+					Name = OptionName1,
 					Options = new RoadBuilderLaneOptionValue[]
 					{
 						new()
@@ -65,15 +65,15 @@ namespace RoadBuilder.LaneGroups
 
 			Prefab.AddComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_ParkingFront0Center.svg";
 
-			SetUp(Sections["RB Parking Section Parallel"], "Parallel", "1").AddOrGetComponent<RoadBuilderLaneInfo>().AddLaneThumbnail("coui://roadbuildericons/Thumb_CarLaneSmall.svg").WithFrontThumbnail("coui://roadbuildericons/RB_ParkingFront0.svg").WithBackThumbnail("coui://roadbuildericons/RB_ParkingRear0.svg");
-			SetUp(Sections["RB Parking Section Parallel NoMarking"], "Parallel", "").AddOrGetComponent<RoadBuilderLaneInfo>().WithNoDirection().AddLaneThumbnail("coui://roadbuildericons/Thumb_CarLaneSmall.svg").WithFrontThumbnail("coui://roadbuildericons/RB_ParkingFront0.svg").WithBackThumbnail("coui://roadbuildericons/RB_ParkingRear0.svg");
-			SetUp(Sections["RB Parking Section Angled"], "Angled", "1").AddOrGetComponent<RoadBuilderLaneInfo>().WithFrontThumbnail("coui://roadbuildericons/RB_ParkingFront45-60.svg").WithBackThumbnail("coui://roadbuildericons/RB_ParkingRear45-60.svg");
-			SetUp(Sections["RB Parking Section Angled NoMarking"], "Angled", "").AddOrGetComponent<RoadBuilderLaneInfo>().WithNoDirection().WithFrontThumbnail("coui://roadbuildericons/RB_ParkingFront45-60.svg").WithBackThumbnail("coui://roadbuildericons/RB_ParkingRear45-60.svg");
-			SetUp(Sections["RB Parking Section Perpendicular"], "Perpendicular", "1").AddOrGetComponent<RoadBuilderLaneInfo>().WithNoDirection().WithFrontThumbnail("coui://roadbuildericons/RB_ParkingFront90.svg").WithBackThumbnail("coui://roadbuildericons/RB_ParkingRear90.svg");
-			SetUp(Sections["RB Parking Section Perpendicular NoMarking"], "Perpendicular", "").AddOrGetComponent<RoadBuilderLaneInfo>().WithNoDirection().WithFrontThumbnail("coui://roadbuildericons/RB_ParkingFront90.svg").WithBackThumbnail("coui://roadbuildericons/RB_ParkingRear90.svg");
+			SetUp(Sections!["RB Parking Section Parallel"], "Parallel", "1").AddOrGetComponent<RoadBuilderLaneInfo>().AddLaneThumbnail("coui://roadbuildericons/Thumb_CarLaneSmall.svg").WithFrontThumbnail("coui://roadbuildericons/RB_ParkingFront0.svg").WithBackThumbnail("coui://roadbuildericons/RB_ParkingRear0.svg");
+			SetUp(Sections!["RB Parking Section Parallel NoMarking"], "Parallel", "").AddOrGetComponent<RoadBuilderLaneInfo>().WithNoDirection().AddLaneThumbnail("coui://roadbuildericons/Thumb_CarLaneSmall.svg").WithFrontThumbnail("coui://roadbuildericons/RB_ParkingFront0.svg").WithBackThumbnail("coui://roadbuildericons/RB_ParkingRear0.svg");
+			SetUp(Sections["RB Parking Section Angled"], "Angled", "1").AddOrGetComponent<RoadBuilderLaneInfo>().WithNoDirection().AddLaneThumbnail("coui://roadbuildericons/Thumb_AngledParkingLane.svg").WithFrontThumbnail("coui://roadbuildericons/RB_ParkingFront45-60.svg").WithBackThumbnail("coui://roadbuildericons/RB_ParkingRear45-60.svg");
+			SetUp(Sections["RB Parking Section Angled NoMarking"], "Angled", "").AddOrGetComponent<RoadBuilderLaneInfo>().WithNoDirection().AddLaneThumbnail("coui://roadbuildericons/Thumb_AngledParkingLane.svg").WithFrontThumbnail("coui://roadbuildericons/RB_ParkingFront45-60.svg").WithBackThumbnail("coui://roadbuildericons/RB_ParkingRear45-60.svg");
+			SetUp(Sections["RB Parking Section Perpendicular"], "Perpendicular", "1").AddOrGetComponent<RoadBuilderLaneInfo>().WithNoDirection().AddLaneThumbnail("coui://roadbuildericons/Thumb_90ParkingLane.svg").WithFrontThumbnail("coui://roadbuildericons/RB_ParkingFront90.svg").WithBackThumbnail("coui://roadbuildericons/RB_ParkingRear90.svg");
+			SetUp(Sections["RB Parking Section Perpendicular NoMarking"], "Perpendicular", "").AddOrGetComponent<RoadBuilderLaneInfo>().WithNoDirection().AddLaneThumbnail("coui://roadbuildericons/Thumb_90ParkingLane.svg").WithFrontThumbnail("coui://roadbuildericons/RB_ParkingFront90.svg").WithBackThumbnail("coui://roadbuildericons/RB_ParkingRear90.svg");
 		}
 
-		private NetSectionPrefab SetUp(NetSectionPrefab prefab, string value, string value2)
+		private NetSectionPrefab SetUp(NetSectionPrefab prefab, string value1, string value2)
 		{
 			var laneInfo = prefab.AddComponent<RoadBuilderLaneGroup>();
 			laneInfo.GroupPrefab = Prefab;
@@ -81,8 +81,8 @@ namespace RoadBuilder.LaneGroups
 			{
 				new()
 				{
-					OptionName = OptionName,
-					Value = value
+					OptionName = OptionName1,
+					Value = value1
 				},
 				new()
 				{

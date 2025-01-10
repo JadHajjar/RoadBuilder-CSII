@@ -1,37 +1,19 @@
 ﻿using Colossal.Entities;
 
-using Game.Common;
-using Game.Prefabs;
-using Game.Rendering;
-using Game.SceneFlow;
-
-using RoadBuilder.Domain.Components;
-using RoadBuilder.Domain.Enums;
-using RoadBuilder.Domain.UI;
-using RoadBuilder.Systems.UI;
-using RoadBuilder.Utilities;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Unity.Collections;
-using Unity.Entities;
-using Colossal.Entities;
-
 using Game;
 using Game.Common;
 using Game.Net;
 using Game.Prefabs;
 using Game.Rendering;
 using Game.SceneFlow;
+using Game.Tools;
 using Game.UI;
+using Game.UI.Editor;
+using Game.UI.InGame;
 
 using RoadBuilder.Domain.Components;
 using RoadBuilder.Domain.Enums;
-using RoadBuilder.Domain.UI;
+using RoadBuilder.Systems.UI;
 using RoadBuilder.Utilities;
 
 using System.Collections.Generic;
@@ -39,14 +21,12 @@ using System.Linq;
 
 using Unity.Collections;
 using Unity.Entities;
-using Game.Tools;
-using Game.UI.Editor;
-using Game.UI.InGame;
 
 namespace RoadBuilder.Systems
 {
 	public partial class RoadBuilderGenericFunctionsSystem : SystemBase
 	{
+#nullable disable
 		private RoadBuilderSystem roadBuilderSystem;
 		private RoadBuilderUISystem roadBuilderUISystem;
 		private RoadBuilderPrefabUpdateSystem roadBuilderUpdateSystem;
@@ -55,11 +35,12 @@ namespace RoadBuilder.Systems
 		private ToolSystem toolSystem;
 		private EditorToolUISystem editorToolUISystem;
 		private CameraUpdateSystem cameraUpdateSystem;
+#nullable enable
 
 		private EntityQuery prefabRefQuery;
 		private EntityQuery edgeRefQuery;
 
-		private string lastFindId;
+		private string? lastFindId;
 		private int lastFindIndex;
 
 		protected override void OnCreate()
@@ -193,12 +174,15 @@ namespace RoadBuilder.Systems
 
 			prefab.Deleted = true;
 
-			if (roadBuilderUISystem.GetWorkingId() == prefab.Config.ID)
+			if (roadBuilderUISystem.GetWorkingId() == prefab.Config?.ID)
 			{
 				roadBuilderUISystem.SetWorkingPrefab(null, RoadBuilderToolMode.Picker);
 			}
 
-			LocalSaveUtil.DeletePreviousLocalConfig(prefab.Config);
+			if (prefab.Config is not null)
+			{
+				LocalSaveUtil.DeletePreviousLocalConfig(prefab.Config);
+			}
 
 			var prefabEntity = prefabSystem.GetEntity(prefab.Prefab);
 			var edgeEntities = prefabRefQuery.ToEntityArray(Allocator.Temp);

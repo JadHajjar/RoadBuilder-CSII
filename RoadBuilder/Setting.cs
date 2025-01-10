@@ -66,6 +66,9 @@ namespace RoadBuilder
 		[SettingsUISection(MAIN_SECTION, ADVANCED_GROUP)]
 		public bool DoNotAddSides { get; set; }
 
+		[SettingsUISection(MAIN_SECTION, ADVANCED_GROUP)]
+		public bool AskToResetRoads { get; set; }
+
 		public override void SetDefaults()
 		{
 		}

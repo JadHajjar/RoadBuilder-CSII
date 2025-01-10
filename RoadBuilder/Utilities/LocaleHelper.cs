@@ -49,9 +49,9 @@ namespace RoadBuilder.Utilities
 			}
 		}
 
-		public static string Translate(string id, string fallback = null)
+		public static string? Translate(string? id, string? fallback = null)
 		{
-			if (GameManager.instance.localizationManager.activeDictionary.TryGetValue(id, out var result))
+			if (id is not null && GameManager.instance.localizationManager.activeDictionary.TryGetValue(id, out var result))
 			{
 				return result;
 			}
@@ -59,7 +59,7 @@ namespace RoadBuilder.Utilities
 			return fallback ?? id;
 		}
 
-		internal static string GetTooltip(string key)
+		internal static string? GetTooltip(string key)
 		{
 			return Translate($"Tooltip.LABEL[{Mod.Id}.{key}]");
 		}

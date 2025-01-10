@@ -126,18 +126,16 @@ This helps us better assist you and avoids your message from getting lost in the
   <Screenshot Value="Properties/Screenshot_07.png" />
   <Tag Value="Code Mod" />
   <ForumLink Value="https://forum.paradoxplaza.com/forum/threads/road-builder.1698661/" />
-  <ModVersion Value="0.4.4" />
-  <GameVersion Value="1.1.*" />
+  <ModVersion Value="0.5.2" />
+  <GameVersion Value="1.2.*" />
   <ChangeLog>
-# v0.4.4
+# v0.5.2
 ## Hotfix
-* Fixed train outside connections not working properly.
-* Fixed outside connections not always having the correct one-way/two-way type.
-* Compatibility with patch 1.1.10f1
+* Fixed parking lanes not converting properly to the v0.5 update.
 </ChangeLog>
   <ExternalLink Type="discord" Url="https://discord.gg/E4k8ZEtRxd" />
   <ExternalLink Type="github" Url="https://github.com/JadHajjar/RoadBuilder-CSII" />
   <ExternalLink Type="crowdin" Url="https://crowdin.com/project/road-builder-cs-ii" />
-  <ExternalLink Type="buymeacoffee" Url="https://www.buymeacoffee.com/tdwsvillage" />
+  <ExternalLink Type="patreon" Url="https://www.patreon.com/tdwsvillage" />
   <ExternalLink Type="kofi" Url="https://ko-fi.com/trejak" />
 </Publish>

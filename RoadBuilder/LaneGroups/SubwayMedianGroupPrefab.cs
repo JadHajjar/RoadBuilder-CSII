@@ -11,7 +11,7 @@ namespace RoadBuilder.LaneGroups
 
 		public override void Initialize()
 		{
-			Prefab.Options = new RoadBuilderLaneOption[]
+			Prefab!.Options = new RoadBuilderLaneOption[]
 			{
 				new()
 				{
@@ -41,7 +41,7 @@ namespace RoadBuilder.LaneGroups
 
 			Prefab.AddComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_CenterPlatform.svg";
 
-			SetUp(Sections["RB Subway Median 8"], "Raised", true).AddComponent<RoadBuilderLaneInfo>().WithThumbnail("coui://roadbuildericons/RB_CenterPlatform.svg").AddLaneThumbnail("coui://roadbuildericons/Thumb_Platform.svg");
+			SetUp(Sections!["RB Subway Median 8"], "Raised", true).AddComponent<RoadBuilderLaneInfo>().WithThumbnail("coui://roadbuildericons/RB_CenterPlatform.svg").AddLaneThumbnail("coui://roadbuildericons/Thumb_Platform.svg");
 			SetUp(Sections["RB Subway Median 8 - Plain"], "Flat", true).AddComponent<RoadBuilderLaneInfo>().WithThumbnail("coui://roadbuildericons/RB_Empty.svg").AddLaneThumbnail("coui://roadbuildericons/Thumb_PlatformEmpty.svg").WithRequireAny(RoadCategory.Train | RoadCategory.Subway);
 
 			SetUp(Sections["Subway Median 8"], "Raised", false);

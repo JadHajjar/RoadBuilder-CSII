@@ -19,16 +19,18 @@ namespace RoadBuilder.Systems.UI
 {
 	public partial class RoadBuilderConfigurationsUISystem : ExtendedUISystemBase
 	{
+#nullable disable
 		private RoadBuilderSystem roadBuilderSystem;
 		private RoadBuilderRoadTrackerSystem roadBuilderRoadTrackerSystem;
 		private PrefabSystem prefabSystem;
 		private RoadBuilderGenericFunctionsSystem genericFunctionsSystem;
 		private ValueBindingHelper<RoadConfigurationUIBinder[]> RoadConfigurations;
 		private string query = string.Empty;
+#nullable enable
 
-		public event Action ConfigurationsUpdated;
+		public event Action? ConfigurationsUpdated;
 
-		public List<RoadConfigurationUIBinder> AvailableConfigurations { get; private set; }
+		public List<RoadConfigurationUIBinder> AvailableConfigurations { get; private set; } = new();
 
 		protected override void OnCreate()
 		{
@@ -59,7 +61,7 @@ namespace RoadBuilder.Systems.UI
 				.ToArray();
 		}
 
-		private bool Filter(string name)
+		private bool Filter(string? name)
 		{
 			return string.IsNullOrWhiteSpace(query) || query.SearchCheck(name);
 		}
@@ -68,16 +70,17 @@ namespace RoadBuilder.Systems.UI
 		{
 			AvailableConfigurations = roadBuilderSystem.Configurations
 				.Select(x => GetRoadBinder(x.Value))
-				.OrderBy(x => x.Locked)
-				.ThenBy(x => x.Name)
-				.ToList();
+				.Where(x => x != null)
+				.OrderBy(x => x!.Locked)
+				.ThenBy(x => x!.Name)
+				.ToList()!;
 
 			SetSearchQuery(query);
 
 			ConfigurationsUpdated?.Invoke();
 		}
 
-		public RoadConfigurationUIBinder GetRoadBinder(Domain.Prefabs.INetworkBuilderPrefab value)
+		public RoadConfigurationUIBinder? GetRoadBinder(Domain.Prefabs.INetworkBuilderPrefab? value)
 		{
 			if (value is null)
 			{
@@ -86,17 +89,17 @@ namespace RoadBuilder.Systems.UI
 
 			return new RoadConfigurationUIBinder
 			{
-				ID = value.Config.ID,
+				ID = value.Config?.ID,
 #if DEBUG && false
-				Name = value.Config.Name + " - " + value.Config.ID,
+				Name = value.Config?.Name + " - " + value.Config.ID,
 #else
-				Name = value.Config.Name,
+				Name = value.Config?.Name,
 #endif
-				IsNotInPlayset = !value.Config.IsInPlayset(),
-				Locked = !Mod.Settings.RemoveLockRequirements && GameManager.instance.gameMode == GameMode.Game && EntityManager.HasEnabledComponent<Locked>(prefabSystem.GetEntity(value.Prefab)),
+				IsNotInPlayset = !value.Config?.IsInPlayset() ?? true,
+				Locked = !Mod.Settings!.RemoveLockRequirements && GameManager.instance.gameMode == GameMode.Game && EntityManager.HasEnabledComponent<Locked>(prefabSystem.GetEntity(value.Prefab)),
 				Used = roadBuilderRoadTrackerSystem.UsedNetworkPrefabs.Contains(value),
-				Category = value.Config.Category,
-				Available = roadBuilderSystem.Configurations.ContainsKey(value.Config.ID),
+				Category = value.Config?.Category ?? default,
+				Available = roadBuilderSystem.Configurations.ContainsKey(value.Config?.ID ?? string.Empty),
 				Thumbnail = ImageSystem.GetIcon(value.Prefab)
 			};
 		}

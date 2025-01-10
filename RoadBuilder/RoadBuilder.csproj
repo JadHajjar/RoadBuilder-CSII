@@ -5,12 +5,13 @@
 		<LangVersion>9</LangVersion>
 		<TargetFramework>net472</TargetFramework>
 		<Configurations>Debug;Release</Configurations>
-		<Version>0.4.4</Version>
+		<Version>0.5.2</Version>
 		<FileVersion>$(Version)</FileVersion>
 		<AssemblyVersion>$(Version)</AssemblyVersion>
 		<Company>T. D. W. and Trejak</Company>
 		<Copyright>@2024 MIT license</Copyright>
 		<Product>Road Builder</Product>
+		<Nullable>enable</Nullable>
 		
 		<!--The file where mod information which is required for publishing mod on PDX mods are stored-->
 		<PublishConfigurationPath>Properties\PublishConfiguration.xml</PublishConfigurationPath>

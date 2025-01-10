@@ -13,7 +13,7 @@ namespace RoadBuilder.LaneGroups
 
 		public override void Initialize()
 		{
-			Prefab.Options = new RoadBuilderLaneOption[]
+			Prefab!.Options = new RoadBuilderLaneOption[]
 			{
 				new()
 				{
@@ -77,7 +77,7 @@ namespace RoadBuilder.LaneGroups
 
 			Prefab.AddComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_Car_Centered.svg";
 
-			SetUp(Sections["Gravel Drive Section 3"], "3m", "").AddOrGetComponent<RoadBuilderLaneInfo>().WithRequireAll(RoadCategory.Gravel).AddLaneThumbnail("coui://roadbuildericons/Thumb_GravelLane.svg");
+			SetUp(Sections!["Gravel Drive Section 3"], "3m", "").AddOrGetComponent<RoadBuilderLaneInfo>().WithRequireAll(RoadCategory.Gravel).AddLaneThumbnail("coui://roadbuildericons/Thumb_GravelLane.svg");
 			SetUp(Sections["RB Tiled Drive Section 3 - Car"], "3m", "").AddOrGetComponent<RoadBuilderLaneInfo>().WithRequireAll(RoadCategory.Tiled).AddLaneThumbnail("coui://roadbuildericons/Thumb_TiledWide.svg");
 			SetUp(Sections["Tiled Drive Section 3"], "3m", "Tram").AddOrGetComponent<RoadBuilderLaneInfo>().WithRequireAll(RoadCategory.Tiled).AddLaneThumbnail("coui://roadbuildericons/Thumb_TiledWide.svg").WithFrontThumbnail("coui://roadbuildericons/RB_CarTramFront.svg").WithBackThumbnail("coui://roadbuildericons/RB_CarTramRear.svg");
 			SetUp(Sections["Alley Drive Section 3"], "3m", "", true).AddOrGetComponent<RoadBuilderLaneInfo>().WithRequireNone(RoadCategory.Gravel | RoadCategory.Tiled).WithFrontThumbnail("coui://roadbuildericons/RB_AlleyCarFront.svg").WithBackThumbnail("coui://roadbuildericons/RB_AlleyCarRear.svg");

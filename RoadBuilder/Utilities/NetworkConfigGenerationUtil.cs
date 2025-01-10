@@ -2,7 +2,6 @@
 
 using Game.Prefabs;
 using Game.SceneFlow;
-using Game.UI.InGame;
 
 using RoadBuilder.Domain;
 using RoadBuilder.Domain.Components.Prefabs;
@@ -10,6 +9,7 @@ using RoadBuilder.Domain.Configurations;
 using RoadBuilder.Domain.Enums;
 using RoadBuilder.Domain.Prefabs;
 using RoadBuilder.Systems;
+using RoadBuilder.Systems.UI;
 
 using System;
 using System.Linq;
@@ -19,21 +19,21 @@ namespace RoadBuilder.Utilities
 	public class NetworkConfigGenerationUtil
 	{
 		private readonly RoadGenerationData _roadGenerationData;
-		private readonly PrefabUISystem _prefabUISystem;
+		private readonly RoadBuilderUISystem _roadBuilderUISystem;
 
 		public NetGeometryPrefab NetworkPrefab { get; }
 
-		public NetworkConfigGenerationUtil(NetGeometryPrefab prefab, RoadGenerationData roadGenerationData, PrefabUISystem prefabUISystem)
+		public NetworkConfigGenerationUtil(NetGeometryPrefab prefab, RoadGenerationData roadGenerationData, RoadBuilderUISystem roadBuilderUISystem)
 		{
 			_roadGenerationData = roadGenerationData;
-			_prefabUISystem = prefabUISystem;
+			_roadBuilderUISystem = roadBuilderUISystem;
 
 			NetworkPrefab = prefab;
 		}
 
 		public INetworkConfig GenerateConfiguration()
 		{
-			if (NetworkPrefab is INetworkBuilderPrefab customPrefab)
+			if (NetworkPrefab is INetworkBuilderPrefab customPrefab && customPrefab.Config is not null)
 			{
 				return JsonClone(customPrefab.Config);
 			}
@@ -92,7 +92,7 @@ namespace RoadBuilder.Utilities
 			}
 
 			config.Lanes.AddRange(NetworkPrefab.m_Sections
-				.Where(x => x.m_RequireAll.Length == 0 && x.m_RequireAny.Length == 0)
+				.Where(x => x.m_RequireAll.Length == 0 && x.m_RequireAny.Length == 0 && !x.m_Section.Has<RoadBuilderIgnoreSection>())
 				.Select(x => GetLaneConfig(x)));
 
 			// remove sides
@@ -111,7 +111,7 @@ namespace RoadBuilder.Utilities
 		{
 			config.Type = config.GetType().Name;
 
-			config = LocalSaveUtil.LoadFromJson(JSON.Dump(config));
+			config = LocalSaveUtil.LoadFromJson(JSON.Dump(config))!;
 
 			config.Version = RoadBuilderSerializeSystem.CURRENT_VERSION;
 			config.ID = string.Empty;
@@ -128,8 +128,8 @@ namespace RoadBuilder.Utilities
 			{
 				return new LaneConfig
 				{
-					GroupPrefabName = groupItem.GroupPrefab.name,
-					GroupOptions = groupItem.Combination.ToDictionary(x => x.OptionName, x => x.Value),
+					GroupPrefabName = groupItem.GroupPrefab?.name,
+					GroupOptions = groupItem.Combination?.ToDictionary(x => x.OptionName ?? string.Empty, x => x.Value) ?? new(),
 					Invert = section.m_Invert
 				};
 			}
@@ -242,23 +242,25 @@ namespace RoadBuilder.Utilities
 
 		private INetworkConfig GenerateFenceConfig(FencePrefab _)
 		{
-			var config = new FenceConfig();
-
-			config.Category = RoadCategory.Fence;
+			var config = new FenceConfig
+			{
+				Category = RoadCategory.Fence
+			};
 
 			return config;
 		}
 
 		private INetworkConfig GeneratePathConfig(PathwayPrefab _)
 		{
-			var config = new PathConfig();
-
-			config.Category = RoadCategory.Pathway;
+			var config = new PathConfig
+			{
+				Category = RoadCategory.Pathway
+			};
 
 			return config;
 		}
 
-		private string FindPillarPrefab(NetGeometryPrefab RoadPrefab)
+		private string? FindPillarPrefab(NetGeometryPrefab RoadPrefab)
 		{
 			if (!RoadPrefab.TryGet<NetSubObjects>(out var netSubObjects))
 			{
@@ -286,7 +288,7 @@ namespace RoadBuilder.Utilities
 
 		private string GetAssetName(PrefabBase prefab)
 		{
-			_prefabUISystem.GetTitleAndDescription(prefab, out var titleId, out var _);
+			_roadBuilderUISystem.GetTitleAndDescription(prefab, out var titleId, out var _);
 
 			if (GameManager.instance.localizationManager.activeDictionary.TryGetValue(titleId, out var name))
 			{

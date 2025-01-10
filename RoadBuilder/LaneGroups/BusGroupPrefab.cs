@@ -12,7 +12,7 @@ namespace RoadBuilder.LaneGroups
 
 		public override void Initialize()
 		{
-			Prefab.Options = new RoadBuilderLaneOption[]
+			Prefab!.Options = new RoadBuilderLaneOption[]
 			{
 				new()
 				{
@@ -54,10 +54,10 @@ namespace RoadBuilder.LaneGroups
 
 			Prefab.AddComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_Bus_Centered.svg";
 
-			SetUp(Sections["Public Transport Lane Section 3 - Tram Option"], "3m", "Tram").AddComponent<RoadBuilderLaneInfo>().WithFrontThumbnail("coui://roadbuildericons/RB_BusTramFront.svg").WithBackThumbnail("coui://roadbuildericons/RB_BusTramRear.svg");
-			SetUp(Sections["Public Transport Lane Section 4 - Tram Option"], "4m", "Tram").AddComponent<RoadBuilderLaneInfo>().WithFrontThumbnail("coui://roadbuildericons/RB_BusTramFront.svg").WithBackThumbnail("coui://roadbuildericons/RB_BusTramRear.svg");
-			SetUp(Sections["RB Public Transport Lane Section 3"], "3m", "");
-			SetUp(Sections["RB Public Transport Lane Section 4"], "4m", "");
+			SetUp(Sections!["Public Transport Lane Section 3 - Tram Option"], "3m", "Tram").AddComponent<RoadBuilderLaneInfo>().WithFrontThumbnail("coui://roadbuildericons/RB_BusTramFront.svg").WithBackThumbnail("coui://roadbuildericons/RB_BusTramRear.svg");
+			SetUp(Sections!["Public Transport Lane Section 4 - Tram Option"], "4m", "Tram").AddComponent<RoadBuilderLaneInfo>().WithFrontThumbnail("coui://roadbuildericons/RB_BusTramFront.svg").WithBackThumbnail("coui://roadbuildericons/RB_BusTramRear.svg");
+			SetUp(Sections!["RB Public Transport Lane Section 3"], "3m", "");
+			SetUp(Sections!["RB Public Transport Lane Section 4"], "4m", "");
 		}
 
 		private NetSectionPrefab SetUp(NetSectionPrefab prefab, string value, string value2)

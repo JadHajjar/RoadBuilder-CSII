@@ -1,7 +1,6 @@
 ﻿using Colossal;
 
 using Game.SceneFlow;
-using Game.UI.InGame;
 
 using RoadBuilder.Domain.Prefabs;
 using RoadBuilder.Systems;
@@ -16,14 +15,12 @@ namespace RoadBuilder.Utilities
 	{
 		private readonly RoadBuilderSystem _roadBuilderSystem;
 		private readonly RoadBuilderUISystem _roadBuilderUISystem;
-		private readonly PrefabUISystem _prefabUISystem;
 		private readonly RoadBuilderNetSectionsSystem _netSectionsSystem;
 
-		public RoadNameUtil(RoadBuilderSystem roadBuilderSystem, RoadBuilderUISystem roadBuilderUISystem, PrefabUISystem prefabUISystem, RoadBuilderNetSectionsSystem netSectionsSystem)
+		public RoadNameUtil(RoadBuilderSystem roadBuilderSystem, RoadBuilderUISystem roadBuilderUISystem, RoadBuilderNetSectionsSystem netSectionsSystem)
 		{
 			_roadBuilderSystem = roadBuilderSystem;
 			_roadBuilderUISystem = roadBuilderUISystem;
-			_prefabUISystem = prefabUISystem;
 			_netSectionsSystem = netSectionsSystem;
 
 			foreach (var localeId in GameManager.instance.localizationManager.GetSupportedLocales())
@@ -36,7 +33,12 @@ namespace RoadBuilder.Utilities
 		{
 			foreach (var item in _roadBuilderSystem.Configurations.Values)
 			{
-				_prefabUISystem.GetTitleAndDescription(item.Prefab, out var titleId, out var descriptionId);
+				if (item.Config?.Name is null)
+				{
+					continue;
+				}
+
+				_roadBuilderUISystem.GetTitleAndDescription(item.Prefab, out var titleId, out var descriptionId);
 
 				yield return new(titleId, item.Config.Name);
 				yield return new(descriptionId, GetRoadDescription(item));
@@ -48,7 +50,7 @@ namespace RoadBuilder.Utilities
 			var width = item.Prefab.m_Sections.Sum(x => x.m_Section.CalculateWidth());
 			var units = width / 8f;
 
-			return $"{(item.Config.IsOneWay() ? "One-Way" : "Two-Way")} {GetRoadTypeName(item)} - {width}m / {units:0.#}U\r\n" +
+			return $"{(item.Config?.IsOneWay() == true ? "One-Way" : "Two-Way")} {GetRoadTypeName(item)} - {width}m / {units:0.#}U\r\n" +
 				$"{string.Join(", ", EnumerateLaneNames(item))}" +
 				$"\r\nMade with Road Builder";
 		}
@@ -58,6 +60,11 @@ namespace RoadBuilder.Utilities
 			var lastName = string.Empty;
 			var lastDirection = 0;
 			var count = 0;
+
+			if (item.Config is null)
+			{
+				yield break;
+			}
 
 			foreach (var lane in item.Config.Lanes)
 			{
@@ -81,7 +88,7 @@ namespace RoadBuilder.Utilities
 
 		private string GetRoadTypeName(INetworkBuilderPrefab item)
 		{
-			return item.Config.Category.ToString();
+			return item.Config?.Category.ToString() ?? "UNKNOWN";
 		}
 
 		public void Unload()

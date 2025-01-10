@@ -1,7 +1,6 @@
 ﻿using Game.Prefabs;
 using Game.SceneFlow;
 using Game.UI;
-using Game.UI.InGame;
 
 using RoadBuilder.Domain.Components.Prefabs;
 using RoadBuilder.Domain.Configurations;
@@ -20,19 +19,22 @@ namespace RoadBuilder.Systems.UI
 {
 	public partial class RoadBuilderNetSectionsUISystem : ExtendedUISystemBase
 	{
-		private PrefabUISystem prefabUISystem;
+#nullable disable
+		private RoadBuilderUISystem roadBuilderUISystem;
 		private RoadBuilderSystem roadBuilderSystem;
 		private RoadBuilderNetSectionsSystem netSectionsSystem;
 		private ValueBindingHelper<NetSectionGroup[]> _NetSections;
-		private List<NetSectionItem> availableSections;
-		private INetworkConfig activeConfig;
+#nullable enable
+
+		private List<NetSectionItem>? availableSections;
+		private INetworkConfig? activeConfig;
 		private string query = string.Empty;
 
 		protected override void OnCreate()
 		{
 			base.OnCreate();
-			
-			prefabUISystem = World.GetOrCreateSystemManaged<PrefabUISystem>();
+
+			roadBuilderUISystem = World.GetOrCreateSystemManaged<RoadBuilderUISystem>();
 			roadBuilderSystem = World.GetOrCreateSystemManaged<RoadBuilderSystem>();
 			netSectionsSystem = World.GetOrCreateSystemManaged<RoadBuilderNetSectionsSystem>();
 
@@ -58,7 +60,7 @@ namespace RoadBuilder.Systems.UI
 				.ToArray();
 		}
 
-		public void RefreshEntries(INetworkConfig config)
+		public void RefreshEntries(INetworkConfig? config)
 		{
 			activeConfig = config;
 
@@ -73,16 +75,16 @@ namespace RoadBuilder.Systems.UI
 
 			foreach (var prefab in netSectionsSystem.NetSections.Values)
 			{
-				if (prefab.Has<RoadBuilderLaneGroup>() || !prefab.Has<RoadBuilderLaneInfo>())
+				if (prefab.Has<RoadBuilderLaneGroup>() || prefab.Has<RoadBuilderVanillaLaneGroup>() || !prefab.Has<RoadBuilderLaneInfo>())
 				{
 					continue;
 				}
 
 				bool restricted;
 
-				if (restricted = !prefab.MatchCategories(activeConfig))
+				if (restricted = activeConfig != null && !prefab.MatchCategories(activeConfig))
 				{
-					if (!Mod.Settings.UnrestrictedLanes)
+					if (!Mod.Settings!.UnrestrictedLanes)
 					{
 						continue;
 					}
@@ -109,9 +111,9 @@ namespace RoadBuilder.Systems.UI
 			{
 				bool restricted;
 
-				if (restricted = !prefab.MatchCategories(activeConfig))
+				if (restricted = activeConfig != null && !prefab.MatchCategories(activeConfig))
 				{
-					if (!Mod.Settings.UnrestrictedLanes)
+					if (!Mod.Settings!.UnrestrictedLanes)
 					{
 						continue;
 					}
@@ -135,26 +137,26 @@ namespace RoadBuilder.Systems.UI
 			return sections;
 		}
 
-		private int GetUseCount(NetSectionItem section)
-		{
-			var name = section.PrefabName;
-			var count = 0;
+		//private int GetUseCount(NetSectionItem section)
+		//{
+		//	var name = section.PrefabName;
+		//	var count = 0;
 
-			foreach (var item in roadBuilderSystem.Configurations.Values)
-			{
-				foreach (var lane in item.Config.Lanes)
-				{
-					if (lane.SectionPrefabName == name || lane.GroupPrefabName == name)
-					{
-						count++;
-					}
-				}
-			}
+		//	foreach (var item in roadBuilderSystem.Configurations.Values)
+		//	{
+		//		foreach (var lane in item.Config.Lanes)
+		//		{
+		//			if (lane.SectionPrefabName == name || lane.GroupPrefabName == name)
+		//			{
+		//				count++;
+		//			}
+		//		}
+		//	}
 
-			return count;
-		}
+		//	return count;
+		//}
 
-		private bool Filter(string name)
+		private bool Filter(string? name)
 		{
 			return string.IsNullOrWhiteSpace(query) || query.SearchCheck(name);
 		}
@@ -218,7 +220,7 @@ namespace RoadBuilder.Systems.UI
 
 		private string GetAssetName(PrefabBase prefab)
 		{
-			prefabUISystem.GetTitleAndDescription(prefab, out var titleId, out var _);
+			roadBuilderUISystem.GetTitleAndDescription(prefab, out var titleId, out var _);
 
 			if (GameManager.instance.localizationManager.activeDictionary.TryGetValue(titleId, out var name))
 			{

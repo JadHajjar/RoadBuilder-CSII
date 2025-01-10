@@ -31,7 +31,7 @@ namespace RoadBuilder.Systems.UI
 
 		public ValueBindingHelper<T> CreateBinding<T>(string key, T initialValue)
 		{
-			var helper = new ValueBindingHelper<T>(new(Mod.Id, key, initialValue, new GenericUIWriter<T>()));
+			var helper = new ValueBindingHelper<T>(new(Mod.Id, key, initialValue, new GenericUIWriter<T?>()));
 
 			AddBinding(helper.Binding);
 
@@ -40,9 +40,9 @@ namespace RoadBuilder.Systems.UI
 			return helper;
 		}
 
-		public ValueBindingHelper<T> CreateBinding<T>(string key, string setterKey, T initialValue, Action<T> updateCallBack = null)
+		public ValueBindingHelper<T> CreateBinding<T>(string key, string setterKey, T initialValue, Action<T>? updateCallBack = null)
 		{
-			var helper = new ValueBindingHelper<T>(new(Mod.Id, key, initialValue, new GenericUIWriter<T>()), updateCallBack);
+			var helper = new ValueBindingHelper<T>(new(Mod.Id, key, initialValue, new GenericUIWriter<T?>()), updateCallBack);
 			var trigger = new TriggerBinding<T>(Mod.Id, setterKey, helper.UpdateCallback, GenericUIReader<T>.Create());
 
 			AddBinding(helper.Binding);
@@ -110,13 +110,13 @@ namespace RoadBuilder.Systems.UI
 
 	public class ValueBindingHelper<T>
 	{
-		private readonly Action<T> _updateCallBack;
-		private T valueToUpdate;
+		private readonly Action<T>? _updateCallBack;
+		private T? valueToUpdate;
 		private bool dirty;
 
-		public ValueBinding<T> Binding { get; }
+		public ValueBinding<T?> Binding { get; }
 
-		public T Value
+		public T? Value
 		{
 			get => dirty ? valueToUpdate : Binding.value;
 			set
@@ -126,7 +126,7 @@ namespace RoadBuilder.Systems.UI
 			}
 		}
 
-		public ValueBindingHelper(ValueBinding<T> binding, Action<T> updateCallBack = null)
+		public ValueBindingHelper(ValueBinding<T?> binding, Action<T>? updateCallBack = null)
 		{
 			Binding = binding;
 			_updateCallBack = updateCallBack;
@@ -149,7 +149,7 @@ namespace RoadBuilder.Systems.UI
 			_updateCallBack?.Invoke(value);
 		}
 
-		public static implicit operator T(ValueBindingHelper<T> helper)
+		public static implicit operator T?(ValueBindingHelper<T> helper)
 		{
 			return helper.Value;
 		}
@@ -184,7 +184,7 @@ namespace RoadBuilder.Systems.UI
 			writer.TypeEnd();
 		}
 
-		private static void WriteGeneric(IJsonWriter writer, object obj)
+		private static void WriteGeneric(IJsonWriter writer, object? obj)
 		{
 			if (obj == null)
 			{
@@ -279,11 +279,17 @@ namespace RoadBuilder.Systems.UI
 			writer.ArrayEnd();
 		}
 
-		private static void WriteEnumerable(IJsonWriter writer, object obj)
+		private static void WriteEnumerable(IJsonWriter writer, object? obj)
 		{
+			if (obj is not IEnumerable enumerable)
+			{
+				writer.WriteEmptyArray();
+				return;
+			}
+
 			var list = new List<object>();
 
-			foreach (var item in obj as IEnumerable)
+			foreach (var item in enumerable)
 			{
 				list.Add(item);
 			}

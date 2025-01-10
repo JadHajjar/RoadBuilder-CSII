@@ -18,8 +18,10 @@ namespace RoadBuilder.Systems
 {
 	public partial class RoadBuilderRoadTrackerSystem : GameSystemBase
 	{
+#nullable disable
 		private PrefabSystem prefabSystem;
 		private EntityQuery segmentQuery;
+#nullable enable
 
 		public IEnumerable<INetworkBuilderPrefab> UsedNetworkPrefabs { get; private set; } = new INetworkBuilderPrefab[0];
 

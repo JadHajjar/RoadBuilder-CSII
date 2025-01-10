@@ -1,47 +1,42 @@
-﻿using Colossal;
-using Colossal.Json;
+﻿using Colossal.Json;
 
 using System;
-using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-
-using UnityEngine;
 
 namespace RoadBuilder.Utilities.Online
 {
 	public class ApiUtilBase
 	{
-		public async Task<T> Get<T>(string url, params (string, object)[] queryParams)
+		public async Task<T?> Get<T>(string url, params (string, object?)[] queryParams)
 		{
 			return await Get<T>(url, new (string, string)[0], queryParams);
 		}
 
-		public async Task<T> Get<T>(string url, (string, string)[] headers, params (string, object)[] queryParams)
+		public async Task<T?> Get<T>(string url, (string, string)[] headers, params (string, object?)[] queryParams)
 		{
 			return await Send<T>("GET", url, headers, queryParams);
 		}
 
-		public async Task<T> Delete<T>(string url, params (string, object)[] queryParams)
+		public async Task<T?> Delete<T>(string url, params (string, object?)[] queryParams)
 		{
 			return await Delete<T>(url, new (string, string)[0], queryParams);
 		}
 
-		public async Task<T> Delete<T>(string url, (string, string)[] headers, params (string, object)[] queryParams)
+		public async Task<T?> Delete<T>(string url, (string, string)[] headers, params (string, object?)[] queryParams)
 		{
 			return await Send<T>("DELETE", url, headers, queryParams);
 		}
 
-		private async Task<T> Send<T>(string method, string baseUrl, (string, string)[] headers, params (string, object)[] queryParams)
+		private async Task<T?> Send<T>(string method, string baseUrl, (string, string)[] headers, params (string, object?)[] queryParams)
 		{
 			var url = baseUrl;
 
 			if (queryParams.Length > 0)
 			{
-				var query = queryParams.Where(x => x.Item2 is not null).Select(x => $"{Uri.EscapeDataString(x.Item1)}={Uri.EscapeDataString(x.Item2.ToString())}");
+				var query = queryParams.Where(x => x.Item2 is not null).Select(x => $"{Uri.EscapeDataString(x.Item1)}={Uri.EscapeDataString(x.Item2!.ToString())}");
 
 				url += "?" + string.Join("&", query);
 			}
@@ -79,19 +74,19 @@ namespace RoadBuilder.Utilities.Online
 				: default;
 		}
 
-		public async Task<T> Post<TBody, T>(string url, TBody body, params (string, object)[] queryParams)
+		public async Task<T?> Post<TBody, T>(string url, TBody body, params (string, object?)[] queryParams)
 		{
 			return await Post<TBody, T>(url, body, new (string, string)[0], queryParams);
 		}
 
-		public async Task<T> Post<TBody, T>(string baseUrl, TBody body, (string, string)[] headers, params (string, object)[] queryParams)
+		public async Task<T?> Post<TBody, T>(string baseUrl, TBody body, (string, string)[] headers, params (string, object?)[] queryParams)
 		{
 			var url = baseUrl;
 			var json = JSON.Dump(body, EncodeOptions.CompactPrint);
 
 			if (queryParams.Length > 0)
 			{
-				var query = queryParams.Where(x => x.Item2 is not null).Select(x => $"{Uri.EscapeDataString(x.Item1)}={Uri.EscapeDataString(x.Item2.ToString())}");
+				var query = queryParams.Where(x => x.Item2 is not null).Select(x => $"{Uri.EscapeDataString(x.Item1)}={Uri.EscapeDataString(x.Item2!.ToString())}");
 
 				url += "?" + string.Join("&", query);
 			}

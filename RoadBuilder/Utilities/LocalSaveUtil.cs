@@ -45,7 +45,10 @@ namespace RoadBuilder.Utilities
 			{
 				try
 				{
-					list.Add(LoadFromJson(File.ReadAllText(item)));
+					if (LoadFromJson(File.ReadAllText(item)) is INetworkConfig config)
+					{
+						list.Add(config);
+					}
 				}
 				catch (Exception ex)
 				{
@@ -58,7 +61,7 @@ namespace RoadBuilder.Utilities
 			return list;
 		}
 
-		public static INetworkConfig LoadFromJson(string data)
+		public static INetworkConfig? LoadFromJson(string data)
 		{
 			var json = JSON.Load(data);
 

@@ -32,9 +32,10 @@ namespace RoadBuilder.Systems.UI
 		private string query = string.Empty;
 		private string discoverQuery = string.Empty;
 		private RoadCategory? currentCategory;
-		private INetworkBuilderPrefab SelectedRoad;
+		private INetworkBuilderPrefab? SelectedRoad;
 		private CancellationTokenSource cancellationTokenSource = new();
 
+#nullable disable
 		private RoadBuilderSystem roadBuilderSystem;
 		private RoadBuilderRoadTrackerSystem roadBuilderRoadTrackerSystem;
 		private RoadBuilderConfigurationsUISystem roadBuilderConfigurationsUISystem;
@@ -48,6 +49,7 @@ namespace RoadBuilder.Systems.UI
 		private ValueBindingHelper<OptionSectionUIEntry[]> SelectedRoadOptions;
 		private ValueBindingHelper<RoadConfigurationUIBinder[]> RoadConfigurations;
 		private ValueBindingHelper<RoadConfigurationUIBinder> ManagedRoad;
+#nullable enable
 
 		protected override void OnCreate()
 		{
@@ -59,7 +61,7 @@ namespace RoadBuilder.Systems.UI
 
 			roadBuilderConfigurationsUISystem.ConfigurationsUpdated += RoadBuilderConfigurationsUISystem_ConfigurationsUpdated;
 
-			CreateBinding("Management.RestrictPlayset", () => !Mod.Settings.NoPlaysetIsolation);
+			CreateBinding("Management.RestrictPlayset", () => !Mod.Settings!.NoPlaysetIsolation);
 
 			Loading = CreateBinding("Discover.Loading", true);
 			ErrorLoading = CreateBinding("Discover.ErrorLoading", false);
@@ -86,7 +88,7 @@ namespace RoadBuilder.Systems.UI
 		{
 			SedSearchQuery(query);
 
-			ManagedRoad.Value = roadBuilderConfigurationsUISystem.GetRoadBinder(SelectedRoad);
+			ManagedRoad.Value = roadBuilderConfigurationsUISystem.GetRoadBinder(SelectedRoad) ?? new();
 		}
 
 		private void SedSearchQuery(string obj)
@@ -98,14 +100,14 @@ namespace RoadBuilder.Systems.UI
 				.ToArray();
 		}
 
-		private bool Filter(string name)
+		private bool Filter(string? name)
 		{
 			return string.IsNullOrWhiteSpace(query) || query.SearchCheck(name);
 		}
 
 		private void SetRoadName(string obj)
 		{
-			if (SelectedRoad != null)
+			if (SelectedRoad?.Config != null)
 			{
 				SelectedRoad.Config.Name = obj;
 
@@ -117,7 +119,7 @@ namespace RoadBuilder.Systems.UI
 
 		private void RoadOptionClicked(int option, int id, int value)
 		{
-			if (SelectedRoad == null)
+			if (SelectedRoad?.Config == null)
 			{
 				return;
 			}
@@ -165,7 +167,7 @@ namespace RoadBuilder.Systems.UI
 
 		private void UpdateSelectedRoadOptions()
 		{
-			if (SelectedRoad is null)
+			if (SelectedRoad?.Config is null)
 			{
 				return;
 			}
@@ -205,7 +207,7 @@ namespace RoadBuilder.Systems.UI
 				}
 			};
 
-			if (!Mod.Settings.NoPlaysetIsolation)
+			if (!Mod.Settings!.NoPlaysetIsolation)
 			{
 				var isInPlayset = config.IsInPlayset();
 				options.Add(new()
@@ -238,7 +240,7 @@ namespace RoadBuilder.Systems.UI
 						{
 							Name = "RoadBuilder.UploadRoad",
 							Icon = "coui://roadbuildericons/RB_Upload.svg",
-							Disabled = Uploading || config.Name.StartsWith("Copy of") || config.Name.StartsWith("Custom ")
+							Disabled = Uploading || config.Name?.StartsWith("Copy of")==true || config.Name?.StartsWith("Custom ")==true
 						}
 					}
 				});
@@ -252,8 +254,10 @@ namespace RoadBuilder.Systems.UI
 		{
 			if (PdxModsUtil.CurrentPlayset > 0
 				&& SelectedRoad?.Config is not null
-				&& !SelectedRoad.Config.Playsets.Contains(PdxModsUtil.CurrentPlayset))
+				&& (SelectedRoad.Config.Playsets is null || !SelectedRoad.Config.Playsets.Contains(PdxModsUtil.CurrentPlayset)))
 			{
+				SelectedRoad.Config.Playsets ??= new();
+
 				SelectedRoad.Config.Playsets.Remove(-PdxModsUtil.CurrentPlayset);
 				SelectedRoad.Config.Playsets.Add(PdxModsUtil.CurrentPlayset);
 			}
@@ -263,6 +267,8 @@ namespace RoadBuilder.Systems.UI
 		{
 			if (PdxModsUtil.CurrentPlayset > 0 && SelectedRoad?.Config is not null)
 			{
+				SelectedRoad.Config.Playsets ??= new();
+
 				if (SelectedRoad.Config.Playsets.Count == 0)
 				{
 					SelectedRoad.Config.Playsets.Add(-PdxModsUtil.CurrentPlayset);
@@ -333,21 +339,21 @@ namespace RoadBuilder.Systems.UI
 			{
 				var result = await ApiUtil.Instance.GetEntries(discoverQuery, (int?)currentCategory, sorting, CurrentPage.Value);
 
-				if (token.IsCancellationRequested)
+				if (token.IsCancellationRequested || result is null)
 				{
 					return;
 				}
 
-				Mod.Log.Debug(result.items.Count + " entries");
+				Mod.Log.Debug((result.items?.Count ?? 0) + " entries");
 
 				CurrentPage.Value = result.page;
 				MaxPages.Value = result.totalPages;
 
-				var items = new RoadConfigurationUIBinder[result.items.Count];
+				var items = new RoadConfigurationUIBinder[result.items?.Count ?? 0];
 
 				for (var i = 0; i < items.Length; i++)
 				{
-					var item = result.items[i];
+					var item = result.items![i];
 
 					items[i] = new RoadConfigurationUIBinder
 					{
@@ -355,7 +361,7 @@ namespace RoadBuilder.Systems.UI
 						Category = (RoadCategory)item.category,
 						Name = item.name,
 						Author = item.author,
-						Available = roadBuilderSystem.Configurations.ContainsKey(item.id),
+						Available = roadBuilderSystem.Configurations.ContainsKey(item.id ?? string.Empty),
 						Thumbnail = $"coui://roadbuilderthumbnails/{item.id}.svg",
 					};
 
@@ -377,7 +383,7 @@ namespace RoadBuilder.Systems.UI
 				Items.Value = items;
 				Loading.Value = false;
 			}
-			catch (Exception ex) 
+			catch (Exception ex)
 			{
 				Mod.Log.Warn(ex, "Failed to load discover items");
 
@@ -412,11 +418,24 @@ namespace RoadBuilder.Systems.UI
 
 			try
 			{
+				var roadBuilderGenerationDataSystem = World.GetExistingSystemManaged<RoadBuilderGenerationDataSystem>();
+
+				if (SelectedRoad is null || roadBuilderGenerationDataSystem.RoadGenerationData is null)
+				{
+					return;
+				}
+
 				var config = SelectedRoad.Config;
-				var svg = new ThumbnailGenerationUtil(SelectedRoad, World.GetExistingSystemManaged<RoadBuilderGenerationDataSystem>().RoadGenerationData).GenerateSvg();
+
+				if (config is null)
+				{
+					return;
+				}
+
+				var svg = new ThumbnailGenerationUtil(SelectedRoad, roadBuilderGenerationDataSystem.RoadGenerationData).GenerateSvg();
 				using var memory = new MemoryStream();
 
-				svg.Save(memory, SaveOptions.DisableFormatting);
+				svg?.Save(memory, SaveOptions.DisableFormatting);
 
 				config.Version = RoadBuilderSerializeSystem.CURRENT_VERSION;
 				config.OriginalID = config.ID;
@@ -431,7 +450,7 @@ namespace RoadBuilder.Systems.UI
 					Config = JSON.Dump(config, EncodeOptions.CompactPrint)
 				});
 
-				if (result.success)
+				if (result?.success == true)
 				{
 					Mod.Log.Info("Upload Successful");
 
@@ -439,7 +458,7 @@ namespace RoadBuilder.Systems.UI
 				}
 				else
 				{
-					Mod.Log.Error("Failed to upload your road: " + result.message);
+					Mod.Log.Error("Failed to upload your road: " + result?.message ?? "UNKNOWN");
 				}
 			}
 			catch (Exception ex)

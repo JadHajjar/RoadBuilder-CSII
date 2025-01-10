@@ -20,7 +20,7 @@ namespace RoadBuilder.Utilities
 			return entityManager.AddComponent(entity, ComponentType.ReadWrite<T>());
 		}
 
-		public static bool SearchCheck(this string searchTerm, string termToBeSearched, bool caseCheck = false)
+		public static bool SearchCheck(this string? searchTerm, string? termToBeSearched, bool caseCheck = false)
 		{
 			if (string.IsNullOrWhiteSpace(searchTerm) && string.IsNullOrWhiteSpace(termToBeSearched))
 			{
@@ -32,12 +32,12 @@ namespace RoadBuilder.Utilities
 				return false;
 			}
 
-			if (termToBeSearched.IndexOf(searchTerm, caseCheck ? StringComparison.CurrentCulture : StringComparison.InvariantCultureIgnoreCase) >= 0)
+			if (termToBeSearched!.IndexOf(searchTerm, caseCheck ? StringComparison.CurrentCulture : StringComparison.InvariantCultureIgnoreCase) >= 0)
 			{
 				return true;
 			}
 
-			if (SpellCheck(searchTerm, termToBeSearched.Substring(0, Math.Min(termToBeSearched.Length, searchTerm.Length + 1)), caseCheck) <= (int)Math.Ceiling((searchTerm.Length - 3) / 5M))
+			if (SpellCheck(searchTerm!, termToBeSearched.Substring(0, Math.Min(termToBeSearched.Length, searchTerm!.Length + 1)), caseCheck) <= (int)Math.Ceiling((searchTerm.Length - 3) / 5M))
 			{
 				return true;
 			}
@@ -187,9 +187,9 @@ namespace RoadBuilder.Utilities
 			return str;
 		}
 
-		public static T Next<T>(this IEnumerable<T> enumerable, T item, bool circleBack = false)
+		public static T? Next<T>(this IEnumerable<T> enumerable, T item, bool circleBack = false)
 		{
-			if (!enumerable?.Any() ?? true)
+			if (enumerable is null || !enumerable.Any())
 			{
 				return item;
 			}
@@ -203,7 +203,7 @@ namespace RoadBuilder.Utilities
 					return it;
 				}
 
-				if (it.Equals(item))
+				if (it?.Equals(item) ?? item is null)
 				{
 					found = true;
 				}
@@ -212,9 +212,9 @@ namespace RoadBuilder.Utilities
 			return circleBack ? enumerable.FirstOrDefault() : default;
 		}
 
-		public static T Previous<T>(this IEnumerable<T> enumerable, T item, bool circleBack = false)
+		public static T? Previous<T>(this IEnumerable<T> enumerable, T item, bool circleBack = false)
 		{
-			if (!enumerable?.Any() ?? true)
+			if (enumerable is null || !enumerable.Any())
 			{
 				return item;
 			}
@@ -228,7 +228,7 @@ namespace RoadBuilder.Utilities
 					return it;
 				}
 
-				if (it.Equals(item))
+				if (it?.Equals(item) ?? item is null)
 				{
 					found = true;
 				}

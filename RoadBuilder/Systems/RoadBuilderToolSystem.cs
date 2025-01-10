@@ -28,6 +28,7 @@ namespace RoadBuilder.Systems
 {
 	public partial class RoadBuilderToolSystem : ToolBaseSystem
 	{
+#nullable disable
 		private PrefabSystem prefabSystem;
 		private RoadBuilderUISystem roadBuilderUISystem;
 		private RoadBuilderSystem roadBuilderSystem;
@@ -39,6 +40,7 @@ namespace RoadBuilder.Systems
 		private ProxyAction placeAction;
 		private new ProxyAction applyAction;
 		private new ProxyAction cancelAction;
+#nullable enable
 
 		public override string toolID { get; } = "RoadBuilderTool";
 
@@ -56,9 +58,9 @@ namespace RoadBuilder.Systems
 			highlightedQuery = SystemAPI.QueryBuilder().WithAny<Highlighted, RoadBuilderUpdateFlagComponent>().Build();
 			roadBuilderNetworkQuery = GetEntityQuery(ComponentType.ReadOnly<RoadBuilderNetwork>());
 
-			placeAction = Mod.Settings.GetAction(nameof(Setting.PlaceToggle));
-			applyAction = Mod.Settings.GetAction(nameof(RoadBuilder) + "Apply");
-			cancelAction = Mod.Settings.GetAction(nameof(RoadBuilder) + "Cancel");
+			placeAction = Mod.Settings!.GetAction(nameof(Setting.PlaceToggle));
+			applyAction = Mod.Settings!.GetAction(nameof(RoadBuilder) + "Apply");
+			cancelAction = Mod.Settings!.GetAction(nameof(RoadBuilder) + "Cancel");
 
 			var builtInApplyAction = InputManager.instance.FindAction(InputManager.kToolMap, "Apply");
 			var mimicApplyBinding = applyAction.bindings.FirstOrDefault(b => b.device == InputManager.DeviceType.Mouse);
@@ -84,7 +86,7 @@ namespace RoadBuilder.Systems
 
 			if (mode == GameMode.Editor)
 			{
-				if (editorToolUISystem.tools.Any(t => t.id == toolID))
+				if (editorToolUISystem?.tools?.Any(t => t?.id == toolID) ?? true)
 				{
 					return;
 				}
@@ -200,7 +202,7 @@ namespace RoadBuilder.Systems
 				return false;
 			}
 
-			if (!Mod.Settings.RemoveLockRequirements && GameManager.instance.gameMode == GameMode.Game && EntityManager.HasEnabledComponent<Locked>(prefabRef.m_Prefab))
+			if (!Mod.Settings!.RemoveLockRequirements && GameManager.instance.gameMode == GameMode.Game && EntityManager.HasEnabledComponent<Locked>(prefabRef.m_Prefab))
 			{
 				return false;
 			}
@@ -240,7 +242,7 @@ namespace RoadBuilder.Systems
 			return true;
 		}
 
-		private void HandleHighlight(EntityQuery query, Func<Entity, bool> shouldBeHighlighted)
+		private void HandleHighlight(EntityQuery query, Func<Entity, bool>? shouldBeHighlighted)
 		{
 			var entities = query.ToEntityArray(Allocator.Temp);
 			var editing = roadBuilderUISystem.Mode >= RoadBuilderToolMode.Editing;
@@ -292,7 +294,7 @@ namespace RoadBuilder.Systems
 			return false;
 		}
 
-		public override PrefabBase GetPrefab()
+		public override PrefabBase? GetPrefab()
 		{
 			return default;
 		}

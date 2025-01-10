@@ -20,22 +20,28 @@ namespace RoadBuilder.Utilities
 {
 	public class ThumbnailGenerationUtil
 	{
+		private readonly INetworkConfig _config;
 		private readonly RoadGenerationData _roadGenerationData;
 		private readonly List<LaneConfig> _lanes;
-		private static SvgItem _arrowForward;
-		private static SvgItem _arrowBackward;
-		private static SvgItem _arrowBoth;
-		private static SvgItem _markingYellow;
-		private static SvgItem _markingWhite;
-		private static SvgItem _markingDashed;
-		private readonly List<(NetSectionPrefab section, LaneGroupPrefab groupPrefab)?> _sections;
+		private static SvgItem? _arrowForward;
+		private static SvgItem? _arrowBackward;
+		private static SvgItem? _arrowBoth;
+		private static SvgItem? _markingYellow;
+		private static SvgItem? _markingWhite;
+		private static SvgItem? _markingDashed;
+		private readonly List<(NetSectionPrefab section, LaneGroupPrefab? groupPrefab)?> _sections;
 
 		public INetworkBuilderPrefab NetworkPrefab { get; }
 
-
 		public ThumbnailGenerationUtil(INetworkBuilderPrefab prefab, RoadGenerationData roadGenerationData)
 		{
+			if (prefab.Config is null)
+			{
+				throw new NullReferenceException($"NULL CONFIG WHILE GENERATING '{prefab.Prefab.name}'");
+			}
+
 			NetworkPrefab = prefab;
+			_config = prefab.Config;
 			_roadGenerationData = roadGenerationData;
 			_lanes = prefab.Config.Lanes.ToList();
 
@@ -44,29 +50,41 @@ namespace RoadBuilder.Utilities
 				_lanes.Reverse();
 			}
 
-			_arrowForward ??= new SvgItem(GetFileName("coui://roadbuildericons/Thumb_ArrowForward.svg"));
-			_arrowBackward ??= new SvgItem(GetFileName("coui://roadbuildericons/Thumb_ArrowBackward.svg"));
-			_arrowBoth ??= new SvgItem(GetFileName("coui://roadbuildericons/Thumb_ArrowBoth.svg"));
-			_markingYellow ??= new SvgItem(GetFileName("coui://roadbuildericons/Thumb_LineYellowSolid.svg"));
-			_markingWhite ??= new SvgItem(GetFileName("coui://roadbuildericons/Thumb_LineWhiteSolid.svg"));
-			_markingDashed ??= new SvgItem(GetFileName("coui://roadbuildericons/Thumb_LineWhiteDotted.svg"));
+			_arrowForward ??= CreateSvg(GetFileName("coui://roadbuildericons/Thumb_ArrowForward.svg"));
+			_arrowBackward ??= CreateSvg(GetFileName("coui://roadbuildericons/Thumb_ArrowBackward.svg"));
+			_arrowBoth ??= CreateSvg(GetFileName("coui://roadbuildericons/Thumb_ArrowBoth.svg"));
+			_markingYellow ??= CreateSvg(GetFileName("coui://roadbuildericons/Thumb_LineYellowSolid.svg"));
+			_markingWhite ??= CreateSvg(GetFileName("coui://roadbuildericons/Thumb_LineWhiteSolid.svg"));
+			_markingDashed ??= CreateSvg(GetFileName("coui://roadbuildericons/Thumb_LineWhiteDotted.svg"));
 
-			_sections = _lanes.Select<LaneConfig, (NetSectionPrefab section, LaneGroupPrefab groupPrefab)?>(lane => NetworkPrefabGenerationUtil.GetNetSection(_roadGenerationData, NetworkPrefab.Config, lane, out var section, out var groupPrefab) ? (section, groupPrefab) : null).ToList();
+			_sections = _lanes.Select<LaneConfig, (NetSectionPrefab section, LaneGroupPrefab? groupPrefab)?>(lane => NetworkPrefabGenerationUtil.GetNetSection(_roadGenerationData, _config, lane, out var section, out var groupPrefab) ? (section!, groupPrefab) : null).ToList();
 		}
 
-		public string GenerateThumbnail()
+		private SvgItem? CreateSvg(string? file)
+		{
+			if (file is null)
+			{
+				return null;
+			}
+
+			return new SvgItem(file);
+		}
+
+		public string? GenerateThumbnail()
 		{
 			var combinedXml = GenerateSvg();
 
 			if (combinedXml is null)
+			{
 				return null;
+			}
 
-			combinedXml.Save(Path.Combine(FoldersUtil.TempFolder, NetworkPrefab.Config.ID + ".svg"));
+			combinedXml.Save(Path.Combine(FoldersUtil.TempFolder, _config.ID + ".svg"));
 
-			return $"coui://roadbuilderthumbnails/{NetworkPrefab.Config.ID}.svg";
+			return $"coui://roadbuilderthumbnails/{_config.ID}.svg";
 		}
 
-		public XDocument GenerateSvg()
+		public XDocument? GenerateSvg()
 		{
 			try
 			{
@@ -104,19 +122,19 @@ namespace RoadBuilder.Utilities
 
 					if (GetArrowIcon(lane.Key, out var arrow))
 					{
-						elements.Insert(lane.Value.Count, arrow.SetBounds(bounds.currentX + ((currentX - bounds.currentX - arrow.PositionRect.Width) / 2), bounds.currentY - ((bounds.currentY - currentY - arrow.PositionRect.Height) / 2)));
+						elements.Insert(lane.Value.Count, arrow!.SetBounds(bounds.currentX + ((currentX - bounds.currentX - arrow.PositionRect.Width) / 2), bounds.currentY - ((bounds.currentY - currentY - arrow.PositionRect.Height) / 2)));
 					}
 
 					if (GetMarkingIcon(lane.Key, out var marking))
 					{
-						elements.Add(marking.SetBounds(bounds.currentX - (marking.PositionRect.Width / 2), bounds.currentY + (marking.PositionRect.Height / 2)));
+						elements.Add(marking!.SetBounds(bounds.currentX - (marking.PositionRect.Width / 2), bounds.currentY + (marking.PositionRect.Height / 2)));
 					}
 				}
 
-				string pipesFile = null;
-				if (NetworkPrefab.Config.Addons.HasFlag(RoadAddons.HasUndergroundElectricityCable) && !NetworkPrefab.Config.Addons.HasFlag(RoadAddons.RequiresUpgradeForElectricity))
+				string? pipesFile = null;
+				if (_config.Addons.HasFlag(RoadAddons.HasUndergroundElectricityCable) && !_config.Addons.HasFlag(RoadAddons.RequiresUpgradeForElectricity))
 				{
-					if (NetworkPrefab.Config.Addons.HasFlag(RoadAddons.HasUndergroundWaterPipes))
+					if (_config.Addons.HasFlag(RoadAddons.HasUndergroundWaterPipes))
 					{
 						pipesFile = totalSize > 115 ? "Thumb_PipesPower" : "Thumb_PipesPowerSmall";
 					}
@@ -125,16 +143,19 @@ namespace RoadBuilder.Utilities
 						pipesFile = totalSize > 115 ? "Thumb_Power" : "Thumb_PowerSmall";
 					}
 				}
-				else if (NetworkPrefab.Config.Addons.HasFlag(RoadAddons.HasUndergroundWaterPipes))
+				else if (_config.Addons.HasFlag(RoadAddons.HasUndergroundWaterPipes))
 				{
 					pipesFile = totalSize > 115 ? "Thumb_Pipes" : "Thumb_PipesSmall";
 				}
 
 				if (pipesFile is not null)
 				{
-					var pipe = new SvgItem(GetFileName($"coui://roadbuildericons/{pipesFile}.svg"));
+					var pipe = CreateSvg(GetFileName($"coui://roadbuildericons/{pipesFile}.svg"));
 
-					elements.Insert(0, pipe.SetBounds((totalSize - 100) / 2, (totalSize - 100) / 2, false));
+					if (pipe != null)
+					{
+						elements.Insert(0, pipe.SetBounds((totalSize - 100) / 2, (totalSize - 100) / 2, false));
+					}
 				}
 
 				XNamespace aw = "http://www.w3.org/2000/svg";
@@ -204,44 +225,49 @@ namespace RoadBuilder.Utilities
 			return svgs;
 		}
 
-		private bool GetArrowIcon(int index, out SvgItem arrow)
+		private bool GetArrowIcon(int index, out SvgItem? arrow)
 		{
-			if (_sections[index] is null || Mod.Settings.HideArrowsOnThumbnails)
+			if (_sections[index] is null || Mod.Settings!.HideArrowsOnThumbnails)
 			{
 				arrow = null;
 				return false;
 			}
 
-			var section = _sections[index].Value;
+			var sectionTuple = _sections[index];
 
-			if (!section.section.FindLanes<CarLane>().Any() && !section.section.FindLanes<TrackLane>().Any())
+			if (sectionTuple.HasValue)
 			{
-				arrow = null;
-				return false;
-			}
+				var section = sectionTuple.Value;
 
-			if (section.section.SupportsTwoWay())
-			{
-				arrow = _arrowBoth;
-				return true;
+				if (!section.section.FindLanes<CarLane>().Any() && !section.section.FindLanes<TrackLane>().Any())
+				{
+					arrow = null;
+					return false;
+				}
+
+				if (section.section.SupportsTwoWay())
+				{
+					arrow = _arrowBoth;
+					return true;
+				}
 			}
 
 			arrow = _lanes[index].Invert ? _arrowBackward : _arrowForward;
 			return true;
 		}
 
-		private bool GetMarkingIcon(int index, out SvgItem arrow)
+		private bool GetMarkingIcon(int index, out SvgItem? arrow)
 		{
-			if (_sections[index] is null || (NetworkPrefab.Config.Category & (RoadCategory.Gravel | RoadCategory.Pathway | RoadCategory.Fence | RoadCategory.Tiled)) != 0)
+			if (_sections[index] is null || (_config.Category & (RoadCategory.Gravel | RoadCategory.Pathway | RoadCategory.Fence | RoadCategory.Tiled)) != 0)
 			{
 				arrow = null;
 				return false;
 			}
 
-			var section = _sections[index].Value;
+			var section = _sections[index];
 			var previous = index > 0 ? _sections[index - 1] : null;
 
-			var isCurrentCar = section.section.FindLanes<CarLane>().Any();
+			var isCurrentCar = section?.section.FindLanes<CarLane>().Any() ?? false;
 			var isPreviousCar = previous.HasValue && previous.Value.section.FindLanes<CarLane>().Any();
 
 			if (isCurrentCar && isPreviousCar)
@@ -262,16 +288,16 @@ namespace RoadBuilder.Utilities
 			return false;
 		}
 
-		private IEnumerable<string> GetLaneIcons(LaneConfig lane, (NetSectionPrefab section, LaneGroupPrefab groupPrefab)? sections)
+		private IEnumerable<string> GetLaneIcons(LaneConfig lane, (NetSectionPrefab section, LaneGroupPrefab? groupPrefab)? sections)
 		{
 			if (sections is null)
 			{
 				yield break;
 			}
 
-			if (sections.Value.section.TryGet<RoadBuilderLaneDecorationInfo>(out var decorationInfo) && sections?.groupPrefab?.Options.FirstOrDefault(x => x.Type is LaneOptionType.Decoration) is RoadBuilderLaneOption decorationOption)
+			if (sections.Value.section.TryGet<RoadBuilderLaneDecorationInfo>(out var decorationInfo) && sections.Value.groupPrefab?.Options.FirstOrDefault(x => x.Type is LaneOptionType.Decoration) is RoadBuilderLaneOption decorationOption)
 			{
-				switch (LaneOptionsUtil.GetSelectedOptionValue(NetworkPrefab.Config, lane, decorationOption))
+				switch (LaneOptionsUtil.GetSelectedOptionValue(_config, lane, decorationOption))
 				{
 					case "G":
 						if (decorationInfo.LaneGrassThumbnail?.Any() ?? false)
@@ -322,7 +348,7 @@ namespace RoadBuilder.Utilities
 				yield break;
 			}
 
-			if (sections?.groupPrefab != null && sections.Value.groupPrefab.TryGet<RoadBuilderLaneInfo>(out var groupInfo) && (groupInfo.LaneThumbnails?.Any() ?? false))
+			if (sections.Value.groupPrefab != null && sections.Value.groupPrefab.TryGet<RoadBuilderLaneInfo>(out var groupInfo) && (groupInfo.LaneThumbnails?.Any() ?? false))
 			{
 				foreach (var item in lane.Invert ? groupInfo.LaneThumbnails.Reverse() : groupInfo.LaneThumbnails)
 				{
@@ -335,7 +361,7 @@ namespace RoadBuilder.Utilities
 			yield return "coui://roadbuildericons/Thumb_CarLane.svg";
 		}
 
-		private static string GetFileName(string icon)
+		private static string? GetFileName(string icon)
 		{
 			if (string.IsNullOrEmpty(icon) || icon.StartsWith("thumbnail://"))
 			{

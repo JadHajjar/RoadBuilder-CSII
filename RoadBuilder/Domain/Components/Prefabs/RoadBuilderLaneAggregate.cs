@@ -12,8 +12,8 @@ namespace RoadBuilder.Domain.Components.Prefabs
 	[ComponentMenu("RoadBuilder/", new Type[] { typeof(NetSectionPrefab), typeof(LaneGroupPrefab) })]
 	public class RoadBuilderLaneAggregate : ComponentBase
 	{
-		public RoadBuilderAggregateSection[] LeftSections;
-		public RoadBuilderAggregateSection[] RightSections;
+		public RoadBuilderAggregateSection[]? LeftSections;
+		public RoadBuilderAggregateSection[]? RightSections;
 
 		public override void GetArchetypeComponents(HashSet<ComponentType> components)
 		{ }

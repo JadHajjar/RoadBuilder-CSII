@@ -9,7 +9,7 @@ namespace RoadBuilder.LaneGroups
 	{
 		public override void Initialize()
 		{
-			Prefab.Options = new RoadBuilderLaneOption[0];
+			Prefab!.Options = new RoadBuilderLaneOption[0];
 
 			Prefab.AddComponent<RoadBuilderLaneInfo>()
 				.WithRequireNone(RoadCategory.Gravel | RoadCategory.Pathway | RoadCategory.Fence | RoadCategory.Subway)
@@ -19,7 +19,7 @@ namespace RoadBuilder.LaneGroups
 
 			Prefab.AddComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_TramFront.svg";
 
-			var laneInfo1 = Sections["Tram Track Section 3"].AddComponent<RoadBuilderLaneGroup>();
+			var laneInfo1 = Sections!["Tram Track Section 3"].AddComponent<RoadBuilderLaneGroup>();
 			laneInfo1.GroupPrefab = Prefab;
 			laneInfo1.Combination = new LaneOptionCombination[0];
 
