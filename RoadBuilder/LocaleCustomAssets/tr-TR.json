@@ -44,7 +44,7 @@
   "RoadBuilder.LaneGroups.ParkingGroupPrefab.Options[Parking Angle][Parallel]": "Paralel",
   "RoadBuilder.LaneGroups.ParkingGroupPrefab.Options[Parking Angle][Angled]": "Açılı",
   "RoadBuilder.LaneGroups.ParkingGroupPrefab.Options[Parking Angle][Perpendicular]": "Dik",
-  "RoadBuilder.LaneGroups.SidewalkGroupPrefab.Options[Parking Angle][Parallel]": "Paralel",
+  "RoadBuilder.LaneGroups.SidewalkGroupPrefab.Options[Parking Angle][]": "Paralel",
   "RoadBuilder.LaneGroups.SidewalkGroupPrefab.Options[Parking Angle][Angled]": "Açılı",
   "RoadBuilder.LaneGroups.SidewalkGroupPrefab.Options[Parking Angle][Perpendicular]": "Dik",
   "RoadBuilder.LaneGroups.ParkingGroupPrefab.Options[Markings][1]": "İşaretlemeli",
