@@ -58,14 +58,14 @@ namespace RoadBuilder.LaneGroups
 				},
 				new()
 				{
-					DefaultValue = "Parallel",
+					DefaultValue = "",
 					Type = LaneOptionType.SingleSelectionButtons,
 					Name = OptionName3,
 					Options = new RoadBuilderLaneOptionValue[]
 					{
 						new()
 						{
-							Value = "Parallel",
+							Value = "",
 							ThumbnailUrl = "coui://roadbuildericons/RB_WhiteParkingAngle0.svg"
 						},
 						new()
@@ -104,10 +104,10 @@ namespace RoadBuilder.LaneGroups
 			SetUp<RoadBuilderLaneGroup>(Sections["Sidewalk 4"], "", "4m", "", false);
 			SetUp<RoadBuilderLaneGroup>(Sections["Sidewalk 3.5"], "", "3.5m", "", false);
 			SetUp<RoadBuilderLaneGroup>(Sections["Sidewalk 4.5"], "", "4.5m", "", false);
-			SetUp<RoadBuilderLaneGroup>(Sections["Sidewalk With Parking 5"], "P", "5m", "Parallel");
-			SetUp<RoadBuilderLaneGroup>(Sections["Sidewalk With Parking 6"], "P", "6m", "Parallel");
-			SetUp<RoadBuilderLaneGroup>(Sections["Sidewalk With Parking 7"], "P", "7m", "Parallel");
-			SetUp<RoadBuilderLaneGroup>(Sections["Sidewalk With Parking 5.5"], "P", "5.5m", "Parallel");
+			SetUp<RoadBuilderLaneGroup>(Sections["Sidewalk With Parking 5"], "P", "5m", "");
+			SetUp<RoadBuilderLaneGroup>(Sections["Sidewalk With Parking 6"], "P", "6m", "");
+			SetUp<RoadBuilderLaneGroup>(Sections["Sidewalk With Parking 7"], "P", "7m", "");
+			SetUp<RoadBuilderLaneGroup>(Sections["Sidewalk With Parking 5.5"], "P", "5.5m", "");
 			SetUp<RoadBuilderLaneGroup>(Sections["Sidewalk 5"], "", "5m", "");
 			SetUp<RoadBuilderLaneGroup>(Sections["Sidewalk 7"], "", "7m", "");
 			SetUp<RoadBuilderLaneGroup>(Sections["Sidewalk 6"], "", "6m", "");

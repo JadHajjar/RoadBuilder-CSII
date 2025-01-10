@@ -126,15 +126,12 @@ This helps us better assist you and avoids your message from getting lost in the
   <Screenshot Value="Properties/Screenshot_07.png" />
   <Tag Value="Code Mod" />
   <ForumLink Value="https://forum.paradoxplaza.com/forum/threads/road-builder.1698661/" />
-  <ModVersion Value="0.5.0" />
+  <ModVersion Value="0.5.2" />
   <GameVersion Value="1.2.*" />
   <ChangeLog>
-# v0.5.0
-## Parking Roads Support
-* Added support for all parking lanes and parking roads introduced in patch 1.2.0f1.
-* Added new widths and parking angles to the Sidewalk lane.
-* Added new widths and parking options to the Shoulder lane.
-* Added support for requirement flags in the Road Builder lane info and lane aggregate component.
+# v0.5.2
+## Hotfix
+* Fixed parking lanes not converting properly to the v0.5 update.
 </ChangeLog>
   <ExternalLink Type="discord" Url="https://discord.gg/E4k8ZEtRxd" />
   <ExternalLink Type="github" Url="https://github.com/JadHajjar/RoadBuilder-CSII" />

@@ -1,6 +1,32 @@
 [
   {
     "Beta": true,
+    "Version": "0.5.2",
+    "Date": "2025-01-10",
+    "ChangeGroups": [
+      {
+        "Name": "Hotfix",
+        "Changes": [
+          "Fixed parking lanes not converting properly to the v0.5 update."
+        ]
+      }
+    ]
+  },
+  {
+    "Beta": true,
+    "Version": "0.5.1",
+    "Date": "2025-01-12",
+    "ChangeGroups": [
+      {
+        "Name": "Hotfix",
+        "Changes": [
+          "Fixed sidewalks not converting properly to the v0.5 update."
+        ]
+      }
+    ]
+  },
+  {
+    "Beta": true,
     "Version": "0.5.0",
     "Date": "2025-01-08",
     "ChangeGroups": [
