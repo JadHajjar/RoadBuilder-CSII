@@ -66,11 +66,11 @@
   width: 22rem;
   height: 22rem;
   margin-top: 1rem;
-  mask-image: url(coui://gameui/Media/Glyphs/Copy.svg);
+  mask-image: url(assetdb://gameui/Media/Glyphs/Copy.svg);
 }
 
 .deleteButton img {
-  mask-image: url(coui://gameui/Media/Glyphs/Trash.svg);
+  mask-image: url(assetdb://gameui/Media/Glyphs/Trash.svg);
 }
 
 .copyButton:hover img {
@@ -112,7 +112,7 @@
     height: 20rem;
     background-color: var(--panelColorNormal);
     backdrop-filter: var(--panelBlur);
-    mask-image: url(coui://gameui/Media/Misc/BalloonArrowBottom.svg#1);
+    mask-image: url(assetdb://gameui/Media/Misc/BalloonArrowBottom.svg#1);
     mask-size: 100% 80rem;
     mask-position: 50% 95%;
   }

@@ -1,6 +1,19 @@
 [
   {
     "Beta": true,
+    "Version": "0.5.3",
+    "Date": "2025-03-18",
+    "ChangeGroups": [
+      {
+        "Name": "Hotfix",
+        "Changes": [
+          "Compatibility with patch 1.2.4f1."
+        ]
+      }
+    ]
+  },
+  {
+    "Beta": true,
     "Version": "0.5.2",
     "Date": "2025-01-10",
     "ChangeGroups": [
