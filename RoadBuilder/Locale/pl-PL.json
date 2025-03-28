@@ -44,7 +44,7 @@
   "RoadBuilder.RoadCategory[Highway]": "Autostrady",
   "RoadBuilder.RoadCategory[PublicTransport]": "Autobus/Transport publiczny",
   "RoadBuilder.RoadCategory[Gravel]": "Droga żwirowa",
-  "RoadBuilder.RoadCategory[Tiled]": "Droga dla pieszych",
+  "RoadBuilder.RoadCategory[Tiled]": "Deptak",
   "RoadBuilder.RoadCategory[Tram]": "Tory tramwajowe",
   "RoadBuilder.RoadCategory[Train]": "Tory kolejowe",
   "RoadBuilder.RoadCategory[Subway]": "Tory metra",
