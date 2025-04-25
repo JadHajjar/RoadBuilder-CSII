@@ -48,7 +48,7 @@ namespace RoadBuilder.Systems.UI
 			CreateTrigger<string>("ActivateRoad", genericFunctionsSystem.ActivateRoad);
 			CreateTrigger<string>("EditRoad", genericFunctionsSystem.EditRoad);
 			CreateTrigger<string>("FindRoad", genericFunctionsSystem.FindRoad);
-			CreateTrigger<string>("DeleteRoad", genericFunctionsSystem.DeleteRoad);
+			CreateTrigger<string[]>("DeleteRoad", genericFunctionsSystem.DeleteRoad);
 			CreateTrigger<string>("Roads.SetSearchQuery", SetSearchQuery);
 		}
 

@@ -8,6 +8,7 @@ using Game.Prefabs;
 using Game.Tools;
 
 using RoadBuilder.Domain.Components;
+using RoadBuilder.Utilities;
 
 using System.Collections.Generic;
 using System.Reflection;
@@ -84,7 +85,7 @@ namespace RoadBuilder.Systems
 					}
 				}
 
-				if (prefabSystem.TryGetPrefab<PrefabBase>(prefabs[j], out var prefab))
+				if (prefabSystem.TryGetSpecificPrefab<PrefabBase>(prefabs[j], out var prefab))
 				{
 					prefabSystem_PrefabIndices[prefab.GetPrefabID()] = prefabSystem_Prefabs.IndexOf(prefab);
 				}

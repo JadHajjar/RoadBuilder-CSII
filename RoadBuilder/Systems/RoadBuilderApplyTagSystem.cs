@@ -8,6 +8,7 @@ using Game.Tools;
 
 using RoadBuilder.Domain.Components;
 using RoadBuilder.Domain.Prefabs;
+using RoadBuilder.Utilities;
 
 using Unity.Collections;
 using Unity.Entities;
@@ -43,7 +44,7 @@ namespace RoadBuilder.Systems
 			{
 				var entity = entities[i];
 
-				if (prefabSystem.TryGetPrefab<PrefabBase>(EntityManager.GetComponentData<PrefabRef>(entity), out var prefab) && prefab is INetworkBuilderPrefab builderPrefab && !builderPrefab.Deleted)
+				if (prefabSystem.TryGetSpecificPrefab<PrefabBase>(EntityManager.GetComponentData<PrefabRef>(entity), out var prefab) && prefab is INetworkBuilderPrefab builderPrefab && !builderPrefab.Deleted)
 				{
 					EntityManager.AddComponent<RoadBuilderNetwork>(entity);
 

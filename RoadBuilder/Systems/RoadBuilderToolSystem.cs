@@ -15,6 +15,7 @@ using RoadBuilder.Domain.Components;
 using RoadBuilder.Domain.Enums;
 using RoadBuilder.Domain.Prefabs;
 using RoadBuilder.Systems.UI;
+using RoadBuilder.Utilities;
 
 using System;
 using System.Linq;
@@ -207,7 +208,7 @@ namespace RoadBuilder.Systems
 				return false;
 			}
 
-			if (!prefabSystem.TryGetPrefab<NetGeometryPrefab>(prefabRef, out var prefab))
+			if (!prefabSystem.TryGetSpecificPrefab<NetGeometryPrefab>(prefabRef, out var prefab))
 			{
 				return false;
 			}

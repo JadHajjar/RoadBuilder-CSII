@@ -39,7 +39,7 @@ namespace RoadBuilder.Systems.UI
 		private RoadBuilderSystem roadBuilderSystem;
 		private RoadBuilderRoadTrackerSystem roadBuilderRoadTrackerSystem;
 		private RoadBuilderConfigurationsUISystem roadBuilderConfigurationsUISystem;
-
+		private RoadBuilderGenericFunctionsSystem genericFunctionsSystem;
 		private ValueBindingHelper<bool> Loading;
 		private ValueBindingHelper<bool> ErrorLoading;
 		private ValueBindingHelper<bool> Uploading;
@@ -58,6 +58,7 @@ namespace RoadBuilder.Systems.UI
 			roadBuilderSystem = World.GetOrCreateSystemManaged<RoadBuilderSystem>();
 			roadBuilderRoadTrackerSystem = World.GetOrCreateSystemManaged<RoadBuilderRoadTrackerSystem>();
 			roadBuilderConfigurationsUISystem = World.GetOrCreateSystemManaged<RoadBuilderConfigurationsUISystem>();
+			genericFunctionsSystem = World.GetOrCreateSystemManaged<RoadBuilderGenericFunctionsSystem>();
 
 			roadBuilderConfigurationsUISystem.ConfigurationsUpdated += RoadBuilderConfigurationsUISystem_ConfigurationsUpdated;
 

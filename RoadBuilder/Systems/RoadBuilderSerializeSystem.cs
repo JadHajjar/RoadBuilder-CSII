@@ -99,7 +99,7 @@ namespace RoadBuilder.Systems
 				{
 					var subobject = subObjects[j];
 
-					if (prefabSystem.TryGetPrefab<PrefabBase>(EntityManager.GetComponentData<PrefabRef>(subobject.m_SubObject), out var prefab) && prefab?.name is "ParkingLotSidewaysDecal01" or "ParkingLotDiagonalDecal01")
+					if (prefabSystem.TryGetSpecificPrefab<PrefabBase>(EntityManager.GetComponentData<PrefabRef>(subobject.m_SubObject), out var prefab) && prefab?.name is "ParkingLotSidewaysDecal01" or "ParkingLotDiagonalDecal01")
 					{
 						EntityManager.AddComponent<Deleted>(subobject.m_SubObject);
 						subObjects.RemoveAt(j);
@@ -132,7 +132,7 @@ namespace RoadBuilder.Systems
 
 			for (var i = 0; i < edges.Length; i++)
 			{
-				if (refs[i].m_Prefab.Index < 0 || !prefabSystem.TryGetPrefab<NetGeometryPrefab>(refs[i], out var prefab))
+				if (refs[i].m_Prefab.Index < 0 || !prefabSystem.TryGetSpecificPrefab<NetGeometryPrefab>(refs[i], out var prefab))
 				{
 					invalidEntities.Add(edges[i]);
 				}
@@ -164,10 +164,10 @@ namespace RoadBuilder.Systems
 		private void FixEdges(List<Entity> invalidEntities)
 		{
 			var updateSystem = World.GetOrCreateSystemManaged<RoadBuilderPrefabUpdateSystem>();
-			var smallRoadId = prefabSystem.TryGetPrefab(new PrefabID(nameof(RoadPrefab), "Small Road"), out var smallRoad) ? prefabSystem.GetEntity(smallRoad) : Entity.Null;
-			var trainTrackId = prefabSystem.TryGetPrefab(new PrefabID(nameof(TrackPrefab), "Double Train Track"), out var trainTrack) ? prefabSystem.GetEntity(trainTrack) : Entity.Null;
-			var tramTrackId = prefabSystem.TryGetPrefab(new PrefabID(nameof(TrackPrefab), "Double Tram Track"), out var tramTrack) ? prefabSystem.GetEntity(tramTrack) : Entity.Null;
-			var subwayTrackId = prefabSystem.TryGetPrefab(new PrefabID(nameof(TrackPrefab), "Double Subway Track"), out var subwayTrack) ? prefabSystem.GetEntity(subwayTrack) : Entity.Null;
+			var smallRoadId = prefabSystem.TryGetSpecificPrefab(new PrefabID(nameof(RoadPrefab), "Small Road"), out var smallRoad) ? prefabSystem.GetEntity(smallRoad) : Entity.Null;
+			var trainTrackId = prefabSystem.TryGetSpecificPrefab(new PrefabID(nameof(TrackPrefab), "Double Train Track"), out var trainTrack) ? prefabSystem.GetEntity(trainTrack) : Entity.Null;
+			var tramTrackId = prefabSystem.TryGetSpecificPrefab(new PrefabID(nameof(TrackPrefab), "Double Tram Track"), out var tramTrack) ? prefabSystem.GetEntity(tramTrack) : Entity.Null;
+			var subwayTrackId = prefabSystem.TryGetSpecificPrefab(new PrefabID(nameof(TrackPrefab), "Double Subway Track"), out var subwayTrack) ? prefabSystem.GetEntity(subwayTrack) : Entity.Null;
 
 			foreach (var entity in invalidEntities)
 			{
@@ -220,7 +220,7 @@ namespace RoadBuilder.Systems
 
 			for (var i = 0; i < prefabRefs.Length; i++)
 			{
-				if (!prefabSystem.TryGetPrefab<PrefabBase>(prefabRefs[i], out var prefab) || prefab is not INetworkBuilderPrefab builderPrefab)
+				if (!prefabSystem.TryGetSpecificPrefab<PrefabBase>(prefabRefs[i], out var prefab) || prefab is not INetworkBuilderPrefab builderPrefab)
 				{
 					continue;
 				}

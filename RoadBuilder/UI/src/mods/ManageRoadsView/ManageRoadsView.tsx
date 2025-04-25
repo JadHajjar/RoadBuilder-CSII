@@ -4,6 +4,7 @@ import styles from "./ManageRoadsView.module.scss";
 import { useValue } from "cs2/api";
 import {
   allRoadConfigurations$,
+  deleteRoad,
   DiscoverErrorLoading$,
   DiscoverItems$,
   DiscoverLoading$,
@@ -45,6 +46,20 @@ export const ManageRoadsView = (props: { editor: boolean }) => {
   let [sorting, setSorting] = useState<number>(0);
   let [selectedCategory, setSelectedCategory] = useState<string | RoadCategory | undefined>(undefined);
   let items: JSX.Element;
+
+  function GetRoadConfigurations() {
+    return roadConfigurations.filter(
+      (val, idx) =>
+        (selectedCategory == undefined || selectedCategory == val.Category) &&
+        (usedFilter === undefined || usedFilter == val.Used) &&
+        (!val.IsNotInPlayset || showAllPlaysets) &&
+        (!val.Locked || !hideLocked)
+    );
+  }
+
+  function deleteAllRoads() {
+    deleteRoad(GetRoadConfigurations().map((x) => x.ID));
+  }
 
   function setAndBindSearch(query: string) {
     setSearchQuery(query);
@@ -131,18 +146,9 @@ export const ManageRoadsView = (props: { editor: boolean }) => {
     items = (
       <div className={styles.localContainer}>
         <Scrollable className={styles.list} vertical smooth trackVisibility="scrollable">
-          {roadConfigurations
-            .filter(
-              (val, idx) =>
-                (selectedCategory == undefined || selectedCategory == val.Category) &&
-                (usedFilter === undefined || usedFilter == val.Used) &&
-                (!val.IsNotInPlayset || showAllPlaysets) &&
-                (!val.Locked || !hideLocked)
-            )
-            .filter((val, idx) => searchQuery == undefined || searchQuery == "" || val.Name.toLowerCase().indexOf(searchQuery.toLowerCase()) >= 0)
-            .map((val, idx) => (
-              <ManageRoadConfigListItem key={idx} road={val} selectRoad={(r) => setManagementRoad(r.ID)} selected={managedRoad?.ID === val.ID} />
-            ))}
+          {GetRoadConfigurations().map((val, idx) => (
+            <ManageRoadConfigListItem key={idx} road={val} selectRoad={(r) => setManagementRoad(r.ID)} selected={managedRoad?.ID === val.ID} />
+          ))}
         </Scrollable>
         <div className={styles.managePanel}>{managedRoad && <ManageRoadPanel road={managedRoad} />}</div>
       </div>
@@ -179,6 +185,13 @@ export const ManageRoadsView = (props: { editor: boolean }) => {
           </div>
 
           <div className={styles.filters}>
+            {!discoverView && (
+              <Tooltip tooltip={translate("RoadBuilder.ShowAllPlaysets")}>
+                <Button variant="flat" selected={showAllPlaysets} onSelect={() => deleteAllRoads()}>
+                  <img style={{ maskImage: "url(coui://roadbuildericons/RB_Playset.svg)" }} />
+                </Button>
+              </Tooltip>
+            )}
             {!discoverView && RestrictPlayset && (
               <Tooltip tooltip={translate("RoadBuilder.ShowAllPlaysets")}>
                 <Button variant="flat" selected={showAllPlaysets} onSelect={() => setShowAllPlaysets(!showAllPlaysets)}>

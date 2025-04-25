@@ -55,10 +55,13 @@ namespace RoadBuilder.Systems
 								EntityManager.AddComponent<Updated>(edgeData.m_End);
 							}
 
-							EntityManager.SetComponentData(entity, new PrefabRef
+							if (EntityManager.TryGetComponent<PrefabRef>(edge.m_Edge, out var prefabRef))
 							{
-								m_Prefab = EntityManager.GetComponentData<PrefabRef>(connectedEdges[0].m_Edge).m_Prefab
-							});
+								EntityManager.SetComponentData(entity, new PrefabRef
+								{
+									m_Prefab = prefabRef.m_Prefab
+								});
+							}
 						}
 					}
 				}

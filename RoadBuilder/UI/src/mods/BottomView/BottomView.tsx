@@ -143,7 +143,7 @@ export const BottomView = (props: { editor: boolean }) => {
               </Button>
             </div>
             <div className={styles.bottomRightButtonBar}>
-              <Button style={copyButtonStyle} className={styles.deleteRoadButton} variant="flat" onSelect={() => deleteRoad(roadId)}>
+              <Button style={copyButtonStyle} className={styles.deleteRoadButton} variant="flat" onSelect={() => deleteRoad([roadId])}>
                 <img />
                 {translate("RoadBuilder.DeleteRoad", "Delete Road")}
               </Button>
