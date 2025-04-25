@@ -1,6 +1,32 @@
 [
   {
     "Beta": true,
+    "Version": "0.5.4",
+    "Date": "2025-04-25",
+    "ChangeGroups": [
+      {
+        "Name": "Hotfix",
+        "Changes": [
+          "Fixed an error caused by assets with unusual component combinations."
+        ]
+      }
+    ]
+  },
+  {
+    "Beta": true,
+    "Version": "0.5.3",
+    "Date": "2025-03-18",
+    "ChangeGroups": [
+      {
+        "Name": "Hotfix",
+        "Changes": [
+          "Compatibility with patch 1.2.4f1."
+        ]
+      }
+    ]
+  },
+  {
+    "Beta": true,
     "Version": "0.5.2",
     "Date": "2025-01-10",
     "ChangeGroups": [

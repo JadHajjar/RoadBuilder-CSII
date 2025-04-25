@@ -131,7 +131,7 @@
 .backButton {
   img {
     margin: 0rem;
-    mask-image: url(coui://gameui/Media/Glyphs/ArrowLeft.svg);
+    mask-image: url(assetdb://gameui/Media/Glyphs/ArrowLeft.svg);
   }
 }
 
@@ -145,14 +145,14 @@
 .closeButton {
   img {
     margin: 0rem;
-    mask-image: url(coui://gameui/Media/Glyphs/Close.svg);
+    mask-image: url(assetdb://gameui/Media/Glyphs/Close.svg);
   }
 }
 
 .deleteRoadButton {
   padding: 4rem 8rem;
   img {
-    mask-image: url(coui://gameui/Media/Glyphs/Trash.svg);
+    mask-image: url(assetdb://gameui/Media/Glyphs/Trash.svg);
   }
   &:hover {
     background-color: var(--negativeColor);

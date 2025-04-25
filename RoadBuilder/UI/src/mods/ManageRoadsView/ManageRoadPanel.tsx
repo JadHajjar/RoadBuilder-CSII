@@ -100,7 +100,7 @@ export const ManageRoadPanel = ({ road }: { road: RoadConfiguration }) => {
           </Button>
         </Tooltip>
         <Tooltip tooltip={translate("RoadBuilder.DeleteTooltip")}>
-          <Button variant="flat" onSelect={() => deleteRoad(road.ID)} className={styles.danger}>
+          <Button variant="flat" onSelect={() => deleteRoad([road.ID])} className={styles.danger}>
             <img style={{ maskImage: "url(coui://roadbuildericons/RB_Trash.svg)" }} /> {translate("RoadBuilder.Delete")}
           </Button>
         </Tooltip>

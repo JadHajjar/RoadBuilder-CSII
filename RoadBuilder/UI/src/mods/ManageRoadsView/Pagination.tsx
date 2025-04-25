@@ -18,8 +18,6 @@ export const Pagination = (props: { setPage: (page: number) => void }) => {
       pages.push(i > maxPages ? -1 : i);
     }
 
-    console.log(pages);
-
     return pages;
   };
 

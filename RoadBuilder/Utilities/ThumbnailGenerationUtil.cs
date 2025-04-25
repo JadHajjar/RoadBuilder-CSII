@@ -375,15 +375,15 @@ namespace RoadBuilder.Utilities
 				return Path.Combine(FoldersUtil.GameUIPath, icon);
 			}
 
-			var hostMap = (IDictionary<string, HashSet<string>>)typeof(DefaultResourceHandler).GetField("m_HostLocationsMap", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(UIManager.defaultUISystem.resourceHandler);
+			var hostMap = (IDictionary<string, List<(string path, int)>>)typeof(DefaultResourceHandler).GetField("m_HostLocationsMap", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(UIManager.defaultUISystem.resourceHandler);
 
 			if (hostMap?.TryGetValue(regex.Groups[1].Value, out var paths) ?? false)
 			{
-				foreach (var path in paths)
+				foreach (var item in paths.OrderBy(x => x.Item2))
 				{
-					if (File.Exists(Path.Combine(path, regex.Groups[2].Value)))
+					if (File.Exists(Path.Combine(item.path, regex.Groups[2].Value)))
 					{
-						return Path.Combine(path, regex.Groups[2].Value);
+						return Path.Combine(item.path, regex.Groups[2].Value);
 					}
 				}
 			}

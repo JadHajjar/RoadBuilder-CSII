@@ -6,6 +6,7 @@ using Game.Common;
 using Game.Prefabs;
 
 using RoadBuilder.Domain;
+using RoadBuilder.Utilities;
 
 using Unity.Collections;
 using Unity.Entities;
@@ -54,13 +55,13 @@ namespace RoadBuilder.Systems
 			var zoneBlockDataEntities = zoneBlockDataQuery.ToEntityArray(Allocator.Temp);
 
 			roadGenerationData.LeftHandTraffic = cityConfigurationSystem.leftHandTraffic;
-			roadGenerationData.YellowDivider = !prefabSystem.TryGetPrefab<ThemePrefab>(cityConfigurationSystem.defaultTheme, out var theme) || theme.assetPrefix is not "EU";
+			roadGenerationData.YellowDivider = !prefabSystem.TryGetSpecificPrefab<ThemePrefab>(cityConfigurationSystem.defaultTheme, out var theme) || theme.assetPrefix is not "EU";
 
 			Mod.Log.Debug("RoadBuilderGenerationDataSystem " + roadGenerationData.LeftHandTraffic);
 
 			for (var i = 0; i < zoneBlockDataEntities.Length; i++)
 			{
-				if (prefabSystem.TryGetPrefab<ZoneBlockPrefab>(zoneBlockDataEntities[i], out var prefab))
+				if (prefabSystem.TryGetSpecificPrefab<ZoneBlockPrefab>(zoneBlockDataEntities[i], out var prefab))
 				{
 					if (prefab.name == "Zone Block")
 					{
@@ -76,7 +77,7 @@ namespace RoadBuilder.Systems
 
 			for (var i = 0; i < outsideConnectionDataEntities.Length; i++)
 			{
-				if (prefabSystem.TryGetPrefab<MarkerObjectPrefab>(outsideConnectionDataEntities[i], out var prefab))
+				if (prefabSystem.TryGetSpecificPrefab<MarkerObjectPrefab>(outsideConnectionDataEntities[i], out var prefab))
 				{
 					if (prefab.name == "Road Outside Connection - Oneway")
 					{
@@ -105,7 +106,7 @@ namespace RoadBuilder.Systems
 
 			for (var i = 0; i < aggregateNetDataEntities.Length; i++)
 			{
-				if (prefabSystem.TryGetPrefab<AggregateNetPrefab>(aggregateNetDataEntities[i], out var prefab))
+				if (prefabSystem.TryGetSpecificPrefab<AggregateNetPrefab>(aggregateNetDataEntities[i], out var prefab))
 				{
 					roadGenerationData.AggregateNetPrefabs[prefab.name] = prefab;
 				}
@@ -116,7 +117,7 @@ namespace RoadBuilder.Systems
 
 			for (var i = 0; i < netSectionDataEntities.Length; i++)
 			{
-				if (prefabSystem.TryGetPrefab<NetSectionPrefab>(netSectionDataEntities[i], out var prefab))
+				if (prefabSystem.TryGetSpecificPrefab<NetSectionPrefab>(netSectionDataEntities[i], out var prefab))
 				{
 					roadGenerationData.NetSectionPrefabs[prefab.name] = prefab;
 				}
@@ -127,7 +128,7 @@ namespace RoadBuilder.Systems
 
 			for (var i = 0; i < serviceObjectDataEntities.Length; i++)
 			{
-				if (prefabSystem.TryGetPrefab<ServicePrefab>(serviceObjectDataEntities[i], out var prefab))
+				if (prefabSystem.TryGetSpecificPrefab<ServicePrefab>(serviceObjectDataEntities[i], out var prefab))
 				{
 					roadGenerationData.ServicePrefabs[prefab.name] = prefab;
 				}
@@ -138,23 +139,23 @@ namespace RoadBuilder.Systems
 
 			for (var i = 0; i < pillarDataEntities.Length; i++)
 			{
-				if (prefabSystem.TryGetPrefab<StaticObjectPrefab>(pillarDataEntities[i], out var prefab))
+				if (prefabSystem.TryGetSpecificPrefab<StaticObjectPrefab>(pillarDataEntities[i], out var prefab))
 				{
 					roadGenerationData.PillarPrefabs[prefab.name] = prefab;
 				}
 			}
 
-			if (prefabSystem.TryGetPrefab(new PrefabID(nameof(StaticObjectPrefab), "Train Pillar Placeholder"), out var trainPillar))
+			if (prefabSystem.TryGetSpecificPrefab(new PrefabID(nameof(StaticObjectPrefab), "Train Pillar Placeholder"), out var trainPillar))
 			{
 				roadGenerationData.PillarPrefabs[trainPillar.name] = (trainPillar as StaticObjectPrefab)!;
 			}
 
-			if (prefabSystem.TryGetPrefab(new PrefabID(nameof(StaticObjectPrefab), "Subway Pillar Placeholder"), out var subwayPillar))
+			if (prefabSystem.TryGetSpecificPrefab(new PrefabID(nameof(StaticObjectPrefab), "Subway Pillar Placeholder"), out var subwayPillar))
 			{
 				roadGenerationData.PillarPrefabs[subwayPillar.name] = (subwayPillar as StaticObjectPrefab)!;
 			}
 
-			if (prefabSystem.TryGetPrefab(new PrefabID(nameof(StaticObjectPrefab), "Pillar Pedestrian Placeholder"), out var pedestrianPillar))
+			if (prefabSystem.TryGetSpecificPrefab(new PrefabID(nameof(StaticObjectPrefab), "Pillar Pedestrian Placeholder"), out var pedestrianPillar))
 			{
 				roadGenerationData.PillarPrefabs[pedestrianPillar.name] = (pedestrianPillar as StaticObjectPrefab)!;
 			}
@@ -164,7 +165,7 @@ namespace RoadBuilder.Systems
 
 			for (var i = 0; i < uIGroupElementEntities.Length; i++)
 			{
-				if (prefabSystem.TryGetPrefab<UIGroupPrefab>(uIGroupElementEntities[i], out var prefab))
+				if (prefabSystem.TryGetSpecificPrefab<UIGroupPrefab>(uIGroupElementEntities[i], out var prefab))
 				{
 					roadGenerationData.UIGroupPrefabs[prefab.name] = prefab;
 				}
@@ -175,7 +176,7 @@ namespace RoadBuilder.Systems
 
 			for (var i = 0; i < featureDataEntities.Length; i++)
 			{
-				if (prefabSystem.TryGetPrefab<PrefabBase>(featureDataEntities[i], out var prefab))
+				if (prefabSystem.TryGetSpecificPrefab<PrefabBase>(featureDataEntities[i], out var prefab))
 				{
 					roadGenerationData.UnlocksPrefabs[prefab.name] = prefab;
 				}
@@ -217,7 +218,7 @@ namespace RoadBuilder.Systems
 
 			for (var i = 0; i < stops.Length; i++)
 			{
-				if (!prefabSystem.TryGetPrefab<MarkerObjectPrefab>(stops[i], out var stop) || stop?.name is not "Integrated Passenger Train Stop" and not "Integrated Cargo Train Stop" and not "Integrated Subway Stop - Side" and not "Integrated Subway Stop - Middle")
+				if (!prefabSystem.TryGetSpecificPrefab<MarkerObjectPrefab>(stops[i], out var stop) || stop?.name is not "Integrated Passenger Train Stop" and not "Integrated Cargo Train Stop" and not "Integrated Subway Stop - Side" and not "Integrated Subway Stop - Middle")
 				{
 					continue;
 				}

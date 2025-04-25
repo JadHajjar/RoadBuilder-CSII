@@ -154,20 +154,23 @@ namespace RoadBuilder.Systems
 			}
 		}
 
-		public void DeleteRoad(string id)
+		public void DeleteRoad(params string?[] ids)
 		{
 			GameManager.instance.userInterface.appBindings.ShowConfirmationDialog(new ConfirmationDialog("Options.SECTION[RoadBuilder.RoadBuilder.Mod]", "RoadBuilder.DIALOG_MESSAGE[DELETE]", "Common.DIALOG_ACTION[Yes]", "Common.DIALOG_ACTION[No]"), msg =>
 			{
 				if (msg == 0)
 				{
-					ApplyDeleteRoad(id);
+					foreach (var item in ids)
+					{
+						ApplyDeleteRoad(item);
+					}
 				}
 			});
 		}
 
-		private void ApplyDeleteRoad(string id)
+		private void ApplyDeleteRoad(string? id)
 		{
-			if (!roadBuilderSystem.Configurations.TryGetValue(id, out var prefab))
+			if (id is null || !roadBuilderSystem.Configurations.TryGetValue(id, out var prefab))
 			{
 				return;
 			}

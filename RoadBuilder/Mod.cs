@@ -87,7 +87,12 @@ namespace RoadBuilder
 
 			UIManager.defaultUISystem.RemoveHostLocation("roadbuilderthumbnails");
 
-			new DirectoryInfo(FoldersUtil.TempFolder).Delete(true);
+			var tempDir = new DirectoryInfo(FoldersUtil.TempFolder);
+
+			if (tempDir.Exists)
+			{
+				tempDir.Delete(true);
+			}
 		}
 
 		public static void ReloadActiveLocale()

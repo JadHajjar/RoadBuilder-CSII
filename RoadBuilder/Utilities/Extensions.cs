@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Game.Prefabs;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -235,6 +237,26 @@ namespace RoadBuilder.Utilities
 			}
 
 			return circleBack ? enumerable.LastOrDefault() : default;
+		}
+
+		public static bool TryGetSpecificPrefab<T>(this PrefabSystem prefabSystem, PrefabData prefabData, out T prefab) where T : PrefabBase
+		{
+			return prefabSystem.TryGetPrefab(prefabData, out prefab) && prefab is not null;
+		}
+
+		public static bool TryGetSpecificPrefab<T>(this PrefabSystem prefabSystem, PrefabRef prefabRef, out T prefab) where T : PrefabBase
+		{
+			return prefabSystem.TryGetPrefab(prefabRef, out prefab) && prefab is not null;
+		}
+
+		public static bool TryGetSpecificPrefab<T>(this PrefabSystem prefabSystem, Entity entity, out T prefab) where T : PrefabBase
+		{
+			return prefabSystem.TryGetPrefab(entity, out prefab) && prefab is not null;
+		}
+
+		public static bool TryGetSpecificPrefab(this PrefabSystem prefabSystem, PrefabID prefabID, out PrefabBase prefab)
+		{
+			return prefabSystem.TryGetPrefab(prefabID, out prefab) && prefab is not null;
 		}
 	}
 }

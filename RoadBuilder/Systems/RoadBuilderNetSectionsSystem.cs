@@ -9,6 +9,7 @@ using RoadBuilder.Domain.Components.Prefabs;
 using RoadBuilder.Domain.Enums;
 using RoadBuilder.Domain.Prefabs;
 using RoadBuilder.LaneGroups;
+using RoadBuilder.Utilities;
 
 using System;
 using System.Collections.Generic;
@@ -57,7 +58,7 @@ namespace RoadBuilder.Systems
 
 				for (var i = 0; i < entities.Length; i++)
 				{
-					if (!prefabSystem.TryGetPrefab<PrefabBase>(entities[i], out var prefab))
+					if (!prefabSystem.TryGetSpecificPrefab<PrefabBase>(entities[i], out var prefab))
 					{
 						continue;
 					}
@@ -388,7 +389,7 @@ namespace RoadBuilder.Systems
 				//	{
 				//		new NetPieceObjectInfo
 				//		{
-				//			m_Object = prefabSystem.TryGetPrefab(new PrefabID(nameof(StaticObjectPrefab), "ParkingLotSidewaysDecal01"), out var prefab)?prefab as ObjectPrefab : default,
+				//			m_Object = prefabSystem.TryGetSpecificPrefab(new PrefabID(nameof(StaticObjectPrefab), "ParkingLotSidewaysDecal01"), out var prefab)?prefab as ObjectPrefab : default,
 				//			m_RequireAll = new [] { NetPieceRequirements.Edge },
 				//			m_RequireAny = new NetPieceRequirements[0],
 				//			m_RequireNone = new NetPieceRequirements[0],
@@ -425,7 +426,7 @@ namespace RoadBuilder.Systems
 				//	{
 				//		new NetPieceObjectInfo
 				//		{
-				//			m_Object = prefabSystem.TryGetPrefab(new PrefabID(nameof(StaticObjectPrefab), "ParkingLotSidewaysDecal01"), out var prefab)?prefab as ObjectPrefab : default,
+				//			m_Object = prefabSystem.TryGetSpecificPrefab(new PrefabID(nameof(StaticObjectPrefab), "ParkingLotSidewaysDecal01"), out var prefab)?prefab as ObjectPrefab : default,
 				//			m_RequireAll = new []{NetPieceRequirements.Edge},
 				//			m_RequireAny = new NetPieceRequirements[0],
 				//			m_RequireNone = new NetPieceRequirements[0],

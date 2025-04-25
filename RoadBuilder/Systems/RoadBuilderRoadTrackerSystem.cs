@@ -8,6 +8,7 @@ using Game.Tools;
 
 using RoadBuilder.Domain.Components;
 using RoadBuilder.Domain.Prefabs;
+using RoadBuilder.Utilities;
 
 using System.Collections.Generic;
 
@@ -65,7 +66,7 @@ namespace RoadBuilder.Systems
 
 			foreach (var prefabRef in prefabIds)
 			{
-				if (prefabSystem.TryGetPrefab<PrefabBase>(prefabRef, out var prefab) && prefab is INetworkBuilderPrefab builderPrefab)
+				if (prefabSystem.TryGetSpecificPrefab<PrefabBase>(prefabRef, out var prefab) && prefab is INetworkBuilderPrefab builderPrefab)
 				{
 					list.Add(builderPrefab);
 				}

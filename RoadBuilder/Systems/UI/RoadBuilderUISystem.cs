@@ -180,7 +180,7 @@ namespace RoadBuilder.Systems.UI
 				return workingConfig?.ID ?? string.Empty;
 			}
 
-			if (prefabSystem.TryGetPrefab<PrefabBase>(EntityManager.GetComponentData<PrefabRef>(workingEntity), out var prefab) && prefab is INetworkBuilderPrefab builderPrefab)
+			if (prefabSystem.TryGetSpecificPrefab<PrefabBase>(EntityManager.GetComponentData<PrefabRef>(workingEntity), out var prefab) && prefab is INetworkBuilderPrefab builderPrefab)
 			{
 				return builderPrefab.Config?.ID ?? string.Empty;
 			}
@@ -203,7 +203,7 @@ namespace RoadBuilder.Systems.UI
 
 		public void PickPrefab()
 		{
-			if (workingEntity != Entity.Null && prefabSystem.TryGetPrefab<PrefabBase>(EntityManager.GetComponentData<PrefabRef>(workingEntity), out var prefab))
+			if (workingEntity != Entity.Null && prefabSystem.TryGetSpecificPrefab<PrefabBase>(EntityManager.GetComponentData<PrefabRef>(workingEntity), out var prefab))
 			{
 				roadBuilderGenericFunctionsSystem.ActivateRoad(prefab.name);
 			}

@@ -44,7 +44,7 @@ export const setRoadListView = (active: boolean) => trigger(mod.id, "SetRoadList
 export const activateRoad = (id: string) => trigger(mod.id, "ActivateRoad", id);
 export const editRoad = (id: string) => trigger(mod.id, "EditRoad", id);
 export const findRoad = (id: string) => trigger(mod.id, "FindRoad", id);
-export const deleteRoad = (id: string) => trigger(mod.id, "DeleteRoad", id);
+export const deleteRoad = (id: string[]) => trigger(mod.id, "DeleteRoad", id);
 export const setIsUIDragging = (isDragging: boolean) => trigger(mod.id, "SetDragging", isDragging);
 export const setSearchBinder = (q: string) => trigger(mod.id, "Lanes.SetSearchQuery", q);
 export const setRoadsSearchBinder = (q: string) => trigger(mod.id, "Roads.SetSearchQuery", q);

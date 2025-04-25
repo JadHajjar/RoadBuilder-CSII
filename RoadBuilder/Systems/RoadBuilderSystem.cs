@@ -132,7 +132,7 @@ namespace RoadBuilder.Systems
 					return;
 				}
 
-				if (createNewPrefab || !(prefabSystem.TryGetPrefab<NetGeometryPrefab>(prefabRef, out var netPrefab) && netPrefab is INetworkBuilderPrefab _networkBuilderPrefab))
+				if (createNewPrefab || !(prefabSystem.TryGetSpecificPrefab<NetGeometryPrefab>(prefabRef, out var netPrefab) && netPrefab is INetworkBuilderPrefab _networkBuilderPrefab))
 				{
 					CreateNewRoadPrefab(config, entity);
 
@@ -161,7 +161,7 @@ namespace RoadBuilder.Systems
 				return null;
 			}
 
-			if (!prefabSystem.TryGetPrefab<NetGeometryPrefab>(prefabRef, out var roadPrefab))
+			if (!prefabSystem.TryGetSpecificPrefab<NetGeometryPrefab>(prefabRef, out var roadPrefab))
 			{
 				return null;
 			}
@@ -186,7 +186,7 @@ namespace RoadBuilder.Systems
 				return null;
 			}
 
-			if (!prefabSystem.TryGetPrefab<NetGeometryPrefab>(prefabRef, out var roadPrefab))
+			if (!prefabSystem.TryGetSpecificPrefab<NetGeometryPrefab>(prefabRef, out var roadPrefab))
 			{
 				return null;
 			}

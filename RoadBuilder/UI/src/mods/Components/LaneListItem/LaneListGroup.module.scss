@@ -44,7 +44,7 @@
       background-color: #fff;
       mask-size: contain;
       mask-position: 50% 50%;
-      mask-image: url(coui://gameui/Media/Glyphs/ThickStrokeArrowDown.svg);
+      mask-image: url(assetdb://gameui/Media/Glyphs/ThickStrokeArrowDown.svg);
     }
   }
 }
@@ -58,7 +58,7 @@
 
   .foldArrow {
     img {
-      mask-image: url(coui://gameui/Media/Glyphs/ThickStrokeArrowUp.svg);
+      mask-image: url(assetdb://gameui/Media/Glyphs/ThickStrokeArrowUp.svg);
     }
   }
 }
