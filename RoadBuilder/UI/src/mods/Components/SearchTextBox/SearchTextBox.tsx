@@ -10,8 +10,6 @@ import magnifierIcon from "images/RB_Magnifier.svg";
 import arrowLeftClear from "images/RB_ArrowLeftClear.svg";
 import classNames from "classnames";
 
-const AssetGridTheme: Theme | any = getModule("game-ui/game/components/asset-menu/asset-grid/asset-grid.module.scss", "classes");
-
 export const SearchTextBox = (props: { onChange?: (val: string) => void; value?: string }) => {
   const { translate } = useLocalization();
   let [searchQuery, setSearchQuery] = useState<string>(props.value == undefined ? "" : props.value);
