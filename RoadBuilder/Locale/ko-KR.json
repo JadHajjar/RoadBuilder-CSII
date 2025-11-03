@@ -1,6 +1,8 @@
 {
   "Editor.TOOL[RoadBuilderTool]": "도로 빌더(Road Builder)",
+  "Assets.NAME[RoadBuilderPack]": "도로 빌더(Road Builder)",
   "Options.SECTION[RoadBuilder.RoadBuilder.Mod]": "도로 빌더(Road Builder)",
+  "Options.INPUT_MAP[RoadBuilder.RoadBuilder.Mod]": "도로 빌더(Road Builder)",
   "Options.GROUP[RoadBuilder.RoadBuilder.Mod.Hotkey]": "단축키 설정",
   "Options.GROUP[RoadBuilder.RoadBuilder.Mod.Main]": "일반 설정",
   "Options.GROUP[RoadBuilder.RoadBuilder.Mod.Advanced]": "고급 설정",
@@ -28,6 +30,8 @@
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.HideRoadsFromToolbarByDefault]": "툴바에 할당되지 않은 도로는 기본적으로 숨겨집니다.\n\n적용하려면 다시 시작해야 합니다.",
   "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.NoPlaysetIsolation]": "플레이세트 격리 비활성화",
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.NoPlaysetIsolation]": "플레이세트에서 도로를 생성한 경우 도로를 제한하는 대신 모든 플레이세트에서 모든 도로의 잠금을 해제합니다.",
+  "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.AskToResetRoads]": "Ask to reset faulty roads on load",
+  "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.AskToResetRoads]": "Asks for confirmation, instead of automatically applying the fix, in cases where road builder detects faulty roads in your city when loading into it.",
   "RoadBuilder.DIALOG_MESSAGE[DELETE]": "정말로 도로를 삭제하시겠습니까? 기존에 배치되었던 도로들이 전부 삭제됩니다.",
   "RoadBuilder.DIALOG_MESSAGE[ReloadSave]": "도시에 아직 저장되지 않은 도로가 있습니다. 게임을 종료하지 않고 이 세이브를 다시 불러오면 교차로에 대한 변경사항이 손실되지 않습니다.",
   "RoadBuilder.DIALOG_MESSAGE[FixInvalidEdges]": "이 도시의 일부 도로 또는 선로가 유효하지 않습니다.\n\n바닐라 네트워크로 재설정하여 수정하시겠습니까?",

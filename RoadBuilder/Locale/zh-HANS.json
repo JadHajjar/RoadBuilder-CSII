@@ -1,6 +1,8 @@
 {
   "Editor.TOOL[RoadBuilderTool]": "道路制造者",
+  "Assets.NAME[RoadBuilderPack]": "道路制造者",
   "Options.SECTION[RoadBuilder.RoadBuilder.Mod]": "道路制造者",
+  "Options.INPUT_MAP[RoadBuilder.RoadBuilder.Mod]": "道路制造者",
   "Options.GROUP[RoadBuilder.RoadBuilder.Mod.Hotkey]": "快捷键设置",
   "Options.GROUP[RoadBuilder.RoadBuilder.Mod.Main]": "常规设置",
   "Options.GROUP[RoadBuilder.RoadBuilder.Mod.Advanced]": "高级设置",
@@ -28,6 +30,8 @@
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.HideRoadsFromToolbarByDefault]": "未设置工具栏状态的道路将默认隐藏。\n\n此选项需要重启游戏才能生效。",
   "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.NoPlaysetIsolation]": "禁用 Playset 的隔离功能",
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.NoPlaysetIsolation]": "解锁所有 Playset 中的道路，而不是限制使用不同 Playset 中的道路资产。",
+  "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.AskToResetRoads]": "载入时请求重置错误的道路",
+  "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.AskToResetRoads]": "当道路制造者模组在加载过程中检测到存档内的道路有错误时，会先提示您进行确认，而不是自动修复。",
   "RoadBuilder.DIALOG_MESSAGE[DELETE]": "您确定要删除这条道路吗？这将删除存档中任何使用此道路的路段。",
   "RoadBuilder.DIALOG_MESSAGE[ReloadSave]": "此存档包含您之前没有创建的道路。请立即重新加载此存档（不要关闭游戏，否则路口的变更将会丢失）。",
   "RoadBuilder.DIALOG_MESSAGE[FixInvalidEdges]": "此存档中的部分道路或轨道无效（缺少该资产）。\n\n您想通过将其重置为原始道路来修复它们吗？",
