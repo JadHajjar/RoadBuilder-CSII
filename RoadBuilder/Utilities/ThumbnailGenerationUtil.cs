@@ -23,6 +23,9 @@ namespace RoadBuilder.Utilities
 		private readonly INetworkConfig _config;
 		private readonly RoadGenerationData _roadGenerationData;
 		private readonly List<LaneConfig> _lanes;
+		private static SvgItem? _arrowForwardSmall;
+		private static SvgItem? _arrowBackwardSmall;
+		private static SvgItem? _arrowBothSmall;
 		private static SvgItem? _arrowForward;
 		private static SvgItem? _arrowBackward;
 		private static SvgItem? _arrowBoth;
@@ -50,6 +53,9 @@ namespace RoadBuilder.Utilities
 				_lanes.Reverse();
 			}
 
+			_arrowForwardSmall ??= CreateSvg(GetFileName("coui://roadbuildericons/Thumb_ArrowForward_Small.svg"));
+			_arrowBackwardSmall ??= CreateSvg(GetFileName("coui://roadbuildericons/Thumb_ArrowBackward_Small.svg"));
+			_arrowBothSmall ??= CreateSvg(GetFileName("coui://roadbuildericons/Thumb_ArrowBoth_Small.svg"));
 			_arrowForward ??= CreateSvg(GetFileName("coui://roadbuildericons/Thumb_ArrowForward.svg"));
 			_arrowBackward ??= CreateSvg(GetFileName("coui://roadbuildericons/Thumb_ArrowBackward.svg"));
 			_arrowBoth ??= CreateSvg(GetFileName("coui://roadbuildericons/Thumb_ArrowBoth.svg"));
@@ -233,6 +239,7 @@ namespace RoadBuilder.Utilities
 				return false;
 			}
 
+			var smallArrow = false;
 			var sectionTuple = _sections[index];
 
 			if (sectionTuple.HasValue)
@@ -245,14 +252,19 @@ namespace RoadBuilder.Utilities
 					return false;
 				}
 
-				if (section.section.SupportsTwoWay())
+				smallArrow = section.section.FindLanes<CarLane>().All(x => x.m_RoadType == Game.Net.RoadTypes.Bicycle);
+
+				if (section.section.SupportsTwoWay(_lanes[index], section.groupPrefab))
 				{
-					arrow = _arrowBoth;
+					arrow = smallArrow ? _arrowBothSmall : _arrowBoth;
 					return true;
 				}
 			}
 
-			arrow = _lanes[index].Invert ? _arrowBackward : _arrowForward;
+			arrow = smallArrow
+				? _lanes[index].Invert ? _arrowBackwardSmall : _arrowForwardSmall
+				: _lanes[index].Invert ? _arrowBackward : _arrowForward;
+
 			return true;
 		}
 

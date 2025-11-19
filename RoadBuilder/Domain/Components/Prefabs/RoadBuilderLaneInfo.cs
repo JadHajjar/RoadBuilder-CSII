@@ -1,4 +1,6 @@
 ﻿using Game.Prefabs;
+using Game.UI.Editor;
+using Game.UI.Widgets;
 
 using RoadBuilder.Domain.Enums;
 using RoadBuilder.Domain.Prefabs;
@@ -22,7 +24,10 @@ namespace RoadBuilder.Domain.Components.Prefabs
 		public LaneGroundType GroundTexture;
 		public Color LaneColor;
 		public bool NoDirection;
+		public bool Median;
+		[CustomField(typeof(UIIconField))]
 		public string? BackThumbnail;
+		[CustomField(typeof(UIIconField))]
 		public string? FrontThumbnail;
 		public string[]? LaneThumbnails;
 		public NetPieceRequirements[] PieceRequireAll = new NetPieceRequirements[0];
@@ -120,6 +125,12 @@ namespace RoadBuilder.Domain.Components.Prefabs
 		public RoadBuilderLaneInfo WithNoDirection()
 		{
 			NoDirection = true;
+			return this;
+		}
+
+		public RoadBuilderLaneInfo WithMedian()
+		{
+			Median = true;
 			return this;
 		}
 	}

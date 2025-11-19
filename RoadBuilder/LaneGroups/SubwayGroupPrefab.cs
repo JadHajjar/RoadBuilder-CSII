@@ -9,7 +9,7 @@ namespace RoadBuilder.LaneGroups
 	{
 		private const string OptionName = "Two-way Support";
 
-		public override void Initialize()
+		public override bool Initialize()
 		{
 			Prefab!.Options = new RoadBuilderLaneOption[]
 			{
@@ -32,6 +32,8 @@ namespace RoadBuilder.LaneGroups
 
 			SetUp(Sections!["Subway Track Section 4"], false);
 			SetUp(Sections["Subway Track Twoway Section 4"], true);
+
+			return true;
 		}
 
 		private void SetUp(NetSectionPrefab prefab, bool value)

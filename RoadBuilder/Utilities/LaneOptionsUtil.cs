@@ -73,7 +73,10 @@ namespace RoadBuilder.Utilities
 
 				if (option.Type is LaneOptionType.Decoration)
 				{
-					var available = remainingSections.Any(x => x.GetComponent<RoadBuilderLaneGroup>().Combination.Any(x => x.OptionName == option.Name && x.Value is not null));
+					var grassAvailable = remainingSections.Any(x => x.GetComponent<RoadBuilderLaneGroup>().Combination
+						.Any(x => x.OptionName == option.Name && x.Value is not null and not "T"));
+					var treeAvailable = remainingSections.Any(x => x.GetComponent<RoadBuilderLaneGroup>().Combination
+						.Any(x => x.OptionName == option.Name && x.Value is not null and not "G"));
 
 					entries[0] = new()
 					{
@@ -81,7 +84,7 @@ namespace RoadBuilder.Utilities
 						Name = "RoadBuilder.Grass",
 						Icon = "coui://roadbuildericons/RB_GrassWhite.svg",
 						Selected = value is "GT" or "G",
-						Disabled = !available,
+						Disabled = !grassAvailable,
 					};
 					entries[1] = new()
 					{
@@ -89,7 +92,7 @@ namespace RoadBuilder.Utilities
 						Name = "RoadBuilder.Trees",
 						Icon = "coui://roadbuildericons/RB_TreeWhite.svg",
 						Selected = value is "GT" or "T",
-						Disabled = !available,
+						Disabled = !treeAvailable,
 					};
 				}
 				else if (option.Type is LaneOptionType.Checkbox)
@@ -366,11 +369,11 @@ namespace RoadBuilder.Utilities
 			}
 		}
 
-		public static string? GetSelectedOptionValue(INetworkConfig config, LaneConfig lane, RoadBuilderLaneOption option)
+		public static string? GetSelectedOptionValue(INetworkConfig? config, LaneConfig lane, RoadBuilderLaneOption option)
 		{
 			var value = lane.GroupOptions.TryGetValue(option.Name ?? string.Empty, out var val) ? val : option.DefaultValue;
 
-			if (option.Type is LaneOptionType.Decoration)
+			if (option.Type is LaneOptionType.Decoration && config is not null)
 			{
 				var laneIndex = config.Lanes.IndexOf(lane);
 				var addGrass = config.Addons.HasFlag(laneIndex == 0 ? RoadAddons.GrassLeft : laneIndex == config.Lanes.Count - 1 ? RoadAddons.GrassRight : RoadAddons.GrassCenter);

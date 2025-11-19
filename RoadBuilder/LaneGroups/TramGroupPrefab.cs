@@ -7,7 +7,7 @@ namespace RoadBuilder.LaneGroups
 {
 	public class TramGroupPrefab : BaseLaneGroupPrefab
 	{
-		public override void Initialize()
+		public override bool Initialize()
 		{
 			Prefab!.Options = new RoadBuilderLaneOption[0];
 
@@ -29,6 +29,8 @@ namespace RoadBuilder.LaneGroups
 
 			Sections["Tram Track Section 3"].AddComponent<RoadBuilderLaneInfo>().WithRequireNone(RoadCategory.Tiled).WithGroundTexture(LaneGroundType.Asphalt);
 			Sections["RB Tiled Tram Section 3"].AddComponent<RoadBuilderLaneInfo>().WithRequireAll(RoadCategory.Tiled).AddLaneThumbnail("coui://roadbuildericons/Thumb_TiledTramLane.svg").WithGroundTexture(LaneGroundType.Tiled);
+
+			return true;
 		}
 	}
 }

@@ -15,7 +15,7 @@ namespace RoadBuilder.LaneGroups
 		private const string OptionName1 = "Lane Width";
 		private const string OptionName2 = "Ground Type";
 
-		public override void Initialize()
+		public override bool Initialize()
 		{
 			Prefab!.Options = new RoadBuilderLaneOption[]
 			{
@@ -30,6 +30,7 @@ namespace RoadBuilder.LaneGroups
 						new() { Value = "Train", ThumbnailUrl = "coui://roadbuildericons/RB_TrainWhite.svg" },
 						new() { Value = "Gravel", ThumbnailUrl = "coui://roadbuildericons/RB_GravelWhite.svg" },
 						new() { Value = "Tiled", ThumbnailUrl = "coui://roadbuildericons/RB_TiledWhite.svg" },
+						new() { Value = "Harbor", ThumbnailUrl = "coui://roadbuildericons/RB_Harbor.svg" },
 					}
 				},
 				new()
@@ -58,11 +59,16 @@ namespace RoadBuilder.LaneGroups
 			SetUp(Sections!, "RB Train Empty Section {0}", 4, "Train", "Thumb_TracklessLane", "Thumb_TracklessLaneSmall").ForEach(x => x.Item2.WithRequireAny(x.Item1 is 4 ? default : RoadCategory.Train | RoadCategory.Subway).WithGroundTexture(LaneGroundType.Train).WithColor(82, 62, 51));
 			SetUp(Sections!, "RB Gravel Empty Section {0}", 3, "Gravel", "Thumb_GravelLane", "Thumb_GravelLaneSmall").ForEach(x => x.Item2.WithRequireAny(x.Item1 is 3 ? default : RoadCategory.Gravel).WithGroundTexture(LaneGroundType.Gravel).WithColor(143, 131, 97));
 			SetUp(Sections!, "RB Tiled Empty Section {0}", 3, "Tiled", "Thumb_TiledWide", "Thumb_TiledSmall").ForEach(x => x.Item2.WithRequireAny(x.Item1 is 3 ? default : RoadCategory.Tiled).WithGroundTexture(LaneGroundType.Tiled).WithColor(76, 78, 83));
+		
+			if (Sections!.ContainsKey("Harbor Dummy Section 4"))
+			SetUp(Sections!["Harbor Dummy Section 4"], "4m", "Harbor").WithRequireNone(RoadCategory.NonAsphalt).WithGroundTexture(LaneGroundType.Asphalt).AddLaneThumbnail("coui://roadbuildericons/Thumb_CarLaneBright.svg").WithColor(145, 155, 163, 150);
+
+			return true;
 		}
 
-		private IEnumerable<(float, RoadBuilderLaneInfo)> SetUp(Dictionary<string, NetSectionPrefab> sections, string name, float maxWidth, string value2, string largeThumb, string smallThumb)
+		private IEnumerable<(float, RoadBuilderLaneInfo)> SetUp(Dictionary<string, NetSectionPrefab> sections, string name, float maxWidth, string value2, string largeThumb, string smallThumb, float minWidth = 0.5f)
 		{
-			for (var width = 0.5f; width <= maxWidth; width += 0.5f)
+			for (var width = minWidth; width <= maxWidth; width += 0.5f)
 			{
 				var prefab = sections[string.Format(name, width.ToString(CultureInfo.InvariantCulture))];
 				var laneGroup = prefab.AddComponent<RoadBuilderLaneGroup>();
@@ -94,6 +100,27 @@ namespace RoadBuilder.LaneGroups
 
 				yield return (width, laneInfo);
 			}
+		}
+
+		private RoadBuilderLaneInfo SetUp(NetSectionPrefab prefab, string value1, string value2)
+		{
+			var laneInfo = prefab.AddComponent<RoadBuilderLaneGroup>();
+			laneInfo.GroupPrefab = Prefab;
+			laneInfo.Combination = new LaneOptionCombination[]
+			{
+				new()
+				{
+					OptionName = OptionName1,
+					Value = value1
+				},
+				new()
+				{
+					OptionName = OptionName2,
+					Value = value2
+				},
+			};
+
+			return prefab.AddOrGetComponent<RoadBuilderLaneInfo>();
 		}
 	}
 }

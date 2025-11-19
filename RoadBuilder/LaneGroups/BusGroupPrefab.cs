@@ -10,7 +10,7 @@ namespace RoadBuilder.LaneGroups
 		private const string OptionName = "Lane Width";
 		private const string OptionName2 = "Transport Option";
 
-		public override void Initialize()
+		public override bool Initialize()
 		{
 			Prefab!.Options = new RoadBuilderLaneOption[]
 			{
@@ -58,6 +58,8 @@ namespace RoadBuilder.LaneGroups
 			SetUp(Sections!["Public Transport Lane Section 4 - Tram Option"], "4m", "Tram").AddComponent<RoadBuilderLaneInfo>().WithFrontThumbnail("coui://roadbuildericons/RB_BusTramFront.svg").WithBackThumbnail("coui://roadbuildericons/RB_BusTramRear.svg");
 			SetUp(Sections!["RB Public Transport Lane Section 3"], "3m", "");
 			SetUp(Sections!["RB Public Transport Lane Section 4"], "4m", "");
+
+			return true;
 		}
 
 		private NetSectionPrefab SetUp(NetSectionPrefab prefab, string value, string value2)

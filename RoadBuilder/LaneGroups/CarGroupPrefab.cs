@@ -11,7 +11,7 @@ namespace RoadBuilder.LaneGroups
 		private const string OptionName2 = "Transport Option";
 		private const string OptionName3 = "Markings";
 
-		public override void Initialize()
+		public override bool Initialize()
 		{
 			Prefab!.Options = new RoadBuilderLaneOption[]
 			{
@@ -87,6 +87,8 @@ namespace RoadBuilder.LaneGroups
 			SetUp(Sections["Highway Drive Section 4"], "4m", "").AddOrGetComponent<RoadBuilderLaneInfo>().WithRequireNone(RoadCategory.Gravel | RoadCategory.Tiled);
 			SetUp(Sections["Highway Drive Section 4 - Transport Option"], "4m", "Transport").AddOrGetComponent<RoadBuilderLaneInfo>().WithRequireNone(RoadCategory.Gravel | RoadCategory.Tiled).WithFrontThumbnail("coui://roadbuildericons/RB_CarBusFront.svg").WithBackThumbnail("coui://roadbuildericons/RB_CarBusRear.svg");
 			SetUp(Sections["Car Drive Section 4 - Transport Tram Option"], "4m", "Tram").AddOrGetComponent<RoadBuilderLaneInfo>().WithRequireNone(RoadCategory.Gravel | RoadCategory.Tiled).WithFrontThumbnail("coui://roadbuildericons/RB_CarTramFront.svg").WithBackThumbnail("coui://roadbuildericons/RB_CarTramRear.svg");
+
+			return true;
 		}
 
 		private NetSectionPrefab SetUp(NetSectionPrefab prefab, string value1, string value2, bool noMarkings = false)

@@ -543,7 +543,7 @@ namespace RoadBuilder.Systems.UI
 					Invert = lane.Invert,
 					NoDirection = noDirection,
 					InvertImage = isEdge && cityConfigurationSystem.leftHandTraffic ? !isBackward : isBackward,
-					TwoWay = validSection && section?.SupportsTwoWay() == true,
+					TwoWay = validSection && section?.SupportsTwoWay(lane, groupPrefab) == true,
 					SectionPrefabName = string.IsNullOrEmpty(lane.GroupPrefabName) ? lane.SectionPrefabName : lane.GroupPrefabName,
 					IsGroup = !string.IsNullOrEmpty(lane.GroupPrefabName),
 					Options = LaneOptionsUtil.GenerateOptions(roadGenerationDataSystem.RoadGenerationData, config, lane),

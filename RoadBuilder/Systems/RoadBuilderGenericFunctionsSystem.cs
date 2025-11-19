@@ -1,4 +1,5 @@
-﻿using Colossal.Entities;
+﻿using Colossal.Core;
+using Colossal.Entities;
 
 using Game;
 using Game.Common;
@@ -156,7 +157,7 @@ namespace RoadBuilder.Systems
 
 		public void DeleteRoad(params string?[] ids)
 		{
-			GameManager.instance.userInterface.appBindings.ShowConfirmationDialog(new ConfirmationDialog("Options.SECTION[RoadBuilder.RoadBuilder.Mod]", "RoadBuilder.DIALOG_MESSAGE[DELETE]", "Common.DIALOG_ACTION[Yes]", "Common.DIALOG_ACTION[No]"), msg =>
+			GameManager.instance.userInterface.appBindings.ShowConfirmationDialog(new ConfirmationDialog("Options.SECTION[RoadBuilder.RoadBuilder.Mod]", ids.Length == 1 ? "RoadBuilder.DIALOG_MESSAGE[DELETE]": "RoadBuilder.DIALOG_MESSAGE[DELETEMANY]", "Common.DIALOG_ACTION[Yes]", "Common.DIALOG_ACTION[No]"), msg =>
 			{
 				if (msg == 0)
 				{

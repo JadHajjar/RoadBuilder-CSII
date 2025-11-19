@@ -92,12 +92,34 @@ namespace RoadBuilder.Utilities
 				x.m_Piece.TryGet<NetDividerPiece>(out var divider) && divider.m_BlockTraffic);
 		}
 
-		public static bool SupportsTwoWay(this NetSectionPrefab netSection)
+		public static bool SupportsTwoWay(this NetSectionPrefab netSection, LaneConfig? lane = null, LaneGroupPrefab? groupPrefab = null)
 		{
 			var carLanes = FindLanes<CarLane>(netSection);
 			var trackLanes = FindLanes<TrackLane>(netSection);
 
-			return carLanes.Any(x => x.m_Twoway) || trackLanes.Any(x => x.m_Twoway);
+			if (carLanes.Any(x => x.m_Twoway) || trackLanes.Any(x => x.m_Twoway))
+			{
+				return true;
+			}
+
+			if (netSection.TryGet<RoadBuilderLaneInfo>(out var laneInfo) && laneInfo.NoDirection)
+			{
+				return true;
+			}
+
+			if (groupPrefab is null || lane is null)
+			{
+				return false;
+			}
+
+			var twoWayOption = groupPrefab.Options.FirstOrDefault(x => x.Type == Domain.Enums.LaneOptionType.TwoWay);
+
+			if (twoWayOption is null)
+			{
+				return false;
+			}
+
+			return LaneOptionsUtil.GetSelectedOptionValue(null, lane, twoWayOption) is not null;
 		}
 
 		public static bool IsTrainOrSubway(this NetSectionPrefab netSection)

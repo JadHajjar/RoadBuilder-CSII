@@ -118,12 +118,12 @@ namespace RoadBuilder.Utilities
 
 				NetworkPrefab.Prefab.name = cfg.ID = $"{NetworkPrefab.GetType().Name.ToLower()[0]}{Guid.NewGuid()}-{PlatformManager.instance.userSpecificPath}";
 			}
-
+#if !DEBUG
 			if (GameManager.instance.configuration.uiDeveloperMode)
 			{
 				return;
 			}
-
+#endif
 			var thumbnail = new ThumbnailGenerationUtil(NetworkPrefab, _roadGenerationData).GenerateThumbnail();
 
 			if (thumbnail is not null and not "")
@@ -358,7 +358,7 @@ namespace RoadBuilder.Utilities
 				{
 					yield return new NetSectionInfo
 					{
-						m_Section = leftSectionEdgeInfo?.SidePrefab ?? _roadGenerationData.NetSectionPrefabs[GetSideName()],
+						m_Section = leftSectionEdgeInfo?.LeftSidePrefab ?? _roadGenerationData.NetSectionPrefabs[GetSideName()],
 						m_Invert = true
 					};
 				}
@@ -395,6 +395,7 @@ namespace RoadBuilder.Utilities
 					{
 						m_Section = section,
 						m_Invert = lane.Invert,
+						m_Median = laneInfo?.Median ?? false,
 						m_RequireAll = laneInfo?.PieceRequireAll ?? new NetPieceRequirements[0],
 						m_RequireAny = laneInfo?.PieceRequireAny ?? new NetPieceRequirements[0],
 						m_RequireNone = laneInfo?.PieceRequireNone ?? new NetPieceRequirements[0],
@@ -428,6 +429,7 @@ namespace RoadBuilder.Utilities
 					{
 						m_Section = section,
 						m_Invert = lane.Invert,
+						m_Median = laneInfo?.Median ?? false,
 						m_RequireAll = laneInfo?.PieceRequireAll ?? new NetPieceRequirements[0],
 						m_RequireAny = laneInfo?.PieceRequireAny ?? new NetPieceRequirements[0],
 						m_RequireNone = laneInfo?.PieceRequireNone ?? new NetPieceRequirements[0],
@@ -438,7 +440,7 @@ namespace RoadBuilder.Utilities
 				{
 					yield return new NetSectionInfo
 					{
-						m_Section = rightSectionEdgeInfo?.SidePrefab ?? _roadGenerationData.NetSectionPrefabs[GetSideName()],
+						m_Section = rightSectionEdgeInfo?.RightSidePrefab ?? _roadGenerationData.NetSectionPrefabs[GetSideName()],
 						m_Invert = false
 					};
 				}

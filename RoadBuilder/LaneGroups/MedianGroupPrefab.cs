@@ -9,7 +9,7 @@ namespace RoadBuilder.LaneGroups
 	{
 		private const string OptionName = "Median Width";
 
-		public override void Initialize()
+		public override bool Initialize()
 		{
 			Prefab!.Options = new RoadBuilderLaneOption[]
 			{
@@ -56,6 +56,8 @@ namespace RoadBuilder.LaneGroups
 			SetUp<RoadBuilderVanillaLaneGroup>(Sections["Road Median 2"], "2m");
 			SetUp<RoadBuilderVanillaLaneGroup>(Sections["Road Median 5"], "5m", true);
 			SetUp<RoadBuilderVanillaLaneGroup>(Sections["Parking Road Median 5"], "5m", true);
+
+			return true;
 		}
 
 		private NetSectionPrefab SetUp<T>(NetSectionPrefab prefab, string value, bool hasGrass = false) where T : RoadBuilderLaneGroup

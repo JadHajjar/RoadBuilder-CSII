@@ -10,6 +10,6 @@ namespace RoadBuilder.LaneGroups
 	{
 		public LaneGroupPrefab? Prefab { get; set; }
 		public Dictionary<string, NetSectionPrefab>? Sections { get; set; }
-		public abstract void Initialize();
+		public abstract bool Initialize();
 	}
 }

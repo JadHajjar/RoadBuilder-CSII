@@ -10,7 +10,7 @@ namespace RoadBuilder.LaneGroups
 		private const string OptionName1 = "Lane Width";
 		private const string OptionName2 = "Ground Type";
 
-		public override void Initialize()
+		public override bool Initialize()
 		{
 			Prefab!.Options = new RoadBuilderLaneOption[]
 			{
@@ -44,6 +44,8 @@ namespace RoadBuilder.LaneGroups
 			SetUp(Sections["RB Train Pole Section 1"], "1m", "Train").WithThumbnail("coui://roadbuildericons/RB_TrainShoulder.svg").WithGroundTexture(LaneGroundType.Train).WithColor(82, 62, 51).AddLaneThumbnail("coui://roadbuildericons/Thumb_ShoulderTrack.svg");
 			SetUp(Sections["RB Tram Pole Section 2"], "2m", "Tram").WithThumbnail("coui://roadbuildericons/RB_TramShoulder.svg").WithGroundTexture(LaneGroundType.Asphalt).AddLaneThumbnail("coui://roadbuildericons/Thumb_ShoulderTrack.svg");
 			SetUp(Sections["RB Tram Pole Section 1"], "1m", "Tram").WithThumbnail("coui://roadbuildericons/RB_TramShoulder.svg").WithGroundTexture(LaneGroundType.Asphalt).AddLaneThumbnail("coui://roadbuildericons/Thumb_ShoulderTrack.svg");
+
+			return true;
 		}
 
 		private RoadBuilderLaneInfo SetUp(NetSectionPrefab prefab, string value1, string value2)

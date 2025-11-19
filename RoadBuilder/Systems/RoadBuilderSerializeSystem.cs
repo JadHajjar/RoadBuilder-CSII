@@ -1,4 +1,5 @@
-﻿using Colossal.Serialization.Entities;
+﻿using Colossal.Core;
+using Colossal.Serialization.Entities;
 
 using Game;
 using Game.Common;

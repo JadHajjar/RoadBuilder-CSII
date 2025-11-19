@@ -65,7 +65,7 @@ export const EditPropertiesPopup = () => {
                 options={currentLane?.Options ?? new Array()}
               ></OptionsPanelComponent>
             ) : (
-              <span>{translate("RoadBuilder.NoOptions")}</span>
+              <span style={{ marginLeft: "10rem" }}>{translate("RoadBuilder.NoOptions")}</span>
             )}
           </div>
           <div className={styles.caret}></div>

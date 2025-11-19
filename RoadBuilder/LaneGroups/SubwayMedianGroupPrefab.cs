@@ -9,7 +9,7 @@ namespace RoadBuilder.LaneGroups
 	{
 		private const string OptionName = "Style";
 
-		public override void Initialize()
+		public override bool Initialize()
 		{
 			Prefab!.Options = new RoadBuilderLaneOption[]
 			{
@@ -46,6 +46,8 @@ namespace RoadBuilder.LaneGroups
 
 			SetUp(Sections["Subway Median 8"], "Raised", false);
 			SetUp(Sections["Subway Median 8 - Plain"], "Flat", false);
+
+			return true;
 		}
 
 		private NetSectionPrefab SetUp(NetSectionPrefab prefab, string value, bool link)

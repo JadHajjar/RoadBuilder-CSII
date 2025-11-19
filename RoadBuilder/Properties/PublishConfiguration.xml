@@ -126,12 +126,12 @@ This helps us better assist you and avoids your message from getting lost in the
   <Screenshot Value="Properties/Screenshot_07.png" />
   <Tag Value="Code Mod" />
   <ForumLink Value="https://forum.paradoxplaza.com/forum/threads/road-builder.1698661/" />
-  <ModVersion Value="0.5.5" />
+  <ModVersion Value="0.6.1" />
   <GameVersion Value="1.3.*" />
   <ChangeLog>
-# v0.5.5
+# v0.6.1
 ## Hotfix
-* Compatibility with patch 1.3.3f1.
+* Fixed sidewalks not transitioning correctly from previous versions.
 </ChangeLog>
   <ExternalLink Type="discord" Url="https://discord.gg/E4k8ZEtRxd" />
   <ExternalLink Type="github" Url="https://github.com/JadHajjar/RoadBuilder-CSII" />

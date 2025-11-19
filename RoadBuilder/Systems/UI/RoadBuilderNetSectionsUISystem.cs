@@ -165,7 +165,7 @@ namespace RoadBuilder.Systems.UI
 		{
 			var carLanes = prefab.FindLanes<CarLane>();
 
-			if (carLanes.Any(x => x.m_RoadType > Game.Net.RoadTypes.Car))
+			if (carLanes.Any(x => (x.m_RoadType & (Game.Net.RoadTypes.Watercraft | Game.Net.RoadTypes.Helicopter | Game.Net.RoadTypes.Airplane)) != 0))
 			{
 				return true;
 			}
