@@ -1,6 +1,8 @@
 {
   "Editor.TOOL[RoadBuilderTool]": "Road Builder",
+  "Assets.NAME[RoadBuilderPack]": "Road Builder",
   "Options.SECTION[RoadBuilder.RoadBuilder.Mod]": "Road Builder",
+  "Options.INPUT_MAP[RoadBuilder.RoadBuilder.Mod]": "Road Builder",
   "Options.GROUP[RoadBuilder.RoadBuilder.Mod.Hotkey]": "Налаштування гарячих клавіш",
   "Options.GROUP[RoadBuilder.RoadBuilder.Mod.Main]": "Загальні налаштування",
   "Options.GROUP[RoadBuilder.RoadBuilder.Mod.Advanced]": "Розширені налаштування",
@@ -28,6 +30,8 @@
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.HideRoadsFromToolbarByDefault]": "Roads that do not have an assigned toolbar state will be hidden by default.\n\nRequires a restart to take effect.",
   "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.NoPlaysetIsolation]": "Disable Playset Isolation",
   "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.NoPlaysetIsolation]": "Unlocks all roads in all playsets instead of restricting roads in the playset they were created in.",
+  "Options.OPTION[RoadBuilder.RoadBuilder.Mod.Setting.AskToResetRoads]": "Ask to reset faulty roads on load",
+  "Options.OPTION_DESCRIPTION[RoadBuilder.RoadBuilder.Mod.Setting.AskToResetRoads]": "Asks for confirmation, instead of automatically applying the fix, in cases where road builder detects faulty roads in your city when loading into it.",
   "RoadBuilder.DIALOG_MESSAGE[DELETE]": "Are you sure you want to delete this road? This will remove any placed segments in your city that uses it.",
   "RoadBuilder.DIALOG_MESSAGE[ReloadSave]": "This city contains roads that you did not have already. Reload this save-game immediately, without closing the game, so your changes to intersections are not lost.",
   "RoadBuilder.DIALOG_MESSAGE[FixInvalidEdges]": "Some roads or tracks in this city are invalid.\n\nWould you like to fix them by resetting them to vanilla networks?",
