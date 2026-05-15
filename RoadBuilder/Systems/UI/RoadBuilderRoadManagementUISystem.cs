@@ -253,26 +253,26 @@ namespace RoadBuilder.Systems.UI
 
 		private void AddToPlayset()
 		{
-			if (PdxModsUtil.CurrentPlayset > 0
+			if (PdxModsUtil.CurrentPlayset is not null
 				&& SelectedRoad?.Config is not null
 				&& (SelectedRoad.Config.Playsets is null || !SelectedRoad.Config.Playsets.Contains(PdxModsUtil.CurrentPlayset)))
 			{
 				SelectedRoad.Config.Playsets ??= new();
 
-				SelectedRoad.Config.Playsets.Remove(-PdxModsUtil.CurrentPlayset);
+				SelectedRoad.Config.Playsets.Remove($"-{PdxModsUtil.CurrentPlayset}");
 				SelectedRoad.Config.Playsets.Add(PdxModsUtil.CurrentPlayset);
 			}
 		}
 
 		private void RemoveFromPlayset()
 		{
-			if (PdxModsUtil.CurrentPlayset > 0 && SelectedRoad?.Config is not null)
+			if (PdxModsUtil.CurrentPlayset is not null && SelectedRoad?.Config is not null)
 			{
 				SelectedRoad.Config.Playsets ??= new();
 
 				if (SelectedRoad.Config.Playsets.Count == 0)
 				{
-					SelectedRoad.Config.Playsets.Add(-PdxModsUtil.CurrentPlayset);
+					SelectedRoad.Config.Playsets.Add($"-{PdxModsUtil.CurrentPlayset}");
 				}
 				else if (SelectedRoad.Config.Playsets.Contains(PdxModsUtil.CurrentPlayset))
 				{
@@ -405,7 +405,11 @@ namespace RoadBuilder.Systems.UI
 				}
 
 				config.ApplyVersionChanges();
-				config.Playsets = new() { PdxModsUtil.CurrentPlayset };
+
+				if (PdxModsUtil.CurrentPlayset is not null)
+				{
+					config.Playsets = new() { PdxModsUtil.CurrentPlayset };
+				}
 
 				roadBuilderSystem.AddPrefab(config);
 

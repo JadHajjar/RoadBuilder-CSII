@@ -1,6 +1,59 @@
 [
   {
     "Beta": true,
+    "Version": "0.6.5",
+    "Date": "2026-04-29",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Compatibility with patch 1.5.7f1.",
+          "Fixed some UI inconsistencies"
+        ]
+      }
+    ]
+  },
+  {
+    "Beta": true,
+    "Version": "0.6.4",
+    "Date": "2025-12-20",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Fixed a minor warning showing up as an error popup."
+        ]
+      }
+    ]
+  },
+  {
+    "Beta": true,
+    "Version": "0.6.3",
+    "Date": "2025-12-03",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Compatibility with patch 1.5.2f1."
+        ]
+      }
+    ]
+  },
+  {
+    "Beta": true,
+    "Version": "0.6.2",
+    "Date": "2025-11-23",
+    "ChangeGroups": [
+      {
+        "Name": "Bugfix",
+        "Changes": [
+          "Fixed UI breaking when opening the road management window."
+        ]
+      }
+    ]
+  },
+  {
+    "Beta": true,
     "Version": "0.6.1",
     "Date": "2025-11-19",
     "ChangeGroups": [

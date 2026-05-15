@@ -23,7 +23,7 @@ namespace RoadBuilder.Domain.Configurations
 		public RoadAddons Addons { get; set; }
 		public List<LaneConfig> Lanes { get; set; } = new();
 		public ShowInToolbarState ToolbarState { get; set; }
-		public List<int>? Playsets { get; set; }
+		public List<string>? Playsets { get; set; }
 		bool INetworkConfig.Uploaded { get; set; }
 
 		public void Deserialize<TReader>(TReader reader) where TReader : IReader

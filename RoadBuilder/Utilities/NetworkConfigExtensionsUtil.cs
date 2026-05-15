@@ -15,9 +15,10 @@ namespace RoadBuilder.Utilities
 		{
 			return Mod.Settings!.NoPlaysetIsolation
 				|| config.Playsets is null
-				|| ((!config.Playsets.Any(x => x > 0)
-				|| config.Playsets.Contains(PdxModsUtil.CurrentPlayset))
-				&& !config.Playsets.Contains(-PdxModsUtil.CurrentPlayset));
+				|| PdxModsUtil.CurrentPlayset is null
+				|| ((!config.Playsets.All(string.IsNullOrEmpty)
+				|| (config.Playsets.Contains(PdxModsUtil.CurrentPlayset))
+				&& !config.Playsets.Contains($"-{PdxModsUtil.CurrentPlayset}")));
 		}
 
 		public static bool GetEdgeLaneInfo(NetSectionPrefab? section, LaneGroupPrefab? groupPrefab, out RoadBuilderEdgeLaneInfo? sectionEdgeInfo)

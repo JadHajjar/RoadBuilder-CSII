@@ -12,7 +12,7 @@ namespace RoadBuilder.Utilities
 		private static readonly PdxSdkPlatform _pdxPlatform;
 		private static readonly IContext? _context;
 
-		public static int CurrentPlayset { get; private set; }
+		public static string? CurrentPlayset { get; private set; }
 		public static string? UserId { get; private set; }
 
 		static PdxModsUtil()
@@ -31,7 +31,7 @@ namespace RoadBuilder.Utilities
 			var currentPlaysetResult = await _context.Mods.GetActivePlayset();
 			var profileResult = await _context.Profile.Get();
 
-			CurrentPlayset = currentPlaysetResult.PlaysetId;
+			CurrentPlayset = _context.Mods.GetActivePlaysetId();
 			UserId = profileResult.Social?.DisplayName;
 
 			_pdxPlatform.onActivePlaysetChanged += PdxPlatform_onActivePlaysetChanged;
@@ -57,9 +57,7 @@ namespace RoadBuilder.Utilities
 				return;
 			}
 
-			var currentPlaysetResult = await _context.Mods.GetActivePlayset();
-
-			CurrentPlayset = currentPlaysetResult.PlaysetId;
+			CurrentPlayset = _context.Mods.GetActivePlaysetId();
 		}
 	}
 }

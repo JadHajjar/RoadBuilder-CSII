@@ -187,11 +187,12 @@ export const ManageRoadsView = (props: { editor: boolean }) => {
           <div className={styles.filters}>
             {!discoverView && (
               <Tooltip tooltip={translate("RoadBuilder.DeleteAllRoads")}>
-                <Button variant="flat" selected={showAllPlaysets} onSelect={() => deleteAllRoads()}>
+                <Button variant="flat" onSelect={() => deleteAllRoads()}>
                   <img style={{ maskImage: "url(coui://roadbuildericons/RB_Trash.svg)" }} />
                 </Button>
               </Tooltip>
             )}
+            
             {!discoverView && RestrictPlayset && (
               <Tooltip tooltip={translate("RoadBuilder.ShowAllPlaysets")}>
                 <Button variant="flat" selected={showAllPlaysets} onSelect={() => setShowAllPlaysets(!showAllPlaysets)}>

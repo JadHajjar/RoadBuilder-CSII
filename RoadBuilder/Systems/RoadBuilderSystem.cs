@@ -60,7 +60,7 @@ namespace RoadBuilder.Systems
 			new RoadNameUtil(this, roadBuilderUISystem, netSectionsSystem);
 
 			// Delay getting the toolbar ui system assets for the next frame
-			GameManager.instance.RegisterUpdater(() => toolbarUISystemLastSelectedAssets ??= typeof(ToolbarUISystem).GetField("m_LastSelectedAssets", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(World.GetOrCreateSystemManaged<ToolbarUISystem>()) as Dictionary<Entity, Entity>);
+			MainThreadDispatcher.RegisterUpdater(() => toolbarUISystemLastSelectedAssets ??= typeof(ToolbarUISystem).GetField("m_LastSelectedAssets", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(World.GetOrCreateSystemManaged<ToolbarUISystem>()) as Dictionary<Entity, Entity>);
 		}
 
 		protected override void OnUpdate()
@@ -344,23 +344,30 @@ namespace RoadBuilder.Systems
 
 					Mod.Log.Debug($"Configuration Found: {prefab.Prefab.name} - {prefab.Config?.ID}");
 
-					if (generateNewThumbnails && roadGenerationDataSystem.RoadGenerationData is not null)
+					try
 					{
-						var thumbnail = new ThumbnailGenerationUtil(prefab, roadGenerationDataSystem.RoadGenerationData).GenerateThumbnail();
-
-						if (thumbnail is not null and not "")
+						if (generateNewThumbnails && roadGenerationDataSystem.RoadGenerationData is not null)
 						{
-							prefab.Prefab.AddOrGetComponent<UIObject>().m_Icon = thumbnail;
+							var thumbnail = new ThumbnailGenerationUtil(prefab, roadGenerationDataSystem.RoadGenerationData).GenerateThumbnail();
+
+							if (thumbnail is not null and not "")
+							{
+								prefab.Prefab.AddOrGetComponent<UIObject>().m_Icon = thumbnail;
+							}
+						}
+
+						if (prefab.Prefab.name != prefab.Config?.ID && prefab.Config is not null)
+						{
+							Mod.Log.Warn($"Configuration Mismatch: {prefab.Prefab.name} - {prefab.Config?.ID}");
+
+							prefab.Prefab.name = prefab.Config?.ID;
+
+							UpdatePrefab(prefab.Prefab);
 						}
 					}
-
-					if (prefab.Prefab.name != prefab.Config?.ID && prefab.Config is not null)
+					catch (Exception ex)
 					{
-						Mod.Log.Warn($"Configuration Mismatch: {prefab.Prefab.name} - {prefab.Config?.ID}");
-
-						prefab.Prefab.name = prefab.Config?.ID;
-
-						UpdatePrefab(prefab.Prefab);
+						Mod.Log.Error(ex, $"Error while updating configuration: {prefab.Prefab.name} - {prefab.Config?.ID}");
 					}
 				}
 			}

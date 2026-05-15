@@ -43,10 +43,12 @@ export const ManageRoadPanel = ({ road }: { road: RoadConfiguration }) => {
   };
 
   useEffect(() => {
-    if (nameRef === null || nameRef.current === null) return;
-    console.log((nameRef.current as any).firstChild.firstChild);
-    (nameRef.current as any).firstChild.firstChild.focus();
-    (nameRef.current as any).firstChild.firstChild.select();
+    const el = (nameRef.current as any)?.firstChild?.firstChild;
+
+    if (el && typeof el.select === "function") {
+        el.focus();
+        el.select();
+    }
   }, [showNameTextbox]);
 
   return (
@@ -85,7 +87,7 @@ export const ManageRoadPanel = ({ road }: { road: RoadConfiguration }) => {
       <div className={styles.buttons}>
         <Tooltip tooltip={translate("RoadBuilder.PlaceTooltip")}>
           <Button variant="flat" onSelect={() => activateRoad(road.ID)}>
-            <img style={{ maskImage: "url(coui://roadbuildericons/RB_PlaceMore.svg)", width: "24rem", height: "24rem", marginRight: "6rem" }} />{" "}
+            <img style={{ maskImage: "url(coui://roadbuildericons/RB_PlaceMore.svg)", width: "24rem", height: "24rem", marginRight: "6rem" }} />
             {translate("RoadBuilder.Place")}
           </Button>
         </Tooltip>

@@ -80,7 +80,7 @@ namespace RoadBuilder.Systems
 			{
 				editorToolUISystem.activeTool = editorToolUISystem.tools.First(x => x is EditorPrefabTool);
 
-				GameManager.instance.RegisterUpdater(() => toolSystem.ActivatePrefabTool(prefab.Prefab));
+				MainThreadDispatcher.RegisterUpdater(() => toolSystem.ActivatePrefabTool(prefab.Prefab));
 			}
 			else
 			{
