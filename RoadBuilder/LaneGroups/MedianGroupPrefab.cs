@@ -62,7 +62,7 @@ namespace RoadBuilder.LaneGroups
 
 		private NetSectionPrefab SetUp<T>(NetSectionPrefab prefab, string value, bool hasGrass = false) where T : RoadBuilderLaneGroup
 		{
-			var laneInfo = prefab.AddComponent<T>();
+			var laneInfo = prefab.AddOrGetComponent<T>();
 			laneInfo.GroupPrefab = Prefab;
 			laneInfo.Combination = hasGrass
 			? new LaneOptionCombination[]

@@ -13,6 +13,8 @@ namespace RoadBuilder.Utilities
 	{
 		public static void Save(INetworkConfig config)
 		{
+			Mod.Log.Debug($"LocalSaveUtil.Save: {config.GetType().Name} id={config.ID} name={config.Name}");
+
 			DeletePreviousLocalConfig(config);
 
 			config.Version = RoadBuilderSerializeSystem.CURRENT_VERSION;

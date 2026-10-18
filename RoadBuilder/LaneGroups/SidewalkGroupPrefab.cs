@@ -97,12 +97,12 @@ namespace RoadBuilder.LaneGroups
 				},
 			};
 
-			Prefab.AddComponent<RoadBuilderLaneInfo>()
+			Prefab.AddOrGetComponent<RoadBuilderLaneInfo>()
 				.AddLaneThumbnail("coui://roadbuildericons/Thumb_SidewalkWide.svg");
 
-			Prefab.AddComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_WideSidewalkRight.svg";
+			Prefab.AddOrGetComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_WideSidewalkRight.svg";
 
-			var edgeInfo = Prefab.AddComponent<RoadBuilderEdgeLaneInfo>();
+			var edgeInfo = Prefab.AddOrGetComponent<RoadBuilderEdgeLaneInfo>();
 			edgeInfo.AddSidewalkStateOnNode = true;
 			edgeInfo.SidePrefab = Sections!["Road Side 0"];
 
@@ -139,7 +139,7 @@ namespace RoadBuilder.LaneGroups
 			if (Sections!.ContainsKey("Harbor Sidewalk Section 6"))
 			{
 				SetUp<RoadBuilderLaneGroup>(Sections["Harbor Sidewalk Section 6"], "H", "6m", "", null).WithColor(145, 155, 163, 150);
-				var harborEdgeInfo = Sections["Harbor Sidewalk Section 6"].AddComponent<RoadBuilderEdgeLaneInfo>();
+				var harborEdgeInfo = Sections["Harbor Sidewalk Section 6"].AddOrGetComponent<RoadBuilderEdgeLaneInfo>();
 				harborEdgeInfo.AddSidewalkStateOnNode = true;
 				harborEdgeInfo.SidePrefab = Sections!["Harbor Road Side Section 0"];
 			}
@@ -152,7 +152,7 @@ namespace RoadBuilder.LaneGroups
 
 		private RoadBuilderLaneInfo SetUp<T>(NetSectionPrefab prefab, string value1, string value2, string value3, string? deco = "") where T : RoadBuilderLaneGroup
 		{
-			var laneInfo = prefab.AddComponent<T>();
+			var laneInfo = prefab.AddOrGetComponent<T>();
 			laneInfo.GroupPrefab = Prefab;
 			laneInfo.Combination = new LaneOptionCombination[]
 			{
@@ -184,28 +184,28 @@ namespace RoadBuilder.LaneGroups
 			switch (value1 + value3)
 			{
 				case "PAngled":
-					prefab.AddComponent<RoadBuilderLaneInfo>()
+					prefab.AddOrGetComponent<RoadBuilderLaneInfo>()
 						.WithFrontThumbnail("coui://roadbuildericons/RB_ParkingFront45-60withSidewalk.svg")
 						.WithBackThumbnail("coui://roadbuildericons/RB_ParkingRear45-60withSidewalk.svg")
 						.AddLaneThumbnail("coui://roadbuildericons/Thumb_AngledParkingLane.svg")
 						.AddLaneThumbnail("coui://roadbuildericons/Thumb_ParkingSidewalk.svg");
 					break;
 				case "PPerpendicular":
-					prefab.AddComponent<RoadBuilderLaneInfo>()
+					prefab.AddOrGetComponent<RoadBuilderLaneInfo>()
 						.WithFrontThumbnail("coui://roadbuildericons/RB_ParkingFront90withSidewalk.svg")
 						.WithBackThumbnail("coui://roadbuildericons/RB_ParkingRear90withSidewalk.svg")
 						.AddLaneThumbnail("coui://roadbuildericons/Thumb_90ParkingLane.svg")
 						.AddLaneThumbnail("coui://roadbuildericons/Thumb_ParkingSidewalk.svg");
 					break;
 				case "B":
-					prefab.AddComponent<RoadBuilderLaneInfo>()
+					prefab.AddOrGetComponent<RoadBuilderLaneInfo>()
 						.WithColor(43, 161, 82, 200)
 						.WithThumbnail("coui://roadbuildericons/RB_BikewSidewalkRear.svg")
 						.AddLaneThumbnail("coui://roadbuildericons/Thumb_BikeLane.svg")
 						.AddLaneThumbnail("coui://roadbuildericons/Thumb_Sidewalk.svg");
 					break;
 				default:
-					prefab.AddComponent<RoadBuilderLaneInfo>()
+					prefab.AddOrGetComponent<RoadBuilderLaneInfo>()
 						.WithFrontThumbnail("coui://roadbuildericons/RB_SidewalkwParkingFront.svg")
 						.WithBackThumbnail("coui://roadbuildericons/RB_SidewalkwParkingRear.svg")
 						.AddLaneThumbnail("coui://roadbuildericons/Thumb_ParkingLane.svg")

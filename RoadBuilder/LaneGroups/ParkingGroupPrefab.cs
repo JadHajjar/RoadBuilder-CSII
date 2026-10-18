@@ -59,11 +59,11 @@ namespace RoadBuilder.LaneGroups
 				}
 			};
 
-			Prefab.AddComponent<RoadBuilderLaneInfo>()
+			Prefab.AddOrGetComponent<RoadBuilderLaneInfo>()
 				.WithRequireNone(RoadCategory.NonAsphalt)
 				.AddLaneThumbnail("coui://roadbuildericons/Thumb_CarLane.svg");
 
-			Prefab.AddComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_ParkingFront0Center.svg";
+			Prefab.AddOrGetComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_ParkingFront0Center.svg";
 
 			SetUp(Sections!["RB Parking Section Parallel"], "Parallel", "1").AddOrGetComponent<RoadBuilderLaneInfo>().AddLaneThumbnail("coui://roadbuildericons/Thumb_CarLaneSmall.svg").WithFrontThumbnail("coui://roadbuildericons/RB_ParkingFront0.svg").WithBackThumbnail("coui://roadbuildericons/RB_ParkingRear0.svg");
 			SetUp(Sections!["RB Parking Section Parallel NoMarking"], "Parallel", "").AddOrGetComponent<RoadBuilderLaneInfo>().WithNoDirection().AddLaneThumbnail("coui://roadbuildericons/Thumb_CarLaneSmall.svg").WithFrontThumbnail("coui://roadbuildericons/RB_ParkingFront0.svg").WithBackThumbnail("coui://roadbuildericons/RB_ParkingRear0.svg");
@@ -77,7 +77,7 @@ namespace RoadBuilder.LaneGroups
 
 		private NetSectionPrefab SetUp(NetSectionPrefab prefab, string value1, string value2)
 		{
-			var laneInfo = prefab.AddComponent<RoadBuilderLaneGroup>();
+			var laneInfo = prefab.AddOrGetComponent<RoadBuilderLaneGroup>();
 			laneInfo.GroupPrefab = Prefab;
 			laneInfo.Combination = new LaneOptionCombination[]
 			{

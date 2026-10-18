@@ -2,6 +2,8 @@
 
 using RoadBuilder.Utilities;
 
+using System;
+
 using Unity.Entities;
 
 namespace RoadBuilder.Systems
@@ -32,14 +34,28 @@ namespace RoadBuilder.Systems
 
 			Enabled = false;
 
-			foreach (var config in LocalSaveUtil.LoadConfigs())
+			var configs = LocalSaveUtil.LoadConfigs();
+			var count = 0;
+
+			foreach (var config in configs)
 			{
-				Mod.Log.Debug($"LoadLocalNetwork: {config.GetType().Name} {config.ID}");
+				Mod.Log.Debug($"LoadLocalNetwork: {config.GetType().Name} id={config.ID} name={config.Name}");
 
-				config.ApplyVersionChanges();
+				try
+				{
+					config.ApplyVersionChanges();
 
-				roadBuilderSystem.AddPrefab(config);
+					roadBuilderSystem.AddPrefab(config);
+
+					count++;
+				}
+				catch (Exception ex)
+				{
+					Mod.Log.Error(ex, $"Failed to load local network config: {config.GetType().Name} id={config.ID}");
+				}
 			}
+
+			Mod.Log.Info($"RoadInitializerSystem: loaded {count} network configs");
 
 			roadBuilderSystem.UpdateConfigurationList();
 		}

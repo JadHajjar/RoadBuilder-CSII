@@ -45,17 +45,17 @@ namespace RoadBuilder.LaneGroups
 				},
 			};
 
-			Prefab.AddComponent<RoadBuilderLaneInfo>()
+			Prefab.AddOrGetComponent<RoadBuilderLaneInfo>()
 				.WithRequireNone(RoadCategory.NonAsphalt)
 				.WithColor(204, 83, 71, 200)
 				.WithFrontThumbnail("coui://roadbuildericons/RB_BusFront.svg")
 				.WithBackThumbnail("coui://roadbuildericons/RB_BusRear.svg")
 				.AddLaneThumbnail("coui://roadbuildericons/Thumb_BusLane.svg");
 
-			Prefab.AddComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_Bus_Centered.svg";
+			Prefab.AddOrGetComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_Bus_Centered.svg";
 
-			SetUp(Sections!["Public Transport Lane Section 3 - Tram Option"], "3m", "Tram").AddComponent<RoadBuilderLaneInfo>().WithFrontThumbnail("coui://roadbuildericons/RB_BusTramFront.svg").WithBackThumbnail("coui://roadbuildericons/RB_BusTramRear.svg");
-			SetUp(Sections!["Public Transport Lane Section 4 - Tram Option"], "4m", "Tram").AddComponent<RoadBuilderLaneInfo>().WithFrontThumbnail("coui://roadbuildericons/RB_BusTramFront.svg").WithBackThumbnail("coui://roadbuildericons/RB_BusTramRear.svg");
+			SetUp(Sections!["Public Transport Lane Section 3 - Tram Option"], "3m", "Tram").AddOrGetComponent<RoadBuilderLaneInfo>().WithFrontThumbnail("coui://roadbuildericons/RB_BusTramFront.svg").WithBackThumbnail("coui://roadbuildericons/RB_BusTramRear.svg");
+			SetUp(Sections!["Public Transport Lane Section 4 - Tram Option"], "4m", "Tram").AddOrGetComponent<RoadBuilderLaneInfo>().WithFrontThumbnail("coui://roadbuildericons/RB_BusTramFront.svg").WithBackThumbnail("coui://roadbuildericons/RB_BusTramRear.svg");
 			SetUp(Sections!["RB Public Transport Lane Section 3"], "3m", "");
 			SetUp(Sections!["RB Public Transport Lane Section 4"], "4m", "");
 
@@ -64,7 +64,7 @@ namespace RoadBuilder.LaneGroups
 
 		private NetSectionPrefab SetUp(NetSectionPrefab prefab, string value, string value2)
 		{
-			var laneInfo = prefab.AddComponent<RoadBuilderLaneGroup>();
+			var laneInfo = prefab.AddOrGetComponent<RoadBuilderLaneGroup>();
 			laneInfo.GroupPrefab = Prefab;
 			laneInfo.Combination = new LaneOptionCombination[]
 			{

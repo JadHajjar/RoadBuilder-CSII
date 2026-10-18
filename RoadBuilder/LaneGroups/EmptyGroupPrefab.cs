@@ -53,7 +53,7 @@ namespace RoadBuilder.LaneGroups
 				},
 			};
 
-			Prefab.AddComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_Empty.svg";
+			Prefab.AddOrGetComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_Empty.svg";
 
 			SetUp(Sections!, "RB Empty Section {0}", 4, "Asphalt", "Thumb_CarLane", "Thumb_CarLaneSmall").ForEach(x => x.Item2.WithRequireNone(x.Item1 is 3 or 4 ? default : RoadCategory.NonAsphalt).WithGroundTexture(LaneGroundType.Asphalt));
 			SetUp(Sections!, "RB Train Empty Section {0}", 4, "Train", "Thumb_TracklessLane", "Thumb_TracklessLaneSmall").ForEach(x => x.Item2.WithRequireAny(x.Item1 is 4 ? default : RoadCategory.Train | RoadCategory.Subway).WithGroundTexture(LaneGroundType.Train).WithColor(82, 62, 51));
@@ -71,7 +71,7 @@ namespace RoadBuilder.LaneGroups
 			for (var width = minWidth; width <= maxWidth; width += 0.5f)
 			{
 				var prefab = sections[string.Format(name, width.ToString(CultureInfo.InvariantCulture))];
-				var laneGroup = prefab.AddComponent<RoadBuilderLaneGroup>();
+				var laneGroup = prefab.AddOrGetComponent<RoadBuilderLaneGroup>();
 				laneGroup.GroupPrefab = Prefab;
 				laneGroup.Combination = new LaneOptionCombination[]
 				{
@@ -104,7 +104,7 @@ namespace RoadBuilder.LaneGroups
 
 		private RoadBuilderLaneInfo SetUp(NetSectionPrefab prefab, string value1, string value2)
 		{
-			var laneInfo = prefab.AddComponent<RoadBuilderLaneGroup>();
+			var laneInfo = prefab.AddOrGetComponent<RoadBuilderLaneGroup>();
 			laneInfo.GroupPrefab = Prefab;
 			laneInfo.Combination = new LaneOptionCombination[]
 			{

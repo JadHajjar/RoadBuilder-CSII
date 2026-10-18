@@ -70,12 +70,12 @@ namespace RoadBuilder.LaneGroups
 				}
 			};
 
-			Prefab.AddComponent<RoadBuilderLaneInfo>()
+			Prefab.AddOrGetComponent<RoadBuilderLaneInfo>()
 				.WithRequireNone(RoadCategory.NonAsphalt & ~RoadCategory.Gravel & ~RoadCategory.Tiled)
 				.WithFrontThumbnail("coui://roadbuildericons/RB_CarFront.svg")
 				.WithBackThumbnail("coui://roadbuildericons/RB_CarRear.svg");
 
-			Prefab.AddComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_Car_Centered.svg";
+			Prefab.AddOrGetComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_Car_Centered.svg";
 
 			SetUp(Sections!["Gravel Drive Section 3"], "3m", "").AddOrGetComponent<RoadBuilderLaneInfo>().WithRequireAll(RoadCategory.Gravel).AddLaneThumbnail("coui://roadbuildericons/Thumb_GravelLane.svg");
 			SetUp(Sections["RB Tiled Drive Section 3 - Car"], "3m", "").AddOrGetComponent<RoadBuilderLaneInfo>().WithRequireAll(RoadCategory.Tiled).AddLaneThumbnail("coui://roadbuildericons/Thumb_TiledWide.svg");
@@ -93,7 +93,7 @@ namespace RoadBuilder.LaneGroups
 
 		private NetSectionPrefab SetUp(NetSectionPrefab prefab, string value1, string value2, bool noMarkings = false)
 		{
-			var laneInfo = prefab.AddComponent<RoadBuilderLaneGroup>();
+			var laneInfo = prefab.AddOrGetComponent<RoadBuilderLaneGroup>();
 			laneInfo.GroupPrefab = Prefab;
 			laneInfo.Combination = new LaneOptionCombination[]
 			{

@@ -31,6 +31,8 @@ namespace RoadBuilder.Systems
 		public const ushort VER_MANAGEMENT_REWORK = 4;
 		public const ushort VER_CHANGE_SOUND_BARRIER = 5;
 
+		private const string EMPTY_CONFIG_MARKER = "EMPTY_CONFIG";
+
 #nullable disable
 		private static RoadBuilderSystem roadBuilderSystem;
 		private static PrefabSystem prefabSystem;
@@ -47,6 +49,8 @@ namespace RoadBuilder.Systems
 
 		protected override void OnUpdate()
 		{
+			Mod.Log.Debug("RoadBuilderSerializeSystem.OnUpdate");
+
 			roadBuilderSystem.UpdateConfigurationList();
 
 			var placedNetworks = CreateNetworksList();
@@ -58,6 +62,8 @@ namespace RoadBuilder.Systems
 				EntityManager.AddComponentData(entity, new NetworkConfigComponent { NetworkId = prefabName });
 			}
 
+			var savedCount = 0;
+
 			foreach (var config in roadBuilderSystem.Configurations.Values)
 			{
 				if (Mod.Settings!.SaveUsedRoadsOnly && !placedNetworks.Contains(config.Config?.ID ?? string.Empty))
@@ -67,9 +73,19 @@ namespace RoadBuilder.Systems
 
 				if (config.Config is not null)
 				{
-					LocalSaveUtil.Save(config.Config);
+					try
+					{
+						LocalSaveUtil.Save(config.Config);
+						savedCount++;
+					}
+					catch (Exception ex)
+					{
+						Mod.Log.Error(ex, $"Failed to save network config: {config.Config.GetType().Name} id={config.Config.ID}");
+					}
 				}
 			}
+
+			Mod.Log.Debug($"RoadBuilderSerializeSystem.OnUpdate: saved {savedCount} configs, {placedNetworks.Count} placed networks");
 		}
 
 		protected override void OnGameLoadingComplete(Purpose purpose, GameMode mode)
@@ -247,41 +263,60 @@ namespace RoadBuilder.Systems
 			reader.Read(out ushort version);
 			reader.Read(out string type);
 
-			INetworkConfig config = type switch
+			Mod.Log.Debug($"DeserializeNetwork: type={type} version={version}");
+
+			if (type == EMPTY_CONFIG_MARKER)
 			{
-				nameof(RoadConfig) => new RoadConfig(),
-				nameof(TrackConfig) => new TrackConfig(),
-				nameof(FenceConfig) => new FenceConfig(),
-				nameof(PathConfig) => new PathConfig(),
-				_ => throw new Exception("Unknown Configuration Type: " + type),
-			};
+				Mod.Log.Warn("Skipping a saved network that had no configuration at save time");
 
-			config.Version = version;
+				return;
+			}
 
-			reader.Read(config);
-
-			config.ApplyVersionChanges();
-
-			Mod.Log.Debug($"DeserializeNetwork: {type} {config.ID}");
-
-			var prefab = roadBuilderSystem.AddPrefab(config);
-
-			if (prefab is not null)
+			try
 			{
-				_prefabsToUpdate.Add(prefab);
+				INetworkConfig config = type switch
+				{
+					nameof(RoadConfig) => new RoadConfig(),
+					nameof(TrackConfig) => new TrackConfig(),
+					nameof(FenceConfig) => new FenceConfig(),
+					nameof(PathConfig) => new PathConfig(),
+					_ => throw new Exception("Unknown Configuration Type: " + type),
+				};
+
+				config.Version = version;
+
+				reader.Read(config);
+
+				config.ApplyVersionChanges();
+
+				Mod.Log.Debug($"DeserializeNetwork: {type} id={config.ID} name={config.Name}");
+
+				var prefab = roadBuilderSystem.AddPrefab(config);
+
+				if (prefab is not null)
+				{
+					_prefabsToUpdate.Add(prefab);
+				}
+			}
+			catch (Exception ex)
+			{
+				Mod.Log.Error(ex, $"Failed to deserialize network config: type={type} version={version}");
 			}
 		}
 
 		public static void SerializeNetwork<TWriter>(TWriter writer, string networkId) where TWriter : IWriter
 		{
+			writer.Write(CURRENT_VERSION);
+
 			if (!roadBuilderSystem.Configurations.TryGetValue(networkId, out var prefab) || prefab.Config is null)
 			{
 				Mod.Log.Error("Trying to save a prefab that has no configuration: " + networkId);
 
+				writer.Write(EMPTY_CONFIG_MARKER);
+
 				return;
 			}
 
-			writer.Write(CURRENT_VERSION);
 			writer.Write(prefab.Config.GetType().Name);
 			writer.Write(prefab.Config);
 		}

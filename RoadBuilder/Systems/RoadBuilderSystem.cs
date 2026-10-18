@@ -60,7 +60,17 @@ namespace RoadBuilder.Systems
 			new RoadNameUtil(this, roadBuilderUISystem, netSectionsSystem);
 
 			// Delay getting the toolbar ui system assets for the next frame
-			MainThreadDispatcher.RegisterUpdater(() => toolbarUISystemLastSelectedAssets ??= typeof(ToolbarUISystem).GetField("m_LastSelectedAssets", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(World.GetOrCreateSystemManaged<ToolbarUISystem>()) as Dictionary<Entity, Entity>);
+			MainThreadDispatcher.RegisterUpdater(() =>
+			{
+				try
+				{
+					toolbarUISystemLastSelectedAssets ??= typeof(ToolbarUISystem).GetField("m_LastSelectedAssets", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(World.GetOrCreateSystemManaged<ToolbarUISystem>()) as Dictionary<Entity, Entity>;
+				}
+				catch (Exception ex)
+				{
+					Mod.Log.Warn(ex, "Failed to retrieve ToolbarUISystem.m_LastSelectedAssets via reflection");
+				}
+			});
 		}
 
 		protected override void OnUpdate()
@@ -177,7 +187,15 @@ namespace RoadBuilder.Systems
 				return null;
 			}
 
-			return new NetworkConfigGenerationUtil(roadPrefab, roadGenerationDataSystem.RoadGenerationData, roadBuilderUISystem).GenerateConfiguration();
+			try
+			{
+				return new NetworkConfigGenerationUtil(roadPrefab, roadGenerationDataSystem.RoadGenerationData, roadBuilderUISystem).GenerateConfiguration();
+			}
+			catch (Exception ex)
+			{
+				Mod.Log.Error(ex, $"Failed to generate configuration for prefab '{roadPrefab?.name}'");
+				return null;
+			}
 		}
 
 		public INetworkConfig? GenerateConfiguration(Entity entity)
@@ -197,7 +215,15 @@ namespace RoadBuilder.Systems
 				return null;
 			}
 
-			return new NetworkConfigGenerationUtil(roadPrefab, roadGenerationDataSystem.RoadGenerationData, roadBuilderUISystem).GenerateConfiguration();
+			try
+			{
+				return new NetworkConfigGenerationUtil(roadPrefab, roadGenerationDataSystem.RoadGenerationData, roadBuilderUISystem).GenerateConfiguration();
+			}
+			catch (Exception ex)
+			{
+				Mod.Log.Error(ex, $"Failed to generate configuration for prefab '{roadPrefab?.name}'");
+				return null;
+			}
 		}
 
 		private void CreateNewRoadPrefab(INetworkConfig config, Entity entity)
@@ -240,9 +266,9 @@ namespace RoadBuilder.Systems
 
 		public void UpdatePrefab(NetGeometryPrefab prefab)
 		{
-			var entity = prefabSystem.GetEntity(prefab);
+			Mod.Log.Debug($"UpdatePrefab: {prefab?.name}");
 
-			EntityManager.AddComponent<DiscardedRoadBuilderPrefab>(entity);
+			var entity = prefabSystem.GetEntity(prefab);
 
 			prefabSystem.UpdatePrefab(prefab, entity);
 

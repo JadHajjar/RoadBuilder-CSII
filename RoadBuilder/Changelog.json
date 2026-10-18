@@ -1,6 +1,20 @@
 [
   {
     "Beta": true,
+    "Version": "0.7.0",
+    "Date": "2026-06-13",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Potential fix for missing lane and invalid configurations, thanks to b2thek.",
+          "Added more safeguards and logging to make it easier to find remaining issues."
+        ]
+      }
+    ]
+  },
+  {
+    "Beta": true,
     "Version": "0.6.5",
     "Date": "2026-04-29",
     "ChangeGroups": [

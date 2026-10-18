@@ -20,7 +20,7 @@ namespace RoadBuilder.LaneGroups
 				}
 			};
 
-			Prefab.AddComponent<RoadBuilderLaneInfo>()
+			Prefab.AddOrGetComponent<RoadBuilderLaneInfo>()
 				.WithRequireAll(RoadCategory.Subway)
 				.WithColor(66, 60, 51)
 				.WithFrontThumbnail("coui://roadbuildericons/RB_SubwayFront.svg")
@@ -28,7 +28,7 @@ namespace RoadBuilder.LaneGroups
 				.AddLaneThumbnail("coui://roadbuildericons/Thumb_SubwayRail.svg")
 				.AddLaneThumbnail("coui://roadbuildericons/Thumb_TrackLane.svg");
 
-			Prefab.AddComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_SubwayFront.svg";
+			Prefab.AddOrGetComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_SubwayFront.svg";
 
 			SetUp(Sections!["Subway Track Section 4"], false);
 			SetUp(Sections["Subway Track Twoway Section 4"], true);
@@ -38,7 +38,7 @@ namespace RoadBuilder.LaneGroups
 
 		private void SetUp(NetSectionPrefab prefab, bool value)
 		{
-			var laneInfo = prefab.AddComponent<RoadBuilderLaneGroup>();
+			var laneInfo = prefab.AddOrGetComponent<RoadBuilderLaneGroup>();
 			laneInfo.GroupPrefab = Prefab;
 			laneInfo.Combination = value ? new LaneOptionCombination[]
 			{

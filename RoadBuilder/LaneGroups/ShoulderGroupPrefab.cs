@@ -67,13 +67,13 @@ namespace RoadBuilder.LaneGroups
 				},
 			};
 
-			Prefab.AddComponent<RoadBuilderEdgeLaneInfo>();
+			Prefab.AddOrGetComponent<RoadBuilderEdgeLaneInfo>();
 
-			Prefab.AddComponent<RoadBuilderLaneInfo>()
+			Prefab.AddOrGetComponent<RoadBuilderLaneInfo>()
 				.WithGroundTexture(LaneGroundType.Asphalt)
 				.AddLaneThumbnail("coui://roadbuildericons/Thumb_Shoulder.svg");
 
-			Prefab.AddComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_Shoulder.svg";
+			Prefab.AddOrGetComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_Shoulder.svg";
 
 			SetUp(Sections!["Alley Shoulder 1"], Sections["Alley Side 0"], "1m", "Asphalt").WithThumbnail("coui://roadbuildericons/RB_ShoulderLight.svg");
 			SetUp(Sections["Highway Shoulder 2"], Sections["Highway Side 0"], "2m", "Asphalt").WithThumbnail("coui://roadbuildericons/RB_ShoulderLight.svg");
@@ -92,19 +92,19 @@ namespace RoadBuilder.LaneGroups
 			SetUp(Sections["Parking Lane 5.5 - Alley"], Sections["Alley Side 0"], "6.5m", "Parking", "Perpendicular").AddLaneThumbnail("coui://roadbuildericons/Thumb_90ParkingLane.svg").WithFrontThumbnail("coui://roadbuildericons/RB_ParkingFront90.svg").WithBackThumbnail("coui://roadbuildericons/RB_ParkingRear90.svg").WithPieceRequireNone(NetPieceRequirements.Node);
 			SetUp(Sections["Parking Lane Angled 5.5 - Alley"], Sections["Alley Side 0"], "6.5m", "Parking", "Angled").AddLaneThumbnail("coui://roadbuildericons/Thumb_AngledParkingLane.svg").WithFrontThumbnail("coui://roadbuildericons/RB_ParkingFront45-60.svg").WithBackThumbnail("coui://roadbuildericons/RB_ParkingRear45-60.svg").WithPieceRequireNone(NetPieceRequirements.Node);
 
-			Sections["Parking Lane 8 - Alley"].AddComponent<RoadBuilderLaneAggregate>().LeftSections = new[] { new RoadBuilderAggregateSection { Section = Sections["Parking Lane Shoulder 1"] } };
-			Sections["Parking Lane Angled 8 - Alley"].AddComponent<RoadBuilderLaneAggregate>().LeftSections = new[] { new RoadBuilderAggregateSection { Section = Sections["Parking Lane Shoulder 1"] } };
-			Sections["Parking Lane 5.5 - Alley"].AddComponent<RoadBuilderLaneAggregate>().LeftSections = new[] { new RoadBuilderAggregateSection { Section = Sections["Parking Lane Shoulder 1"], PieceRequireNone = new[] { NetPieceRequirements.Node } }, new RoadBuilderAggregateSection { Section = Sections["Parking Lane Shoulder 2.5"], PieceRequireAny = new[] { NetPieceRequirements.Node } } };
-			Sections["Parking Lane Angled 5.5 - Alley"].AddComponent<RoadBuilderLaneAggregate>().LeftSections = new[] { new RoadBuilderAggregateSection { Section = Sections["Parking Lane Shoulder 1"], PieceRequireNone = new[] { NetPieceRequirements.Node } }, new RoadBuilderAggregateSection { Section = Sections["Parking Lane Shoulder 2.5"], PieceRequireAny = new[] { NetPieceRequirements.Node } } };
-			Sections["Parking Lane Shoulder 1"].AddComponent<RoadBuilderIgnoreSection>();
-			Sections["Parking Lane Shoulder 2.5"].AddComponent<RoadBuilderIgnoreSection>();
+			Sections["Parking Lane 8 - Alley"].AddOrGetComponent<RoadBuilderLaneAggregate>().LeftSections = new[] { new RoadBuilderAggregateSection { Section = Sections["Parking Lane Shoulder 1"] } };
+			Sections["Parking Lane Angled 8 - Alley"].AddOrGetComponent<RoadBuilderLaneAggregate>().LeftSections = new[] { new RoadBuilderAggregateSection { Section = Sections["Parking Lane Shoulder 1"] } };
+			Sections["Parking Lane 5.5 - Alley"].AddOrGetComponent<RoadBuilderLaneAggregate>().LeftSections = new[] { new RoadBuilderAggregateSection { Section = Sections["Parking Lane Shoulder 1"], PieceRequireNone = new[] { NetPieceRequirements.Node } }, new RoadBuilderAggregateSection { Section = Sections["Parking Lane Shoulder 2.5"], PieceRequireAny = new[] { NetPieceRequirements.Node } } };
+			Sections["Parking Lane Angled 5.5 - Alley"].AddOrGetComponent<RoadBuilderLaneAggregate>().LeftSections = new[] { new RoadBuilderAggregateSection { Section = Sections["Parking Lane Shoulder 1"], PieceRequireNone = new[] { NetPieceRequirements.Node } }, new RoadBuilderAggregateSection { Section = Sections["Parking Lane Shoulder 2.5"], PieceRequireAny = new[] { NetPieceRequirements.Node } } };
+			Sections["Parking Lane Shoulder 1"].AddOrGetComponent<RoadBuilderIgnoreSection>();
+			Sections["Parking Lane Shoulder 2.5"].AddOrGetComponent<RoadBuilderIgnoreSection>();
 
 			return true;
 		}
 
 		private RoadBuilderLaneInfo SetUp(NetSectionPrefab prefab, NetSectionPrefab side, string value1, string value2, string value3 = "")
 		{
-			var laneInfo = prefab.AddComponent<RoadBuilderLaneGroup>();
+			var laneInfo = prefab.AddOrGetComponent<RoadBuilderLaneGroup>();
 			laneInfo.GroupPrefab = Prefab;
 			laneInfo.Combination = new LaneOptionCombination[]
 			{
@@ -125,7 +125,7 @@ namespace RoadBuilder.LaneGroups
 				},
 			};
 
-			prefab.AddComponent<RoadBuilderEdgeLaneInfo>().SidePrefab = side;
+			prefab.AddOrGetComponent<RoadBuilderEdgeLaneInfo>().SidePrefab = side;
 
 			return prefab.AddOrGetComponent<RoadBuilderLaneInfo>();
 		}

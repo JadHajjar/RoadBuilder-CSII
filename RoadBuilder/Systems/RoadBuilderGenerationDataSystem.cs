@@ -193,7 +193,7 @@ namespace RoadBuilder.Systems
 				//AddStops();
 				roadGenerationData.RoadBuilderPack = ScriptableObject.CreateInstance<AssetPackPrefab>();
 				roadGenerationData.RoadBuilderPack.name = "RoadBuilderPack";
-				roadGenerationData.RoadBuilderPack.AddComponent<UIObject>().m_Icon = "coui://roadbuildericons/Pack.svg";
+				roadGenerationData.RoadBuilderPack.AddOrGetComponent<UIObject>().m_Icon = "coui://roadbuildericons/Pack.svg";
 				prefabSystem.AddPrefab(roadGenerationData.RoadBuilderPack);
 
 				Mod.Log.Debug("RoadGenerationData First Created");
@@ -230,7 +230,7 @@ namespace RoadBuilder.Systems
 					continue;
 				}
 
-				newStop.AddComponent<ServiceObject>().m_Service = RoadGenerationData?.ServicePrefabs["Transportation"];
+				newStop.AddOrGetComponent<ServiceObject>().m_Service = RoadGenerationData?.ServicePrefabs["Transportation"];
 
 				newStop.AddOrGetComponent<UIObject>().m_Group = stop.name is "Integrated Passenger Train Stop" or "Integrated Cargo Train Stop"
 					? RoadGenerationData?.UIGroupPrefabs["TransportationTrain"]

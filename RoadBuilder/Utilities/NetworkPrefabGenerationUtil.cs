@@ -72,6 +72,8 @@ namespace RoadBuilder.Utilities
 				throw new NullReferenceException($"Trying to generate road with NULL configuration - '{NetworkPrefab.Prefab.name}'");
 			}
 
+			Mod.Log.Debug($"GenerateRoadInternal: id={cfg.ID} name={cfg.Name} type={cfg.GetType().Name} lanes={cfg.Lanes?.Count} generateId={generateId}");
+
 			prefab.isDirty = true;
 			prefab.name = cfg.ID;
 			prefab.m_MaxSlopeSteepness = cfg.MaxSlopeSteepness;
@@ -531,6 +533,8 @@ namespace RoadBuilder.Utilities
 
 		private IEnumerable<ComponentBase> GenerateComponents()
 		{
+			Mod.Log.Debug($"GenerateComponents: id={NetworkPrefab.Config!.ID}");
+
 			var netPollution = ScriptableObject.CreateInstance<NetPollution>();
 			var undergroundNetSections = ScriptableObject.CreateInstance<UndergroundNetSections>();
 			var netSubObjects = ScriptableObject.CreateInstance<NetSubObjects>();
@@ -758,6 +762,8 @@ namespace RoadBuilder.Utilities
 
 		private void GetUIGroupAndRequirement(out string? service, out string? group, out string[] requirements, out string[] unlocks)
 		{
+			Mod.Log.Debug($"GetUIGroupAndRequirement: id={NetworkPrefab.Config!.ID} category={NetworkPrefab.Config.Category}");
+
 			if (NetworkPrefab.Config!.Category.HasFlag(RoadCategory.Train))
 			{
 				service = "Transportation";

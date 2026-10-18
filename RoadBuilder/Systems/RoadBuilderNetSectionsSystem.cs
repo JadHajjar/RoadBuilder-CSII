@@ -138,6 +138,8 @@ namespace RoadBuilder.Systems
 		{
 			prefabGenerationPhase++;
 
+			Mod.Log.Debug($"RoadBuilderNetSectionsSystem.DoCustomSectionSetup phase={prefabGenerationPhase}");
+
 			switch (prefabGenerationPhase)
 			{
 				case NetPrefabGenerationPhase.NetLaneCreation:
@@ -217,10 +219,16 @@ namespace RoadBuilder.Systems
 		{
 			foreach (var type in typeof(RoadBuilderNetSectionsSystem).Assembly.GetTypes())
 			{
-				if (typeof(BaseLaneGroupPrefab).IsAssignableFrom(type) && !type.IsAbstract)
+				if (!typeof(BaseLaneGroupPrefab).IsAssignableFrom(type) || type.IsAbstract)
+				{
+					continue;
+				}
+
+				Mod.Log.Debug($"RoadBuilderNetSectionsSystem.DoNetGroupsCreation: initializing {type.Name}");
+
+				try
 				{
 					var prefab = ScriptableObject.CreateInstance<LaneGroupPrefab>();
-
 					var groupPrefab = (Activator.CreateInstance(type) as BaseLaneGroupPrefab)!;
 
 					groupPrefab.Prefab = prefab;
@@ -228,6 +236,7 @@ namespace RoadBuilder.Systems
 
 					if (!groupPrefab.Initialize())
 					{
+						Mod.Log.Debug($"RoadBuilderNetSectionsSystem.DoNetGroupsCreation: {type.Name} skipped (Initialize returned false)");
 						continue;
 					}
 
@@ -235,6 +244,12 @@ namespace RoadBuilder.Systems
 					prefab.RoadBuilder = true;
 
 					prefabSystem.AddPrefab(prefab);
+
+					Mod.Log.Debug($"RoadBuilderNetSectionsSystem.DoNetGroupsCreation: {type.Name} added as '{prefab.name}'");
+				}
+				catch (Exception ex)
+				{
+					Mod.Log.Error(ex, $"Failed to initialize lane group: {type.Name}");
 				}
 			}
 		}
@@ -866,7 +881,7 @@ namespace RoadBuilder.Systems
 					},
 				};
 
-				section.AddComponent<NetDividerPiece>().m_BlockTraffic = true;
+				section.AddOrGetComponent<NetDividerPiece>().m_BlockTraffic = true;
 
 				prefabSystem.AddPrefab(NetSections[section.name] = section);
 			}
@@ -926,7 +941,7 @@ namespace RoadBuilder.Systems
 			var barrier = (NetSections["Sound Barrier 1"].Clone("RB Sound Barrier 1") as NetSectionPrefab)!;
 			var width = 1;
 
-			barrier.AddComponent<RoadBuilderEdgeLaneInfo>().DoNotRequireBeingOnEdge = true;
+			barrier.AddOrGetComponent<RoadBuilderEdgeLaneInfo>().DoNotRequireBeingOnEdge = true;
 			barrier.m_Pieces = new[]
 			{
 				new NetPieceInfo
@@ -1135,11 +1150,13 @@ namespace RoadBuilder.Systems
 
 		private void AddCustomPrefabComponents()
 		{
+			Mod.Log.Debug("RoadBuilderNetSectionsSystem.AddCustomPrefabComponents");
+
 			SetUp("Tiled Pedestrian Section 3", "coui://roadbuildericons/RB_PedestrianOnly.svg").WithRequireAll(RoadCategory.Tiled).AddLaneThumbnail("coui://roadbuildericons/Thumb_TiledSmall.svg");
 			SetUp("RB Tiled Median 2", "coui://roadbuildericons/RB_TiledMedian_Centered.svg").WithRequireAll(RoadCategory.Tiled).WithThumbnail("coui://roadbuildericons/RB_TiledMedian.svg").AddLaneThumbnail("coui://roadbuildericons/Thumb_PedestrianLaneSmall.svg");
 			
 			SetUp("Pavement Path Section 3", "coui://roadbuildericons/RB_PedestrianCentered.svg").WithThumbnail("coui://roadbuildericons/RB_PedestrianLane.svg").WithRequireAll(RoadCategory.Pathway).AddLaneThumbnail("coui://roadbuildericons/Thumb_PedestrianLaneWide.svg");
-			var pathEdgeInfo = NetSections["Pavement Path Section 3"].AddComponent<RoadBuilderEdgeLaneInfo>();
+			var pathEdgeInfo = NetSections["Pavement Path Section 3"].AddOrGetComponent<RoadBuilderEdgeLaneInfo>();
 			pathEdgeInfo.SidePrefab = NetSections["Pavement Path Side Section 0"];
 			pathEdgeInfo.AddSidewalkStateOnNode = true;
 			pathEdgeInfo.DoNotRequireBeingOnEdge = true;
@@ -1153,12 +1170,12 @@ namespace RoadBuilder.Systems
 				.AddLaneThumbnail("coui://roadbuildericons/Thumb_PedestrianLaneSmall.svg")
 				.AddLaneThumbnail("coui://roadbuildericons/Thumb_BikeLane.svg");
 
-			NetSections["PavementPathWithBikeSection 8"].AddComponent<RoadBuilderEdgeLaneInfo>()
+			NetSections["PavementPathWithBikeSection 8"].AddOrGetComponent<RoadBuilderEdgeLaneInfo>()
 				.WithLeftSide(NetSections["Pavement Path Side Section 0"])
 				.WithRightSide(NetSections["BikeSideSection 0"])
 				.WithDoNotRequireBeingOnEdge();
 
-			NetSections["PavementPathWithBikeSection 8"].AddComponent<RoadBuilderLaneAggregate>().RightSections = new[]
+			NetSections["PavementPathWithBikeSection 8"].AddOrGetComponent<RoadBuilderLaneAggregate>().RightSections = new[]
 			{
 				new RoadBuilderAggregateSection
 				{
@@ -1167,7 +1184,7 @@ namespace RoadBuilder.Systems
 				}
 			};
 
-			NetSections["PavementPathBikeSection 0"].AddComponent<RoadBuilderIgnoreSection>();
+			NetSections["PavementPathBikeSection 0"].AddOrGetComponent<RoadBuilderIgnoreSection>();
 		}
 
 		private RoadBuilderLaneInfo SetUp(string prefabName, string thumbnail)

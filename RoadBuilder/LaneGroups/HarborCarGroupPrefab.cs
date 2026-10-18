@@ -36,13 +36,13 @@ namespace RoadBuilder.LaneGroups
 				}
 			};
 
-			Prefab.AddComponent<RoadBuilderLaneInfo>()
+			Prefab.AddOrGetComponent<RoadBuilderLaneInfo>()
 				.WithColor(145, 155, 163, 150)
 				.WithRequireNone(RoadCategory.NonAsphalt & ~RoadCategory.Gravel & ~RoadCategory.Tiled)
 				.WithFrontThumbnail("coui://roadbuildericons/RB_CarFront.svg")
 				.WithBackThumbnail("coui://roadbuildericons/RB_CarRear.svg");
 
-			Prefab.AddComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_Cargo_Centered.svg";
+			Prefab.AddOrGetComponent<UIObject>().m_Icon = "coui://roadbuildericons/RB_Cargo_Centered.svg";
 
 			SetUp(Sections!["Harbor Drive Section 4"], "").AddOrGetComponent<RoadBuilderLaneInfo>().WithRequireNone(RoadCategory.Gravel | RoadCategory.Tiled);
 			SetUp(Sections["Harbor Drive Section 4 - Transport Option"], "Transport").AddOrGetComponent<RoadBuilderLaneInfo>().WithRequireNone(RoadCategory.Gravel | RoadCategory.Tiled)
@@ -53,7 +53,7 @@ namespace RoadBuilder.LaneGroups
 
 		private NetSectionPrefab SetUp(NetSectionPrefab prefab, string value2)
 		{
-			var laneInfo = prefab.AddComponent<RoadBuilderLaneGroup>();
+			var laneInfo = prefab.AddOrGetComponent<RoadBuilderLaneGroup>();
 			laneInfo.GroupPrefab = Prefab;
 			laneInfo.Combination = new LaneOptionCombination[]
 			{
