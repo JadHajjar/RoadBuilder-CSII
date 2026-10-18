@@ -41,10 +41,10 @@
   }
 
   &.game {
-    bottom: 10rem + _base.$bottomBarOffset + _base.$bottomBarHeight;
+    @include _base.gameBottomOffset(10rem + _base.$bottomBarHeight);
 
     &.expanded {
-      bottom: 10rem + _base.$bottomBarOffset;
+      @include _base.gameBottomOffset(10rem);
     }
   }
 

@@ -30,6 +30,10 @@
   }
 
   img {
+    // Explicit width is required: newer Coherent derives the img width from the SVG's
+    // square viewBox (320rem wide) instead of the container, which zooms the icon in.
+    // A 64x320 viewport centers the viewBox at 128-192rem (the button's bottom) and lets the overflow above show.
+    width: 100%;
     height: 320rem;
     position: absolute;
     top: 0;

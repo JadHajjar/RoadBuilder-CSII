@@ -17,7 +17,7 @@
   animation: entry 0.2s;
 
   &.game {
-    bottom: base.$bottomBarOffset;
+    @include base.gameBottomOffset;
   }
 
   &.editor {
@@ -88,6 +88,17 @@
 }
 
 .game .bottomBG {
+  background-image: linear-gradient(
+    0deg,
+    var(--panelGradientStart),
+    var(--panelGradientEnd)
+  );
+  background-color: rgba(0, 0, 0, 0);
+  backdrop-filter: var(--panelBlur);
+}
+
+:global(.legacy-interface) .game .bottomBG {
+  background-image: none;
   background-color: var(--panelColorNormal);
   backdrop-filter: var(--panelBlur);
 }

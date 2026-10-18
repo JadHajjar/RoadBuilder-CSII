@@ -5,6 +5,16 @@ $bottomBarOffsetEditor: 145rem;
 
 $laneButtonSize: 64rem;
 
+// Stacks above the in-game toolbar, whose height is now dynamic.
+// $bottomBarOffset is kept for the legacy interface, which still uses the fixed toolbar.
+@mixin gameBottomOffset($extra: 0rem) {
+  bottom: calc(#{$extra} + 2 * var(--toolbarHeight) - 1rem);
+
+  :global(.legacy-interface) & {
+    bottom: $extra + $bottomBarOffset;
+  }
+}
+
 @mixin textInputBasic {
   background-color: rgba(0, 0, 0, 0.15);
   color: #eee;

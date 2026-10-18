@@ -38,7 +38,7 @@
   }
 
   &.game {
-    bottom: 10rem + _base.$bottomBarOffset + _base.$bottomBarHeight - 48rem;
+    @include _base.gameBottomOffset(10rem + _base.$bottomBarHeight - 48rem);
   }
 
   &.editor {
