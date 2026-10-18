@@ -1,4 +1,5 @@
-﻿using Colossal.UI;
+﻿using Colossal.IO.AssetDatabase;
+using Colossal.UI;
 
 using Game.Prefabs;
 
@@ -205,20 +206,16 @@ namespace RoadBuilder.Utilities
 
 				foreach (var lane in GetLaneIcons(laneConfig, _sections[i]))
 				{
-					var file = GetFileName(lane);
-
-					if (file is null)
-					{
-						continue;
-					}
-
 					try
 					{
-						laneSvgs.Add(new SvgItem(file));
+						if (LoadSvgDocument(lane) is XDocument document)
+						{
+							laneSvgs.Add(new SvgItem(document));
+						}
 					}
 					catch (Exception ex)
 					{
-						Mod.Log.Warn(ex, "Failed to get SVG info from file: " + file);
+						Mod.Log.Warn(ex, "Failed to get SVG info from: " + lane);
 					}
 				}
 
@@ -307,12 +304,14 @@ namespace RoadBuilder.Utilities
 				yield break;
 			}
 
-			if (sections.Value.section.TryGet<RoadBuilderLaneDecorationInfo>(out var decorationInfo) && sections.Value.groupPrefab?.Options.FirstOrDefault(x => x.Type is LaneOptionType.Decoration) is RoadBuilderLaneOption decorationOption)
+			// Same as the lane bar, the picked variant's decorations win and the group's are used for variants without their own
+			if ((sections.Value.section.TryGet<RoadBuilderLaneDecorationInfo>(out var decorationInfo) || (sections.Value.groupPrefab?.TryGet(out decorationInfo) ?? false))
+				&& sections.Value.groupPrefab?.Options?.FirstOrDefault(x => x?.Type is LaneOptionType.Decoration) is RoadBuilderLaneOption decorationOption)
 			{
 				switch (LaneOptionsUtil.GetSelectedOptionValue(_config, lane, decorationOption))
 				{
 					case "G":
-						if (decorationInfo.LaneGrassThumbnail?.Any() ?? false)
+						if (decorationInfo!.LaneGrassThumbnail?.Any() ?? false)
 						{
 							foreach (var item in lane.Invert ? decorationInfo.LaneGrassThumbnail.Reverse() : decorationInfo.LaneGrassThumbnail)
 							{
@@ -324,7 +323,7 @@ namespace RoadBuilder.Utilities
 
 						break;
 					case "T":
-						if (decorationInfo.LaneTreeThumbnail?.Any() ?? false)
+						if (decorationInfo!.LaneTreeThumbnail?.Any() ?? false)
 						{
 							foreach (var item in lane.Invert ? decorationInfo.LaneTreeThumbnail.Reverse() : decorationInfo.LaneTreeThumbnail)
 							{
@@ -336,7 +335,7 @@ namespace RoadBuilder.Utilities
 
 						break;
 					case "GT":
-						if (decorationInfo.LaneGrassAndTreeThumbnail?.Any() ?? false)
+						if (decorationInfo!.LaneGrassAndTreeThumbnail?.Any() ?? false)
 						{
 							foreach (var item in lane.Invert ? decorationInfo.LaneGrassAndTreeThumbnail.Reverse() : decorationInfo.LaneGrassAndTreeThumbnail)
 							{
@@ -373,9 +372,41 @@ namespace RoadBuilder.Utilities
 			yield return "coui://roadbuildericons/Thumb_CarLane.svg";
 		}
 
+		// Lane images are files behind a coui:// host or the game's UI folder, or images saved in an asset (assetdb://),
+		// which is what the asset editor's image picker produces
+		public static XDocument? LoadSvgDocument(string icon)
+		{
+			if (GetFileName(icon) is string file)
+			{
+				return XDocument.Load(file);
+			}
+
+			if (icon?.StartsWith("assetdb://") == true && AssetDatabase.global.TryGetAsset(icon, out IAssetData asset) && asset is AssetData assetData)
+			{
+				using var stream = assetData.GetReadStream();
+
+				return XDocument.Load(stream);
+			}
+
+			return null;
+		}
+
+		// Road thumbnail pieces must be SVGs with rects named Position and Extents, anything else is skipped when drawing
+		public static bool IsValidLaneThumbnail(string icon)
+		{
+			try
+			{
+				return LoadSvgDocument(icon) is XDocument document && new SvgItem(document).Svg is not null;
+			}
+			catch
+			{
+				return false;
+			}
+		}
+
 		private static string? GetFileName(string icon)
 		{
-			if (string.IsNullOrEmpty(icon) || icon.StartsWith("thumbnail://"))
+			if (string.IsNullOrEmpty(icon) || icon.StartsWith("thumbnail://") || icon.StartsWith("assetdb://"))
 			{
 				return null;
 			}
@@ -384,7 +415,9 @@ namespace RoadBuilder.Utilities
 
 			if (!regex.Success)
 			{
-				return Path.Combine(FoldersUtil.GameUIPath, icon);
+				var path = Path.Combine(FoldersUtil.GameUIPath, icon);
+
+				return File.Exists(path) ? path : null;
 			}
 
 			var hostMap = (IDictionary<string, List<(string path, int)>>)typeof(DefaultResourceHandler).GetField("m_HostLocationsMap", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(UIManager.defaultUISystem.resourceHandler);
@@ -415,10 +448,12 @@ namespace RoadBuilder.Utilities
 
 		private class SvgItem
 		{
-			public SvgItem(string file)
+			public SvgItem(string file) : this(XDocument.Load(file))
 			{
-				var xml = XDocument.Load(file);
+			}
 
+			public SvgItem(XDocument xml)
+			{
 				Svg = xml.Root;
 				PositionRect = GetRectValues(xml, "Position");
 				ExtentsRect = GetRectValues(xml, "Extents");

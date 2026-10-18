@@ -76,6 +76,7 @@ namespace RoadBuilder
 			updateSystem.UpdateAt<RoadBuilderNetSectionsUISystem>(SystemUpdatePhase.UIUpdate);
 			updateSystem.UpdateAt<RoadBuilderConfigurationsUISystem>(SystemUpdatePhase.UIUpdate);
 			updateSystem.UpdateAt<RoadBuilderRoadManagementUISystem>(SystemUpdatePhase.UIUpdate);
+			updateSystem.UpdateAt<RoadBuilderLaneSetupUISystem>(SystemUpdatePhase.UIUpdate);
 
 			MainThreadDispatcher.RegisterUpdater(() => Task.Run(PdxModsUtil.Start));
 		}

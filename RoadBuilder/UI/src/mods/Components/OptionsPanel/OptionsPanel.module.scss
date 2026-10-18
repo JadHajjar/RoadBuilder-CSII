@@ -59,6 +59,16 @@
   background-color: var(--accentColorNormal) !important;
 }
 
+// Option values without an icon show their name, so the button grows to fit it
+.optionContent > .textButton {
+  width: auto;
+  min-width: 32rem;
+  margin: 2rem !important;
+  padding: 0 8rem;
+  font-size: var(--fontSizeS);
+  white-space: nowrap;
+}
+
 .disabled {
   background-color: rgba(15, 16, 19, 1) !important;
   opacity: 0.35 !important;

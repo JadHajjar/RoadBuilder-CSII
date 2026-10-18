@@ -87,6 +87,21 @@ export const OptionsPanelComponent = (props: _Props) => {
                         )}
                       />
                     </>
+                  ) : !option.icon ? (
+                    // Values of custom lanes may have no icon, their name is shown instead of an empty button
+                    <Button
+                      disabled={option.disabled}
+                      onSelect={option.disabled ? undefined : () => props.OnChange(section.id, option.id, 0)}
+                      focusKey={VanillaComponentResolver.instance.FOCUS_DISABLED}
+                      className={classNames(
+                        VanillaComponentResolver.instance.toolButtonTheme.button,
+                        styles.textButton,
+                        option.selected && !option.disabled && styles.selected,
+                        option.disabled && styles.disabled
+                      )}
+                    >
+                      {option.name}
+                    </Button>
                   ) : (
                     <VanillaComponentResolver.instance.ToolButton
                       selected={option.selected && !option.disabled}

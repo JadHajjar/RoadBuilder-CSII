@@ -328,7 +328,7 @@ namespace RoadBuilder.Systems.UI
 						{
 							lane.GroupOptions = new(similarLane.GroupOptions);
 
-							foreach (var option in group.Options.Where(x => x.IgnoreForSimilarDuplicate))
+							foreach (var option in (group.Options ?? new RoadBuilderLaneOption[0]).Where(x => x?.IgnoreForSimilarDuplicate == true))
 							{
 								lane.GroupOptions[option.Name ?? string.Empty] = option.DefaultValue;
 							}
@@ -497,7 +497,11 @@ namespace RoadBuilder.Systems.UI
 			{
 				config.Lanes.RemoveAll(x =>
 				{
-					NetworkPrefabGenerationUtil.GetNetSection(roadGenerationDataSystem.RoadGenerationData, config, x, out var section, out var group);
+					if (!NetworkPrefabGenerationUtil.GetNetSection(roadGenerationDataSystem.RoadGenerationData, config, x, out var section, out var group))
+					{
+						// A group lane with no variant allowed in the new road type is removed, lanes from mods that aren't loaded are kept
+						return !string.IsNullOrEmpty(x.GroupPrefabName) && netSectionsSystem.LaneGroups.ContainsKey(x.GroupPrefabName!);
+					}
 
 					return !(section?.MatchCategories(config) ?? true) || !(group?.MatchCategories(config) ?? true);
 				});
@@ -516,7 +520,6 @@ namespace RoadBuilder.Systems.UI
 
 		private RoadLaneUIBinder[] From(INetworkConfig config)
 		{
-			var isMetric = RoadOptionsUtil.IsMetric();
 			var leftEdgeMissing = !Mod.Settings!.RemoveSafetyMeasures && config.Lanes.Count > 0 && !(NetworkPrefabGenerationUtil.GetNetSection(roadGenerationDataSystem.RoadGenerationData, config, config.Lanes[0], out var leftSection, out var leftGroupPrefab) && NetworkConfigExtensionsUtil.GetEdgeLaneInfo(leftSection, leftGroupPrefab, out _));
 			var rightEdgeMissing = !Mod.Settings.RemoveSafetyMeasures && config.Lanes.Count > 0 && !(NetworkPrefabGenerationUtil.GetNetSection(roadGenerationDataSystem.RoadGenerationData, config, config.Lanes[config.Lanes.Count - 1], out var rightSection, out var rightGroupPrefab) && NetworkConfigExtensionsUtil.GetEdgeLaneInfo(rightSection, rightGroupPrefab, out _));
 			var binders = new RoadLaneUIBinder[config.Lanes.Count + (leftEdgeMissing ? 1 : 0) + (rightEdgeMissing ? 1 : 0)];
@@ -528,39 +531,7 @@ namespace RoadBuilder.Systems.UI
 
 			for (var i = 0; i < config.Lanes.Count; i++)
 			{
-				var lane = config.Lanes[i];
-				var validSection = NetworkPrefabGenerationUtil.GetNetSection(roadGenerationDataSystem.RoadGenerationData, config, lane, out var section, out var groupPrefab);
-				var noDirection = validSection && ((section?.TryGet<RoadBuilderLaneInfo>(out var laneInfo) == true && laneInfo.NoDirection) || ((groupPrefab?.TryGet<RoadBuilderLaneInfo>(out var groupInfo) ?? false) && groupInfo.NoDirection));
-				var isEdge = NetworkConfigExtensionsUtil.GetEdgeLaneInfo(section, groupPrefab, out _);
-				var isBackward = noDirection ? FindDirection(config, i) : lane.Invert;
-				var width = validSection ? section?.CalculateWidth(groupPrefab) ?? 0F : 0F;
-
-				GetThumbnailAndColor(config, lane, section, groupPrefab, isBackward, out var thumbnail, out var color, out var texture);
-
-				binders[leftEdgeMissing ? i + 1 : i] = new RoadLaneUIBinder
-				{
-					Index = i,
-					Invert = lane.Invert,
-					NoDirection = noDirection,
-					InvertImage = isEdge && cityConfigurationSystem.leftHandTraffic ? !isBackward : isBackward,
-					TwoWay = validSection && section?.SupportsTwoWay(lane, groupPrefab) == true,
-					SectionPrefabName = string.IsNullOrEmpty(lane.GroupPrefabName) ? lane.SectionPrefabName : lane.GroupPrefabName,
-					IsGroup = !string.IsNullOrEmpty(lane.GroupPrefabName),
-					Options = LaneOptionsUtil.GenerateOptions(roadGenerationDataSystem.RoadGenerationData, config, lane),
-					Texture = texture ?? "asphalt",
-					// Invariant culture, comma decimal separators would produce invalid CSS
-					Color = color is not Color c ? null : FormattableString.Invariant($"rgba({Mathf.RoundToInt(c.r * 255)}, {Mathf.RoundToInt(c.g * 255)}, {Mathf.RoundToInt(c.b * 255)}, {c.a:0.###})"),
-					NetSection = new()
-					{
-						PrefabName = section?.name ?? groupPrefab?.name,
-						IsGroup = !string.IsNullOrEmpty(lane.GroupPrefabName),
-						IsEdge = isEdge,
-						DisplayName = !validSection && groupPrefab is null ? "Unknown Lane" : GetAssetName((groupPrefab as PrefabBase) ?? section!),
-						Width = width,
-						WidthText = isMetric ? $"{width:0.##} m" : $"{Math.Round(width * 3.28084 * 4, MidpointRounding.AwayFromZero) / 4:0.##} ft",
-						Thumbnail = thumbnail,
-					}
-				};
+				binders[leftEdgeMissing ? i + 1 : i] = CreateLaneBinder(config, config.Lanes[i], i, noDirectionBackward => FindDirection(config, noDirectionBackward));
 			}
 
 			if (rightEdgeMissing)
@@ -583,6 +554,65 @@ namespace RoadBuilder.Systems.UI
 			return binders;
 		}
 
+		// findDirection resolves which way a direction-less lane faces, it receives the lane's index
+		private RoadLaneUIBinder CreateLaneBinder(INetworkConfig config, LaneConfig lane, int index, Func<int, bool> findDirection)
+		{
+			var isMetric = RoadOptionsUtil.IsMetric();
+			var validSection = NetworkPrefabGenerationUtil.GetNetSection(roadGenerationDataSystem.RoadGenerationData, config, lane, out var section, out var groupPrefab);
+			var noDirection = validSection && ((section?.TryGet<RoadBuilderLaneInfo>(out var laneInfo) == true && laneInfo.NoDirection) || ((groupPrefab?.TryGet<RoadBuilderLaneInfo>(out var groupInfo) ?? false) && groupInfo.NoDirection));
+			var isEdge = NetworkConfigExtensionsUtil.GetEdgeLaneInfo(section, groupPrefab, out _);
+			var isBackward = noDirection ? findDirection(index) : lane.Invert;
+			var width = validSection ? section?.CalculateWidth(groupPrefab, includeAggregates: true) ?? 0F : 0F;
+
+			GetThumbnailAndColor(config, lane, section, groupPrefab, isBackward, out var thumbnail, out var color, out var texture);
+
+			return new RoadLaneUIBinder
+			{
+				Index = index,
+				Invert = lane.Invert,
+				NoDirection = noDirection,
+				InvertImage = isEdge && cityConfigurationSystem.leftHandTraffic ? !isBackward : isBackward,
+				TwoWay = validSection && section?.SupportsTwoWay(lane, groupPrefab) == true,
+				SectionPrefabName = string.IsNullOrEmpty(lane.GroupPrefabName) ? lane.SectionPrefabName : lane.GroupPrefabName,
+				IsGroup = !string.IsNullOrEmpty(lane.GroupPrefabName),
+				Options = LaneOptionsUtil.GenerateOptions(roadGenerationDataSystem.RoadGenerationData, config, lane),
+				Texture = texture ?? "asphalt",
+				// Invariant culture, comma decimal separators would produce invalid CSS
+				Color = color is not Color c ? null : FormattableString.Invariant($"rgba({Mathf.RoundToInt(c.r * 255)}, {Mathf.RoundToInt(c.g * 255)}, {Mathf.RoundToInt(c.b * 255)}, {c.a:0.###})"),
+				NetSection = new()
+				{
+					PrefabName = section?.name ?? groupPrefab?.name,
+					IsGroup = !string.IsNullOrEmpty(lane.GroupPrefabName),
+					IsEdge = isEdge,
+					DisplayName = !validSection && groupPrefab is null ? "Unknown Lane" : GetAssetName((groupPrefab as PrefabBase) ?? section!),
+					Width = width,
+					WidthText = isMetric ? $"{width:0.##} m" : $"{Math.Round(width * 3.28084 * 4, MidpointRounding.AwayFromZero) / 4:0.##} ft",
+					Thumbnail = thumbnail,
+				}
+			};
+		}
+
+		// Builds forward and backward previews of a single section or lane group, as they'd look in the lane bar
+		public RoadLaneUIBinder[] CreatePreviewLanes(PrefabBase prefab, INetworkConfig config)
+		{
+			if (roadGenerationDataSystem.RoadGenerationData is null)
+			{
+				return new RoadLaneUIBinder[0];
+			}
+
+			var isGroup = prefab is LaneGroupPrefab;
+			var lanes = new[] { false, true }.Select(invert => new LaneConfig
+			{
+				SectionPrefabName = isGroup ? null : prefab.name,
+				GroupPrefabName = isGroup ? prefab.name : null,
+				Invert = invert
+			}).ToList();
+
+			config.Lanes = lanes;
+
+			return lanes.Select((lane, i) => CreateLaneBinder(config, lane, i, _ => lane.Invert)).ToArray();
+		}
+
 		private bool FindDirection(INetworkConfig config, int i)
 		{
 			if (config.Lanes.Count <= 3)
@@ -600,6 +630,15 @@ namespace RoadBuilder.Systems.UI
 			}
 		}
 
+		// The back icon is shown for forward lanes and the front icon for backward ones, each falls back to the other when only one is set
+		private static string? GetFacingThumbnail(RoadBuilderLaneInfo info, bool invert)
+		{
+			var preferred = invert ? info.FrontThumbnail : info.BackThumbnail;
+			var other = invert ? info.BackThumbnail : info.FrontThumbnail;
+
+			return !string.IsNullOrEmpty(preferred) ? preferred : !string.IsNullOrEmpty(other) ? other : null;
+		}
+
 		private static void GetThumbnailAndColor(INetworkConfig config, LaneConfig lane, NetSectionPrefab? section, LaneGroupPrefab? groupPrefab, bool invert, out string? thumbnail, out Color? color, out string? texture)
 		{
 			thumbnail = null;
@@ -611,40 +650,27 @@ namespace RoadBuilder.Systems.UI
 				return;
 			}
 
-			if (section.TryGet<RoadBuilderLaneDecorationInfo>(out var decorationInfo) && groupPrefab?.Options.FirstOrDefault(x => x.Type is LaneOptionType.Decoration) is RoadBuilderLaneOption decorationOption)
+			// The picked variant's decoration icons win, the group's are used for variants without their own
+			if ((section.TryGet<RoadBuilderLaneDecorationInfo>(out var decorationInfo) || (groupPrefab?.TryGet(out decorationInfo) ?? false))
+				&& groupPrefab?.Options?.FirstOrDefault(x => x?.Type is LaneOptionType.Decoration) is RoadBuilderLaneOption decorationOption)
 			{
-				switch (LaneOptionsUtil.GetSelectedOptionValue(config, lane, decorationOption))
+				var decorationThumbnail = LaneOptionsUtil.GetSelectedOptionValue(config, lane, decorationOption) switch
 				{
-					case "G":
-						if (decorationInfo.GrassThumbnail is not null or "")
-						{
-							thumbnail = decorationInfo.GrassThumbnail;
-						}
+					"G" => decorationInfo!.GrassThumbnail,
+					"T" => decorationInfo!.TreeThumbnail,
+					"GT" => decorationInfo!.GrassAndTreeThumbnail,
+					_ => null
+				};
 
-						break;
-					case "T":
-						if (decorationInfo.TreeThumbnail is not null or "")
-						{
-							thumbnail = decorationInfo.TreeThumbnail;
-						}
-
-						break;
-					case "GT":
-						if (decorationInfo.GrassAndTreeThumbnail is not null or "")
-						{
-							thumbnail = decorationInfo.GrassAndTreeThumbnail;
-						}
-
-						break;
+				if (!string.IsNullOrEmpty(decorationThumbnail))
+				{
+					thumbnail = decorationThumbnail;
 				}
 			}
 
 			if (section.TryGet<RoadBuilderLaneInfo>(out var sectionInfo))
 			{
-				if (thumbnail is null && !string.IsNullOrEmpty(invert ? sectionInfo.FrontThumbnail : sectionInfo.BackThumbnail))
-				{
-					thumbnail = invert ? sectionInfo.FrontThumbnail : sectionInfo.BackThumbnail;
-				}
+				thumbnail ??= GetFacingThumbnail(sectionInfo, invert);
 
 				if (sectionInfo.LaneColor != default)
 				{
@@ -664,12 +690,9 @@ namespace RoadBuilder.Systems.UI
 
 			if (groupPrefab?.TryGet<RoadBuilderLaneInfo>(out var groupInfo) ?? false)
 			{
-				if (thumbnail is null && !string.IsNullOrEmpty(invert ? groupInfo.FrontThumbnail : groupInfo.BackThumbnail))
-				{
-					thumbnail = invert ? groupInfo.FrontThumbnail : groupInfo.BackThumbnail;
-				}
+				thumbnail ??= GetFacingThumbnail(groupInfo!, invert);
 
-				if (groupInfo.LaneColor != default && color is null)
+				if (groupInfo!.LaneColor != default && color is null)
 				{
 					color = groupInfo.LaneColor;
 				}
@@ -721,7 +744,7 @@ namespace RoadBuilder.Systems.UI
 			return string.Empty;
 		}
 
-		private string GetAssetName(PrefabBase prefab)
+		public string GetAssetName(PrefabBase prefab)
 		{
 			GetTitleAndDescription(prefab, out var titleId, out var _);
 

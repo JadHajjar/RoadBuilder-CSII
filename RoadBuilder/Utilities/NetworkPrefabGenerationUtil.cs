@@ -400,7 +400,11 @@ namespace RoadBuilder.Utilities
 
 				RoadBuilderLaneInfo? laneInfo = null;
 
-				section?.TryGet<RoadBuilderLaneInfo>(out laneInfo);
+				// A variant without its own lane info uses the group's median and piece requirements
+				if (section?.TryGet<RoadBuilderLaneInfo>(out laneInfo) != true)
+				{
+					groupPrefab?.TryGet(out laneInfo);
+				}
 
 				if (section?.TryGet<RoadBuilderLaneAggregate>(out var aggregate) == true || (groupPrefab?.TryGet(out aggregate) ?? false))
 				{
@@ -408,7 +412,7 @@ namespace RoadBuilder.Utilities
 
 					if (aggregate?.LeftSections != null)
 					{
-						sections.AddRange(aggregate.LeftSections.Select(x => new NetSectionInfo
+						sections.AddRange(aggregate.LeftSections.Where(x => x?.Section is not null).Select(x => new NetSectionInfo
 						{
 							m_Section = x.Section,
 							m_Invert = x.Invert ? !lane.Invert : lane.Invert,
@@ -430,7 +434,7 @@ namespace RoadBuilder.Utilities
 
 					if (aggregate?.RightSections != null)
 					{
-						sections.AddRange(aggregate.RightSections.Select(x => new NetSectionInfo
+						sections.AddRange(aggregate.RightSections.Where(x => x?.Section is not null).Select(x => new NetSectionInfo
 						{
 							m_Section = x.Section,
 							m_Invert = x.Invert ? !lane.Invert : lane.Invert,
@@ -498,58 +502,49 @@ namespace RoadBuilder.Utilities
 
 		private static bool GetNetSection(INetworkConfig config, LaneConfig lane, LaneGroupPrefab group, out NetSectionPrefab? section)
 		{
-			var defaults = group.Options.ToDictionary(x => x.Name, x => x.DefaultValue);
+			// Decorations don't pick a variant, they're applied to whichever variant is picked
+			var options = (group.Options ?? new RoadBuilderLaneOption[0]).Where(x => x is not null && x.Type is not LaneOptionType.Decoration).ToList();
+			var bestScore = -1;
+			NetSectionPrefab? bestSection = null;
 
 			foreach (var item in group.LinkedSections)
 			{
-				if (!item.TryGet<RoadBuilderLaneGroup>(out var groupItem) || !item.MatchCategories(config))
+				if (!item.MatchCategories(config))
 				{
 					continue;
 				}
 
-				var matched = true;
+				var score = 0;
 
-				foreach (var option in group.Options ?? Enumerable.Empty<RoadBuilderLaneOption>())
+				foreach (var option in options)
 				{
-					if (option.Type is LaneOptionType.Decoration)
+					if (LaneOptionsUtil.MatchesOptionValue(item, option, LaneOptionsUtil.GetSelectedOptionValue(config, lane, option)))
 					{
-						continue;
-					}
-
-					var selectedValue = LaneOptionsUtil.GetSelectedOptionValue(config, lane, option);
-					var combination = groupItem.Combination.FirstOrDefault(x => x.OptionName?.Equals(option.Name, StringComparison.InvariantCultureIgnoreCase) ?? option.Name is null)?.Value;
-
-					if (option.Type is LaneOptionType.Checkbox)
-					{
-						if (string.IsNullOrEmpty(combination) != string.IsNullOrEmpty(selectedValue))
-						{
-							matched = false;
-						}
-
-						continue;
-					}
-
-					if (option.Type is LaneOptionType.TwoWay)
-					{
-						if (combination != null != (selectedValue == "1"))
-						{
-							matched = false;
-						}
-
-						continue;
-					}
-
-					if ((combination is not null || selectedValue is not null) && !(combination?.Equals(selectedValue, StringComparison.InvariantCultureIgnoreCase) ?? false))
-					{
-						matched = false;
+						score++;
 					}
 				}
 
-				if (matched)
+				if (score == options.Count)
 				{
 					section = item;
 					return true;
 				}
+
+				if (score > bestScore)
+				{
+					bestScore = score;
+					bestSection = item;
+				}
+			}
+
+			// No variant matches every stored value, which happens when a lane mod renames or removes a value.
+			// The closest variant keeps the lane in the road instead of silently dropping it.
+			if (bestSection is not null)
+			{
+				Mod.Log.Debug($"No exact variant of '{group.name}' for the lane's options, using '{bestSection.name}'");
+
+				section = bestSection;
+				return true;
 			}
 
 			section = default;

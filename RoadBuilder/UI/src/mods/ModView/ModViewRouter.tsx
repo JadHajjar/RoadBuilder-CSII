@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import { useValue } from "cs2/api";
 import { useLocalization } from "cs2/l10n";
 import { RoadBuilderToolModeEnum } from "domain/RoadBuilderToolMode";
@@ -59,5 +60,5 @@ export const Router = (props: { editor: boolean }) => {
       return <></>;
   }
 
-  return <div className={styles.view}>{content}</div>;
+  return <div className={classNames(styles.view, props.editor && styles.editor)}>{content}</div>;
 };

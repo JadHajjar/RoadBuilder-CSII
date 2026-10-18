@@ -75,7 +75,8 @@ namespace RoadBuilder.Systems.UI
 
 			foreach (var prefab in netSectionsSystem.NetSections.Values)
 			{
-				if (prefab.Has<RoadBuilderLaneGroup>() || prefab.Has<RoadBuilderVanillaLaneGroup>() || !prefab.Has<RoadBuilderLaneInfo>())
+				// Variants are listed through their group, a variant whose group isn't loaded is listed on its own instead of vanishing
+				if (IsLinkedVariant(prefab) || prefab.Has<RoadBuilderVanillaLaneGroup>() || !prefab.Has<RoadBuilderLaneInfo>())
 				{
 					continue;
 				}
@@ -102,16 +103,23 @@ namespace RoadBuilder.Systems.UI
 					Thumbnail = ImageSystem.GetIcon(prefab),
 					IsEdge = prefab.Has<RoadBuilderEdgeLaneInfo>(),
 					IsRestricted = restricted,
-					IsCustom = !prefab.GetComponent<RoadBuilderLaneInfo>().RoadBuilder,
+					IsCustom = !netSectionsSystem.IsBuiltIn(prefab),
 					SectionType = GetSectionType(prefab),
 				});
 			}
 
 			foreach (var prefab in netSectionsSystem.LaneGroups.Values)
 			{
+				// A group without variants can't produce a lane
+				if (prefab.LinkedSections.Count == 0)
+				{
+					continue;
+				}
+
 				bool restricted;
 
-				if (restricted = activeConfig != null && !prefab.MatchCategories(activeConfig))
+				// The group's own road types and at least one variant's road types both have to allow the road
+				if (restricted = activeConfig != null && (!prefab.MatchCategories(activeConfig) || !prefab.LinkedSections.Any(x => x.MatchCategories(activeConfig))))
 				{
 					if (!Mod.Settings!.UnrestrictedLanes)
 					{
@@ -125,9 +133,9 @@ namespace RoadBuilder.Systems.UI
 					PrefabName = prefab.name,
 					DisplayName = GetAssetName(prefab),
 					Thumbnail = ImageSystem.GetIcon(prefab),
-					IsEdge = prefab.Has<RoadBuilderEdgeLaneInfo>(),
+					IsEdge = prefab.Has<RoadBuilderEdgeLaneInfo>() || prefab.LinkedSections.All(x => x.Has<RoadBuilderEdgeLaneInfo>()),
 					IsRestricted = restricted,
-					IsCustom = !prefab.RoadBuilder,
+					IsCustom = !netSectionsSystem.IsBuiltIn(prefab),
 					SectionType = GetSectionType(prefab),
 				});
 			}
@@ -155,6 +163,13 @@ namespace RoadBuilder.Systems.UI
 
 		//	return count;
 		//}
+
+		private bool IsLinkedVariant(NetSectionPrefab prefab)
+		{
+			return prefab.TryGetExactly<RoadBuilderLaneGroup>(out var laneGroup)
+				&& laneGroup.GroupPrefab is not null
+				&& netSectionsSystem.LaneGroups.ContainsKey(laneGroup.GroupPrefab.name);
+		}
 
 		private bool Filter(string? name)
 		{
@@ -205,7 +220,7 @@ namespace RoadBuilder.Systems.UI
 				return LaneSectionType.Tracks;
 			}
 
-			if (prefab.IsMedian() || prefab.name.IndexOf("Median", StringComparison.InvariantCultureIgnoreCase) >= 0)
+			if (prefab.IsMedian() || (prefab.TryGet<RoadBuilderLaneInfo>(out var laneInfo) && laneInfo.Median) || prefab.name.IndexOf("Median", StringComparison.InvariantCultureIgnoreCase) >= 0)
 			{
 				return LaneSectionType.Medians;
 			}

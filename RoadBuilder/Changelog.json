@@ -5,6 +5,15 @@
     "Date": "2026-10-18",
     "ChangeGroups": [
       {
+        "Name": "Custom Lanes in the Asset Editor",
+        "Changes": [
+          "Added a Road Builder Setup panel to the asset editor.",
+          "Set up any net section as a lane, edge lane or group variant without adding components by hand.",
+          "Added a getting started guide explaining how lanes, edge lanes and lane groups fit together.",
+          "Create new lanes, edge lanes, lane groups and group variants in one click.",
+        ]
+      },
+      {
         "Name": "Changes",
         "Changes": [
           "Compatibility with the game's new toolbar and icon format.",
@@ -34,10 +43,9 @@
           "Fixed roads deleted in the current session breaking when loading a save.",
           "Fixed lane colors not showing with some region settings.",
           "Fixed the lane options popup editing the wrong lane after dragging.",
-          "Fixed the 'Place Road Hotkey' causing an error.",
           "Fixed old fence roads not using the updated sound barrier.",
-          "Fixed some UI inconsistencies.",
-          "Fixed several rare errors when deleting roads or loading saves."
+          "Fixed several rare errors when deleting roads or loading saves.",
+          "Fixed some UI inconsistencies."
         ]
       }
     ]

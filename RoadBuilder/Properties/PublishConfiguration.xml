@@ -126,13 +126,43 @@ This helps us better assist you and avoids your message from getting lost in the
   <Screenshot Value="Properties/Screenshot_07.png" />
   <Tag Value="Code Mod" />
   <ForumLink Value="https://forum.paradoxplaza.com/forum/threads/road-builder.1698661/" />
-  <ModVersion Value="0.7.0" />
+  <ModVersion Value="0.8.0" />
   <GameVersion Value="1.6.*" />
   <ChangeLog>
-# v0.7.0
+# v0.8.0
+## Custom Lanes in the Asset Editor
+* Added a Road Builder Setup panel to the asset editor.
+* Set up any net section as a lane, edge lane or group variant without adding components by hand.
+* Added a getting started guide explaining how lanes, edge lanes and lane groups fit together.
+* Create new lanes, edge lanes, lane groups and group variants in one click.
+
 ## Changes
-* Potential fix for missing lane and invalid configurations, thanks to b2thek.
-* Added more safeguards and logging to make it easier to find remaining issues.
+* Compatibility with the game's new toolbar and icon format.
+* Playset isolation now works as intended, roads only show in the playsets they belong to.
+* Faulty roads are fixed automatically on load again, enable 'Ask to reset faulty roads on load' to be asked first.
+* Existing roads are updated with the fixes below when loading a save.
+* The download button in the Discover tab now waits for the road to be added before switching to 'Place'.
+* Edited roads can now be uploaded again.
+* Smoother UI while editing roads.
+
+## Fixes
+* Fixed lane icons looking cut off in the lane bar.
+* Fixed downloaded roads sometimes not being added.
+* Fixed the Discover tab getting stuck while loading.
+* Fixed the search in 'My Roads' not working.
+* Fixed uploaded roads sometimes appearing twice.
+* Fixed intersections on some roads getting a sidewalk on one side only.
+* Fixed gravel roads not getting paved properly.
+* Fixed some roads showing up in the wrong toolbar tab.
+* Fixed sidewalks showing parking in their thumbnails.
+* Fixed Gravel and Tiled tracks losing their track type.
+* Fixed roads with missing lanes losing their sides.
+* Fixed roads deleted in the current session breaking when loading a save.
+* Fixed lane colors not showing with some region settings.
+* Fixed the lane options popup editing the wrong lane after dragging.
+* Fixed old fence roads not using the updated sound barrier.
+* Fixed several rare errors when deleting roads or loading saves.
+* Fixed some UI inconsistencies.
 </ChangeLog>
   <ExternalLink Type="discord" Url="https://discord.gg/E4k8ZEtRxd" />
   <ExternalLink Type="github" Url="https://github.com/JadHajjar/RoadBuilder-CSII" />

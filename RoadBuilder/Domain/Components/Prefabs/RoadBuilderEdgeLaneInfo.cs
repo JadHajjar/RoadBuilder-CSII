@@ -1,6 +1,7 @@
 ﻿using Game.Prefabs;
 
 using RoadBuilder.Domain.Enums;
+using RoadBuilder.Domain.Prefabs;
 
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,8 @@ using Unity.Entities;
 
 namespace RoadBuilder.Domain.Components.Prefabs
 {
-	[ComponentMenu("RoadBuilder/", new Type[] { typeof(NetSectionPrefab) })]
+	// Also allowed on lane groups, which makes every variant of the group an edge lane
+	[ComponentMenu("RoadBuilder/", new Type[] { typeof(NetSectionPrefab), typeof(LaneGroupPrefab) })]
 	public class RoadBuilderEdgeLaneInfo : ComponentBase
 	{
 		public NetSectionPrefab? LeftSidePrefab;

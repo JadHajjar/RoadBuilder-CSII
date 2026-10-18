@@ -1,3 +1,5 @@
+@use "../base.scss" as _base;
+
 .view {
   position: absolute;
   top: 0;
@@ -6,6 +8,11 @@
   right: 0;
 
   // background: rgba(#000,0.2);
+
+  // In the asset editor every Road Builder view gets the editor's orange for hover, pressed and selected states too
+  &.editor {
+    @include _base.editorAccentColors;
+  }
 }
 
 .pickerHint {

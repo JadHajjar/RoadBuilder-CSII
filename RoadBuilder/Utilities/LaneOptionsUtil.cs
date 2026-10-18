@@ -26,6 +26,91 @@ namespace RoadBuilder.Utilities
 
 		private static readonly RoadBuilderNetSectionsSystem _netSectionsSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystemManaged<RoadBuilderNetSectionsSystem>();
 
+		#region Combination rules
+
+		// These rules are shared by road generation, the lane options UI and road imports, so a variant is matched the same way everywhere.
+		// Option names and values are matched without case, and a variant that leaves an option out reads as an empty value.
+
+		public static bool TryGetCombinationValue(NetSectionPrefab section, string? optionName, out string? value)
+		{
+			if (section.TryGet<RoadBuilderLaneGroup>(out var laneGroup) && laneGroup.Combination is not null)
+			{
+				foreach (var item in laneGroup.Combination)
+				{
+					if (item is not null && string.Equals(item.OptionName, optionName, StringComparison.InvariantCultureIgnoreCase))
+					{
+						value = item.Value;
+						return true;
+					}
+				}
+			}
+
+			value = null;
+			return false;
+		}
+
+		public static string? GetCombinationValue(NetSectionPrefab section, string? optionName)
+		{
+			return TryGetCombinationValue(section, optionName, out var value) ? value : null;
+		}
+
+		public static bool SameValue(string? a, string? b)
+		{
+			return string.Equals(a ?? string.Empty, b ?? string.Empty, StringComparison.InvariantCultureIgnoreCase);
+		}
+
+		// Decoration values: no value means no decorations, "G" grass only, "T" trees only, anything else both
+		public static bool SupportsGrass(string? value)
+		{
+			return value is not null && !SameValue(value, "T");
+		}
+
+		public static bool SupportsTrees(string? value)
+		{
+			return value is not null && !SameValue(value, "G");
+		}
+
+		private static bool SupportsDecoration(string? sectionValue, string? selectedValue)
+		{
+			var needsGrass = selectedValue?.IndexOf('G') >= 0;
+			var needsTrees = selectedValue?.IndexOf('T') >= 0;
+
+			return (!needsGrass || SupportsGrass(sectionValue)) && (!needsTrees || SupportsTrees(sectionValue));
+		}
+
+		// The two-way variant is the one that lists the TwoWay option, with any value other than "0"
+		public static bool IsTwoWayVariant(NetSectionPrefab section, string? optionName)
+		{
+			return TryGetCombinationValue(section, optionName, out var value) && value != "0";
+		}
+
+		public static bool IsTwoWaySelected(string? selectedValue)
+		{
+			return selectedValue == "1";
+		}
+
+		public static bool MatchesOptionValue(NetSectionPrefab section, RoadBuilderLaneOption? option, string? selectedValue)
+		{
+			if (option is null)
+			{
+				return false;
+			}
+
+			switch (option.Type)
+			{
+				case LaneOptionType.Checkbox:
+					return string.IsNullOrEmpty(selectedValue) == string.IsNullOrEmpty(GetCombinationValue(section, option.Name));
+				case LaneOptionType.Decoration:
+					return SupportsDecoration(GetCombinationValue(section, option.Name), selectedValue);
+				case LaneOptionType.TwoWay:
+					return IsTwoWayVariant(section, option.Name) == IsTwoWaySelected(selectedValue);
+				default:
+					return SameValue(GetCombinationValue(section, option.Name), selectedValue);
+			}
+		}
+
+		#endregion
+
 		public static List<OptionSectionUIEntry> GenerateOptions(RoadGenerationData? roadGenerationData, INetworkConfig config, LaneConfig lane)
 		{
 			var options = new List<OptionSectionUIEntry>();
@@ -66,20 +151,19 @@ namespace RoadBuilder.Utilities
 					yield break;
 				}
 
-				if (option.Type is LaneOptionType.TwoWay)
+				if (option is null || option.Type is LaneOptionType.TwoWay)
 				{
 					continue;
 				}
 
-				var entries = new OptionItemUIEntry[option.Type is LaneOptionType.Decoration or LaneOptionType.TwoWay ? 2 : option.Type is LaneOptionType.ValueUpDown or LaneOptionType.LaneWidth or LaneOptionType.Checkbox ? 1 : option.Options?.Length ?? 0];
+				var optionValues = option.Options?.Where(x => x is not null).ToArray() ?? new RoadBuilderLaneOptionValue[0];
+				var entries = new OptionItemUIEntry[option.Type is LaneOptionType.Decoration or LaneOptionType.TwoWay ? 2 : option.Type is LaneOptionType.ValueUpDown or LaneOptionType.LaneWidth or LaneOptionType.Checkbox ? 1 : optionValues.Length];
 				var value = GetSelectedOptionValue(config, lane, option);
 
 				if (option.Type is LaneOptionType.Decoration)
 				{
-					var grassAvailable = remainingSections.Any(x => x.GetComponent<RoadBuilderLaneGroup>().Combination
-						.Any(x => x.OptionName == option.Name && x.Value is not null and not "T"));
-					var treeAvailable = remainingSections.Any(x => x.GetComponent<RoadBuilderLaneGroup>().Combination
-						.Any(x => x.OptionName == option.Name && x.Value is not null and not "G"));
+					var grassAvailable = remainingSections.Any(x => SupportsGrass(GetCombinationValue(x, option.Name)));
+					var treeAvailable = remainingSections.Any(x => SupportsTrees(GetCombinationValue(x, option.Name)));
 
 					entries[0] = new()
 					{
@@ -100,7 +184,8 @@ namespace RoadBuilder.Utilities
 				}
 				else if (option.Type is LaneOptionType.Checkbox)
 				{
-					var available = remainingSections.Any(x => x.GetComponent<RoadBuilderLaneGroup>().Combination.Any(x => x.OptionName == option.Name && string.IsNullOrEmpty(x.Value) != string.IsNullOrEmpty(value)));
+					// A variant that leaves the option out counts as the unchecked one
+					var available = remainingSections.Any(x => string.IsNullOrEmpty(GetCombinationValue(x, option.Name)) != string.IsNullOrEmpty(value));
 
 					entries[0] = new()
 					{
@@ -127,13 +212,16 @@ namespace RoadBuilder.Utilities
 				{
 					for (var i = 0; i < entries.Length; i++)
 					{
+						var optionValue = optionValues[i].Value;
+
 						entries[i] = new OptionItemUIEntry
 						{
-							Id = i,
-							Name = LocaleHelper.Translate($"{group.name}.Options[{option.Name}][{option.Options?[i].Value}]", option.Options?[i].Value),
-							Icon = option.Options?[i].ThumbnailUrl,
-							Selected = option.Options?[i].Value == value,
-							Disabled = !remainingSections.Any(x => x.GetComponent<RoadBuilderLaneGroup>().Combination.Any(x => x.OptionName == option.Name && x.Value == option.Options?[i].Value))
+							// The id is the value's position in option.Options, which GroupOptionClicked indexes into
+							Id = Array.IndexOf(option.Options!, optionValues[i]),
+							Name = LocaleHelper.Translate($"{group.name}.Options[{option.Name}][{optionValue}]", optionValue),
+							Icon = optionValues[i].ThumbnailUrl,
+							Selected = SameValue(optionValue, value),
+							Disabled = !remainingSections.Any(x => SameValue(GetCombinationValue(x, option.Name), optionValue))
 						};
 					}
 				}
@@ -168,31 +256,9 @@ namespace RoadBuilder.Utilities
 			return $"{Math.Round(width * 3.28084 * 4, MidpointRounding.AwayFromZero) / 4:0.##} ft";
 		}
 
-		private static bool MatchesOptionValue(NetSectionPrefab section, RoadBuilderLaneOption? option, string? currentValue)
-		{
-			if (option is null)
-			{
-				return false;
-			}
-
-			var value = section.GetComponent<RoadBuilderLaneGroup>().Combination.FirstOrDefault(x => x.OptionName == option.Name)?.Value;
-
-			if (option.Type is LaneOptionType.Checkbox)
-			{
-				return string.IsNullOrEmpty(currentValue) == string.IsNullOrEmpty(value);
-			}
-
-			if (option.Type is LaneOptionType.Decoration or LaneOptionType.TwoWay)
-			{
-				return currentValue is null or "" || value is not null and not "";
-			}
-
-			return value is not null && value == currentValue;
-		}
-
 		private static OptionSectionUIEntry GetInvertOption(INetworkConfig config, LaneConfig lane, RoadBuilderLaneOption? twoWayOption)
 		{
-			var isTwoWaySelected = twoWayOption is not null && GetSelectedOptionValue(config, lane, twoWayOption) == "1";
+			var isTwoWaySelected = twoWayOption is not null && IsTwoWaySelected(GetSelectedOptionValue(config, lane, twoWayOption));
 
 			return new OptionSectionUIEntry
 			{
@@ -244,11 +310,11 @@ namespace RoadBuilder.Utilities
 
 					if (NetworkPrefabGenerationUtil.GetNetSection(roadGenerationData, config, lane, out var section, out var group))
 					{
-						var option = group?.Options.FirstOrDefault(x => x.Type is LaneOptionType.TwoWay);
+						var option = group?.Options?.FirstOrDefault(x => x?.Type is LaneOptionType.TwoWay);
 
 						if (option?.Name is not null)
 						{
-							lane.GroupOptions[option.Name] = id != 2 || GetSelectedOptionValue(config, lane, option) == "1" ? null : "1";
+							lane.GroupOptions[option.Name] = id != 2 || IsTwoWaySelected(GetSelectedOptionValue(config, lane, option)) ? null : "1";
 						}
 					}
 
@@ -258,12 +324,21 @@ namespace RoadBuilder.Utilities
 
 		public static void GroupOptionClicked(INetworkConfig config, LaneConfig lane, int optionId, int id, int value)
 		{
-			var group = _netSectionsSystem.LaneGroups[lane.GroupPrefabName ?? string.Empty];
-			var option = group.Options?[optionId];
+			if (!_netSectionsSystem.LaneGroups.TryGetValue(lane.GroupPrefabName ?? string.Empty, out var group))
+			{
+				return;
+			}
+
+			var option = group.Options?.ElementAtOrDefault(optionId);
 
 			try
 			{
-				if (option?.Type is LaneOptionType.Decoration)
+				if (option is null)
+				{
+					return;
+				}
+
+				if (option.Type is LaneOptionType.Decoration)
 				{
 					var laneIndex = config.Lanes.IndexOf(lane);
 					RoadAddons addon = default;
@@ -289,17 +364,27 @@ namespace RoadBuilder.Utilities
 					return;
 				}
 
-				if (option?.Type is LaneOptionType.Checkbox)
+				if (option.Type is LaneOptionType.Checkbox)
 				{
-					lane.GroupOptions[option?.Name ?? string.Empty] = id == 0 ? "checked" : "";
+					lane.GroupOptions[option.Name ?? string.Empty] = id == 0 ? "checked" : "";
 
 					return;
 				}
 
-				if (option?.Type is not LaneOptionType.ValueUpDown and not LaneOptionType.LaneWidth)
+				if (option.Type is not LaneOptionType.ValueUpDown and not LaneOptionType.LaneWidth)
 				{
-					lane.GroupOptions[option?.Name ?? string.Empty] = option?.Options?[id].Value;
+					var clickedValue = option.Options?.ElementAtOrDefault(id);
 
+					if (clickedValue is not null)
+					{
+						lane.GroupOptions[option.Name ?? string.Empty] = clickedValue.Value;
+					}
+
+					return;
+				}
+
+				if (option.Options is null)
+				{
 					return;
 				}
 
@@ -312,7 +397,7 @@ namespace RoadBuilder.Utilities
 						break;
 					}
 
-					if (item.Type is LaneOptionType.TwoWay)
+					if (item is null || item.Type is LaneOptionType.TwoWay)
 					{
 						continue;
 					}
@@ -323,16 +408,16 @@ namespace RoadBuilder.Utilities
 				}
 
 				var currentValue = GetSelectedOptionValue(config, lane, option);
-				var currentOption = option.Options.FirstOrDefault(x => x.Value == currentValue);
-				var validOptions = option.Options.Where(x => remainingSections.Any(s => MatchesOptionValue(s, option, x.Value))).ToList();
+				var currentOption = option.Options.FirstOrDefault(x => x is not null && SameValue(x.Value, currentValue));
+				var validOptions = option.Options.Where(x => x is not null && remainingSections.Any(s => MatchesOptionValue(s, option, x.Value))).ToList();
 
 				if (value > 0)
 				{
-					lane.GroupOptions[option?.Name ?? string.Empty] = validOptions.Next(currentOption)?.Value ?? currentValue;
+					lane.GroupOptions[option.Name ?? string.Empty] = validOptions.Next(currentOption)?.Value ?? currentValue;
 				}
 				else
 				{
-					lane.GroupOptions[option?.Name ?? string.Empty] = validOptions.Previous(currentOption)?.Value ?? currentValue;
+					lane.GroupOptions[option.Name ?? string.Empty] = validOptions.Previous(currentOption)?.Value ?? currentValue;
 				}
 			}
 			finally
@@ -347,6 +432,11 @@ namespace RoadBuilder.Utilities
 
 			foreach (var option in group.Options ?? Enumerable.Empty<RoadBuilderLaneOption>())
 			{
+				if (option is null)
+				{
+					continue;
+				}
+
 				if (remainingSections.Count == 0)
 				{
 					Mod.Log.WarnFormat("Lane Fix Failed: no remaining sections left at option '{0}'", option.Name);
@@ -365,7 +455,7 @@ namespace RoadBuilder.Utilities
 
 				if (!remainingSections.Any(x => MatchesOptionValue(x, option, value)))
 				{
-					lane.GroupOptions[option?.Name ?? string.Empty] = value = remainingSections[0].GetComponent<RoadBuilderLaneGroup>().Combination.FirstOrDefault(x => x.OptionName == option?.Name)?.Value;
+					lane.GroupOptions[option.Name ?? string.Empty] = value = GetCombinationValue(remainingSections[0], option.Name);
 				}
 
 				remainingSections.RemoveAll(x => !MatchesOptionValue(x, option, value));
@@ -374,7 +464,19 @@ namespace RoadBuilder.Utilities
 
 		public static string? GetSelectedOptionValue(INetworkConfig? config, LaneConfig lane, RoadBuilderLaneOption option)
 		{
-			var value = lane.GroupOptions.TryGetValue(option.Name ?? string.Empty, out var val) ? val : option.DefaultValue;
+			string? value;
+
+			if (lane.GroupOptions.TryGetValue(option.Name ?? string.Empty, out var val))
+			{
+				value = val;
+			}
+			else
+			{
+				// Option names are matched without case, a stored value can differ in case from the current option name
+				var stored = lane.GroupOptions.FirstOrDefault(x => string.Equals(x.Key, option.Name, StringComparison.InvariantCultureIgnoreCase));
+
+				value = stored.Key is not null ? stored.Value : option.DefaultValue;
+			}
 
 			if (option.Type is LaneOptionType.Decoration && config is not null)
 			{

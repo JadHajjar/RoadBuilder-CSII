@@ -1,0 +1,805 @@
+@use "../base.scss" as _base;
+
+$accent: var(--accentColorNormal);
+$error: rgba(239, 83, 80, 1);
+$warning: rgba(255, 183, 77, 1);
+
+// Text levels: labels and titles, explanations under them, and placeholders
+$text: rgba(255, 255, 255, 0.95);
+$subtext: rgba(255, 255, 255, 0.6);
+$muted: rgba(255, 255, 255, 0.4);
+
+.bottomBarButton {
+  display: flex;
+}
+
+.bottomBarButtonDisabled {
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+// Centered on screen, with a fixed height so the content can scroll inside it
+.panel {
+  // The game's inputs and buttons inside use accent variants the editor leaves blue
+  @include _base.editorAccentColors;
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 75vh;
+  width: 460rem;
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  border-radius: 6rem;
+  background-color: var(--panelColorNormal);
+  backdrop-filter: var(--panelBlur);
+  color: var(--menuText1Normal);
+  overflow: hidden;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  padding: 10rem 10rem 10rem 14rem;
+  background-color: var(--panelColorDark);
+
+  .headerIcon {
+    width: 34rem;
+    height: 34rem;
+    margin-right: 10rem;
+  }
+
+  .headerText {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .headerTitle {
+    font-size: var(--fontSizeL);
+    font-weight: bold;
+    color: var(--accentColorLight);
+    text-transform: uppercase;
+  }
+
+  .headerSubtitle {
+    font-size: var(--fontSizeS);
+    color: $subtext;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+// Nested under the header so it outranks the game's flat button theme, which gives buttons a background
+.header .closeButton {
+  width: 32rem;
+  height: 32rem;
+  padding: 6rem;
+  border-radius: 4rem;
+  border: none;
+  background-color: transparent;
+  transition: background-color 0.15s;
+
+  img {
+    width: 100%;
+    height: 100%;
+    background-color: var(--menuText1Normal);
+    mask-size: contain;
+  }
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+
+  &:active {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+}
+
+.content {
+  flex: 1;
+  padding: 8rem 4rem 8rem 8rem;
+
+  & > div {
+    margin-right: 6rem;
+  }
+}
+
+.banner {
+  margin-bottom: 8rem;
+  padding: 8rem 10rem;
+  border-radius: 4rem;
+  background-color: rgba(255, 183, 77, 0.15);
+  border-left: 3rem solid $warning;
+  font-size: var(--fontSizeS);
+}
+
+.card {
+  margin-bottom: 8rem;
+  border-radius: 4rem;
+  background-color: rgba(0, 0, 0, 0.15);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  padding: 8rem 10rem;
+
+  &.clickable:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+}
+
+.cardTitle {
+  flex: 1;
+  font-size: var(--fontSizeM);
+  font-weight: bold;
+  letter-spacing: 0.5rem;
+  color: $text;
+}
+
+.cardRight {
+  display: flex;
+  align-items: center;
+}
+
+.cardBody {
+  padding: 0 10rem 10rem 10rem;
+}
+
+.caret {
+  width: 12rem;
+  height: 12rem;
+  margin-right: 8rem;
+  background-color: var(--menuText1Normal);
+  mask-size: contain;
+  transition: transform 0.15s;
+
+  &.open,
+  &.down {
+    transform: rotate(90deg);
+  }
+}
+
+.description {
+  margin: 0 0 10rem 0;
+  font-size: var(--fontSizeS);
+  line-height: 1.35;
+  color: $subtext;
+}
+
+.hint {
+  margin-top: 2rem;
+  font-size: var(--fontSizeXS);
+  font-weight: normal;
+  line-height: 1.3;
+  color: $subtext;
+}
+
+// Small header splitting a card into parts, like the left and right extra sections
+.subTitle {
+  margin: 14rem 0 8rem 0;
+  padding-bottom: 4rem;
+  border-bottom: 1rem solid rgba(255, 255, 255, 0.1);
+  font-size: var(--fontSizeXS);
+  font-weight: bold;
+  letter-spacing: 1rem;
+  text-transform: uppercase;
+  color: $subtext;
+}
+
+.summary {
+  margin: 4rem 0 10rem 0;
+  font-size: var(--fontSizeXS);
+  color: $subtext;
+}
+
+.row {
+  margin-bottom: 12rem;
+}
+
+.rowLabel {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 6rem;
+  font-size: var(--fontSizeS);
+
+  & > span:first-child {
+    font-weight: bold;
+    color: $text;
+  }
+}
+
+.rowContent {
+  display: flex;
+  flex-direction: column;
+}
+
+.textField {
+  @include _base.textInputBasic();
+  flex: 1;
+  min-width: 0;
+  font-size: var(--fontSizeS);
+}
+
+.imageField {
+  display: flex;
+  align-items: center;
+  margin-bottom: 4rem;
+
+  & > * {
+    margin-right: 6rem;
+  }
+
+  & > *:last-child {
+    margin-right: 0;
+  }
+}
+
+.imagePreview {
+  width: 32rem;
+  height: 32rem;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4rem;
+  background-color: rgba(0, 0, 0, 0.3);
+  color: $muted;
+
+  img {
+    width: 28rem;
+    height: 28rem;
+  }
+}
+
+.imageList {
+  display: flex;
+  flex-direction: column;
+}
+
+.imageStrip {
+  display: flex;
+  height: 56rem;
+  margin-bottom: 6rem;
+  padding: 4rem;
+  border-radius: 4rem;
+  background-color: rgba(0, 0, 0, 0.3);
+
+  img {
+    height: 100%;
+  }
+}
+
+.inlineButtons {
+  display: flex;
+  align-items: center;
+
+  & > * {
+    margin-right: 6rem;
+  }
+}
+
+.smallButton,
+.wideButton {
+  padding: 5rem 10rem;
+  border-radius: 4rem;
+  font-size: var(--fontSizeS);
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--menuText1Normal);
+  white-space: nowrap;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+
+  &[disabled] {
+    opacity: 0.5;
+  }
+
+  &.danger {
+    margin-top: 6rem;
+    color: $error;
+  }
+}
+
+.wideButton {
+  width: 100%;
+  margin-top: 4rem;
+}
+
+.iconButton {
+  width: 30rem;
+  height: 30rem;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border-radius: 4rem;
+  background-color: rgba(255, 255, 255, 0.1);
+
+  img {
+    width: 14rem;
+    height: 14rem;
+    mask-size: contain;
+    mask-position: 50% 50%;
+    mask-repeat: no-repeat;
+    background-color: var(--menuText1Normal);
+  }
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+
+  // Removing things turns red on hover, so it reads as destructive before the click
+  &.danger:hover {
+    background-color: rgba(239, 83, 80, 0.35);
+
+    img {
+      background-color: white;
+    }
+  }
+
+  &[disabled] {
+    opacity: 0.35;
+  }
+}
+
+.toggle {
+  display: flex;
+  align-items: flex-start;
+  margin: 6rem 0;
+  cursor: pointer;
+
+  &.disabled {
+    opacity: 0.5;
+  }
+}
+
+.checkbox {
+  width: 20rem;
+  height: 20rem;
+  flex-shrink: 0;
+  margin-right: 10rem;
+  border-radius: 3rem;
+  border: 2rem solid rgba(255, 255, 255, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &.checked {
+    background-color: $accent;
+    border-color: $accent;
+  }
+
+  img {
+    width: 14rem;
+    height: 14rem;
+    background-color: white;
+    mask-size: contain;
+  }
+}
+
+// Text next to an icon in a flex row only wraps when it fills the remaining width and is allowed to shrink
+@mixin wrappingText {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.toggleText {
+  @include wrappingText;
+  display: flex;
+  flex-direction: column;
+  font-size: var(--fontSizeS);
+  color: $text;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.chip {
+  display: flex;
+  align-items: center;
+  margin: 0 4rem 4rem 0;
+  padding: 4rem 9rem;
+  border-radius: 12rem;
+  background-color: rgba(255, 255, 255, 0.08);
+  font-size: var(--fontSizeS);
+  cursor: pointer;
+
+  img {
+    width: 18rem;
+    height: 18rem;
+    margin-right: 5rem;
+  }
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.16);
+  }
+
+  &.selected {
+    background-color: $accent;
+    color: white;
+  }
+
+  &.disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.tag {
+  display: flex;
+  align-items: center;
+  margin: 0 4rem 4rem 0;
+  padding: 3rem 6rem 3rem 9rem;
+  border-radius: 4rem;
+  background-color: rgba(255, 255, 255, 0.12);
+  font-size: var(--fontSizeS);
+
+  img {
+    width: 12rem;
+    height: 12rem;
+    margin-left: 6rem;
+    background-color: var(--menuText1Normal);
+    mask-size: contain;
+    cursor: pointer;
+  }
+}
+
+.picker {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+}
+
+.pickerValue {
+  display: flex;
+  align-items: center;
+  padding: 5rem 8rem;
+  border-radius: 4rem;
+  background-color: rgba(0, 0, 0, 0.25);
+  border: 2rem solid rgba(255, 255, 255, 0.15);
+  font-size: var(--fontSizeS);
+  cursor: pointer;
+
+  span {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .caret {
+    margin: 0 0 0 8rem;
+  }
+
+  &.disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+}
+
+.placeholder {
+  color: $muted;
+}
+
+.pickerPopup {
+  margin-top: 4rem;
+  padding: 6rem;
+  border-radius: 4rem;
+  background-color: var(--panelColorDark);
+}
+
+.pickerList {
+  max-height: 220rem;
+  margin-top: 6rem;
+}
+
+.pickerItem {
+  display: flex;
+  flex-direction: column;
+  padding: 4rem 8rem;
+  border-radius: 3rem;
+  font-size: var(--fontSizeS);
+  cursor: pointer;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+
+  &.selected {
+    background-color: $accent;
+  }
+}
+
+.empty {
+  padding: 6rem 8rem;
+  font-size: var(--fontSizeS);
+  color: $muted;
+}
+
+.roles {
+  display: flex;
+  flex-direction: column;
+}
+
+.role {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 6rem;
+  padding: 8rem 10rem;
+  border-radius: 4rem;
+  border: 2rem solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+
+  &.selected {
+    border-color: $accent;
+    background-color: rgba(255, 255, 255, 0.06);
+  }
+
+  &.disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+}
+
+.roleLabel {
+  margin-bottom: 2rem;
+  font-size: var(--fontSizeM);
+  font-weight: bold;
+  color: $text;
+}
+
+.colorRow {
+  display: flex;
+  align-items: center;
+  margin-bottom: 6rem;
+}
+
+.swatch {
+  width: 28rem;
+  height: 28rem;
+  flex-shrink: 0;
+  margin-right: 6rem;
+  border-radius: 4rem;
+  border: 2rem solid rgba(255, 255, 255, 0.2);
+}
+
+.previewTile {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8rem;
+
+  img {
+    width: 48rem;
+    height: 48rem;
+    margin-right: 10rem;
+  }
+
+  div {
+    @include wrappingText;
+    display: flex;
+    flex-direction: column;
+    font-size: var(--fontSizeS);
+  }
+}
+
+// The lane buttons draw their icon above themselves, the padding leaves room for it
+.previewLanes {
+  display: flex;
+  justify-content: center;
+  padding-top: 90rem;
+  border-radius: 4rem;
+  background-color: rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+
+.optionCard {
+  margin-bottom: 8rem;
+  padding: 8rem;
+  border-radius: 4rem;
+  background-color: rgba(255, 255, 255, 0.04);
+}
+
+.optionHeader {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8rem;
+
+  & > * {
+    margin-right: 4rem;
+  }
+}
+
+.optionNumber {
+  flex: 1;
+  font-size: var(--fontSizeXS);
+  font-weight: bold;
+  letter-spacing: 1rem;
+  text-transform: uppercase;
+  color: var(--accentColorLight);
+}
+
+.optionValue {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10rem;
+  padding: 2rem 0 2rem 10rem;
+  border-left: 2rem solid rgba(255, 255, 255, 0.1);
+
+  & > .textField {
+    margin-bottom: 6rem;
+  }
+}
+
+.valueLabel {
+  margin-bottom: 4rem;
+  font-size: var(--fontSizeXS);
+  font-weight: bold;
+  color: $text;
+}
+
+.valueIconLabel {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 4rem;
+  font-size: var(--fontSizeXS);
+  color: $text;
+}
+
+.spaced {
+  margin-top: 10rem;
+}
+
+.linkedSection {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 6rem;
+}
+
+.linkedName {
+  font-size: var(--fontSizeS);
+  font-weight: bold;
+  color: var(--accentColorLight);
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.issues {
+  margin-bottom: 8rem;
+}
+
+.issue {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 4rem;
+  padding: 6rem 8rem;
+  border-radius: 4rem;
+  font-size: var(--fontSizeS);
+  background-color: rgba(255, 255, 255, 0.05);
+
+  span {
+    @include wrappingText;
+  }
+
+  img {
+    width: 16rem;
+    height: 16rem;
+    flex-shrink: 0;
+    margin-right: 8rem;
+    mask-size: contain;
+  }
+
+  &.error {
+    background-color: rgba(239, 83, 80, 0.15);
+
+    img {
+      background-color: $error;
+    }
+  }
+
+  &.warning {
+    background-color: rgba(255, 183, 77, 0.12);
+
+    img {
+      background-color: $warning;
+    }
+  }
+}
+
+.dot {
+  width: 8rem;
+  height: 8rem;
+  flex-shrink: 0;
+  margin: 5rem 12rem 0 4rem;
+  border-radius: 50%;
+  background-color: $subtext;
+}
+
+// Getting started view
+.concepts {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10rem;
+}
+
+.concept {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 8rem;
+  padding: 6rem 0 6rem 10rem;
+  border-left: 3rem solid $accent;
+}
+
+.conceptTitle {
+  font-size: var(--fontSizeS);
+  font-weight: bold;
+  color: $text;
+}
+
+.bannerButton {
+  display: block;
+  margin-top: 8rem;
+}
+
+.fieldError {
+  margin-top: 4rem;
+  font-size: var(--fontSizeXS);
+  color: $error;
+}
+
+// The game's button themes press and focus in blue with hardcoded gradients and borders, which variables can't reach.
+// Every button in the panel gets its own pressed look instead, scoped to the panel so it outranks those themes.
+// Classes are listed besides the element, the game's Button may not render a <button>.
+.panel {
+  button,
+  .smallButton,
+  .wideButton,
+  .iconButton,
+  .closeButton {
+    &:global(.focused),
+    &:active {
+      background-image: none !important;
+      border-color: transparent !important;
+      box-shadow: none !important;
+    }
+
+    // Focused comes first so pressing still wins while focused
+    &:global(.focused) {
+      background-color: rgba(255, 255, 255, 0.1) !important;
+    }
+
+    &:active {
+      // The editor's orange accent, matching its own pressed buttons
+      background-color: var(--accentColorNormal) !important;
+    }
+  }
+
+  .iconButton.danger:active {
+    background-color: rgba(239, 83, 80, 0.5) !important;
+  }
+
+  .smallButton.danger:active {
+    background-color: rgba(239, 83, 80, 0.25) !important;
+  }
+}

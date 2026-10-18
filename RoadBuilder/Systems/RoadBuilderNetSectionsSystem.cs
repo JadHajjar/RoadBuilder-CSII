@@ -101,23 +101,14 @@ namespace RoadBuilder.Systems
 					return;
 				}
 
-				foreach (var item in LaneGroups.Values)
+				LinkLaneGroups();
+
+				if (!InitialSetupFinished)
 				{
-					item.LinkedSections = new();
-
-					foreach (var section in NetSections.Values)
-					{
-						if (section.TryGetExactly<RoadBuilderLaneGroup>(out var laneGroup) && laneGroup.GroupPrefab?.name == item.name)
-						{
-							item.LinkedSections.Add(section);
-						}
-					}
-
-					if (!item.LinkedSections.Any())
-					{
-						Mod.Log.Warn("Group with no sections found: " + item.name);
-					}
+					RememberBuiltInPrefabs();
 				}
+
+				LogCustomContentIssues();
 
 				SectionsAdded?.Invoke();
 
@@ -132,6 +123,88 @@ namespace RoadBuilder.Systems
 			{
 				Mod.Log.Error(ex);
 			}
+		}
+
+		private void LinkLaneGroups()
+		{
+			foreach (var item in LaneGroups.Values)
+			{
+				item.LinkedSections = new();
+
+				foreach (var section in NetSections.Values)
+				{
+					if (section.TryGetExactly<RoadBuilderLaneGroup>(out var laneGroup) && laneGroup.GroupPrefab?.name == item.name)
+					{
+						item.LinkedSections.Add(section);
+					}
+				}
+
+				if (!item.LinkedSections.Any())
+				{
+					Mod.Log.Warn("Group with no sections found: " + item.name);
+				}
+			}
+		}
+
+		private readonly HashSet<string> _loggedCustomContent = new();
+
+		// Third-party sections and groups set up with Road Builder components, Road Builder's own content is set up in code and skipped
+		private void LogCustomContentIssues()
+		{
+			try
+			{
+				var customSections = NetSections.Values.Where(x => (x.Has<RoadBuilderLaneInfo>() || x.Has<RoadBuilderLaneGroup>()) && !IsBuiltIn(x));
+
+				var customGroups = LaneGroups.Values.Where(x => !IsBuiltIn(x));
+
+				LaneSetupValidator.LogIssues(customSections.Cast<PrefabBase>().Concat(customGroups), this, _loggedCustomContent);
+			}
+			catch (Exception ex)
+			{
+				Mod.Log.Warn(ex, "Failed to check custom lanes");
+			}
+		}
+
+		private readonly HashSet<PrefabBase> _builtInPrefabs = new();
+
+		// Road Builder's own lanes are remembered by reference once its setup is done. A section cloned from one of them keeps the
+		// same components and group link, so checking those would treat the clone as built-in and lock it from editing.
+		private void RememberBuiltInPrefabs()
+		{
+			foreach (var prefab in NetSections.Values.Cast<PrefabBase>().Concat(LaneGroups.Values))
+			{
+				// Road Builder only sets up the game's own prefabs and the ones it creates at runtime, never prefabs saved in an asset
+				if (HasBuiltInSetup(prefab) && (prefab.isBuiltin || prefab.asset is null))
+				{
+					_builtInPrefabs.Add(prefab);
+				}
+			}
+		}
+
+		// Lanes set up in code are flagged, variants of Road Builder's groups only through their group
+		private static bool HasBuiltInSetup(PrefabBase prefab)
+		{
+			return prefab is LaneGroupPrefab group
+				? group.RoadBuilder
+				: (prefab.TryGet<RoadBuilderLaneInfo>(out var info) && info.RoadBuilder) || (prefab.TryGet<RoadBuilderLaneGroup>(out var laneGroup) && (laneGroup.GroupPrefab?.RoadBuilder ?? false));
+		}
+
+		public bool IsBuiltIn(PrefabBase prefab)
+		{
+			return _builtInPrefabs.Contains(prefab);
+		}
+
+		// Called after Road Builder components were edited in the asset editor, so links and the lane list pick up the change
+		public void RefreshCustomContent()
+		{
+			if (prefabGenerationPhase != NetPrefabGenerationPhase.Complete)
+			{
+				return;
+			}
+
+			LinkLaneGroups();
+
+			SectionsAdded?.Invoke();
 		}
 
 		private void DoCustomSectionSetup()

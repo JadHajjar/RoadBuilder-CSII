@@ -12,6 +12,7 @@ using RoadBuilder.Systems;
 using RoadBuilder.Systems.UI;
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace RoadBuilder.Utilities
@@ -130,12 +131,28 @@ namespace RoadBuilder.Utilities
 
 		private LaneConfig GetLaneConfig(NetSectionInfo section)
 		{
-			if (section.m_Section.TryGet<RoadBuilderLaneGroup>(out var groupItem))
+			// A variant without a group is imported as its own section rather than as a lane with no section at all
+			if (section.m_Section.TryGet<RoadBuilderLaneGroup>(out var groupItem) && groupItem.GroupPrefab is not null)
 			{
+				var groupOptions = new Dictionary<string, string?>();
+
+				foreach (var item in groupItem.Combination ?? new LaneOptionCombination[0])
+				{
+					if (item?.OptionName is null)
+					{
+						continue;
+					}
+
+					// Stored under the group's own spelling of the option name, which is what the lane options look up
+					var optionName = groupItem.GroupPrefab.Options?.FirstOrDefault(x => string.Equals(x?.Name, item.OptionName, StringComparison.InvariantCultureIgnoreCase))?.Name ?? item.OptionName;
+
+					groupOptions[optionName] = item.Value;
+				}
+
 				return new LaneConfig
 				{
-					GroupPrefabName = groupItem.GroupPrefab?.name,
-					GroupOptions = groupItem.Combination?.ToDictionary(x => x.OptionName ?? string.Empty, x => x.Value) ?? new(),
+					GroupPrefabName = groupItem.GroupPrefab.name,
+					GroupOptions = groupOptions,
 					Invert = section.m_Invert
 				};
 			}

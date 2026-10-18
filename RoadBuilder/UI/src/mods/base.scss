@@ -5,6 +5,23 @@ $bottomBarOffsetEditor: 145rem;
 
 $laneButtonSize: 64rem;
 
+// The asset editor only switches the base accent colors to orange, their hover, pressed and focused variants and the
+// "selected" colors keep the game's blue. Values from the game's own orange style (style--dark-grey-orange).
+@mixin editorAccentColors {
+  --accentColorNormal-hover: #e3a74e;
+  --accentColorNormal-pressed: #edc890;
+  --accentColorDark-hover: #eba53d;
+  --accentColorDark-pressed: #fff2de;
+  --accentColorDark-focused: #ffb340;
+  --accentColorLighter: #feeccd;
+  --accentColorDarker-hover: #9a640f;
+  --accentColorDarker-pressed: #b8781a;
+  --selectedColor: var(--accentColorDark);
+  --selectedColorDark: var(--accentColorDarker);
+  --selectedColor-hover: #eba53d;
+  --selectedColor-active: #ffb340;
+}
+
 // Stacks above the in-game toolbar, whose height is now dynamic.
 // $bottomBarOffset is kept for the legacy interface, which still uses the fixed toolbar.
 @mixin gameBottomOffset($extra: 0rem) {

@@ -89,13 +89,15 @@ namespace RoadBuilder.Utilities
 			return true;
 		}
 
-		public static float CalculateWidth(this NetSectionPrefab netSection, LaneGroupPrefab? groupPrefab = null)
+		// includeAggregates counts the extra sections a lane adds around itself, for the lane's own width in the UI.
+		// A generated road already lists those sections, so they are left out when measuring roads.
+		public static float CalculateWidth(this NetSectionPrefab netSection, LaneGroupPrefab? groupPrefab = null, bool includeAggregates = false)
 		{
 			var subSectionsWidth = netSection.m_SubSections.Sum(x =>
 				x.m_RequireAll.Length == 0 &&
 				x.m_RequireAny.Length == 0 ? x.m_Section.CalculateWidth() : 0f);
 
-			if (groupPrefab is not null && (netSection.TryGet<RoadBuilderLaneAggregate>(out var aggregate) || groupPrefab.TryGet(out aggregate)))
+			if (includeAggregates && (netSection.TryGet<RoadBuilderLaneAggregate>(out var aggregate) || (groupPrefab?.TryGet(out aggregate) ?? false)))
 			{
 				// Conditional sections are alternatives to the unconditional ones, only the plain edge layout is counted
 				subSectionsWidth += (aggregate?.LeftSections?.Sum(GetAggregateSectionWidth) ?? 0) + (aggregate?.RightSections?.Sum(GetAggregateSectionWidth) ?? 0);
@@ -120,7 +122,7 @@ namespace RoadBuilder.Utilities
 
 		private static float GetAggregateSectionWidth(RoadBuilderAggregateSection section)
 		{
-			return section.PieceRequireAll.Length == 0 && section.PieceRequireAny.Length == 0
+			return section is not null && (section.PieceRequireAll?.Length ?? 0) == 0 && (section.PieceRequireAny?.Length ?? 0) == 0
 				? section.Section?.CalculateWidth() ?? 0f
 				: 0f;
 		}
@@ -150,7 +152,7 @@ namespace RoadBuilder.Utilities
 				return true;
 			}
 
-			if (netSection.TryGet<RoadBuilderLaneInfo>(out var laneInfo) && laneInfo.NoDirection)
+			if ((netSection.TryGet<RoadBuilderLaneInfo>(out var laneInfo) && laneInfo.NoDirection) || (groupPrefab is not null && groupPrefab.TryGet<RoadBuilderLaneInfo>(out var groupInfo) && groupInfo.NoDirection))
 			{
 				return true;
 			}
@@ -160,14 +162,15 @@ namespace RoadBuilder.Utilities
 				return false;
 			}
 
-			var twoWayOption = groupPrefab.Options.FirstOrDefault(x => x.Type == Domain.Enums.LaneOptionType.TwoWay);
+			var twoWayOption = groupPrefab.Options?.FirstOrDefault(x => x?.Type == Domain.Enums.LaneOptionType.TwoWay);
 
 			if (twoWayOption is null)
 			{
 				return false;
 			}
 
-			return LaneOptionsUtil.GetSelectedOptionValue(null, lane, twoWayOption) is not null;
+			// Same rule as the variant lookup, only "1" selects the two-way variant
+			return LaneOptionsUtil.IsTwoWaySelected(LaneOptionsUtil.GetSelectedOptionValue(null, lane, twoWayOption));
 		}
 
 		public static bool IsTrainOrSubway(this NetSectionPrefab netSection)
