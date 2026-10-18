@@ -15,23 +15,70 @@ namespace RoadBuilder.Utilities
 		{
 			Mod.Log.Debug($"LocalSaveUtil.Save: {config.GetType().Name} id={config.ID} name={config.Name}");
 
-			DeletePreviousLocalConfig(config);
+			if (!IsSafeFileName(config.ID))
+			{
+				throw new InvalidOperationException("Invalid configuration ID: " + config.ID);
+			}
+
+			var previousId = config.OriginalID;
+			var fileName = Path.Combine(FoldersUtil.ContentFolder, $"{config.ID}.json");
+			var tempFileName = fileName + ".tmp";
 
 			config.Version = RoadBuilderSerializeSystem.CURRENT_VERSION;
 			config.OriginalID = config.ID;
 			config.Type = config.GetType().Name;
 
-			File.WriteAllText(Path.Combine(FoldersUtil.ContentFolder, $"{config.ID}.json"), JSON.Dump(config));
+			try
+			{
+				// Written to a temp file first so a failed write never loses the existing config
+				File.WriteAllText(tempFileName, JSON.Dump(config));
+
+				if (File.Exists(fileName))
+				{
+					File.Delete(fileName);
+				}
+
+				File.Move(tempFileName, fileName);
+			}
+			catch
+			{
+				config.OriginalID = previousId;
+
+				throw;
+			}
+
+			if (previousId != config.ID)
+			{
+				DeleteLocalConfig(previousId);
+			}
 		}
 
 		public static void DeletePreviousLocalConfig(INetworkConfig config)
 		{
-			var fileName = Path.Combine(FoldersUtil.ContentFolder, $"{config.OriginalID}.json");
+			DeleteLocalConfig(config.OriginalID);
+		}
+
+		private static void DeleteLocalConfig(string? id)
+		{
+			if (!IsSafeFileName(id))
+			{
+				return;
+			}
+
+			var fileName = Path.Combine(FoldersUtil.ContentFolder, $"{id}.json");
 
 			if (File.Exists(fileName))
 			{
 				File.Delete(fileName);
 			}
+		}
+
+		// IDs can come from online configs, they must never resolve outside of the target folder
+		public static bool IsSafeFileName(string? id)
+		{
+			return !string.IsNullOrWhiteSpace(id)
+				&& id!.IndexOfAny(Path.GetInvalidFileNameChars()) < 0
+				&& !id.Contains("..");
 		}
 
 		internal static IEnumerable<INetworkConfig> LoadConfigs()

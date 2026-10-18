@@ -16,12 +16,14 @@ const DropdownStyle: Theme | any = getModule("game-ui/menu/themes/dropdown.modul
 export const CustomDropdown = <T,>(props: DropdownItems<T>) => {
   const dropDownItems = props.Items.map((item, index) => (
     <DropdownItem<Number>
+      key={index}
       theme={DropdownStyle}
       focusKey={FOCUS_AUTO}
       value={index}
       closeOnSelect={true}
-      onToggleSelected={() => props.OnItemSelected(item)}
-      selected={true}
+      // onChange fires for unselected items, onToggleSelected only for the one already selected
+      onChange={() => props.OnItemSelected(item)}
+      selected={item === props.SelectedItem}
       sounds={{ select: "select-item" }}
     >
       {props.ToString(item)}

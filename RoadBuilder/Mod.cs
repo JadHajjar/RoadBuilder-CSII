@@ -88,11 +88,18 @@ namespace RoadBuilder
 
 			UIManager.defaultUISystem.RemoveHostLocation("roadbuilderthumbnails");
 
-			var tempDir = new DirectoryInfo(FoldersUtil.TempFolder);
-
-			if (tempDir.Exists)
+			try
 			{
-				tempDir.Delete(true);
+				var tempDir = new DirectoryInfo(FoldersUtil.TempFolder);
+
+				if (tempDir.Exists)
+				{
+					tempDir.Delete(true);
+				}
+			}
+			catch (Exception ex)
+			{
+				Log.Warn(ex, "Failed to delete the temp folder");
 			}
 		}
 

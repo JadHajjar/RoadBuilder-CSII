@@ -3,7 +3,7 @@ import { LaneListItem } from "../Components/LaneListItem/LaneListItem";
 import styles from "./ManageRoadsView.module.scss";
 import { useValue } from "cs2/api";
 import {
-  allRoadConfigurations$,
+  managementRoadConfigurations$,
   deleteRoad,
   DiscoverErrorLoading$,
   DiscoverItems$,
@@ -35,7 +35,8 @@ export const ManageRoadsView = (props: { editor: boolean }) => {
   const DiscoverErrorLoading = useValue(DiscoverErrorLoading$);
   const DiscoverItems = useValue(DiscoverItems$);
   const RestrictPlayset = useValue(RestrictPlayset$);
-  const roadConfigurations = useValue(allRoadConfigurations$);
+  // The management list is filtered by the "My Roads" search, separately from the side panel's list
+  const roadConfigurations = useValue(managementRoadConfigurations$);
   const managedRoad = useValue(managedRoad$);
   let [searchQuery, setSearchQuery] = useState<string>("");
   let [pageChanging, setPageChanging] = useState<boolean>(false);
@@ -94,7 +95,16 @@ export const ManageRoadsView = (props: { editor: boolean }) => {
     setDiscoverPage(page);
   }
 
-  if (!managedRoad && roadConfigurations.length > 0) setManagementRoad(roadConfigurations[0].ID);
+  // Runs as an effect, triggering during render would fire on every render until the binding updates
+  useEffect(() => {
+    if (!discoverView && !managedRoad && roadConfigurations.length > 0) setManagementRoad(roadConfigurations[0].ID);
+  }, [discoverView, managedRoad, roadConfigurations]);
+
+  // The selected category's button disappears once no road matches it, so fall back to all roads
+  useEffect(() => {
+    if (!discoverView && selectedCategory !== undefined && !roadConfigurations.some((r) => r.Category === selectedCategory))
+      setSelectedCategory(undefined);
+  }, [discoverView, selectedCategory, roadConfigurations]);
 
   useEffect(() => {
     setAndBindSearch("");
@@ -133,7 +143,7 @@ export const ManageRoadsView = (props: { editor: boolean }) => {
             <>
               <Scrollable className={styles.list} vertical smooth trackVisibility="scrollable">
                 {DiscoverItems.map((val, idx) => (
-                  <DiscoverRoadConfigListItem key={idx} road={val} />
+                  <DiscoverRoadConfigListItem key={val.ID ?? idx} road={val} />
                 ))}
               </Scrollable>
             </>
@@ -147,7 +157,7 @@ export const ManageRoadsView = (props: { editor: boolean }) => {
       <div className={styles.localContainer}>
         <Scrollable className={styles.list} vertical smooth trackVisibility="scrollable">
           {GetRoadConfigurations().map((val, idx) => (
-            <ManageRoadConfigListItem key={idx} road={val} selectRoad={(r) => setManagementRoad(r.ID)} selected={managedRoad?.ID === val.ID} />
+            <ManageRoadConfigListItem key={val.ID ?? idx} road={val} selectRoad={(r) => setManagementRoad(r.ID)} selected={managedRoad?.ID === val.ID} />
           ))}
         </Scrollable>
         <div className={styles.managePanel}>{managedRoad && <ManageRoadPanel road={managedRoad} />}</div>
@@ -159,25 +169,25 @@ export const ManageRoadsView = (props: { editor: boolean }) => {
     <div className={classNames(styles.panel, props.editor ? styles.editor : styles.game)}>
       <div className={styles.header}>
         <div className={styles.mode}>
-          <div className={!discoverView && styles.selected} onClick={() => setDiscoverView(false)}>
+          <div className={classNames(!discoverView && styles.selected)} onClick={() => setDiscoverView(false)}>
             <img style={{ maskImage: "url(coui://roadbuildericons/RB_User.svg)" }} />
             <span>{translate("RoadBuilder.MyRoads")}</span>
           </div>
-          <div className={discoverView && styles.selected} onClick={() => setDiscoverView(true)}>
+          <div className={classNames(discoverView && styles.selected)} onClick={() => setDiscoverView(true)}>
             <img style={{ maskImage: "url(coui://roadbuildericons/RB_Compass.svg)" }} />
             <span>{translate("RoadBuilder.Discover")}</span>
           </div>
         </div>
         <div className={styles.topBar}>
           <div className={styles.categories}>
-            <Button className={selectedCategory == undefined && styles.selected} variant="flat" onSelect={() => setAndBindCategory(undefined)}>
+            <Button className={classNames(selectedCategory == undefined && styles.selected)} variant="flat" onSelect={() => setAndBindCategory(undefined)}>
               <img src="Media/Tools/Snap Options/All.svg" />
               <span>{translate("RoadBuilder.AllRoads")}</span>
             </Button>
             {Object.values(RoadCategory)
               .filter((x) => GetCategoryIcon(x as RoadCategory) != undefined && (discoverView || roadConfigurations.some((r) => r.Category === x)))
               .map((x) => (
-                <Button className={selectedCategory == x && styles.selected} variant="flat" onSelect={() => setAndBindCategory(x as RoadCategory)}>
+                <Button key={x} className={classNames(selectedCategory == x && styles.selected)} variant="flat" onSelect={() => setAndBindCategory(x as RoadCategory)}>
                   <img src={GetCategoryIcon(x as RoadCategory)} />
                   <span>{translate(GetCategoryName(x as RoadCategory))}</span>
                 </Button>

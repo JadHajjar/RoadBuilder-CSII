@@ -61,7 +61,7 @@ namespace RoadBuilder.Utilities
 				throw new Exception("Invalid Prefab");
 			}
 
-			config.Playsets = new() { PdxModsUtil.CurrentPlayset };
+			config.Playsets = PdxModsUtil.CurrentPlayset is null ? new() : new() { PdxModsUtil.CurrentPlayset };
 			config.Name = $"Custom {GetAssetName(NetworkPrefab)}";
 			config.MaxSlopeSteepness = NetworkPrefab.m_MaxSlopeSteepness;
 			config.PillarPrefabName = FindPillarPrefab(NetworkPrefab);
@@ -91,18 +91,24 @@ namespace RoadBuilder.Utilities
 				config.Category = RoadCategory.Tiled;
 			}
 
-			config.Lanes.AddRange(NetworkPrefab.m_Sections
+			// Sides and median are located in the filtered list, so conditional sections can't shift their indexes
+			var sections = NetworkPrefab.m_Sections
 				.Where(x => x.m_RequireAll.Length == 0 && x.m_RequireAny.Length == 0 && !x.m_Section.Has<RoadBuilderIgnoreSection>())
-				.Select(x => GetLaneConfig(x)));
+				.ToList();
 
 			// remove sides
-			config.Lanes.RemoveAt(0);
-			config.Lanes.RemoveAt(config.Lanes.Count - 1);
-
-			if (NetworkPrefab.m_Sections[(NetworkPrefab.m_Sections.Length - 1) / 2].m_Section.CalculateWidth() == 0)
+			if (sections.Count >= 2)
 			{
-				config.Lanes.RemoveAt((config.Lanes.Count - 1) / 2);
+				sections.RemoveAt(0);
+				sections.RemoveAt(sections.Count - 1);
 			}
+
+			if (sections.Count > 0 && sections[(sections.Count - 1) / 2].m_Section.CalculateWidth() == 0)
+			{
+				sections.RemoveAt((sections.Count - 1) / 2);
+			}
+
+			config.Lanes.AddRange(sections.Select(x => GetLaneConfig(x)));
 
 			return config;
 		}
@@ -117,7 +123,7 @@ namespace RoadBuilder.Utilities
 			config.ID = string.Empty;
 			config.OriginalID = null;
 			config.Name = $"Copy of {config.Name}";
-			config.Playsets = new() { PdxModsUtil.CurrentPlayset };
+			config.Playsets = PdxModsUtil.CurrentPlayset is null ? new() : new() { PdxModsUtil.CurrentPlayset };
 
 			return config;
 		}
@@ -182,37 +188,8 @@ namespace RoadBuilder.Utilities
 					break;
 			}
 
-			FixTrafficDirection(config);
-
+			// Lanes are kept in right-hand layout, road builder prefabs invert them for left-hand traffic themselves
 			return config;
-		}
-
-		private void FixTrafficDirection(INetworkConfig config)
-		{
-			if (_roadGenerationData.LeftHandTraffic)
-			{
-				switch (NetworkPrefab.m_InvertMode)
-				{
-					case CompositionInvertMode.InvertLefthandTraffic:
-						config.Lanes.Reverse();
-						break;
-					case CompositionInvertMode.FlipLefthandTraffic:
-						config.Lanes.ForEach(x => x.Invert = !x.Invert);
-						break;
-				}
-			}
-			else
-			{
-				switch (NetworkPrefab.m_InvertMode)
-				{
-					case CompositionInvertMode.InvertRighthandTraffic:
-						config.Lanes.Reverse();
-						break;
-					case CompositionInvertMode.FlipRighthandTraffic:
-						config.Lanes.ForEach(x => x.Invert = !x.Invert);
-						break;
-				}
-			}
 		}
 
 		private INetworkConfig GenerateTrackConfig(TrackPrefab trackPrefab)

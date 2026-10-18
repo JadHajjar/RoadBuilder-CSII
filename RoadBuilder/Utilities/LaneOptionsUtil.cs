@@ -58,6 +58,9 @@ namespace RoadBuilder.Utilities
 
 			foreach (var option in group.Options)
 			{
+				// Ids map back to group.Options in GroupOptionClicked, so they follow the option's position even when some are skipped
+				index--;
+
 				if (remainingSections.Count == 0)
 				{
 					yield break;
@@ -137,7 +140,7 @@ namespace RoadBuilder.Utilities
 
 				yield return new OptionSectionUIEntry
 				{
-					Id = --index,
+					Id = index,
 					Options = entries,
 					IsToggle = option.Type is LaneOptionType.Toggle,
 					IsCheckbox = option.Type is LaneOptionType.Checkbox,
@@ -309,7 +312,7 @@ namespace RoadBuilder.Utilities
 						break;
 					}
 
-					if (option.Type is LaneOptionType.TwoWay)
+					if (item.Type is LaneOptionType.TwoWay)
 					{
 						continue;
 					}

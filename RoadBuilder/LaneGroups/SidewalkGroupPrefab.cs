@@ -204,12 +204,16 @@ namespace RoadBuilder.LaneGroups
 						.AddLaneThumbnail("coui://roadbuildericons/Thumb_BikeLane.svg")
 						.AddLaneThumbnail("coui://roadbuildericons/Thumb_Sidewalk.svg");
 					break;
-				default:
+				case "P":
 					prefab.AddOrGetComponent<RoadBuilderLaneInfo>()
 						.WithFrontThumbnail("coui://roadbuildericons/RB_SidewalkwParkingFront.svg")
 						.WithBackThumbnail("coui://roadbuildericons/RB_SidewalkwParkingRear.svg")
 						.AddLaneThumbnail("coui://roadbuildericons/Thumb_ParkingLane.svg")
 						.AddLaneThumbnail("coui://roadbuildericons/Thumb_ParkingSidewalk.svg");
+					break;
+				default:
+					// Plain and harbor sidewalks have no parking, they fall back to the group's thumbnails
+					prefab.AddOrGetComponent<RoadBuilderLaneInfo>();
 					break;
 			}
 

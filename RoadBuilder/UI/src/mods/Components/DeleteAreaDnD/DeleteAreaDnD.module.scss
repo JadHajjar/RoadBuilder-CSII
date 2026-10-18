@@ -1,6 +1,7 @@
 @use "../../base.scss" as _base;
 
 $height: _base.$bottomBarHeight + 18rem;
+$danger: rgba(239, 83, 80, 1);
 
 .area {
   position: absolute;
@@ -11,9 +12,11 @@ $height: _base.$bottomBarHeight + 18rem;
   justify-content: center;
   align-items: center;
 
-  transition: opacity 0.15s;
+  transition: opacity 0.15s, transform 0.15s;
+
   &.hidden {
     opacity: 0;
+    transform: translateY(8rem);
     pointer-events: none;
   }
 
@@ -30,42 +33,58 @@ $height: _base.$bottomBarHeight + 18rem;
 }
 
 .target {
-  padding: 8rem 50rem;
   width: 50%;
+  min-width: 360rem;
+  max-width: 900rem;
   height: 80%;
-  text-align: center;
-  border: 2rem solid rgba(255, 255, 255, 0.2);
-  border-radius: 4rem;
-  color: var(--normalTextColor);
-  background-color: rgba(255, 255, 255, 0);
   display: flex;
+  flex-direction: row;
+  justify-content: center;
   align-items: center;
-  transition: border-width 0.25s, border-color 0.25s;
+  border: 2rem solid rgba(255, 255, 255, 0.2);
+  border-radius: 6rem;
+  background-color: rgba(0, 0, 0, 0.25);
+  color: rgba(255, 255, 255, 0.75);
+  transition: background-color 0.15s, border-color 0.15s, color 0.15s;
 
-  transition: background-color 0.15s;
-  img {
-    filter: invert(1);
-    height: 40rem;
-    transition: height 0.25s;
+  .icon {
+    width: 26rem;
+    height: 26rem;
+    margin-right: 12rem;
+    mask-size: contain;
+    mask-position: 50% 50%;
+    mask-repeat: no-repeat;
+    background-color: rgba(255, 255, 255, 0.75);
+    transition: background-color 0.15s, transform 0.15s;
   }
 
-  &:hover {
-    background-color: rgba(217, 70, 70, 0.2);
-    border: none;
+  .label {
+    font-size: 16rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1rem;
+  }
 
-    img {
-      height: 50rem;
+  // Hovering means the lane will be removed on release
+  &:hover {
+    background-color: rgba(239, 83, 80, 0.3);
+    border-color: $danger;
+    color: rgba(255, 255, 255, 1);
+
+    .icon {
+      background-color: rgba(255, 255, 255, 1);
+      transform: scale(1.15);
     }
   }
 }
 
 .area.editor .target {
-  border-color: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(24px);
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.3);
 
   &:hover {
-    background-color: rgba(239, 64, 64, 0.2);
-    border: none;
+    background-color: rgba(239, 83, 80, 0.3);
+    border-color: $danger;
   }
 }

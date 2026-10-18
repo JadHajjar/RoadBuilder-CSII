@@ -30,20 +30,28 @@ namespace RoadBuilder.Systems
 		{
 			foreach (var entity in query.ToEntityArray(Allocator.Temp))
 			{
-				if (EntityManager.TryGetBuffer<ConnectedEdge>(entity, true, out var connectedEdges))
+				if (EntityManager.TryGetBuffer<ConnectedEdge>(entity, true, out var connectedEdgesBuffer))
 				{
+					// Copy before making structural changes, which invalidate the buffer
+					var connectedEdges = connectedEdgesBuffer.ToNativeArray(Allocator.Temp);
+
 					if (connectedEdges.Length == 0)
 					{
 						EntityManager.AddComponent<Deleted>(entity);
 
-						foreach (var item in EntityManager.GetBuffer<Game.Objects.SubObject>(entity))
+						if (EntityManager.TryGetBuffer<Game.Objects.SubObject>(entity, true, out var subObjectsBuffer))
 						{
-							EntityManager.AddComponent<Deleted>(item.m_SubObject);
+							foreach (var item in subObjectsBuffer.ToNativeArray(Allocator.Temp))
+							{
+								EntityManager.AddComponent<Deleted>(item.m_SubObject);
+							}
 						}
 					}
 					else
 					{
 						EntityManager.RemoveComponent<RoadBuilderToBeDeletedComponent>(entity);
+
+						var prefabSet = false;
 
 						foreach (var edge in connectedEdges)
 						{
@@ -55,12 +63,14 @@ namespace RoadBuilder.Systems
 								EntityManager.AddComponent<Updated>(edgeData.m_End);
 							}
 
-							if (EntityManager.TryGetComponent<PrefabRef>(edge.m_Edge, out var prefabRef))
+							if (!prefabSet && EntityManager.TryGetComponent<PrefabRef>(edge.m_Edge, out var prefabRef))
 							{
 								EntityManager.SetComponentData(entity, new PrefabRef
 								{
 									m_Prefab = prefabRef.m_Prefab
 								});
+
+								prefabSet = true;
 							}
 						}
 					}

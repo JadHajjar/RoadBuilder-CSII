@@ -548,7 +548,8 @@ namespace RoadBuilder.Systems.UI
 					IsGroup = !string.IsNullOrEmpty(lane.GroupPrefabName),
 					Options = LaneOptionsUtil.GenerateOptions(roadGenerationDataSystem.RoadGenerationData, config, lane),
 					Texture = texture ?? "asphalt",
-					Color = color is null ? null : $"rgba({color?.r * 255}, {color?.g * 255}, {color?.b * 255}, {color?.a})",
+					// Invariant culture, comma decimal separators would produce invalid CSS
+					Color = color is not Color c ? null : FormattableString.Invariant($"rgba({Mathf.RoundToInt(c.r * 255)}, {Mathf.RoundToInt(c.g * 255)}, {Mathf.RoundToInt(c.b * 255)}, {c.a:0.###})"),
 					NetSection = new()
 					{
 						PrefabName = section?.name ?? groupPrefab?.name,

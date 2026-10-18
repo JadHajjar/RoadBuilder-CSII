@@ -43,6 +43,18 @@
   pointer-events: none;
 }
 
+// Without the asset grid theme the button has no hover state of its own
+.clearIcon {
+  img {
+    opacity: 0.8;
+    transition: opacity 0.15s;
+  }
+
+  &:hover img {
+    opacity: 1;
+  }
+}
+
 .textBox {
   @include _base.textInputBasic();
 }

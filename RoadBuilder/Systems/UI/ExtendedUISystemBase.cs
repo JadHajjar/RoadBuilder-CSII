@@ -111,18 +111,29 @@ namespace RoadBuilder.Systems.UI
 	public class ValueBindingHelper<T>
 	{
 		private readonly Action<T>? _updateCallBack;
+		private readonly object _lock = new();
 		private T? valueToUpdate;
 		private bool dirty;
 
 		public ValueBinding<T?> Binding { get; }
 
+		// Values can be set from background tasks, the lock keeps the pending value and dirty flag consistent
 		public T? Value
 		{
-			get => dirty ? valueToUpdate : Binding.value;
+			get
+			{
+				lock (_lock)
+				{
+					return dirty ? valueToUpdate : Binding.value;
+				}
+			}
 			set
 			{
-				dirty = true;
-				valueToUpdate = value;
+				lock (_lock)
+				{
+					dirty = true;
+					valueToUpdate = value;
+				}
 			}
 		}
 
@@ -134,12 +145,20 @@ namespace RoadBuilder.Systems.UI
 
 		public void ForceUpdate()
 		{
-			if (dirty)
-			{
-				Binding.Update(valueToUpdate);
+			T? value;
 
+			lock (_lock)
+			{
+				if (!dirty)
+				{
+					return;
+				}
+
+				value = valueToUpdate;
 				dirty = false;
 			}
+
+			Binding.Update(value);
 		}
 
 		public void UpdateCallback(T value)

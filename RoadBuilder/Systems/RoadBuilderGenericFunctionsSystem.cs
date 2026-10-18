@@ -36,6 +36,7 @@ namespace RoadBuilder.Systems
 		private ToolSystem toolSystem;
 		private EditorToolUISystem editorToolUISystem;
 		private CameraUpdateSystem cameraUpdateSystem;
+		private RoadBuilderRoadTrackerSystem roadTrackerSystem;
 #nullable enable
 
 		private EntityQuery prefabRefQuery;
@@ -56,6 +57,7 @@ namespace RoadBuilder.Systems
 			toolSystem = World.GetOrCreateSystemManaged<ToolSystem>();
 			editorToolUISystem = World.GetOrCreateSystemManaged<EditorToolUISystem>();
 			cameraUpdateSystem = World.GetOrCreateSystemManaged<CameraUpdateSystem>();
+			roadTrackerSystem = World.GetOrCreateSystemManaged<RoadBuilderRoadTrackerSystem>();
 
 			prefabRefQuery = SystemAPI.QueryBuilder()
 				.WithAll<RoadBuilderNetwork, PrefabRef>()
@@ -200,11 +202,18 @@ namespace RoadBuilder.Systems
 				{
 					if (EntityManager.HasComponent<Edge>(entity))
 					{
+						var subObjects = EntityManager.TryGetBuffer<Game.Objects.SubObject>(entity, true, out var subObjectsBuffer)
+							? subObjectsBuffer.ToNativeArray(Allocator.Temp)
+							: default;
+
 						EntityManager.AddComponent<Deleted>(entity);
 
-						foreach (var item in EntityManager.GetBuffer<Game.Objects.SubObject>(entity))
+						if (subObjects.IsCreated)
 						{
-							EntityManager.AddComponent<Deleted>(item.m_SubObject);
+							foreach (var item in subObjects)
+							{
+								EntityManager.AddComponent<Deleted>(item.m_SubObject);
+							}
 						}
 
 						foreach (var edge in roadBuilderUpdateSystem.GetEdges(entity))
@@ -230,6 +239,9 @@ namespace RoadBuilder.Systems
 			prefab.Prefab.components.Clear();
 
 			roadBuilderSystem.UpdatePrefab(prefab.Prefab);
+
+			// The tag was removed from the deleted edges, so the tracker won't pick this change up by itself
+			roadTrackerSystem.Refresh();
 
 			roadBuilderSystem.UpdateConfigurationList();
 		}

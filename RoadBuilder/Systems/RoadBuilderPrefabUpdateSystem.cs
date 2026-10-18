@@ -138,16 +138,21 @@ namespace RoadBuilder.Systems
 				UpdateEntity(edge.m_End);
 			}
 
-			if (EntityManager.TryGetBuffer<Game.Net.SubLane>(entity, true, out var subLanes))
+			// Buffers are copied first since adding components invalidates them
+			if (EntityManager.TryGetBuffer<Game.Net.SubLane>(entity, true, out var subLanesBuffer))
 			{
+				var subLanes = subLanesBuffer.ToNativeArray(Allocator.Temp);
+
 				for (var j = 0; j < subLanes.Length; j++)
 				{
 					UpdateEntity(subLanes[j].m_SubLane);
 				}
 			}
 
-			if (EntityManager.TryGetBuffer<Game.Objects.SubObject>(entity, true, out var subObjects))
+			if (EntityManager.TryGetBuffer<Game.Objects.SubObject>(entity, true, out var subObjectsBuffer))
 			{
+				var subObjects = subObjectsBuffer.ToNativeArray(Allocator.Temp);
+
 				for (var j = 0; j < subObjects.Length; j++)
 				{
 					UpdateEntity(subObjects[j].m_SubObject);

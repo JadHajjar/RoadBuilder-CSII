@@ -13,14 +13,16 @@ export default () => {
   let dragCtx = useContext(DragContext);
 
   let popupPosition = useMemo(() => {
+    // The context only tracks the mouse while dragging, the latest position is read from the ref
+    let mousePosition = dragCtx.getMousePosition();
     let halfPopupWidth = (rem * 500) / 2;
     let halfPopupHeight = (rem * 200) / 2;
     let bodySize = document.body.getBoundingClientRect();
-    let deltaRight = bodySize.width - (dragCtx.mousePosition.x + halfPopupWidth);
-    let deltaLeft = dragCtx.mousePosition.x - halfPopupWidth;
-    let deltaTop = dragCtx.mousePosition.y - halfPopupHeight;
-    let deltaBottom = bodySize.height - (dragCtx.mousePosition.y + halfPopupHeight + 120 * rem);
-    let nPos = dragCtx.mousePosition;
+    let deltaRight = bodySize.width - (mousePosition.x + halfPopupWidth);
+    let deltaLeft = mousePosition.x - halfPopupWidth;
+    let deltaTop = mousePosition.y - halfPopupHeight;
+    let deltaBottom = bodySize.height - (mousePosition.y + halfPopupHeight + 120 * rem);
+    let nPos = mousePosition;
     if (deltaRight < 0 || deltaLeft < 0) {
       nPos = { ...nPos, x: nPos.x + Math.min(deltaRight, deltaLeft < 0 ? -deltaLeft : 0) };
     }

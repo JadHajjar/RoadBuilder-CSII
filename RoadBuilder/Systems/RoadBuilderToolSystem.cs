@@ -54,7 +54,7 @@ namespace RoadBuilder.Systems
 			roadBuilderSystem = World.GetOrCreateSystemManaged<RoadBuilderSystem>();
 			toolSystem = World.GetOrCreateSystemManaged<ToolSystem>();
 			editorToolUISystem = World.GetExistingSystemManaged<EditorToolUISystem>();
-			roadBuilderGenericFunctionsSystem = World.GetExistingSystemManaged<RoadBuilderGenericFunctionsSystem>();
+			roadBuilderGenericFunctionsSystem = World.GetOrCreateSystemManaged<RoadBuilderGenericFunctionsSystem>();
 
 			highlightedQuery = SystemAPI.QueryBuilder().WithAny<Highlighted, RoadBuilderUpdateFlagComponent>().Build();
 			roadBuilderNetworkQuery = GetEntityQuery(ComponentType.ReadOnly<RoadBuilderNetwork>());
@@ -275,6 +275,7 @@ namespace RoadBuilder.Systems
 		{
 			base.OnStopRunning();
 
+			placeAction.shouldBeEnabled = false;
 			applyAction.shouldBeEnabled = false;
 			cancelAction.shouldBeEnabled = false;
 

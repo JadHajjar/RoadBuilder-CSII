@@ -11,14 +11,28 @@ namespace RoadBuilder.Utilities
 {
 	public static class NetworkConfigExtensionsUtil
 	{
+		// Playsets holds the playsets a network is restricted to, and "-{id}" entries for playsets it was removed from.
+		// With no positive entries, the network is available in every playset that didn't remove it.
 		public static bool IsInPlayset(this INetworkConfig config)
 		{
-			return Mod.Settings!.NoPlaysetIsolation
-				|| config.Playsets is null
-				|| PdxModsUtil.CurrentPlayset is null
-				|| ((!config.Playsets.All(string.IsNullOrEmpty)
-				|| (config.Playsets.Contains(PdxModsUtil.CurrentPlayset))
-				&& !config.Playsets.Contains($"-{PdxModsUtil.CurrentPlayset}")));
+			if (Mod.Settings!.NoPlaysetIsolation || config.Playsets is null || PdxModsUtil.CurrentPlayset is null)
+			{
+				return true;
+			}
+
+			if (config.Playsets.Contains($"-{PdxModsUtil.CurrentPlayset}"))
+			{
+				return false;
+			}
+
+			var positivePlaysets = config.GetPositivePlaysets();
+
+			return positivePlaysets.Count == 0 || positivePlaysets.Contains(PdxModsUtil.CurrentPlayset);
+		}
+
+		public static List<string> GetPositivePlaysets(this INetworkConfig config)
+		{
+			return config.Playsets?.Where(x => !string.IsNullOrEmpty(x) && !x.StartsWith("-")).ToList() ?? new();
 		}
 
 		public static bool GetEdgeLaneInfo(NetSectionPrefab? section, LaneGroupPrefab? groupPrefab, out RoadBuilderEdgeLaneInfo? sectionEdgeInfo)
@@ -37,18 +51,36 @@ namespace RoadBuilder.Utilities
 			return false;
 		}
 
-		public static bool IsOneWay(this INetworkConfig config)
+		// Only sections with car or track lanes have a direction, medians and sidewalks are ignored
+		public static bool IsOneWay(this NetGeometryPrefab prefab)
 		{
-			if (config.Lanes.Count < 2)
-			{
-				return true;
-			}
+			bool? direction = null;
 
-			var first = config.Lanes[1].Invert;
-
-			for (var i = 2; i < config.Lanes.Count - 1; i++)
+			foreach (var section in prefab.m_Sections)
 			{
-				if (config.Lanes[i].Invert != first)
+				if (section.m_RequireAll.Length != 0 || section.m_RequireAny.Length != 0 || section.m_Section is null)
+				{
+					continue;
+				}
+
+				var carLanes = section.m_Section.FindLanes<CarLane>();
+				var trackLanes = section.m_Section.FindLanes<TrackLane>();
+
+				if (carLanes.Count == 0 && trackLanes.Count == 0)
+				{
+					continue;
+				}
+
+				if (carLanes.Any(x => x.m_Twoway) || trackLanes.Any(x => x.m_Twoway))
+				{
+					return false;
+				}
+
+				if (direction is null)
+				{
+					direction = section.m_Invert;
+				}
+				else if (direction != section.m_Invert)
 				{
 					return false;
 				}
@@ -65,7 +97,8 @@ namespace RoadBuilder.Utilities
 
 			if (groupPrefab is not null && (netSection.TryGet<RoadBuilderLaneAggregate>(out var aggregate) || groupPrefab.TryGet(out aggregate)))
 			{
-				subSectionsWidth += (aggregate?.LeftSections?.Sum(x => x.Section?.CalculateWidth() ?? 0) ?? 0) + (aggregate?.RightSections?.Sum(x => x.Section?.CalculateWidth() ?? 0) ?? 0);
+				// Conditional sections are alternatives to the unconditional ones, only the plain edge layout is counted
+				subSectionsWidth += (aggregate?.LeftSections?.Sum(GetAggregateSectionWidth) ?? 0) + (aggregate?.RightSections?.Sum(GetAggregateSectionWidth) ?? 0);
 			}
 
 			if (netSection.m_Pieces.Length == 0)
@@ -83,6 +116,20 @@ namespace RoadBuilder.Utilities
 			}
 
 			return subSectionsWidth + pieceWidths;
+		}
+
+		private static float GetAggregateSectionWidth(RoadBuilderAggregateSection section)
+		{
+			return section.PieceRequireAll.Length == 0 && section.PieceRequireAny.Length == 0
+				? section.Section?.CalculateWidth() ?? 0f
+				: 0f;
+		}
+
+		public static float CalculateWidth(this NetGeometryPrefab prefab)
+		{
+			return prefab.m_Sections.Sum(x =>
+				x.m_RequireAll.Length == 0 &&
+				x.m_RequireAny.Length == 0 ? x.m_Section.CalculateWidth() : 0f);
 		}
 
 		public static bool IsMedian(this NetSectionPrefab netSection)

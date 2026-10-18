@@ -47,18 +47,25 @@ export const SidePanel = (props: { editor: boolean }) => {
     setAndBindSearch("");
   }, [roadListView]);
 
+  // The selected category's button disappears once no road matches it, so fall back to all roads
+  useEffect(() => {
+    if (selectedCategory !== undefined && !roadConfigurations.some((r) => r.Category === selectedCategory && !r.IsNotInPlayset))
+      setSelectedCategory(undefined);
+  }, [selectedCategory, roadConfigurations]);
+
   //if (toolMode == RoadBuilderToolModeEnum.Picker && searchQuery === "" && roadConfigurations.length === 0) return <></>;
 
   if (roadListView || toolMode == RoadBuilderToolModeEnum.Picker) {
     items = roadConfigurations
       .filter((val, idx) => (selectedCategory == undefined || selectedCategory == val.Category) && !val.IsNotInPlayset)
-      .map((val, idx) => <RoadConfigListItem key={idx} road={val} index={idx} selected={selectedItemId == idx} onSelect={setSelectedItemId} />);
+      .map((val, idx) => <RoadConfigListItem key={val.ID ?? idx} road={val} index={idx} selected={selectedItemId == idx} onSelect={setSelectedItemId} />);
   } else {
     const small = netSections.map((x) => x.Sections.length).reduce((x, s) => x + s, 0) >= 15;
-    items = netSections
+    // Sorted on a copy, the array belongs to the binding
+    items = [...netSections]
       .sort((a, b) => (a.Type > b.Type ? 1 : -1))
       .map((grp) => (
-        <LaneListGroup type={grp.Type} small={small}>
+        <LaneListGroup key={grp.Type} type={grp.Type} small={small}>
           {grp.Sections.map((val, idx) => (
             <LaneListItem key={idx} netSection={val} small={small} />
           ))}
@@ -84,10 +91,10 @@ export const SidePanel = (props: { editor: boolean }) => {
         )}
         {toolMode != RoadBuilderToolModeEnum.Picker && (
           <div className={styles.mode}>
-            <div className={!roadListView && styles.selected} onClick={() => setRoadListView(false)}>
+            <div className={classNames(!roadListView && styles.selected)} onClick={() => setRoadListView(false)}>
               {translate("RoadBuilder.AvailableLanes")}
             </div>
-            <div className={roadListView && styles.selected} onClick={() => setRoadListView(true)}>
+            <div className={classNames(roadListView && styles.selected)} onClick={() => setRoadListView(true)}>
               {translate("RoadBuilder.CreatedRoads")}
             </div>
           </div>
@@ -98,15 +105,15 @@ export const SidePanel = (props: { editor: boolean }) => {
         {(roadListView || toolMode == RoadBuilderToolModeEnum.Picker) && (
           <div className={styles.categories}>
             <Tooltip tooltip={translate("RoadBuilder.AllRoads")}>
-              <Button className={selectedCategory == undefined && styles.selected} variant="flat" onSelect={() => setSelectedCategory(undefined)}>
+              <Button className={classNames(selectedCategory == undefined && styles.selected)} variant="flat" onSelect={() => setSelectedCategory(undefined)}>
                 <img src="Media/Tools/Snap Options/All.svg" />
               </Button>
             </Tooltip>
             {Object.values(RoadCategory)
               .filter((x) => GetCategoryIcon(x as RoadCategory) != undefined && roadConfigurations.some((r) => r.Category === x && !r.IsNotInPlayset))
               .map((x) => (
-                <Tooltip tooltip={translate(GetCategoryName(x as RoadCategory))}>
-                  <Button className={selectedCategory == x && styles.selected} variant="flat" onSelect={() => setSelectedCategory(x)}>
+                <Tooltip key={x} tooltip={translate(GetCategoryName(x as RoadCategory))}>
+                  <Button className={classNames(selectedCategory == x && styles.selected)} variant="flat" onSelect={() => setSelectedCategory(x)}>
                     <img src={GetCategoryIcon(x as RoadCategory)} />
                   </Button>
                 </Tooltip>

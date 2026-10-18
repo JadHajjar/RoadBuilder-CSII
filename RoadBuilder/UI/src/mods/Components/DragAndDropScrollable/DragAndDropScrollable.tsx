@@ -16,8 +16,10 @@ enum ArrowState {
 }
 
 export const DragAndDropScrollable = (props: _Props) => {
-    let scrollController = VanillaComponentResolver.instance.useScrollController();    
-    let [scrollRoutine, setScrollRoutine] = useState<number>();
+    let scrollController = VanillaComponentResolver.instance.useScrollController();
+    // Kept in refs so the interval and listener can always be cleaned up, even after re-renders or unmount
+    let scrollRoutine = useRef<number>();
+    let wheelTarget = useRef<HTMLDivElement | null>(null);
     let [isScrollPosInit, setIsScrollPosInit] = useState(false);
     let scrollRef = useRef<HTMLDivElement>(null);
     let rem = useRem();
@@ -25,21 +27,29 @@ export const DragAndDropScrollable = (props: _Props) => {
     const wheelScrollMultiplier = 0.66;
     let [arrowState, setArrowState] = useState<ArrowState>(ArrowState.None);
 
-    let onMouseOver = (dir: 'left' | 'right') => () => {        
+    let stopScroll = () => {
+        if (scrollRoutine.current !== undefined) {
+            clearInterval(scrollRoutine.current);
+            scrollRoutine.current = undefined;
+        }
+    }
+
+    let onMouseOver = (dir: 'left' | 'right') => () => {
         if (!scrollRef.current) {
             return;
         }
-        let dx = baseScrollSpeed * (dir == 'left'? -1 : 1);        
-        setScrollRoutine(setInterval(() => {         
-            scrollController.scrollBy(dx, 0);            
-        }, Math.round(1000/30)));                
+        let dx = baseScrollSpeed * (dir == 'left'? -1 : 1);
+        stopScroll();
+        scrollRoutine.current = setInterval(() => {
+            scrollController.scrollBy(dx, 0);
+        }, Math.round(1000/30));
     }
 
     let updateArrowState = () => {
-        if (scrollRef.current == null) {            
-            arrowState = ArrowState.Left | ArrowState.Right;
-            return;       
-        }   
+        if (scrollRef.current == null) {
+            setArrowState(ArrowState.Left | ArrowState.Right);
+            return;
+        }
         let maxScrollLeft = scrollRef.current.scrollWidth - scrollRef.current.clientWidth;
         let scrollLeft = scrollRef.current?.scrollLeft;
         let nState = ArrowState.None;
@@ -52,42 +62,41 @@ export const DragAndDropScrollable = (props: _Props) => {
         setArrowState(nState);
     }
 
-    let onScrollWheel = (evt: WheelEvent) => {
+    // A single stable listener, so the one removed on unmount is the same one that was added
+    let scrollControllerRef = useRef(scrollController);
+    scrollControllerRef.current = scrollController;
+
+    let onScrollWheel = useRef((evt: WheelEvent) => {
         evt.preventDefault();
-        scrollController.scrollBy(evt.deltaY * wheelScrollMultiplier, 0);
-    }
+        scrollControllerRef.current.scrollBy(evt.deltaY * wheelScrollMultiplier, 0);
+    }).current;
 
     // On Mount, on Detach
     useEffect(() => {
         return () => {
-            if(scrollRef.current) {
-                scrollRef.current.removeEventListener('wheel', onScrollWheel);
-            }
+            stopScroll();
+            wheelTarget.current?.removeEventListener('wheel', onScrollWheel);
+            wheelTarget.current = null;
         }
     }, [])
 
     useEffect(() => {
         if (scrollController && scrollRef.current && !isScrollPosInit) {
-            let maxScrollLeft = scrollRef.current.scrollWidth - scrollRef.current.clientWidth;            
+            let maxScrollLeft = scrollRef.current.scrollWidth - scrollRef.current.clientWidth;
             if (maxScrollLeft > 0) {
-                scrollController.scrollTo(maxScrollLeft/2, 0);            
-                scrollRef.current.addEventListener('wheel', onScrollWheel);
+                scrollController.scrollTo(maxScrollLeft/2, 0);
+                // The listener added here is the one removed on unmount, the element is remembered since the ref is cleared first
+                wheelTarget.current = scrollRef.current;
+                wheelTarget.current.addEventListener('wheel', onScrollWheel);
                 setIsScrollPosInit(true);
-            }            
-        }        
+            }
+        }
         updateArrowState();
     }, [scrollRef.current, props.children]);
 
-    let onOverflowX = useCallback((overflow: boolean) => {             
+    let onOverflowX = useCallback((overflow: boolean) => {
         updateArrowState();
     }, [scrollRef]);
-
-    let stopScroll = () => {
-        if (scrollRoutine) {
-            clearInterval(scrollRoutine);
-            setScrollRoutine(undefined);
-        }
-    }
 
     return (
         <>

@@ -26,6 +26,7 @@ namespace RoadBuilder.Systems
 	public partial class RoadBuilderSystem : GameSystemBase
 	{
 		private readonly Queue<(INetworkBuilderPrefab prefab, bool generateId)> _updatedRoadPrefabsQueue = new();
+		private readonly Dictionary<string, INetworkBuilderPrefab> deletedPrefabs = new();
 
 #nullable disable
 		private PrefabSystem prefabSystem;
@@ -118,7 +119,12 @@ namespace RoadBuilder.Systems
 
 			var roadPrefabGeneration = new NetworkPrefabGenerationUtil(prefab, roadGenerationDataSystem.RoadGenerationData);
 
-			roadPrefabGeneration.GenerateRoad(generateId);
+			if (!roadPrefabGeneration.GenerateRoad(generateId))
+			{
+				Mod.Log.Error($"Skipping prefab update after failed generation: '{prefab.Prefab.name}'");
+
+				return;
+			}
 
 			prefab.Prefab.name = prefab.Config.ID;
 
@@ -290,12 +296,11 @@ namespace RoadBuilder.Systems
 			{
 				var buffer = EntityManager.GetBuffer<UIGroupElement>(uIGroupElements[i]);
 
-				for (var j = 0; j < buffer.Length; j++)
+				for (var j = buffer.Length - 1; j >= 0; j--)
 				{
 					if (buffer[j].m_Prefab == entity)
 					{
 						buffer.RemoveAt(j);
-						return;
 					}
 				}
 			}
@@ -319,11 +324,23 @@ namespace RoadBuilder.Systems
 					return null;
 				}
 
+				// A road deleted this session is still registered in the prefab system under its ID,
+				// so it has to be revived instead of added again
+				if (!generateId && config.ID is not null and not "" && deletedPrefabs.TryGetValue(config.ID, out var deletedPrefab) && deletedPrefab.Prefab.GetType() == config.GetPrefabType())
+				{
+					return RestoreDeletedPrefab(deletedPrefab, config);
+				}
+
 				var roadPrefab = NetworkPrefabGenerationUtil.CreatePrefab(config);
 
 				var roadPrefabGeneration = new NetworkPrefabGenerationUtil(roadPrefab, roadGenerationDataSystem.RoadGenerationData);
 
-				roadPrefabGeneration.GenerateRoad(generateId);
+				if (!roadPrefabGeneration.GenerateRoad(generateId))
+				{
+					UnityEngine.Object.Destroy(roadPrefab.Prefab);
+
+					return null;
+				}
 
 				if (roadPrefab.Config?.ID is null)
 				{
@@ -355,47 +372,82 @@ namespace RoadBuilder.Systems
 			}
 		}
 
+		private INetworkBuilderPrefab? RestoreDeletedPrefab(INetworkBuilderPrefab prefab, INetworkConfig config)
+		{
+			prefab.Config = config;
+
+			if (!new NetworkPrefabGenerationUtil(prefab, roadGenerationDataSystem.RoadGenerationData!).GenerateRoad(false))
+			{
+				prefab.Config = null;
+
+				return null;
+			}
+
+			prefab.Deleted = false;
+			prefab.Prefab.name = config.ID;
+
+			deletedPrefabs.Remove(config.ID!);
+
+			UpdatePrefab(prefab.Prefab);
+
+			Mod.Log.Debug("Restored Deleted Prefab: " + prefab.Prefab.name);
+
+			return prefab;
+		}
+
 		public void UpdateConfigurationList(bool generateNewThumbnails = false)
 		{
-			var roadBuilderConfigsQuery = SystemAPI.QueryBuilder().WithAll<RoadBuilderPrefabData>().WithNone<DiscardedRoadBuilderPrefab>().Build();
+			// Discarded prefabs are included so deleted roads can be tracked and revived
+			var roadBuilderConfigsQuery = SystemAPI.QueryBuilder().WithAny<RoadBuilderPrefabData, DiscardedRoadBuilderPrefab>().Build();
 			var prefabs = roadBuilderConfigsQuery.ToEntityArray(Allocator.Temp);
 
 			Configurations.Clear();
+			deletedPrefabs.Clear();
 
 			for (var i = 0; i < prefabs.Length; i++)
 			{
-				if (prefabSystem.GetPrefab<PrefabBase>(prefabs[i]) is INetworkBuilderPrefab prefab && !prefab.Deleted)
+				if (prefabSystem.GetPrefab<PrefabBase>(prefabs[i]) is not INetworkBuilderPrefab prefab)
 				{
-					Configurations[prefab.Prefab.name] = prefab;
+					continue;
+				}
 
-					Mod.Log.Debug($"Configuration Found: {prefab.Prefab.name} - {prefab.Config?.ID}");
+				if (prefab.Deleted)
+				{
+					deletedPrefabs[prefab.Prefab.name] = prefab;
 
-					try
+					continue;
+				}
+
+				Mod.Log.Debug($"Configuration Found: {prefab.Prefab.name} - {prefab.Config?.ID}");
+
+				try
+				{
+					if (generateNewThumbnails && roadGenerationDataSystem.RoadGenerationData is not null)
 					{
-						if (generateNewThumbnails && roadGenerationDataSystem.RoadGenerationData is not null)
+						var thumbnail = new ThumbnailGenerationUtil(prefab, roadGenerationDataSystem.RoadGenerationData).GenerateThumbnail();
+
+						if (thumbnail is not null and not "")
 						{
-							var thumbnail = new ThumbnailGenerationUtil(prefab, roadGenerationDataSystem.RoadGenerationData).GenerateThumbnail();
-
-							if (thumbnail is not null and not "")
-							{
-								prefab.Prefab.AddOrGetComponent<UIObject>().m_Icon = thumbnail;
-							}
-						}
-
-						if (prefab.Prefab.name != prefab.Config?.ID && prefab.Config is not null)
-						{
-							Mod.Log.Warn($"Configuration Mismatch: {prefab.Prefab.name} - {prefab.Config?.ID}");
-
-							prefab.Prefab.name = prefab.Config?.ID;
-
-							UpdatePrefab(prefab.Prefab);
+							prefab.Prefab.AddOrGetComponent<UIObject>().m_Icon = thumbnail;
 						}
 					}
-					catch (Exception ex)
+
+					if (prefab.Prefab.name != prefab.Config?.ID && prefab.Config is not null)
 					{
-						Mod.Log.Error(ex, $"Error while updating configuration: {prefab.Prefab.name} - {prefab.Config?.ID}");
+						Mod.Log.Warn($"Configuration Mismatch: {prefab.Prefab.name} - {prefab.Config?.ID}");
+
+						prefab.Prefab.name = prefab.Config?.ID;
+
+						UpdatePrefab(prefab.Prefab);
 					}
 				}
+				catch (Exception ex)
+				{
+					Mod.Log.Error(ex, $"Error while updating configuration: {prefab.Prefab.name} - {prefab.Config?.ID}");
+				}
+
+				// Keyed after the mismatch repair above so lookups by config ID always match
+				Configurations[prefab.Prefab.name ?? string.Empty] = prefab;
 			}
 
 			Mod.Log.Debug("Configuration Count: " + Configurations.Count);

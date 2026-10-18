@@ -33,7 +33,7 @@ export const RoadButtonSmall = (props: _Props) => {
       y: bounds.top - 20 * rem,
     };
     laneCtx.open(props.roadLane, props.index, position);
-  }, [containerRef.current, laneCtx.open]);
+  }, [props.roadLane, props.index, rem, laneCtx.open]);
 
   let updateModDragItem = () => {
     if (!dragging) {
@@ -62,7 +62,7 @@ export const RoadButtonSmall = (props: _Props) => {
         >
           <div className={styles.button}>
             <div className={styles.imageContainer}>
-              <img className={props.roadLane.InvertImage && styles.inverted} src="coui://roadbuildericons/RB_Edge.svg" />
+              <img className={classNames(props.roadLane.InvertImage && styles.inverted)} src="coui://roadbuildericons/RB_Edge.svg" />
             </div>
           </div>
           <div className={styles.informationBar}></div>
@@ -77,7 +77,7 @@ export const RoadButtonSmall = (props: _Props) => {
         <div className={styles.imageContainer}>
           <img
             src={props.roadLane.NetSection?.Thumbnail ?? "coui://roadbuildericons/RB_Unknown.svg"}
-            className={props.roadLane.InvertImage && styles.inverted}
+            className={classNames(props.roadLane.InvertImage && styles.inverted)}
           />
         </div>
       </div>

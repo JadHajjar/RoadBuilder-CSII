@@ -50,15 +50,19 @@ namespace RoadBuilder.Utilities
 			return prefab;
 		}
 
-		public void GenerateRoad(bool generateId = true)
+		public bool GenerateRoad(bool generateId = true)
 		{
 			try
 			{
 				GenerateRoadInternal(generateId);
+
+				return true;
 			}
 			catch (Exception ex)
 			{
 				Mod.Log.Error(ex, "Unhandled Error During Road Generation");
+
+				return false;
 			}
 		}
 
@@ -119,6 +123,9 @@ namespace RoadBuilder.Utilities
 				//ThumbnailGenerationUtil.DeleteThumbnail(NetworkPrefab.Config.ID);
 
 				NetworkPrefab.Prefab.name = cfg.ID = $"{NetworkPrefab.GetType().Name.ToLower()[0]}{Guid.NewGuid()}-{PlatformManager.instance.userSpecificPath}";
+
+				// A new ID is a new version of the road that hasn't been uploaded yet
+				cfg.Uploaded = false;
 			}
 #if !DEBUG
 			if (GameManager.instance.configuration.uiDeveloperMode)
@@ -184,8 +191,17 @@ namespace RoadBuilder.Utilities
 				{
 					m_RequireAll = new NetPieceRequirements[0],
 					m_RequireAny = new NetPieceRequirements[0],
-					m_RequireNone = new[] { NetPieceRequirements.Elevated, NetPieceRequirements.Tunnel },
+					m_RequireNone = new[] { NetPieceRequirements.Pavement, NetPieceRequirements.Elevated, NetPieceRequirements.Tunnel },
 					m_SetState = new[] { NetPieceRequirements.Gravel }
+				};
+
+				// Matches the edge states, paved gravel nodes switch to pavement
+				yield return new NetNodeStateInfo
+				{
+					m_RequireAll = new NetPieceRequirements[0],
+					m_RequireAny = new[] { NetPieceRequirements.Pavement },
+					m_RequireNone = new NetPieceRequirements[0],
+					m_SetState = new[] { NetPieceRequirements.Pavement }
 				};
 			}
 			else if ((NetworkPrefab.Config.Category & RoadCategory.Tiled) != 0)
@@ -231,8 +247,9 @@ namespace RoadBuilder.Utilities
 				};
 			}
 
+			// Left maps to the Opposite states, matching the grass addons
 			var addOppositeSidewalk = leftSectionEdgeInfo?.AddSidewalkStateOnNode ?? false;
-			var addSidewalk = leftSectionEdgeInfo?.AddSidewalkStateOnNode ?? false;
+			var addSidewalk = rightSectionEdgeInfo?.AddSidewalkStateOnNode ?? false;
 
 			if (addSidewalk || addOppositeSidewalk)
 			{
@@ -317,14 +334,15 @@ namespace RoadBuilder.Utilities
 				{
 					m_RequireAll = new NetPieceRequirements[0],
 					m_RequireAny = new NetPieceRequirements[0],
-					m_RequireNone = new[] { NetPieceRequirements.Pavement | NetPieceRequirements.Elevated | NetPieceRequirements.Tunnel },
+					// NetPieceRequirements is not a flags enum, each requirement is its own element
+					m_RequireNone = new[] { NetPieceRequirements.Pavement, NetPieceRequirements.Elevated, NetPieceRequirements.Tunnel },
 					m_SetState = new[] { NetPieceRequirements.Gravel }
 				};
 
 				yield return new NetEdgeStateInfo
 				{
 					m_RequireAll = new NetPieceRequirements[0],
-					m_RequireAny = new[] { NetPieceRequirements.Pavement | NetPieceRequirements.Elevated | NetPieceRequirements.Tunnel },
+					m_RequireAny = new[] { NetPieceRequirements.Pavement, NetPieceRequirements.Elevated, NetPieceRequirements.Tunnel },
 					m_RequireNone = new NetPieceRequirements[0],
 					m_SetState = new[] { NetPieceRequirements.Pavement }
 				};
@@ -344,17 +362,24 @@ namespace RoadBuilder.Utilities
 
 		private IEnumerable<NetSectionInfo> GenerateSections()
 		{
-			var index = 0;
+			// Missing sections are dropped first, so the sides and median are placed relative to the lanes that remain
+			var lanes = new List<(LaneConfig lane, NetSectionPrefab? section, LaneGroupPrefab? groupPrefab)>();
 
-			for (var i = 0; i < NetworkPrefab.Config!.Lanes.Count; i++)
+			foreach (var configLane in NetworkPrefab.Config!.Lanes)
 			{
-				var lane = NetworkPrefab.Config.Lanes[i];
-
-				if (!GetNetSection(_roadGenerationData, NetworkPrefab.Config, lane, out var section, out var groupPrefab))
+				if (GetNetSection(_roadGenerationData, NetworkPrefab.Config, configLane, out var foundSection, out var foundGroupPrefab))
 				{
-					Mod.Log.Warn($"NET SECTION '{lane.SectionPrefabName ?? lane.GroupPrefabName ?? "NULL"}' could not be found");
-					continue;
+					lanes.Add((configLane, foundSection, foundGroupPrefab));
 				}
+				else
+				{
+					Mod.Log.Warn($"NET SECTION '{configLane.SectionPrefabName ?? configLane.GroupPrefabName ?? "NULL"}' could not be found");
+				}
+			}
+
+			for (var i = 0; i < lanes.Count; i++)
+			{
+				var (lane, section, groupPrefab) = lanes[i];
 
 				if (i == 0 && (NetworkConfigExtensionsUtil.GetEdgeLaneInfo(section, groupPrefab, out leftSectionEdgeInfo) | !Mod.Settings!.DoNotAddSides))
 				{
@@ -365,7 +390,7 @@ namespace RoadBuilder.Utilities
 					};
 				}
 
-				if (index++ == NetworkPrefab.Config.Lanes.Count / 2 && NetworkPrefab.Config.Lanes.Count % 2 == 0)
+				if (i == lanes.Count / 2 && lanes.Count % 2 == 0)
 				{
 					yield return new NetSectionInfo
 					{
@@ -438,7 +463,7 @@ namespace RoadBuilder.Utilities
 					};
 				}
 
-				if (i == NetworkPrefab.Config.Lanes.Count - 1 && (NetworkConfigExtensionsUtil.GetEdgeLaneInfo(section, groupPrefab, out rightSectionEdgeInfo) | !Mod.Settings!.DoNotAddSides))
+				if (i == lanes.Count - 1 && (NetworkConfigExtensionsUtil.GetEdgeLaneInfo(section, groupPrefab, out rightSectionEdgeInfo) | !Mod.Settings!.DoNotAddSides))
 				{
 					yield return new NetSectionInfo
 					{
@@ -809,7 +834,7 @@ namespace RoadBuilder.Utilities
 			else if (NetworkPrefab is RoadPrefab)
 			{
 				service = "Roads";
-				var width = NetworkPrefab.Prefab.m_Sections.Sum(x => x.m_Section.CalculateWidth());
+				var width = NetworkPrefab.Prefab.CalculateWidth();
 
 				if (width >= 34)
 				{

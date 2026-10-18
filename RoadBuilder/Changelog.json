@@ -1,6 +1,49 @@
 [
   {
     "Beta": true,
+    "Version": "0.8.0",
+    "Date": "2026-10-18",
+    "ChangeGroups": [
+      {
+        "Name": "Changes",
+        "Changes": [
+          "Compatibility with the game's new toolbar and icon format.",
+          "Playset isolation now works as intended, roads only show in the playsets they belong to.",
+          "Faulty roads are fixed automatically on load again, enable 'Ask to reset faulty roads on load' to be asked first.",
+          "Existing roads are updated with the fixes below when loading a save.",
+          "The download button in the Discover tab now waits for the road to be added before switching to 'Place'.",
+          "Edited roads can now be uploaded again.",
+          "Smoother UI while editing roads."
+        ]
+      },
+      {
+        "Name": "Fixes",
+        "Changes": [
+          "Fixed lane icons looking cut off in the lane bar.",
+          "Fixed downloaded roads sometimes not being added.",
+          "Fixed the Discover tab getting stuck while loading.",
+          "Fixed the search in 'My Roads' not working.",
+          "Fixed the management panel opening with no road selected.",
+          "Fixed uploaded roads sometimes appearing twice.",
+          "Fixed intersections on some roads getting a sidewalk on one side only.",
+          "Fixed gravel roads not getting paved properly.",
+          "Fixed some roads showing up in the wrong toolbar tab.",
+          "Fixed sidewalks showing parking in their thumbnails.",
+          "Fixed Gravel and Tiled tracks losing their track type.",
+          "Fixed roads with missing lanes losing their sides.",
+          "Fixed roads deleted in the current session breaking when loading a save.",
+          "Fixed lane colors not showing with some region settings.",
+          "Fixed the lane options popup editing the wrong lane after dragging.",
+          "Fixed the 'Place Road Hotkey' causing an error.",
+          "Fixed old fence roads not using the updated sound barrier.",
+          "Fixed some UI inconsistencies.",
+          "Fixed several rare errors when deleting roads or loading saves."
+        ]
+      }
+    ]
+  },
+  {
+    "Beta": true,
     "Version": "0.7.0",
     "Date": "2026-06-13",
     "ChangeGroups": [

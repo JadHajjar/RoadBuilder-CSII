@@ -44,14 +44,20 @@ namespace RoadBuilder.Systems
 		{
 			base.OnGameLoadingComplete(purpose, mode);
 
-			OnUpdate();
+			Refresh();
 		}
 
 		protected override void OnUpdate()
 		{
+			Refresh();
+		}
+
+		public void Refresh()
+		{
+			// Bulldozed segments still exist with Deleted during this frame, they no longer count as used
 			var allSegmentQuery = SystemAPI.QueryBuilder()
 				.WithAll<Edge, RoadBuilderNetwork, PrefabRef>()
-				.WithNone<Temp>()
+				.WithNone<Temp, Deleted>()
 				.Build();
 
 			var prefabRefs = allSegmentQuery.ToComponentDataArray<PrefabRef>(Allocator.Temp);

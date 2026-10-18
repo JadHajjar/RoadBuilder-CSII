@@ -19,6 +19,9 @@ export const SearchTextBox = (props: { onChange?: (val: string) => void; value?:
     props.onChange && props.onChange(target.value);
   };
 
+  // A value passed by the parent wins over the local state, it can be reset from outside
+  const currentValue = props.value === undefined ? searchQuery : props.value;
+
   const clearText = () => {
     setSearchQuery("");
     props.onChange && props.onChange("");
@@ -28,20 +31,20 @@ export const SearchTextBox = (props: { onChange?: (val: string) => void; value?:
     <div className={styles.container}>
       <div className={styles.searchArea}>
         <input
-          value={props.value === undefined ? searchQuery : props.value}
+          value={currentValue}
           disabled={false}
           type="text"
           className={classNames(TextInputTheme.input, styles.textBox)}
           onChange={onChange}
         />
 
-        {(props.value === undefined ? searchQuery : props.value) === "" && (
+        {currentValue === "" && (
           <span className={styles.placeholder}>{translate("Editor.SEARCH_PLACEHOLDER", "Search...")!}</span>
         )}
 
-        {searchQuery.trim() !== "" ? (
+        {currentValue.trim() !== "" ? (
           <Button
-            className={classNames(VanillaComponentResolver.instance.assetGridTheme.item, styles.clearIcon)}
+            className={styles.clearIcon}
             variant="icon"
             onSelect={clearText}
             focusKey={VanillaComponentResolver.instance.FOCUS_DISABLED}
@@ -49,7 +52,8 @@ export const SearchTextBox = (props: { onChange?: (val: string) => void; value?:
             <img style={{ maskImage: `url(${arrowLeftClear})` }} />
           </Button>
         ) : (
-          <div className={classNames(VanillaComponentResolver.instance.assetGridTheme.item, styles.searchIcon)}>
+          // Not themed as an asset grid item, that theme draws its own background behind the icon
+          <div className={styles.searchIcon}>
             <img style={{ maskImage: `url(${magnifierIcon})` }} />
           </div>
         )}

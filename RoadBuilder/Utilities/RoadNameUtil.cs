@@ -47,10 +47,10 @@ namespace RoadBuilder.Utilities
 
 		private string GetRoadDescription(INetworkBuilderPrefab item)
 		{
-			var width = item.Prefab.m_Sections.Sum(x => x.m_Section.CalculateWidth());
+			var width = item.Prefab.CalculateWidth();
 			var units = width / 8f;
 
-			return $"{(item.Config?.IsOneWay() == true ? "One-Way" : "Two-Way")} {GetRoadTypeName(item)} - {width}m / {units:0.#}U\r\n" +
+			return $"{(item.Prefab.IsOneWay() ? "One-Way" : "Two-Way")} {GetRoadTypeName(item)} - {width}m / {units:0.#}U\r\n" +
 				$"{string.Join(", ", EnumerateLaneNames(item))}" +
 				$"\r\nMade with Road Builder";
 		}

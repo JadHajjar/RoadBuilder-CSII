@@ -26,12 +26,12 @@ export const Pagination = (props: { setPage: (page: number) => void }) => {
   return (
     <div className={styles.pagination}>
       <ul>
-        <li className={currentPage <= 3 && styles.hidden}>
+        <li className={classNames(currentPage <= 3 && styles.hidden)}>
           <Button variant="flat" onSelect={() => props.setPage(1)}>
             <span>1</span>
           </Button>
         </li>
-        <li className={currentPage <= 3 && styles.hidden}>
+        <li className={classNames(currentPage <= 3 && styles.hidden)}>
           <div className={styles.dots}>
             <img src="coui://roadbuildericons/RB_Dots.svg" />
           </div>
@@ -51,7 +51,7 @@ export const Pagination = (props: { setPage: (page: number) => void }) => {
             {page <= 0 ? (
               <div className={styles.dots} />
             ) : (
-              <Button variant="flat" className={page === currentPage && styles.selected} onSelect={() => props.setPage(page)}>
+              <Button variant="flat" className={classNames(page === currentPage && styles.selected)} onSelect={() => props.setPage(page)}>
                 <span>{page}</span>
               </Button>
             )}
@@ -67,12 +67,12 @@ export const Pagination = (props: { setPage: (page: number) => void }) => {
             <img style={{ maskImage: "url(Media/Glyphs/ArrowRight.svg)" }} />
           </Button>
         </li>
-        <li className={currentPage + range >= maxPages && styles.hidden}>
+        <li className={classNames(currentPage + range >= maxPages && styles.hidden)}>
           <div className={styles.dots}>
             <img src="coui://roadbuildericons/RB_Dots.svg" />
           </div>
         </li>
-        <li className={currentPage + range >= maxPages && styles.hidden}>
+        <li className={classNames(currentPage + range >= maxPages && styles.hidden)}>
           <Button variant="flat" onSelect={() => props.setPage(maxPages)}>
             <span>{maxPages}</span>
           </Button>

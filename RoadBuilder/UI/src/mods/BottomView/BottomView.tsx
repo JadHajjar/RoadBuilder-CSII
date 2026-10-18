@@ -51,7 +51,7 @@ export const BottomView = (props: { editor: boolean }) => {
       let dragBounds = dragContext.dragElement.getBoundingClientRect();
       for (let i = 0; i < dividersRef.current.length; i++) {
         let divider = dividersRef.current[i];
-        if (divider.intersects(dragBounds)) {
+        if (divider?.intersects(dragBounds)) {
           if (dragContext.roadLane) {
             moveLane(dragContext.roadLane, dragContext.oldIndex!, divider.listIdx);
           } else if (dragContext.netSectionItem) {
@@ -62,6 +62,9 @@ export const BottomView = (props: { editor: boolean }) => {
       }
       dragContext.onNetSectionItemChange(undefined);
       dragContext.setRoadLane(undefined, undefined);
+
+      // The lane under the popup's index changes after a drop
+      laneCtx.close();
     }
   }, [dragContext.mouseReleased]);
 
@@ -88,14 +91,17 @@ export const BottomView = (props: { editor: boolean }) => {
     setRoadLanes([...roadLanes.slice(0, idx), ...roadLanes.slice(Math.min(idx + 1, roadLanes.length))]);
   };
 
-  let items = roadLanes
-    .filter((val) => val.SectionPrefabName || val.IsEdgePlaceholder)
-    .flatMap((val, idx) => {
-      return [
-        <DragAndDropDivider ref={(elem) => (dividersRef.current[idx] = elem!)} key={idx * 2} listIdx={idx} />,
-        <RoadButtonSmall index={idx} onDelete={deleteLane} roadLane={val} key={idx * 2 + 1} />,
-      ];
-    });
+  // Invalid lanes are skipped without filtering, so idx keeps matching roadLanes for move, add and delete
+  let items = roadLanes.flatMap((val, idx) => {
+    if (!val.SectionPrefabName && !val.IsEdgePlaceholder) {
+      return [];
+    }
+
+    return [
+      <DragAndDropDivider ref={(elem) => (dividersRef.current[idx] = elem!)} key={idx * 2} listIdx={idx} />,
+      <RoadButtonSmall index={idx} onDelete={deleteLane} roadLane={val} key={idx * 2 + 1} />,
+    ];
+  });
   items.push(<DragAndDropDivider ref={(elem) => (dividersRef.current[roadLanes.length] = elem!)} key={items.length} listIdx={roadLanes.length} />);
 
   let copyButtonStyle: CSSProperties = {
@@ -114,7 +120,7 @@ export const BottomView = (props: { editor: boolean }) => {
         {roadLanes.length == 0 && !dragContext.netSectionItem ? <div className={styles.hint}>{translate("RoadBuilder.DragHere")}</div> : <></>}
         <div className={styles.scrollBuffer}></div>
       </DragAndDropScrollable>
-      <div className={styles.bottomBG + " " + (isPaused && styles.paused)}>
+      <div className={classNames(styles.bottomBG, isPaused && styles.paused)}>
         {isDragging ? (
           <></>
         ) : (

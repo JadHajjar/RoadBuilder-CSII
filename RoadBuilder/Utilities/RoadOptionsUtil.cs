@@ -242,6 +242,26 @@ namespace RoadBuilder.Utilities
 					break;
 
 				case ActionType.RoadCategory:
+					if (config is TrackConfig)
+					{
+						// Track surfaces combine with the track type instead of replacing it
+						const RoadCategory surfaces = RoadCategory.Gravel | RoadCategory.Tiled;
+						var category = (RoadCategory)id;
+
+						if ((category & surfaces) != 0)
+						{
+							config.Category = config.Category.HasFlag(category)
+								? config.Category & ~category
+								: (config.Category & ~surfaces) | category;
+						}
+						else
+						{
+							config.Category = category | (config.Category & surfaces);
+						}
+
+						break;
+					}
+
 					if (config.Category.HasFlag((RoadCategory)id))
 					{
 						config.Category = config is TrackConfig ? RoadCategory.Tram : RoadCategory.Road;

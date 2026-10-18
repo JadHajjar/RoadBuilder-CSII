@@ -1,7 +1,6 @@
-import { FormattedText, Tooltip } from "cs2/ui";
 import styles from "./DeleteAreaDnD.module.scss";
 import { useLocalization } from "cs2/l10n";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { DragContext } from "mods/Contexts/DragContext";
 import classNames from "classnames";
 import { useDropArea } from "domain/DragAndDrop/DropArea";
@@ -9,7 +8,7 @@ import { useDropArea } from "domain/DragAndDrop/DropArea";
 export const DeleteAreaDnD = (props: { onRemove: (index: number) => void; editor: boolean }) => {
   let dragCtx = useContext(DragContext);
   let localize = useLocalization();
-  let tooltip = localize.translate("Prompt[DragToDelete]", "Drag Here to Remove")!;
+  let label = localize.translate("Prompt[DragToDelete]", "Drag Here to Remove")!;
   let isDragging = dragCtx.roadLane !== undefined;
 
   let onDrop = () => {
@@ -18,11 +17,11 @@ export const DeleteAreaDnD = (props: { onRemove: (index: number) => void; editor
   let [areaRef, _] = useDropArea<HTMLDivElement>({ onDrop });
   return (
     <div className={classNames(styles.area, { [styles.hidden]: !isDragging }, props.editor ? styles.editor : styles.game)}>
-      <Tooltip tooltip={tooltip} disabled={!isDragging}>
-        <div className={styles.target} ref={areaRef}>
-          <img src="Media/Glyphs/Trash.svg"></img>
-        </div>
-      </Tooltip>
+      {/* The hint is shown inside the drop zone, a tooltip would cover the lane bar above */}
+      <div className={styles.target} ref={areaRef}>
+        <div className={styles.icon} style={{ maskImage: "url(Media/Glyphs/Trash.svg)" }}></div>
+        <span className={styles.label}>{label}</span>
+      </div>
     </div>
   );
 };

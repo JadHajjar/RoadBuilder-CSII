@@ -50,11 +50,39 @@ namespace RoadBuilder.Systems
 
 					if (EntityManager.TryGetComponent<Edge>(entity, out var edge))
 					{
-						EntityManager.RemoveComponent<RoadBuilderNetwork>(edge.m_Start);
-						EntityManager.RemoveComponent<RoadBuilderNetwork>(edge.m_End);
+						if (!HasOtherRoadBuilderEdge(edge.m_Start, entity))
+						{
+							EntityManager.RemoveComponent<RoadBuilderNetwork>(edge.m_Start);
+						}
+
+						if (!HasOtherRoadBuilderEdge(edge.m_End, entity))
+						{
+							EntityManager.RemoveComponent<RoadBuilderNetwork>(edge.m_End);
+						}
 					}
 				}
 			}
+		}
+
+		// Nodes shared with a road builder edge keep their tag
+		private bool HasOtherRoadBuilderEdge(Entity node, Entity edge)
+		{
+			if (!EntityManager.TryGetBuffer<ConnectedEdge>(node, true, out var connectedEdges))
+			{
+				return false;
+			}
+
+			for (var i = 0; i < connectedEdges.Length; i++)
+			{
+				var connectedEdge = connectedEdges[i].m_Edge;
+
+				if (connectedEdge != edge && EntityManager.HasComponent<RoadBuilderNetwork>(connectedEdge))
+				{
+					return true;
+				}
+			}
+
+			return false;
 		}
 	}
 }

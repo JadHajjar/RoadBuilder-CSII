@@ -186,12 +186,15 @@ namespace RoadBuilder.Systems
 
 			roadGenerationData.LaneGroupPrefabs = LaneGroups;
 
+			// The pack is only created once, carry it over to every rebuilt generation data
+			roadGenerationData.RoadBuilderPack = RoadGenerationData?.RoadBuilderPack;
+
 			RoadGenerationData = roadGenerationData;
 
 			if (!firstTimeRun)
 			{
 				//AddStops();
-				roadGenerationData.RoadBuilderPack = ScriptableObject.CreateInstance<AssetPackPrefab>();
+				roadGenerationData.RoadBuilderPack ??= ScriptableObject.CreateInstance<AssetPackPrefab>();
 				roadGenerationData.RoadBuilderPack.name = "RoadBuilderPack";
 				roadGenerationData.RoadBuilderPack.AddOrGetComponent<UIObject>().m_Icon = "coui://roadbuildericons/Pack.svg";
 				prefabSystem.AddPrefab(roadGenerationData.RoadBuilderPack);

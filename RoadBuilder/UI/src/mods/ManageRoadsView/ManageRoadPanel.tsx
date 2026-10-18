@@ -97,7 +97,7 @@ export const ManageRoadPanel = ({ road }: { road: RoadConfiguration }) => {
           </Button>
         </Tooltip>
         <Tooltip tooltip={translate("RoadBuilder.FindTooltip")}>
-          <Button disabled={!road.Used} variant="flat" onSelect={() => findRoad(road.ID)} className={!road.Used && styles.disabled}>
+          <Button disabled={!road.Used} variant="flat" onSelect={() => findRoad(road.ID)} className={classNames(!road.Used && styles.disabled)}>
             <img style={{ maskImage: "url(coui://roadbuildericons/RB_Location.svg)" }} /> {translate("RoadBuilder.Find")}
           </Button>
         </Tooltip>

@@ -26,8 +26,11 @@ export const EditPropertiesPopup = () => {
     left: laneCtx.position.x + "px",
   };
 
+  // The live lane at the index is used everywhere, the opened copy goes stale once lanes are reordered
+  let currentLane = roadLanes[laneCtx.index];
+
   let onCopy = () => {
-    duplicateLane(laneCtx.laneData?.Index ?? -1);
+    duplicateLane(currentLane?.Index ?? -1);
   };
 
   let onDelete = () => {
@@ -36,7 +39,6 @@ export const EditPropertiesPopup = () => {
     setRoadLanes(nList);
   };
 
-  let currentLane = roadLanes[laneCtx.index];
   let isDragging = dragCtx.roadLane != null || dragCtx.netSectionItem != null;
 
   if (!currentLane || isDragging) return <></>;
@@ -45,7 +47,7 @@ export const EditPropertiesPopup = () => {
     <div className={styles.viewContainer} style={inlineStyle} onMouseLeave={laneCtx.close}>
       <div className={styles.view}>
         <div className={styles.topBar}>
-          <div className={styles.title}>{laneCtx.laneData.NetSection?.DisplayName}</div>
+          <div className={styles.title}>{currentLane.NetSection?.DisplayName}</div>
           <Tooltip tooltip={translate("RoadBuilder.CopyLane")}>
             <div className={styles.copyButton} onClick={onCopy}>
               <img />

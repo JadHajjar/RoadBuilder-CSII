@@ -1,4 +1,5 @@
 ﻿using Colossal.Core;
+using Colossal.Entities;
 using Colossal.Serialization.Entities;
 
 using Game;
@@ -15,6 +16,7 @@ using RoadBuilder.Utilities;
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using Unity.Collections;
 using Unity.Entities;
@@ -111,6 +113,7 @@ namespace RoadBuilder.Systems
 			for (var i = 0; i < sections.Length; i++)
 			{
 				var subObjects = EntityManager.GetBuffer<Game.Objects.SubObject>(sections[i]);
+				var toDelete = new List<Entity>();
 
 				for (var j = 0; j < subObjects.Length;)
 				{
@@ -118,13 +121,19 @@ namespace RoadBuilder.Systems
 
 					if (prefabSystem.TryGetSpecificPrefab<PrefabBase>(EntityManager.GetComponentData<PrefabRef>(subobject.m_SubObject), out var prefab) && prefab?.name is "ParkingLotSidewaysDecal01" or "ParkingLotDiagonalDecal01")
 					{
-						EntityManager.AddComponent<Deleted>(subobject.m_SubObject);
+						toDelete.Add(subobject.m_SubObject);
 						subObjects.RemoveAt(j);
 					}
 					else
 					{
 						j++;
 					}
+				}
+
+				// Structural changes are deferred until the buffer is no longer used
+				foreach (var subObject in toDelete)
+				{
+					EntityManager.AddComponent<Deleted>(subObject);
 				}
 			}
 
@@ -162,7 +171,7 @@ namespace RoadBuilder.Systems
 
 			Mod.Log.WarnFormat("{0} invalid edges found", invalidEntities.Count);
 
-			if (Mod.Settings?.AskToResetRoads == true)
+			if (Mod.Settings?.AskToResetRoads != true)
 			{
 				FixEdges(invalidEntities);
 			}
@@ -180,6 +189,9 @@ namespace RoadBuilder.Systems
 
 		private void FixEdges(List<Entity> invalidEntities)
 		{
+			// The confirmation dialog can be answered later, after some of these entities were removed
+			invalidEntities = invalidEntities.Where(x => EntityManager.Exists(x) && !EntityManager.HasComponent<Deleted>(x)).ToList();
+
 			var updateSystem = World.GetOrCreateSystemManaged<RoadBuilderPrefabUpdateSystem>();
 			var smallRoadId = prefabSystem.TryGetSpecificPrefab(new PrefabID(nameof(RoadPrefab), "Small Road"), out var smallRoad) ? prefabSystem.GetEntity(smallRoad) : Entity.Null;
 			var trainTrackId = prefabSystem.TryGetSpecificPrefab(new PrefabID(nameof(TrackPrefab), "Double Train Track"), out var trainTrack) ? prefabSystem.GetEntity(trainTrack) : Entity.Null;
@@ -190,41 +202,32 @@ namespace RoadBuilder.Systems
 			{
 				updateSystem.UpdateEdge(entity);
 
-				if (EntityManager.HasComponent<Road>(entity))
+				var prefabRef = new PrefabRef
 				{
-					EntityManager.SetComponentData(entity, new PrefabRef
-					{
-						m_Prefab = smallRoadId
-					});
-				}
-				else if (EntityManager.HasComponent<TrainTrack>(entity))
+					m_Prefab =
+						EntityManager.HasComponent<TrainTrack>(entity) ? trainTrackId :
+						EntityManager.HasComponent<TramTrack>(entity) ? tramTrackId :
+						EntityManager.HasComponent<SubwayTrack>(entity) ? subwayTrackId :
+						smallRoadId
+				};
+
+				EntityManager.SetComponentData(entity, prefabRef);
+
+				// Nodes were assigned the road builder prefab too, reset them if their prefab is also invalid
+				if (EntityManager.TryGetComponent<Edge>(entity, out var edge))
 				{
-					EntityManager.SetComponentData(entity, new PrefabRef
-					{
-						m_Prefab = trainTrackId
-					});
+					FixNode(edge.m_Start, prefabRef);
+					FixNode(edge.m_End, prefabRef);
 				}
-				else if (EntityManager.HasComponent<TramTrack>(entity))
-				{
-					EntityManager.SetComponentData(entity, new PrefabRef
-					{
-						m_Prefab = tramTrackId
-					});
-				}
-				else if (EntityManager.HasComponent<SubwayTrack>(entity))
-				{
-					EntityManager.SetComponentData(entity, new PrefabRef
-					{
-						m_Prefab = subwayTrackId
-					});
-				}
-				else
-				{
-					EntityManager.SetComponentData(entity, new PrefabRef
-					{
-						m_Prefab = smallRoadId
-					});
-				}
+			}
+		}
+
+		private void FixNode(Entity node, PrefabRef prefabRef)
+		{
+			if (EntityManager.TryGetComponent<PrefabRef>(node, out var nodePrefabRef)
+				&& (nodePrefabRef.m_Prefab.Index < 0 || !prefabSystem.TryGetSpecificPrefab<NetGeometryPrefab>(nodePrefabRef, out _)))
+			{
+				EntityManager.SetComponentData(node, prefabRef);
 			}
 		}
 
