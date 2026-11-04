@@ -38,7 +38,8 @@ namespace RoadBuilder.Systems
 #nullable disable
 		private static RoadBuilderSystem roadBuilderSystem;
 		private static PrefabSystem prefabSystem;
-		private static readonly List<INetworkBuilderPrefab> _prefabsToUpdate = new();
+		// Filled off the main thread, where Unity can't create prefabs.
+		private static readonly List<INetworkConfig> _configsToAdd = new();
 #nullable enable
 
 		protected override void OnCreate()
@@ -90,20 +91,33 @@ namespace RoadBuilder.Systems
 			Mod.Log.Debug($"RoadBuilderSerializeSystem.OnUpdate: saved {savedCount} configs, {placedNetworks.Count} placed networks");
 		}
 
+		protected override void OnGamePreload(Purpose purpose, GameMode mode)
+		{
+			base.OnGamePreload(purpose, mode);
+
+			_configsToAdd.Clear();
+		}
+
 		protected override void OnGameLoadingComplete(Purpose purpose, GameMode mode)
 		{
 			base.OnGameLoadingComplete(purpose, mode);
 
-			foreach (var item in _prefabsToUpdate)
+			var reloadNeeded = false;
+
+			foreach (var config in _configsToAdd)
 			{
-				roadBuilderSystem.UpdatePrefab(item.Prefab);
+				var prefab = roadBuilderSystem.AddPrefab(config);
+
+				if (prefab is not null)
+				{
+					roadBuilderSystem.UpdatePrefab(prefab.Prefab);
+					reloadNeeded = true;
+				}
 			}
 
-			if (_prefabsToUpdate.Count > 0)
+			if (reloadNeeded)
 			{
 				Mod.ReloadActiveLocale();
-
-				_prefabsToUpdate.Clear();
 
 				GameManager.instance.userInterface.appBindings.ShowMessageDialog(new MessageDialog("Options.SECTION[RoadBuilder.RoadBuilder.Mod]", "RoadBuilder.DIALOG_MESSAGE[ReloadSave]", "RoadBuilder.DIALOG_MESSAGE[Ok]"), null);
 			}
@@ -139,13 +153,17 @@ namespace RoadBuilder.Systems
 
 			roadBuilderSystem.UpdateConfigurationList(true);
 
-			try
+			// Resetting the edges now would lose the roads the reload brings back.
+			if (!reloadNeeded)
 			{
-				FixInvalidEdges();
-			}
-			catch (Exception ex)
-			{
-				Mod.Log.Error(ex);
+				try
+				{
+					FixInvalidEdges();
+				}
+				catch (Exception ex)
+				{
+					Mod.Log.Error(ex);
+				}
 			}
 		}
 
@@ -240,6 +258,19 @@ namespace RoadBuilder.Systems
 
 			for (var i = 0; i < prefabRefs.Length; i++)
 			{
+				// Roads added on load point at a placeholder until the save is reloaded.
+				if (EntityManager.TryGetComponent<PrefabData>(prefabRefs[i].m_Prefab, out var prefabData) && prefabData.m_Index < 0)
+				{
+					var obsoleteName = prefabSystem.GetObsoleteID(prefabData).GetName();
+
+					if (roadBuilderSystem.Configurations.ContainsKey(obsoleteName))
+					{
+						list.Add(obsoleteName);
+					}
+
+					continue;
+				}
+
 				if (!prefabSystem.TryGetSpecificPrefab<PrefabBase>(prefabRefs[i], out var prefab) || prefab is not INetworkBuilderPrefab builderPrefab)
 				{
 					continue;
@@ -294,12 +325,7 @@ namespace RoadBuilder.Systems
 
 				Mod.Log.Debug($"DeserializeNetwork: {type} id={config.ID} name={config.Name}");
 
-				var prefab = roadBuilderSystem.AddPrefab(config);
-
-				if (prefab is not null)
-				{
-					_prefabsToUpdate.Add(prefab);
-				}
+				_configsToAdd.Add(config);
 			}
 			catch (Exception ex)
 			{
